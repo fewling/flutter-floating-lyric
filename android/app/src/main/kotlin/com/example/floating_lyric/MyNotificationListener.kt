@@ -76,6 +76,7 @@ class MyNotificationListener : NotificationListenerService() {
      */
     private fun startMoovRunnable() {
         // Log.i(TAG, "startMoovRunnable")
+        handler.removeCallbacks(moovRunnable)
         handler.postDelayed(moovRunnable, 100)
         // Log.i(TAG, "postDelayed moovRunnable")
 
