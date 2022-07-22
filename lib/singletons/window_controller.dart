@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'lyric.dart';
-import 'lyric_window.dart';
-import 'song.dart';
+import '../models/lyric.dart';
+import '../ui/lyric_window.dart';
+import '../models/song.dart';
+import 'song_box.dart';
 
 class WindowController extends GetxController {
   // singleton constructor
@@ -12,10 +12,8 @@ class WindowController extends GetxController {
   static final WindowController _instance = WindowController._();
   WindowController._();
 
-  // nullable properties
-  Box? _songBox;
-
   // non-reactive properties
+  final _songBox = SongBox();
   final _lyricWindow = LyricWindow();
   var _playingSong = Song();
   var _millisLyric = <Map<int, String>>[];
@@ -42,17 +40,7 @@ class WindowController extends GetxController {
 
     // update lyric list when song changed:
     if (_playingSong.title != song.title) {
-      // if box is opened proceed to update lyric, else open it it first
-      if (_songBox != null) {
-        _millisLyric = _updateLyricList(song);
-      } else {
-        Hive.openBox('song_box').then((box) {
-          _songBox = box;
-          _millisLyric = _updateLyricList(song);
-          _updateWindow();
-        });
-      }
-
+      _millisLyric = _updateLyricList(song);
       _displayingTitle.value = '${song.artist} - ${song.title}';
     }
 
@@ -118,12 +106,10 @@ class WindowController extends GetxController {
     final artist = song.artist;
     final title = song.title;
     final key = '$artist - $title';
-    // log('artist: $artist, title: $title, key: $key');
 
-    // log('box contains $key: ${_songBox!.containsKey(key)}');
-    if (!_songBox!.containsKey(key)) return [];
+    if (!_songBox.hasKey(key)) return [];
 
-    final lyric = Lyric.fromMap((_songBox!.get(key)) as Map);
+    final lyric = Lyric.fromMap((_songBox.getSongMap(key)));
     const pattern = r'[0-9]{2}:[0-9]{2}.[0-9]{2}';
     final regExp = RegExp(pattern);
 

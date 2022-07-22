@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
-import 'package:floating_lyric/lyric.dart';
-import 'package:floating_lyric/song.dart';
-import 'package:floating_lyric/window_controller.dart';
+import 'package:floating_lyric/models/song.dart';
+import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:system_alert_window/system_alert_window.dart';
+import '../singletons/window_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   late StreamSubscription _streamSubscription;
   final StreamController<Song> _songStreamController = StreamController();
   final WindowController _windowController = WindowController();
+  final _songBox = SongBox();
 
   @override
   void initState() {
@@ -100,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                     child: SizedBox(
                       height: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () => importLRC(),
+                        onPressed: () => _songBox.importLRC(),
                         label: const Text('Import LRC'),
                         icon: const Icon(Icons.add),
                       ),
@@ -110,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                     child: SizedBox(
                       height: double.infinity,
                       child: ElevatedButton.icon(
-                        onPressed: () => clearDB(),
+                        onPressed: () => _songBox.clearDB(),
                         label: const Text('Clear DB'),
                         icon: const Icon(Icons.delete),
                       ),
@@ -123,52 +121,6 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-  }
-
-  void clearDB() {
-    try {
-      Hive.boxExists('song_box').then((exists) {
-        if (exists) {
-          Hive.openBox('song_box').then((box) => box.clear());
-        }
-      });
-    } catch (e) {
-      log('clearDB error: $e');
-    }
-  }
-
-  Future<void> importLRC() async {
-    String? selectedDirectory = await FilePicker.platform.getDirectoryPath();
-
-    if (selectedDirectory == null) return;
-
-    log("Selected directory: $selectedDirectory");
-
-    final List<FileSystemEntity> entities =
-        Directory(selectedDirectory).listSync().toList();
-
-    final box = await Hive.openBox('song_box');
-    for (var item in entities) {
-      if (item is File) {
-        final fileNameWithExt = item.path.split('/').last;
-        final name = fileNameWithExt.split('.').first;
-        final fileExt = fileNameWithExt.split('.').last;
-
-        if (fileExt.toLowerCase() == 'lrc') {
-          File f = File(item.path);
-
-          final singer = name.split('-').first;
-          final song = name.split('-').last;
-          final content = f.readAsLinesSync();
-
-          final lyric = Lyric(singer: singer, song: song, content: content);
-
-          box.put('$singer-$song', lyric.toJson());
-
-          log('key: $singer-$song');
-        }
-      }
-    }
   }
 
   Widget buildSongStreamer() {

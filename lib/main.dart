@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'homepage.dart';
+import 'singletons/song_box.dart';
+import 'ui/homepage.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Hive.initFlutter().then((_) => runApp(const MyApp()));
+  await Hive.initFlutter();
+  await SongBox().openBox();
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

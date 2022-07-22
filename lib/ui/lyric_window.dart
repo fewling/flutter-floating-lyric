@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:system_alert_window/system_alert_window.dart';
-import 'window_controller.dart';
+import '../singletons/window_controller.dart';
 
 class LyricWindow {
   // singleton constructor
