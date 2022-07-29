@@ -1,8 +1,11 @@
 import 'package:floating_lyric/singletons/window_controller.dart';
+import 'package:floating_lyric/ui/homepage.dart';
+import 'package:floating_lyric/ui/permission_page.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'singletons/permission_manager.dart';
 import 'singletons/song_box.dart';
-import 'ui/homepage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,8 +13,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   await SongBox().openBox();
   WindowController().init();
-
-  runApp(const MyApp());
+  PermissionManager().init().then((value) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +24,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.deepPurple, useMaterial3: true),
-      home: const HomePage(),
+      home: Obx(
+        () => PermissionManager().isSystemAlertWindowGranted
+            ? const HomePage()
+            : const PermissionPage(),
+      ),
     );
   }
 }
