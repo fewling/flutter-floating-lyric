@@ -1,3 +1,4 @@
+import 'package:floating_lyric/singletons/window_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'singletons/song_box.dart';
@@ -8,6 +9,7 @@ Future<void> main() async {
 
   await Hive.initFlutter();
   await SongBox().openBox();
+  WindowController().init();
 
   runApp(const MyApp());
 }

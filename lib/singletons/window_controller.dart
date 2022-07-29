@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/lyric.dart';
 import '../ui/lyric_window.dart';
 import '../models/song.dart';
@@ -12,11 +13,26 @@ class WindowController extends GetxController {
   static final WindowController _instance = WindowController._();
   WindowController._();
 
+  void init() {
+    SharedPreferences.getInstance().then((value) {
+      _prefs = value;
+
+      _textColor.value = _prefs!.getInt('color') == null
+          ? Colors.deepPurple.shade300
+          : Color(_prefs!.getInt('color')!);
+
+      _backgroundOpcity.value = _prefs!.getDouble('opacity') == null
+          ? 0.0
+          : _prefs!.getDouble('opacity')!;
+    });
+  }
+
   // non-reactive properties
   final _songBox = SongBox();
   final _lyricWindow = LyricWindow();
   var _playingSong = Song();
   var _millisLyric = <Map<int, String>>[];
+  SharedPreferences? _prefs;
 
   // reactive properties:
   final _displayingTitle = ''.obs;
@@ -50,11 +66,13 @@ class WindowController extends GetxController {
 
   set textColor(Color color) {
     _textColor.value = color;
+    _prefs?.setInt('color', color.value);
     _updateWindow(uiUpdate: true);
   }
 
   set backgroundOpcity(double opacity) {
     _backgroundOpcity.value = opacity;
+    _prefs?.setDouble('opacity', opacity);
     _updateWindow(uiUpdate: true);
   }
 
