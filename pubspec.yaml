@@ -19,6 +19,7 @@ dependencies:
   get: ^4.6.5
   shared_preferences: ^2.0.15
   permission_handler: ^10.0.0
+  awesome_notifications: ^0.6.21
   
 dev_dependencies:
   flutter_test:
