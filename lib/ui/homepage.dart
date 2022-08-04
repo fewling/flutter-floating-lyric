@@ -1,9 +1,5 @@
-import 'dart:async';
-import 'dart:developer';
-import 'package:floating_lyric/models/song.dart';
 import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:system_alert_window/system_alert_window.dart';
@@ -17,9 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const _eventChannel = EventChannel('event_channel');
-  late StreamSubscription _streamSubscription;
-  final StreamController<Song> _songStreamController = StreamController();
   final WindowController _windowController = WindowController();
   final _songBox = SongBox();
 
@@ -30,23 +23,7 @@ class _HomePageState extends State<HomePage> {
     SystemAlertWindow.requestPermissions(
         prefMode: SystemWindowPrefMode.OVERLAY);
 
-    _streamSubscription = _eventChannel.receiveBroadcastStream().listen(
-        (data) => _songStreamController.add(Song.fromMap(data as Map)),
-        onError: (error) => log('Received error: ${error.message}'),
-        cancelOnError: true);
-
-    _songStreamController.stream
-        .listen((song) => _windowController.song = song);
-
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _streamSubscription.cancel();
-    _songStreamController.close();
-
-    super.dispose();
   }
 
   @override
@@ -119,30 +96,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget buildSongStreamer() {
-    return Center(
-      child: StreamBuilder<Song>(
-        stream: _songStreamController.stream,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            Song song = snapshot.data!;
-            return Text(
-              '${song.title} - ${song.artist}',
-              style: Theme.of(context).textTheme.headline4,
-            );
-          } else if (snapshot.hasError) {
-            return Text(
-              'Error: ${snapshot.error}',
-              style: Theme.of(context).textTheme.headline4,
-            );
-          } else {
-            return const Text('Waiting for data...');
-          }
-        },
       ),
     );
   }
