@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:developer';
+import 'package:flutter/services.dart';
+import '../models/song.dart';
 import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -13,6 +17,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  static const _eventChannel = EventChannel('event_channel');
+  late StreamSubscription _streamSubscription;
+  final StreamController<Song> _songStreamController = StreamController();
   final WindowController _windowController = WindowController();
   final _songBox = SongBox();
 
@@ -20,10 +27,26 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     Get.put(_windowController);
 
+    _streamSubscription = _eventChannel.receiveBroadcastStream().listen(
+        (data) => _songStreamController.add(Song.fromMap(data as Map)),
+        onError: (error) => log('Received error: ${error.message}'),
+        cancelOnError: true);
+
+    _songStreamController.stream
+        .listen((song) => _windowController.song = song);
+
     SystemAlertWindow.requestPermissions(
         prefMode: SystemWindowPrefMode.OVERLAY);
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    _songStreamController.close();
+
+    super.dispose();
   }
 
   @override
