@@ -5,11 +5,6 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionManager extends GetxController {
-  // singleton constructor
-  factory PermissionManager() => _instance;
-  static final PermissionManager _instance = PermissionManager._();
-  PermissionManager._();
-
   Future<void> init() async {
     await AwesomeNotifications().initialize(
         null,

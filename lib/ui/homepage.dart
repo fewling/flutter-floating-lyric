@@ -20,12 +20,12 @@ class _HomePageState extends State<HomePage> {
   static const _eventChannel = EventChannel('event_channel');
   late StreamSubscription _streamSubscription;
   final StreamController<Song> _songStreamController = StreamController();
-  final WindowController _windowController = WindowController();
+  late WindowController _windowController;
   final _songBox = SongBox();
 
   @override
   void initState() {
-    Get.put(_windowController);
+    _windowController = Get.find<WindowController>();
 
     _streamSubscription = _eventChannel.receiveBroadcastStream().listen(
         (data) => _songStreamController.add(Song.fromMap(data as Map)),

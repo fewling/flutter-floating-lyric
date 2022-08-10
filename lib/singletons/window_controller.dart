@@ -8,11 +8,6 @@ import '../models/song.dart';
 import 'song_box.dart';
 
 class WindowController extends GetxController {
-  // singleton constructor
-  factory WindowController() => _instance;
-  static final WindowController _instance = WindowController._();
-  WindowController._();
-
   void init() {
     SharedPreferences.getInstance().then((value) {
       _prefs = value;

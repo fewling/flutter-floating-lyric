@@ -1,7 +1,7 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:floating_lyric/singletons/permission_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 
 class PermissionPage extends StatefulWidget {
   const PermissionPage({Key? key}) : super(key: key);
@@ -11,10 +11,10 @@ class PermissionPage extends StatefulWidget {
 }
 
 class _PermissionPageState extends State<PermissionPage> {
-  final _manager = PermissionManager();
-
   @override
   Widget build(BuildContext context) {
+    final manager = Get.find<PermissionManager>();
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -25,10 +25,10 @@ class _PermissionPageState extends State<PermissionPage> {
             const SizedBox(height: 16),
             Obx(
               () => ElevatedButton.icon(
-                onPressed: _manager.isSystemAlertWindowGranted
+                onPressed: manager.isSystemAlertWindowGranted
                     ? null
-                    : () => _manager.requestSystemAlertWindowPermission(),
-                icon: Icon(_manager.isSystemAlertWindowGranted
+                    : () => manager.requestSystemAlertWindowPermission(),
+                icon: Icon(manager.isSystemAlertWindowGranted
                     ? Icons.check
                     : Icons.unpublished_outlined),
                 label: const Text('System Alert Window'),
@@ -37,10 +37,10 @@ class _PermissionPageState extends State<PermissionPage> {
             const SizedBox(height: 16),
             Obx(
               () => ElevatedButton.icon(
-                onPressed: _manager.isNotificationGranted
+                onPressed: manager.isNotificationGranted
                     ? null
-                    : () => _manager.requestNotificationPermission(),
-                icon: Icon(_manager.isNotificationGranted
+                    : () => manager.requestNotificationPermission(),
+                icon: Icon(manager.isNotificationGranted
                     ? Icons.check
                     : Icons.unpublished_outlined),
                 label: const Text('Notification'),
