@@ -53,6 +53,7 @@ class WindowController extends GetxController {
     if (_playingSong.title != song.title) {
       _millisLyric = _updateLyricList(song);
       _displayingTitle.value = '${song.artist} - ${song.title}';
+      _displayingLyric.value = '';
     }
 
     _playingSong = song;

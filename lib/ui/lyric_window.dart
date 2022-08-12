@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:system_alert_window/system_alert_window.dart';
@@ -62,6 +63,7 @@ class LyricWindow {
     final controller = Get.find<WindowController>();
     SystemWindowHeader header = buildHeader(controller);
     SystemWindowBody body = buildBody(controller);
+    log('displaying title: ${controller.displayingTitle}');
 
     SystemAlertWindow.updateSystemWindow(
       height: 150,

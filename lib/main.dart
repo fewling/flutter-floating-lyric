@@ -1,5 +1,5 @@
 import 'package:floating_lyric/singletons/window_controller.dart';
-import 'package:floating_lyric/ui/homepage.dart';
+import 'package:floating_lyric/ui/base_container.dart';
 import 'package:floating_lyric/ui/permission_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple, useMaterial3: true),
       home: Obx(
         () => manager.isSystemAlertWindowGranted
-            ? const HomePage()
+            ? const BaseContainer()
             : const PermissionPage(),
       ),
     );

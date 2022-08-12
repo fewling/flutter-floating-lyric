@@ -14,12 +14,16 @@ class SongBox {
   Box? _songBox;
   final String _boxName = 'song_box';
 
+  int get size => _songBox!.length;
+
   Future<void> openBox() =>
       Hive.openBox(_boxName).then((box) => _songBox = box);
 
   bool hasKey(String key) => _songBox!.containsKey(key);
 
   Map getSongMap(String key) => _songBox!.get(key) as Map;
+
+  String getTitleByIndex(int index) => _songBox!.keyAt(index).toString();
 
   // methods:
   void clearDB() => _songBox!.clear();
