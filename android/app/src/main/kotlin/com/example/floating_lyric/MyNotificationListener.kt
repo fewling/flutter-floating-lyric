@@ -62,9 +62,22 @@ class MyNotificationListener : NotificationListenerService() {
             controller = MediaController(applicationContext, token)
 
 
-            /* Get the music info base on the displaying texts, default format: <title> - <singer> */
-            singer = sbn.notification.extras[Notification.EXTRA_TEXT].toString()
-            song = sbn.notification.extras[Notification.EXTRA_TITLE].toString()
+            /* Get the music info from the MediaController */
+            song = controller?.metadata?.description?.title.toString()
+            singer = controller?.metadata?.description?.subtitle.toString()
+//            val album = controller?.metadata?.description?.description.toString()
+
+            Log.i(TAG, "metadata.description: ${controller?.metadata?.description}")
+            Log.i(TAG, "title: ${controller?.metadata?.description?.title}")
+            Log.i(TAG, "subtitle: ${controller?.metadata?.description?.subtitle}")
+            Log.i(TAG, "description: ${controller?.metadata?.description?.description}")
+
+            /* Sample results:
+            I/MyNotificationListener(24170): metadata.description: 前世情人, 周杰倫, 周杰倫的床邊故事
+            I/MyNotificationListener(24170): title: 前世情人
+            I/MyNotificationListener(24170): subtitle: 周杰倫
+            I/MyNotificationListener(24170): description: 周杰倫的床邊故事
+            */
 
             startMoovRunnable()
         }
