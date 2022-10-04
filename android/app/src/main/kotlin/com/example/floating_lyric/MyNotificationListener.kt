@@ -6,10 +6,12 @@ import android.content.Intent
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSession
+import android.os.Build
 import android.os.Handler
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import androidx.annotation.RequiresApi
 
 
 class MyNotificationListener : NotificationListenerService() {
@@ -34,9 +36,29 @@ class MyNotificationListener : NotificationListenerService() {
     /**
      * Listen to event occurs in Notification Section
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
         // Log.i(TAG, "onNotificationPosted: ${sbn?.notification}")
+
+        checkAndUpdate(sbn)
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onListenerConnected() {
+        super.onListenerConnected()
+        val notifications = activeNotifications
+
+        for (notification in notifications) {
+            checkAndUpdate(notification)
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun checkAndUpdate(sbn: StatusBarNotification?) {
 
         /* Check if notification event caused by MOOV: */
         if (sbn?.packageName.equals("com.now.moov")) {
@@ -81,8 +103,8 @@ class MyNotificationListener : NotificationListenerService() {
 
             startMoovRunnable()
         }
-
     }
+
 
     /**
      * Loop the lyric update mechanism every 100ms
