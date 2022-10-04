@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/lyric.dart';
@@ -8,7 +9,23 @@ import '../models/song.dart';
 import 'song_box.dart';
 
 class WindowController extends GetxController {
-  void init() {
+  Future<void> init() async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onReceive,
+      onDidReceiveBackgroundNotificationResponse: onBackgroundReceive,
+    );
+
     SharedPreferences.getInstance().then((value) {
       _prefs = value;
 
@@ -20,6 +37,20 @@ class WindowController extends GetxController {
           ? 0.0
           : _prefs!.getDouble('opacity')!;
     });
+  }
+
+  void onReceive(NotificationResponse notificationResponse) async {
+    final payload = notificationResponse.payload;
+    log('notification payload: $payload');
+  }
+
+  /// Functions passed to the [onDidReceiveBackgroundNotificationResponse] callback need to be
+  /// annotated with the @pragma('vm:entry-point') annotation to ensure they are not stripped out by the Dart compiler.
+  @pragma('vm:entry-point')
+  static void onBackgroundReceive(
+      NotificationResponse notificationResponse) async {
+    final payload = notificationResponse.payload;
+    log('Background Notification payload: $payload');
   }
 
   // non-reactive properties
@@ -44,10 +75,11 @@ class WindowController extends GetxController {
   double get backgroundOpcity => _backgroundOpcity.value;
   bool get isShowingWindow => _isShowingWindow.value;
   bool get shouldShowWindow => _shouldShowWindow.value;
+  Song get song => _playingSong;
 
   // setters
   set song(Song song) {
-    log('set song: $song, \nplayingSong: $_playingSong');
+    // log('set song: $song, \nplayingSong: $_playingSong');
 
     // update lyric list when song changed:
     if (_playingSong.title != song.title) {
@@ -88,13 +120,15 @@ class WindowController extends GetxController {
   }
 
   void _updateWindow({bool uiUpdate = false}) {
+    _showNotificationWithChronometer();
+
     if (!shouldShowWindow) return;
 
     if (uiUpdate) {
       _lyricWindow.update();
     } else if (_millisLyric.isNotEmpty) {
       final currentDuration = int.parse(_playingSong.currentDuration);
-      log(_millisLyric.length.toString());
+      // log(_millisLyric.length.toString());
 
       for (final lyric in _millisLyric.reversed) {
         final timeKey = lyric.keys.first;
@@ -154,5 +188,25 @@ class WindowController extends GetxController {
 
     lyricList.sort((a, b) => a.keys.first.compareTo(b.keys.first));
     return lyricList;
+  }
+
+  Future<void> _showNotificationWithChronometer() async {
+    final AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      '515',
+      'Floating Lyric Window Controller',
+      channelDescription:
+          'notfication channels to control the visibility of floating window',
+      category: AndroidNotificationCategory.service,
+      enableVibration: false,
+      progress: int.tryParse(song.currentDuration) ?? 0,
+      maxProgress: int.tryParse(song.maxDuration) ?? 0,
+      showProgress: true,
+    );
+
+    final details = NotificationDetails(android: androidDetails);
+
+    await FlutterLocalNotificationsPlugin()
+        .show(0, 'Floating Lyric Window Controller', 'Tab to app', details);
   }
 }

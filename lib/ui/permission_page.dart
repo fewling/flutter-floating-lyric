@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:floating_lyric/singletons/permission_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,34 +32,6 @@ class _PermissionPageState extends State<PermissionPage> {
                     : Icons.unpublished_outlined),
                 label: const Text('System Alert Window'),
               ),
-            ),
-            const SizedBox(height: 16),
-            Obx(
-              () => ElevatedButton.icon(
-                onPressed: manager.isNotificationGranted
-                    ? null
-                    : () => manager.requestNotificationPermission(),
-                icon: Icon(manager.isNotificationGranted
-                    ? Icons.check
-                    : Icons.unpublished_outlined),
-                label: const Text('Notification'),
-              ),
-            ),
-
-            /// For testing notifications:
-            ElevatedButton(
-              onPressed: () {
-                AwesomeNotifications().createNotification(
-                  content: NotificationContent(
-                    id: 0,
-                    channelKey: 'basic_channel',
-                    body: 'This is a test notification',
-                    title: 'Test notification',
-                    color: Colors.deepPurple,
-                  ),
-                );
-              },
-              child: const Text('test'),
             ),
           ],
         ),

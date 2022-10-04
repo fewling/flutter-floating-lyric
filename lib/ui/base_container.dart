@@ -4,6 +4,7 @@ import 'package:floating_lyric/ui/homepage.dart';
 import 'package:floating_lyric/ui/lyric_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:system_alert_window/system_alert_window.dart';
 
@@ -51,6 +52,7 @@ class _BaseContainerState extends State<BaseContainer> {
 
     _streamSubscription.cancel();
     _songStreamController.close();
+    FlutterLocalNotificationsPlugin().cancelAll();
 
     super.dispose();
   }
@@ -67,7 +69,7 @@ class _BaseContainerState extends State<BaseContainer> {
         onTap: (index) => setState(() => _index = index),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lyric List'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lyrics'),
         ],
       ),
     );

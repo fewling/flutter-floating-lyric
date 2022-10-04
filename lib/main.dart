@@ -13,8 +13,10 @@ Future<void> main() async {
   await Hive.initFlutter();
   await SongBox().openBox();
 
-  final windowController = WindowController()..init();
+  final windowController = WindowController();
   final permissionManager = PermissionManager();
+
+  await windowController.init();
   await permissionManager.init();
 
   Get.put(windowController);
