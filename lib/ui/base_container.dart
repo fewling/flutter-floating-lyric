@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:floating_lyric/ui/homepage.dart';
 import 'package:floating_lyric/ui/lyric_list.dart';
+import 'package:floating_lyric/ui/lyric_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -52,6 +53,7 @@ class _BaseContainerState extends State<BaseContainer> {
 
     _streamSubscription.cancel();
     _songStreamController.close();
+    LyricWindow().close();
     FlutterLocalNotificationsPlugin().cancelAll();
 
     super.dispose();
