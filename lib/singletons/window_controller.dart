@@ -195,9 +195,10 @@ class WindowController extends GetxController {
         AndroidNotificationDetails(
       '515',
       'Floating Lyric Window Controller',
-      channelDescription:
-          'notfication channels to control the visibility of floating window',
+      channelDescription: 'Control the visibility of floating window',
       category: AndroidNotificationCategory.service,
+      importance: Importance.low,
+      priority: Priority.low,
       enableVibration: false,
       progress: int.tryParse(song.currentDuration) ?? 0,
       maxProgress: int.tryParse(song.maxDuration) ?? 0,
