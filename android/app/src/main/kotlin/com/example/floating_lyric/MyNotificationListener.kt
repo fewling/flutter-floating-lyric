@@ -59,50 +59,32 @@ class MyNotificationListener : NotificationListenerService() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkAndUpdate(sbn: StatusBarNotification?) {
+        if (!sbn?.packageName.equals("com.example.floating_lyric")) {
 
-        /* Check if notification event caused by MOOV: */
-        if (sbn?.packageName.equals("com.now.moov")) {
+            if (sbn?.notification?.extras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
 
-            /* Check if the MOOV notification event involves media session: */
-            // Log.i(
-            //     TAG,
-            //     "moov media session: ${sbn?.notification?.extras?.get(Notification.EXTRA_MEDIA_SESSION)}"
-            // )
-            if (sbn?.notification?.extras?.get(Notification.EXTRA_MEDIA_SESSION) == null)
-                return
-
-            /* Get the MediaSession token which belongs to MOOV: */
-            // Log.i(
-            //     TAG,
-            //     "moov Token: ${sbn.notification.extras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token}"
-            // )
-            val token: MediaSession.Token =
-                sbn.notification.extras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
+                val token: MediaSession.Token = sbn.notification.extras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
 
 
-            /* Get the MediaController from the MOOV MediaSession token: */
-            controller = MediaController(applicationContext, token)
+                /* Get the MediaController from the MOOV MediaSession token: */
+                controller = MediaController(applicationContext, token)
+    
+    
+                /* Get the music info from the MediaController */
+                song = controller?.metadata?.description?.title.toString()
+                singer = controller?.metadata?.description?.subtitle.toString()
+    
+                Log.i(TAG, "metadata.description: ${controller?.metadata?.description}")
+                Log.i(TAG, "title: ${controller?.metadata?.description?.title}")
+                Log.i(TAG, "subtitle: ${controller?.metadata?.description?.subtitle}")
+                Log.i(TAG, "description: ${controller?.metadata?.description?.description}")
 
+                startMoovRunnable()
 
-            /* Get the music info from the MediaController */
-            song = controller?.metadata?.description?.title.toString()
-            singer = controller?.metadata?.description?.subtitle.toString()
-//            val album = controller?.metadata?.description?.description.toString()
-
-            Log.i(TAG, "metadata.description: ${controller?.metadata?.description}")
-            Log.i(TAG, "title: ${controller?.metadata?.description?.title}")
-            Log.i(TAG, "subtitle: ${controller?.metadata?.description?.subtitle}")
-            Log.i(TAG, "description: ${controller?.metadata?.description?.description}")
-
-            /* Sample results:
-            I/MyNotificationListener(24170): metadata.description: 前世情人, 周杰倫, 周杰倫的床邊故事
-            I/MyNotificationListener(24170): title: 前世情人
-            I/MyNotificationListener(24170): subtitle: 周杰倫
-            I/MyNotificationListener(24170): description: 周杰倫的床邊故事
-            */
-
-            startMoovRunnable()
+    
+            }
         }
+
     }
 
 
