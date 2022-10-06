@@ -158,7 +158,7 @@ class WindowController extends GetxController {
     if (!_songBox.hasKey(key)) return [];
 
     final lyric = Lyric.fromMap((_songBox.getSongMap(key)));
-    const pattern = r'[0-9]{2}:[0-9]{2}.[0-9]{2}';
+    const pattern = r'\[[0-9]{2}:[0-9]{2}.[0-9]{2}\]';
     final regExp = RegExp(pattern);
 
     for (final line in lyric.content) {
@@ -166,6 +166,7 @@ class WindowController extends GetxController {
 
       for (final m in matches) {
         final l = m.input;
+        log('line: $l');
 
         final lastBracketIndex = l.lastIndexOf(']') + 1;
         final content = l.substring(lastBracketIndex);
