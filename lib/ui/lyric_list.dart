@@ -9,7 +9,10 @@ class LyricList extends StatelessWidget {
     final songBox = SongBox();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Your lyrics')),
+      appBar: AppBar(
+        leading: const Icon(Icons.file_copy_outlined),
+        title: const Text('Your lyric files'),
+      ),
       body: ListView.builder(
         itemCount: songBox.size,
         itemBuilder: (context, index) {

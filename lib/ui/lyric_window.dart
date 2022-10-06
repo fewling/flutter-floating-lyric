@@ -51,6 +51,7 @@ class LyricWindow {
     SystemWindowBody body = buildBody(controller);
 
     SystemAlertWindow.showSystemWindow(
+      width: (controller.maxWidth * (controller.widthProportion / 100)).toInt(),
       height: 150,
       header: header,
       body: body,
@@ -64,8 +65,11 @@ class LyricWindow {
     SystemWindowHeader header = buildHeader(controller);
     SystemWindowBody body = buildBody(controller);
     log('displaying title: ${controller.displayingTitle}');
+    log('${(controller.maxWidth * (controller.widthProportion / 100))}');
+    log('percent: ${controller.widthProportion}');
 
     SystemAlertWindow.updateSystemWindow(
+      width: (controller.maxWidth * (controller.widthProportion / 100)).toInt(),
       height: 150,
       header: header,
       body: body,

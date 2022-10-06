@@ -36,6 +36,10 @@ class WindowController extends GetxController {
       _backgroundOpcity.value = _prefs!.getDouble('opacity') == null
           ? 0.0
           : _prefs!.getDouble('opacity')!;
+
+      _widthProportion.value = _prefs!.getDouble('width') == null
+          ? 100.0
+          : _prefs!.getDouble('width')!;
     });
   }
 
@@ -59,6 +63,7 @@ class WindowController extends GetxController {
   var _playingSong = Song();
   var _millisLyric = <Map<int, String>>[];
   SharedPreferences? _prefs;
+  double maxWidth = 1000;
 
   // reactive properties:
   final _displayingTitle = ''.obs;
@@ -67,6 +72,7 @@ class WindowController extends GetxController {
   final _shouldShowWindow = false.obs;
   final _textColor = Colors.deepPurple.shade300.obs;
   final _backgroundOpcity = 0.0.obs;
+  final _widthProportion = 100.0.obs;
 
   // getters
   String get displayingTitle => _displayingTitle.value;
@@ -76,6 +82,7 @@ class WindowController extends GetxController {
   bool get isShowingWindow => _isShowingWindow.value;
   bool get shouldShowWindow => _shouldShowWindow.value;
   Song get song => _playingSong;
+  double get widthProportion => _widthProportion.value;
 
   // setters
   set song(Song song) {
@@ -101,6 +108,12 @@ class WindowController extends GetxController {
   set backgroundOpcity(double opacity) {
     _backgroundOpcity.value = opacity;
     _prefs?.setDouble('opacity', opacity);
+    _updateWindow(uiUpdate: true);
+  }
+
+  set widthProportion(double percentage) {
+    _widthProportion.value = percentage;
+    _prefs?.setDouble('width', percentage);
     _updateWindow(uiUpdate: true);
   }
 
