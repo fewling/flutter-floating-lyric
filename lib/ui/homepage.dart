@@ -116,7 +116,10 @@ class HomePage extends StatelessWidget {
 
                 return Text(
                   '$prefix${windowController.displayingTitle}.lrc',
-                  style: TextStyle(color: color, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: color,
+                        fontWeight: FontWeight.bold,
+                      ),
                 );
               }),
 
@@ -201,10 +204,20 @@ class HomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 16),
+
+              Text(
+                'If the window still not showing the lyric, please check if you have the correct filename and content.',
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(color: Colors.grey),
+              ),
+
+              const SizedBox(height: 16),
               const Divider(),
 
               Text(
-                'A typical .LRC file: ',
+                'A typical .LRC file looks like this: ',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium!
