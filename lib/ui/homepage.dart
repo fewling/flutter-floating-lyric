@@ -29,6 +29,14 @@ class HomePage extends StatelessWidget {
                   )),
             ),
 
+            Obx(() {
+              final prefix = songBox.hasSong(
+                      windowController.song.artist, windowController.song.title)
+                  ? 'Using: '
+                  : 'Could not find: ';
+              return Text('$prefix${windowController.displayingTitle}.lrc');
+            }),
+
             //* Opacity slider:
             Obx(() => Slider(
                   label: windowController.backgroundOpcity.toString(),

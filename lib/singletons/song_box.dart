@@ -21,6 +21,8 @@ class SongBox {
 
   bool hasKey(String key) => _songBox!.containsKey(key);
 
+  bool hasSong(String artist, String title) => hasKey('$artist - $title');
+
   Map getSongMap(String key) => _songBox!.get(key) as Map;
 
   String getTitleByIndex(int index) => _songBox!.keyAt(index).toString();
