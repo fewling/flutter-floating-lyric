@@ -40,7 +40,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.deepPurple, useMaterial3: true),
       home: Obx(
-        () => manager.isSystemAlertWindowGranted
+        () => manager.isSystemAlertWindowGranted &&
+                manager.isNotificationListenerGranted
             ? const BaseContainer()
             : const PermissionPage(),
       ),

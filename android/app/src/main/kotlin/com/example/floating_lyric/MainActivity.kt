@@ -6,9 +6,11 @@ import android.content.IntentFilter
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import androidx.annotation.RequiresApi
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 
 class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
@@ -16,18 +18,52 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
     private val EVENT_CHANNEL = "Floating Lyric Channel"
     private lateinit var eventChannel: EventChannel
 
+    private val METHOD_CHANNEL = "floating_lyric/method_channel"
+
+    private val REQUEST_CODE_NOTIFICATION_LISTENER = 1
+
+    private lateinit var _methodChannelResult: MethodChannel.Result
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        val isNotificationServiceRunning = isNotificationServiceRunning()
-        if (!isNotificationServiceRunning) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            METHOD_CHANNEL
+        ).setMethodCallHandler { call, result ->
+            _methodChannelResult = result
+
+            // This method is invoked on the main thread.
+            if (call.method == "checkNotificationListenerPermission") {
+
+                _methodChannelResult.success(isNotificationServiceRunning())
+
+            } else if (call.method == "requestNotificationListenerPermission") {
+                val isNotificationServiceRunning = isNotificationServiceRunning()
+                if (!isNotificationServiceRunning) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        startActivityForResult(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS), REQUEST_CODE_NOTIFICATION_LISTENER)
+                    }
+                }
+            } else {
+                _methodChannelResult.notImplemented()
             }
         }
 
+
+
+
         eventChannel = EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_CHANNEL)
         eventChannel.setStreamHandler(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode === REQUEST_CODE_NOTIFICATION_LISTENER) {
+            _methodChannelResult.success(isNotificationServiceRunning())
+        }
     }
 
 
@@ -72,5 +108,4 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
         val packageName = packageName
         return enabledNotificationListeners.contains(packageName)
     }
-
 }
