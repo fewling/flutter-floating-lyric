@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-import 'package:floating_lyric/ui/lyric_color_picker.dart';
+import 'package:floating_lyric/ui/instruction.dart';
 import 'package:floating_lyric/ui/homepage.dart';
 import 'package:floating_lyric/ui/lyric_list.dart';
 import 'package:floating_lyric/ui/lyric_window.dart';
@@ -22,13 +22,13 @@ class BaseContainer extends StatefulWidget {
 
 class _BaseContainerState extends State<BaseContainer> {
   int _index = 0;
-  final _pages = [
-    const HomePage(),
-    const LyricList(),
-    const LyricColorPicker(),
+  final _pages = const [
+    HomePage(),
+    LyricList(),
+    InstructionPage(),
   ];
 
-  static const _eventChannel = EventChannel('event_channel');
+  static const _eventChannel = EventChannel('Floating Lyric Channel');
   late StreamSubscription _streamSubscription;
   final StreamController<Song> _songStreamController = StreamController();
 
@@ -74,6 +74,7 @@ class _BaseContainerState extends State<BaseContainer> {
         child: _pages[_index],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _index,
         onTap: (index) => setState(() => _index = index),
         items: const [
@@ -81,7 +82,7 @@ class _BaseContainerState extends State<BaseContainer> {
               icon: Icon(Icons.window_outlined), label: 'Window'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lyrics'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.color_lens_rounded), label: 'Colours'),
+              icon: Icon(Icons.question_mark_outlined), label: 'How to Use'),
         ],
       ),
     );

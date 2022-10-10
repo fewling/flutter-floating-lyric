@@ -13,7 +13,7 @@ import io.flutter.plugin.common.EventChannel
 
 class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
     private val TAG = "MainActivity"
-    private val EVENT_CHANNEL = "event_channel"
+    private val EVENT_CHANNEL = "Floating Lyric Channel"
     private lateinit var eventChannel: EventChannel
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {

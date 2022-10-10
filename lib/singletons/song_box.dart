@@ -28,7 +28,7 @@ class SongBox {
   String getTitleByIndex(int index) => _songBox!.keyAt(index).toString();
 
   // methods:
-  void clearDB() => _songBox!.clear();
+  Future<int> clearDB() => _songBox!.clear();
 
   Future<void> importLRC() async {
     String? selectedDirectory = await FilePicker.platform.getDirectoryPath();

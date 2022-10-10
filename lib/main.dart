@@ -1,3 +1,4 @@
+import 'package:floating_lyric/singletons/expansion_panel_controller.dart';
 import 'package:floating_lyric/singletons/window_controller.dart';
 import 'package:floating_lyric/ui/base_container.dart';
 import 'package:floating_lyric/ui/permission_page.dart';
@@ -15,12 +16,15 @@ Future<void> main() async {
 
   final windowController = WindowController();
   final permissionManager = PermissionManager();
+  final expansionController = ExpansionPanelController();
 
   await windowController.init();
   await permissionManager.init();
+  await expansionController.init();
 
   Get.put(windowController);
   Get.put(permissionManager);
+  Get.put(expansionController);
 
   runApp(const MyApp());
 }
