@@ -23,6 +23,7 @@ dependencies:
   introduction_screen: ^3.0.2
   lottie: ^1.4.3
   feature_discovery: ^0.14.1
+  change_app_package_name: ^1.1.0
 
 dev_dependencies:
   flutter_test:

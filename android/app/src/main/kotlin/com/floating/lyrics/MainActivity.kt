@@ -1,4 +1,4 @@
-package com.example.floating_lyric
+package com.floating.lyrics
 
 import android.content.ContentResolver
 import android.content.Intent
@@ -105,7 +105,7 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
         val contentResolver: ContentResolver = contentResolver
         val enabledNotificationListeners: String =
             Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
-        val packageName = packageName
-        return enabledNotificationListeners.contains(packageName)
+        val package com.floating.lyrics
+        return enabledNotificationListeners.contains(package com.floating.lyrics
     }
 }
