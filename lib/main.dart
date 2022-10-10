@@ -1,3 +1,4 @@
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:floating_lyric/singletons/expansion_panel_controller.dart';
 import 'package:floating_lyric/singletons/window_controller.dart';
 import 'package:floating_lyric/ui/base_container.dart';
@@ -36,14 +37,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final manager = Get.find<PermissionManager>();
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.deepPurple, useMaterial3: true),
-      home: Obx(
-        () => manager.isSystemAlertWindowGranted &&
-                manager.isNotificationListenerGranted
-            ? const BaseContainer()
-            : const PermissionPage(),
+    return FeatureDiscovery(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(primarySwatch: Colors.deepPurple, useMaterial3: true),
+        home: Obx(
+          () => manager.isSystemAlertWindowGranted &&
+                  manager.isNotificationListenerGranted
+              ? const BaseContainer()
+              : const PermissionPage(),
+        ),
       ),
     );
   }

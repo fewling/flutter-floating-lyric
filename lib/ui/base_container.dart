@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
+import 'package:feature_discovery/feature_discovery.dart';
 import 'package:floating_lyric/ui/instruction.dart';
 import 'package:floating_lyric/ui/homepage.dart';
 import 'package:floating_lyric/ui/lyric_list.dart';
 import 'package:floating_lyric/ui/lyric_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,8 @@ class BaseContainer extends StatefulWidget {
 }
 
 class _BaseContainerState extends State<BaseContainer> {
+  String _featureId = 'id_how_to_use';
+
   int _index = 0;
   final _pages = const [
     HomePage(),
@@ -48,6 +52,13 @@ class _BaseContainerState extends State<BaseContainer> {
 
     SystemAlertWindow.requestPermissions(
         prefMode: SystemWindowPrefMode.OVERLAY);
+
+    SchedulerBinding.instance.addPostFrameCallback((Duration duration) {
+      FeatureDiscovery.discoverFeatures(
+        context,
+        [_featureId],
+      );
+    });
 
     super.initState();
   }
@@ -77,12 +88,25 @@ class _BaseContainerState extends State<BaseContainer> {
         type: BottomNavigationBarType.fixed,
         currentIndex: _index,
         onTap: (index) => setState(() => _index = index),
-        items: const [
+        items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.window_outlined), label: 'Window'),
           BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Lyrics'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.question_mark_outlined), label: 'How to Use'),
+            icon: DescribedFeatureOverlay(
+              featureId: _featureId,
+              tapTarget: Icon(Icons.question_mark_outlined),
+              description: Text(
+                'First-time user may take a look here to learn how to use this app',
+                style: Theme.of(context)
+                    .textTheme
+                    .headlineLarge!
+                    .copyWith(color: Colors.white),
+              ),
+              child: Icon(Icons.question_mark_outlined),
+            ),
+            label: 'How to Use',
+          ),
         ],
       ),
     );
