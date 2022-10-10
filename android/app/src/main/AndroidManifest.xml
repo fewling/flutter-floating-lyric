@@ -7,7 +7,7 @@
 
    <application
    
-        android:label="floating_lyric"
+        android:label="Floating Lyrics"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
