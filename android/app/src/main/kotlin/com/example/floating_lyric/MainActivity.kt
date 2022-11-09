@@ -7,6 +7,9 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
@@ -27,6 +30,11 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        val windowInsetsCompat = WindowInsetsControllerCompat(window, window.decorView)
+        windowInsetsCompat.hide(WindowInsetsCompat.Type.statusBars())
+        windowInsetsCompat.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
