@@ -19,7 +19,6 @@ dependencies:
   get: ^4.6.5
   shared_preferences: ^2.0.15
   permission_handler: ^10.0.0
-  flutter_local_notifications: ^11.0.1
   introduction_screen: ^3.0.2
   lottie: ^1.4.3
   feature_discovery: ^0.14.1
