@@ -83,7 +83,7 @@ class _LyricListState extends State<LyricList> {
                     ],
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ],
             )
           : Center(
@@ -91,14 +91,14 @@ class _LyricListState extends State<LyricList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('No LRC files record'),
-                  SizedBox(height: 16),
+                  const Text('No LRC files record'),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () =>
                         songBox.importLRC().then((_) => setState(() {})),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: [
+                      children: const [
                         Icon(Icons.add),
                         Text('Import from folder'),
                       ],

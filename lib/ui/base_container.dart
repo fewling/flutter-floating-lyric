@@ -65,8 +65,6 @@ class _BaseContainerState extends State<BaseContainer> {
 
   @override
   void dispose() {
-    log('dispose');
-
     _streamSubscription.cancel();
     _songStreamController.close();
     LyricWindow().close();
