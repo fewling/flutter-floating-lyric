@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-
-import 'package:get/get.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
-import '../singletons/permission_manager.dart';
 
-class PermissionPage extends StatelessWidget {
+import 'permission_notifier.dart';
+
+class PermissionPage extends ConsumerWidget {
   const PermissionPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const bodyStyle = TextStyle(fontSize: 19.0);
 
     const pageDecoration = PageDecoration(
@@ -20,7 +20,8 @@ class PermissionPage extends StatelessWidget {
       imagePadding: EdgeInsets.zero,
     );
 
-    final manager = Get.find<PermissionManager>();
+    final permissionState = ref.watch(permissionProvider);
+    final permissionNotifier = ref.watch(permissionProvider.notifier);
 
     return IntroductionScreen(
       pages: [
@@ -30,7 +31,7 @@ class PermissionPage extends StatelessWidget {
             children: [
               const Text(
                 '''
-This app needs to access the music player in the nofication bar to work.
+This app needs to access the music player in the notification bar to work.
 
 Grant Access button -> this app -> Turn on Allow notification access
 ''',
@@ -40,13 +41,15 @@ Grant Access button -> this app -> Turn on Allow notification access
               const SizedBox(height: 8),
               SizedBox(
                 width: 150,
-                child: Obx(
-                  () => ElevatedButton(
-                    onPressed: manager.isNotificationListenerGranted
+                child: permissionState.when(
+                  data: (data) => ElevatedButton(
+                    onPressed: data.notificationListenerGranted
                         ? null
-                        : () => manager.requestNotificationListener(),
+                        : () => permissionNotifier.requestNotificationListener(),
                     child: const Text('Grant Access'),
                   ),
+                  error: (error, stackTrace) => const Text('Error'),
+                  loading: () => const CircularProgressIndicator(),
                 ),
               ),
             ],
@@ -73,12 +76,15 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
               const SizedBox(height: 8),
               SizedBox(
                 width: 150,
-                child: Obx(
-                  () => ElevatedButton(
-                      onPressed: manager.isSystemAlertWindowGranted
-                          ? null
-                          : () => manager.requestSystemAlertWindowPermission(),
-                      child: const Text('Grant Access')),
+                child: permissionState.when(
+                  data: (data) => ElevatedButton(
+                    onPressed: data.systemAlertWindowGranted
+                        ? null
+                        : () => permissionNotifier.requestSystemAlertWindowPermission(),
+                    child: const Text('Grant Access'),
+                  ),
+                  error: (error, stackTrace) => const Text('Error'),
+                  loading: () => const CircularProgressIndicator(),
                 ),
               ),
             ],
@@ -87,7 +93,7 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
           decoration: pageDecoration,
         ),
       ],
-      onDone: () => _onIntroEnd(context),
+      onDone: () => _onIntroEnd(context, ref),
       showSkipButton: false,
       skipOrBackFlex: 0,
       nextFlex: 0,
@@ -96,25 +102,22 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
       next: const Icon(Icons.arrow_forward),
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
       curve: Curves.fastLinearToSlowEaseIn,
-      controlsPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 4.0),
-      dotsDecorator: const DotsDecorator(
-        size: Size(10.0, 10.0),
-        color: Color(0xFFBDBDBD),
-        activeSize: Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(25.0)),
-        ),
+      controlsPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      dotsDecorator: DotsDecorator(
+        size: const Size(10.0, 10.0),
+        color: const Color(0xFFBDBDBD),
+        activeSize: const Size(22.0, 10.0),
+        activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
-      dotsContainerDecorator: const ShapeDecoration(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0)),
-        ),
+      dotsContainerDecorator: ShapeDecoration(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
 
-  void _onIntroEnd(context) {
-    final manager = Get.find<PermissionManager>();
+  void _onIntroEnd(BuildContext context, WidgetRef ref) {
+    final permissionState = ref.watch(permissionProvider);
+    final permissionNotifier = ref.watch(permissionProvider.notifier);
 
     showDialog(
       context: context,
@@ -125,20 +128,25 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Obx(
-                () => ElevatedButton(
-                  onPressed: manager.isNotificationListenerGranted
+              permissionState.when(
+                data: (data) => ElevatedButton(
+                  onPressed: data.notificationListenerGranted
                       ? null
-                      : () => manager.requestNotificationListener(),
+                      : () => permissionNotifier.requestNotificationListener(),
                   child: const Text('Notification Access'),
                 ),
+                error: (_, __) => const Text('Error checking notification listener permission'),
+                loading: () => const CircularProgressIndicator(),
               ),
-              Obx(
-                () => ElevatedButton(
-                    onPressed: manager.isSystemAlertWindowGranted
-                        ? null
-                        : () => manager.requestSystemAlertWindowPermission(),
-                    child: const Text('Display Window Over Apps')),
+              permissionState.when(
+                data: (data) => ElevatedButton(
+                  onPressed: data.systemAlertWindowGranted
+                      ? null
+                      : () => permissionNotifier.requestSystemAlertWindowPermission(),
+                  child: const Text('Display Window Over Apps'),
+                ),
+                error: (error, stackTrace) => const Text('Error'),
+                loading: () => const CircularProgressIndicator(),
               ),
             ],
           )

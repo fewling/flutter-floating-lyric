@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:hive/hive.dart';
+
 import '../models/lyric.dart';
+import '../models/song.dart';
 
 class SongBox {
   // singleton constructor
@@ -16,12 +19,15 @@ class SongBox {
 
   int get size => _songBox!.length;
 
-  Future<void> openBox() =>
-      Hive.openBox(_boxName).then((box) => _songBox = box);
+  Future<void> openBox() => Hive.openBox(_boxName).then((box) => _songBox = box);
 
   bool hasKey(String key) => _songBox!.containsKey(key);
 
-  bool hasSong(String artist, String title) => hasKey('$artist - $title');
+  bool hasSong(Song song) {
+    final artist = song.artist;
+    final title = song.title;
+    return hasKey('$artist - $title');
+  }
 
   Map getSongMap(String key) => _songBox!.get(key) as Map;
 
@@ -37,8 +43,7 @@ class SongBox {
 
     log("Selected directory: $selectedDirectory");
 
-    final List<FileSystemEntity> entities =
-        Directory(selectedDirectory).listSync().toList();
+    final List<FileSystemEntity> entities = Directory(selectedDirectory).listSync().toList();
 
     final box = await Hive.openBox('song_box');
     for (var item in entities) {
