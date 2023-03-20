@@ -14,22 +14,33 @@ final permissionProvider =
 class PermissionNotifier extends AsyncNotifier<PermissionState> {
   @override
   Future<PermissionState> build() async {
+    print('PermissionNotifier.build()');
     final systemAlertWindowGranted = await Permission.systemAlertWindow.isGranted;
     final notificationListenerGranted =
         await platform.invokeMethod(PlatformMethods.checkNotificationListenerPermission.name);
 
+    print('systemAlertWindowGranted build: $systemAlertWindowGranted');
+
     return PermissionState(
       systemAlertWindowGranted: systemAlertWindowGranted,
-      notificationListenerGranted: notificationListenerGranted,
+      notificationListenerGranted: notificationListenerGranted as bool,
     );
   }
 
-  bool allPermissionsGranted() {
-    final value = state.value;
-    if (value == null) return false;
-
-    return value.systemAlertWindowGranted && value.notificationListenerGranted;
-  }
+  bool allPermissionsGranted() => state.when(
+        data: (value) {
+          print('systemAlertWindowGranted: ${value.systemAlertWindowGranted}');
+          return value.systemAlertWindowGranted && value.notificationListenerGranted;
+        },
+        error: (_, __) {
+          print('error: $_');
+          return false;
+        },
+        loading: () {
+          print('loading');
+          return false;
+        },
+      );
 
   void requestSystemAlertWindowPermission() {
     Permission.systemAlertWindow.request().then((permissionStatus) {
@@ -42,8 +53,8 @@ class PermissionNotifier extends AsyncNotifier<PermissionState> {
   }
 
   Future<bool> checkNotificationListenerPermission() async {
-    bool result =
-        await platform.invokeMethod(PlatformMethods.checkNotificationListenerPermission.name);
+    final result = await platform
+        .invokeMethod(PlatformMethods.checkNotificationListenerPermission.name) as bool;
     if (state.value != null) {
       state = AsyncData(
         state.value!.copyWith(notificationListenerGranted: result),

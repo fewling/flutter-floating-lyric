@@ -2,10 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:feature_discovery/feature_discovery.dart';
-import 'package:floating_lyric/screens/instruction/instruction.dart';
-import 'package:floating_lyric/screens/window_settings/window_settings_page.dart';
-import 'package:floating_lyric/service/floating_window_state.dart';
-import 'package:floating_lyric/ui/lyric_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -13,9 +9,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:system_alert_window/system_alert_window.dart';
 
 import '../../models/song.dart';
+import '../../service/floating_window_state.dart';
+import '../../ui/lyric_list.dart';
+import '../instruction/instruction.dart';
+import '../window_settings/window_settings_page.dart';
 
 class BaseContainer extends ConsumerStatefulWidget {
-  const BaseContainer({Key? key}) : super(key: key);
+  const BaseContainer({super.key});
 
   @override
   ConsumerState<BaseContainer> createState() => _BaseContainerState();
@@ -38,7 +38,7 @@ class _BaseContainerState extends ConsumerState<BaseContainer> {
   @override
   void initState() {
     _streamSubscription = _eventChannel.receiveBroadcastStream().listen(
-        (data) => _songStreamController.add(Song.fromMap(data as Map)),
+        (data) => _songStreamController.add(Song.fromJson(data as Map<String, dynamic>)),
         onError: (error) => log('Received error: ${error.message}'),
         cancelOnError: true);
 

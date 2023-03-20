@@ -1,8 +1,9 @@
-import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
 
+import '../service/song_box.dart';
+
 class LyricList extends StatefulWidget {
-  const LyricList({Key? key}) : super(key: key);
+  const LyricList({super.key});
 
   @override
   State<LyricList> createState() => _LyricListState();
@@ -28,16 +29,13 @@ class _LyricListState extends State<LyricList> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         title: Text(songBox.getTitleByIndex(index)),
-                        tileColor: Colors
-                            .primaries[index % Colors.primaries.length]
-                            .shade200,
+                        tileColor: Colors.primaries[index % Colors.primaries.length].shade200,
                         onTap: () {},
                       );
                     },
                   ),
                 ),
                 Expanded(
-                  flex: 1,
                   child: Row(
                     children: [
                       Expanded(
@@ -60,13 +58,11 @@ class _LyricListState extends State<LyricList> {
                                     'This will empty all stored lyrics in this app (does not remove the original files).'),
                                 actions: [
                                   ElevatedButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
+                                    onPressed: () => Navigator.of(context).pop(),
                                     child: const Text('Cancel'),
                                   ),
                                   TextButton(
-                                    onPressed: () =>
-                                        songBox.clearDB().then((value) {
+                                    onPressed: () => songBox.clearDB().then((value) {
                                       Navigator.of(context).pop();
                                       if (mounted) setState(() {});
                                     }),
@@ -94,8 +90,7 @@ class _LyricListState extends State<LyricList> {
                   const Text('No LRC files record'),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () =>
-                        songBox.importLRC().then((_) => setState(() {})),
+                    onPressed: () => songBox.importLRC().then((_) => setState(() {})),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: const [

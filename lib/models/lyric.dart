@@ -1,30 +1,15 @@
-class Lyric {
-  late String singer;
-  late String song;
-  late List<String> content;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Lyric({
-    required this.singer,
-    required this.song,
-    required this.content,
-  });
+part 'lyric.freezed.dart';
+part 'lyric.g.dart';
 
-  Lyric.fromMap(Map map) {
-    singer = map['singer'] ?? '';
-    song = map['song'] ?? '';
-    content = map['content'] ?? [];
-  }
+@freezed
+class Lyric with _$Lyric {
+  const factory Lyric({
+    @Default('') String singer,
+    @Default('') String song,
+    @Default(<String>[]) List<String> content,
+  }) = _Lyric;
 
-  @override
-  String toString() {
-    return 'Lyric{singer: $singer, song: $song, content: $content}';
-  }
-
-  toJson() {
-    return {
-      "singer": singer,
-      "song": song,
-      "content": content,
-    };
-  }
+  factory Lyric.fromJson(Map<String, dynamic> json) => _$LyricFromJson(json);
 }

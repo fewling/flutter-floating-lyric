@@ -1,13 +1,13 @@
-import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../service/floating_window_state.dart';
+import '../../service/song_box.dart';
 import 'window_settings_state.dart';
 
 class HomePage extends ConsumerWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,8 +66,6 @@ class HomePage extends ConsumerWidget {
                             label: floatingState.backgroundOpacity.toString(),
                             divisions: 20,
                             value: floatingState.backgroundOpacity,
-                            min: 0,
-                            max: 1,
                             onChanged: floatingNotifier.updateBackgroundOpacity,
                           ),
                         ),

@@ -1,11 +1,11 @@
-import 'package:floating_lyric/singletons/song_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../service/floating_window_state.dart';
+import '../../service/song_box.dart';
 
 class InstructionPage extends ConsumerWidget {
-  const InstructionPage({Key? key}) : super(key: key);
+  const InstructionPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

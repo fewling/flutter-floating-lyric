@@ -26,7 +26,7 @@ class PermissionPage extends ConsumerWidget {
     return IntroductionScreen(
       pages: [
         PageViewModel(
-          title: "Notification Listener Permission",
+          title: 'Notification Listener Permission',
           bodyWidget: Column(
             children: [
               const Text(
@@ -61,7 +61,7 @@ Grant Access button -> this app -> Turn on Allow notification access
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Overlay Window Permission",
+          title: 'Overlay Window Permission',
           bodyWidget: Column(
             children: [
               const Text(
@@ -94,7 +94,6 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
         ),
       ],
       onDone: () => _onIntroEnd(context, ref),
-      showSkipButton: false,
       skipOrBackFlex: 0,
       nextFlex: 0,
       showBackButton: true,

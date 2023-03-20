@@ -1,25 +1,16 @@
-class Song {
-  late String title;
-  late String artist;
-  late String maxDuration;
-  late String currentDuration;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  Song() {
-    title = '';
-    artist = '';
-    maxDuration = '';
-    currentDuration = '';
-  }
+part 'song.freezed.dart';
+part 'song.g.dart';
 
-  Song.fromMap(Map data) {
-    title = data["song"] ?? "";
-    artist = data["singer"] ?? "";
-    maxDuration = data["max_duration"] ?? "";
-    currentDuration = data["current_duration"] ?? "";
-  }
+@freezed
+class Song with _$Song {
+  const factory Song({
+    @Default('') String title,
+    @Default('') String artist,
+    @Default('') String maxDuration,
+    @Default('') String currentDuration,
+  }) = _Song;
 
-  @override
-  String toString() {
-    return 'Song{title: $title, artist: $artist, maxDuration: $maxDuration, currentDuration: $currentDuration}';
-  }
+  factory Song.fromJson(Map<String, dynamic> json) => _$SongFromJson(json);
 }

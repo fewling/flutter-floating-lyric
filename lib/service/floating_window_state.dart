@@ -17,7 +17,7 @@ class FloatingStateNotifier extends Notifier<FloatingState> {
       displayingLyric: '',
       isShowingWindow: false,
       shouldShowWindow: false,
-      song: Song(),
+      song: const Song(),
       textColor: Colors.deepPurple.shade300,
       backgroundOpacity: 0,
       widthProportion: 100,
