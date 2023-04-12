@@ -1,50 +1,49 @@
-import 'package:feature_discovery/feature_discovery.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'screens/base/base_container.dart';
-import 'screens/permission/permission_notifier.dart';
-import 'screens/permission/permission_page.dart';
-import 'service/app_preferences.dart';
-import 'service/song_box.dart';
+import 'models/lyric_model.dart';
+import 'screens/main/main_screen.dart';
+import 'screens/permission/permission_screen.dart';
+import 'services/app_preference.dart';
+import 'services/db_helper.dart';
+import 'services/permission_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final sharedPreferences = await SharedPreferences.getInstance();
-
-  await Hive.initFlutter();
-  await SongBox().openBox();
+  final isar = await Isar.open([LrcDBSchema]);
+  final pref = await SharedPreferences.getInstance();
 
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferenceProvider.overrideWithValue(sharedPreferences),
+        dbHelperProvider.overrideWithValue(DBHelper(isar)),
+        sharedPreferenceProvider.overrideWithValue(pref),
       ],
-      child: const MyApp(),
+      child: const FloatingLyricApp(),
     ),
   );
 }
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+class FloatingLyricApp extends ConsumerWidget {
+  const FloatingLyricApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FeatureDiscovery(
-      child: MaterialApp(
-        title: 'Floating Lyric',
-        theme: ThemeData(useMaterial3: true),
-        home: ref.watch(permissionProvider).when(
-              data: (data) => data.notificationListenerGranted && data.systemAlertWindowGranted
-                  ? const BaseContainer()
-                  : const PermissionPage(),
-              error: (error, stackTrace) => Center(child: Text('Error: $error')),
-              loading: () => const Center(child: CircularProgressIndicator()),
-            ),
+    final permissionState = ref.watch(permissionStateProvider);
+    final allGranted = permissionState.isSystemAlertWindowGranted &&
+        permissionState.isNotificationListenerGranted;
+
+    final pref = ref.watch(preferenceProvider);
+
+    return MaterialApp(
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Color(pref.color),
       ),
+      home: allGranted ? const MainScreen() : const PermissionScreen(),
     );
   }
 }

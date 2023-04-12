@@ -1,15 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 
-import 'permission_notifier.dart';
+import '../../services/permission_provider.dart';
 
-class PermissionPage extends ConsumerWidget {
-  const PermissionPage({super.key});
+class PermissionScreen extends ConsumerStatefulWidget {
+  const PermissionScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PermissionScreen> createState() => _PermissionScreenState();
+}
+
+class _PermissionScreenState extends ConsumerState<PermissionScreen>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  /// This is to handle the case when user grant SystemAlertWindow permission
+  /// but the result is not returned from native Android code.
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    Logger.d('didChangeAppLifecycleState: $state');
+
+    if (state == AppLifecycleState.resumed) {
+      ref.read(permissionStateProvider.notifier).refresh();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final permissionState = ref.watch(permissionStateProvider);
+    final permissionNotifier = ref.watch(permissionStateProvider.notifier);
+
+    Logger.d('''building
+    permissionState.isSystemAlertWindowGranted: ${permissionState.isSystemAlertWindowGranted}
+    permissionState.isNotificationListenerGranted: ${permissionState.isNotificationListenerGranted}
+''');
     const bodyStyle = TextStyle(fontSize: 19.0);
 
     const pageDecoration = PageDecoration(
@@ -19,9 +57,6 @@ class PermissionPage extends ConsumerWidget {
       pageColor: Colors.white,
       imagePadding: EdgeInsets.zero,
     );
-
-    final permissionState = ref.watch(permissionProvider);
-    final permissionNotifier = ref.watch(permissionProvider.notifier);
 
     return IntroductionScreen(
       pages: [
@@ -41,15 +76,11 @@ Grant Access button -> this app -> Turn on Allow notification access
               const SizedBox(height: 8),
               SizedBox(
                 width: 150,
-                child: permissionState.when(
-                  data: (data) => ElevatedButton(
-                    onPressed: data.notificationListenerGranted
-                        ? null
-                        : () => permissionNotifier.requestNotificationListener(),
-                    child: const Text('Grant Access'),
-                  ),
-                  error: (error, stackTrace) => const Text('Error'),
-                  loading: () => const CircularProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: permissionState.isNotificationListenerGranted
+                      ? null
+                      : permissionNotifier.requestNotificationListener,
+                  child: const Text('Grant Access'),
                 ),
               ),
             ],
@@ -76,15 +107,11 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
               const SizedBox(height: 8),
               SizedBox(
                 width: 150,
-                child: permissionState.when(
-                  data: (data) => ElevatedButton(
-                    onPressed: data.systemAlertWindowGranted
-                        ? null
-                        : () => permissionNotifier.requestSystemAlertWindowPermission(),
-                    child: const Text('Grant Access'),
-                  ),
-                  error: (error, stackTrace) => const Text('Error'),
-                  loading: () => const CircularProgressIndicator(),
+                child: ElevatedButton(
+                  onPressed: permissionState.isSystemAlertWindowGranted
+                      ? null
+                      : permissionNotifier.requestSystemAlertWindow,
+                  child: const Text('Grant Access'),
                 ),
               ),
             ],
@@ -101,12 +128,14 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
       next: const Icon(Icons.arrow_forward),
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
       curve: Curves.fastLinearToSlowEaseIn,
-      controlsPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      controlsPadding:
+          const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       dotsDecorator: DotsDecorator(
         size: const Size(10.0, 10.0),
         color: const Color(0xFFBDBDBD),
         activeSize: const Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+        activeShape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
       ),
       dotsContainerDecorator: ShapeDecoration(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
@@ -115,8 +144,8 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
   }
 
   void _onIntroEnd(BuildContext context, WidgetRef ref) {
-    final permissionState = ref.watch(permissionProvider);
-    final permissionNotifier = ref.watch(permissionProvider.notifier);
+    final permissionState = ref.watch(permissionStateProvider);
+    final permissionNotifier = ref.watch(permissionStateProvider.notifier);
 
     showDialog(
       context: context,
@@ -127,25 +156,17 @@ Grant Access button -> this app >> Turn on `Allow display over other apps`
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              permissionState.when(
-                data: (data) => ElevatedButton(
-                  onPressed: data.notificationListenerGranted
-                      ? null
-                      : () => permissionNotifier.requestNotificationListener(),
-                  child: const Text('Notification Access'),
-                ),
-                error: (_, __) => const Text('Error checking notification listener permission'),
-                loading: () => const CircularProgressIndicator(),
+              ElevatedButton(
+                onPressed: permissionState.isNotificationListenerGranted
+                    ? null
+                    : permissionNotifier.requestNotificationListener,
+                child: const Text('Notification Access'),
               ),
-              permissionState.when(
-                data: (data) => ElevatedButton(
-                  onPressed: data.systemAlertWindowGranted
-                      ? null
-                      : () => permissionNotifier.requestSystemAlertWindowPermission(),
-                  child: const Text('Display Window Over Apps'),
-                ),
-                error: (error, stackTrace) => const Text('Error'),
-                loading: () => const CircularProgressIndicator(),
+              ElevatedButton(
+                onPressed: permissionState.isSystemAlertWindowGranted
+                    ? null
+                    : permissionNotifier.requestSystemAlertWindow,
+                child: const Text('Display Window Over Apps'),
               ),
             ],
           )

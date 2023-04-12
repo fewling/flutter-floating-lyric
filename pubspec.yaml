@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.0.1+2
+version: 2.0.0+1
 
 environment:
   sdk: ">=2.19.2 <3.0.0"
@@ -11,20 +11,25 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
   system_alert_window: ^1.2.1
-  file_picker: ^5.2.6
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+  file_picker: ^5.2.7
   flutter_colorpicker: ^1.0.3
-  shared_preferences: ^2.0.18
-  permission_handler: ^10.2.0
+  shared_preferences: ^2.1.0
   introduction_screen: ^3.1.7
-  lottie: ^2.3.0
+  lottie: ^2.3.2
   feature_discovery: ^0.14.1
-  flutter_riverpod: ^2.3.2
+  flutter_riverpod: ^2.3.3
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
+  flutter_easylogger: ^2.3.3
+  isar: ^3.0.5
+  isar_flutter_libs: ^3.0.5
+  url_launcher: ^6.1.10
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,12 +37,11 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   build_runner: any
   hive_generator: ^2.0.0
-  flutter_launcher_icons: ^0.12.0
   freezed: ^2.3.2
-  custom_lint: ^0.3.2
-  riverpod_lint: ^1.1.6
+  custom_lint: ^0.3.3
+  riverpod_lint: ^1.1.7
   json_serializable: ^6.6.1
-
+  isar_generator: ^3.0.5
 flutter_icons:
   android: "launcher_icon"
   image_path: "assets/launcher_icon/icons8-songs-and-lyrics-on-the-music-application-72.png"
