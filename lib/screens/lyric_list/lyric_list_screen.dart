@@ -6,6 +6,8 @@ import '../../services/db_helper.dart';
 import '../../services/lyric_file_processor.dart';
 import '../../widgets/fail_import_dialog.dart';
 
+final _isLoadingProvider = StateProvider((_) => false);
+
 class LyricListScreen extends ConsumerWidget {
   const LyricListScreen({super.key});
 
@@ -14,7 +16,8 @@ class LyricListScreen extends ConsumerWidget {
     final rawLyrics = ref.watch(allRawLyricsProvider);
 
     return rawLyrics.when(
-      error: (error, stackTrace) => Text('error: $error\n' 'stacktrace: $stackTrace'),
+      error: (error, stackTrace) =>
+          Text('error: $error\n' 'stacktrace: $stackTrace'),
       loading: () => const Center(child: CircularProgressIndicator()),
       data: (data) => Scaffold(
         body: data.isEmpty
@@ -23,23 +26,29 @@ class LyricListScreen extends ConsumerWidget {
                 itemCount: data.length,
                 itemBuilder: (context, index) => _LyricTile(
                   title: data[index].fileName,
-                  onDelete: () => _promptDeleteDialog(context, ref, data[index]),
+                  onDelete: () =>
+                      _promptDeleteDialog(context, ref, data[index]),
                 ),
               ),
         bottomNavigationBar: _BottomBar(
           onDeleteAllPressed: () => _promptDeleteAllDialog(context, ref),
         ),
         floatingActionButton: _ImportFAB(
-          onPressed: () => ref.read(lrcProcessorProvider).pickLrcFiles().then((failed) {
-            if (failed.isNotEmpty) {
-              showDialog(
-                context: context,
-                builder: (_) => FailedImportDialog(failed),
-              );
-            }
-            ref.invalidate(allRawLyricsProvider);
-          }),
-        ),
+            isLoading: ref.watch(_isLoadingProvider),
+            onPressed: () {
+              ref.read(_isLoadingProvider.notifier).state = true;
+              ref.read(lrcProcessorProvider).pickLrcFiles().then((failed) {
+                ref.read(_isLoadingProvider.notifier).state = false;
+
+                if (failed.isNotEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => FailedImportDialog(failed),
+                  );
+                }
+                ref.invalidate(allRawLyricsProvider);
+              });
+            }),
         floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
       ),
     );
@@ -58,8 +67,11 @@ class LyricListScreen extends ConsumerWidget {
           ),
           TextButton(
             onPressed: () {
+              ref
+                  .read(dbHelperProvider)
+                  .deleteLyric(lrcDB)
+                  .then((value) => ref.invalidate(allRawLyricsProvider));
               Navigator.of(context).pop();
-              ref.read(dbHelperProvider).deleteLyric(lrcDB).then((value) => ref.invalidate(allRawLyricsProvider));
             },
             child: const Text('Delete'),
           ),
@@ -82,7 +94,10 @@ class LyricListScreen extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              ref.read(dbHelperProvider).deleteAllLyrics().then((value) => ref.invalidate(allRawLyricsProvider));
+              ref
+                  .read(dbHelperProvider)
+                  .deleteAllLyrics()
+                  .then((value) => ref.invalidate(allRawLyricsProvider));
             },
             child: const Text('Delete'),
           ),
@@ -111,25 +126,7 @@ class _LyricTile extends StatelessWidget {
             tooltip: 'Edit',
           ),
           IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Delete Lyric'),
-                  content: const Text('Are you sure you want to delete this lyric?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: onDelete,
-                      child: const Text('Delete'),
-                    ),
-                  ],
-                ),
-              );
-            },
+            onPressed: onDelete,
             icon: const Icon(Icons.delete),
             tooltip: 'Delete',
           ),
@@ -140,17 +137,19 @@ class _LyricTile extends StatelessWidget {
 }
 
 class _ImportFAB extends StatelessWidget {
-  const _ImportFAB({this.onPressed});
+  const _ImportFAB({this.onPressed, this.isLoading = false});
 
   final void Function()? onPressed;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
+    return FloatingActionButton(
       hoverElevation: 16,
       onPressed: onPressed,
-      label: const Text('Import'),
-      icon: const Icon(Icons.add_rounded),
+      tooltip: 'Import',
+      child:
+          isLoading ? const CircularProgressIndicator() : const Icon(Icons.add),
     );
   }
 }
@@ -169,25 +168,23 @@ class _BottomBar extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Filter Lyric'),
-                    content: const Text('Work in Progress'),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-              },
+              onPressed: () => showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Filter Lyric'),
+                  content: const Text('Work in Progress'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              ),
               icon: const Icon(Icons.filter_alt_rounded),
               tooltip: 'Filter',
             ),
