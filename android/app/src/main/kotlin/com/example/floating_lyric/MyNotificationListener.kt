@@ -1,137 +1,139 @@
 package com.example.floating_lyric
 
-
 import android.app.Notification
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSession
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
+import android.view.*
 import androidx.annotation.RequiresApi
-
+import com.example.floating_lyric.MainActivity.Companion.NOTIFICATION_INTENT
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.ARTIST
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.DURATION
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.IS_PLAYING
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.IS_SHOWING
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.MEDIA_PLAYER_NAME
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.POSITION
+import com.example.floating_lyric.MyBroadcastReceiver.Companion.TITLE
+import java.util.*
 
 class MyNotificationListener : NotificationListenerService() {
 
-    private val TAG = "MyNotificationListener"
-
     companion object {
-        const val NOTIFICATION_INTENT = "my_notification_event"
-        var PACKAGE_NAME = "pkg_name"
-        var SONG = "song"
-        var SINGER = "singer"
-        var MAX_DURATION = "max_duration"
-        var CURRENT_DURATION = "current_duration"
+        private const val TAG = "MyNotificationListener"
     }
 
+    private var timer = Timer()
+    private lateinit var inflater: LayoutInflater
+    private lateinit var windowManager: WindowManager
 
-    private val handler = Handler()
-    private var controller: MediaController? = null
-    private var singer = ""
-    private var song = ""
+    override fun onCreate() {
+        super.onCreate()
 
-    /**
-     * Listen to event occurs in Notification Section
-     */
+        inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
-        // Log.i(TAG, "onNotificationPosted: ${sbn?.notification}")
-
         checkAndUpdate(sbn)
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onListenerConnected() {
         super.onListenerConnected()
         val notifications = activeNotifications
-
         for (notification in notifications) {
             checkAndUpdate(notification)
         }
-
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun checkAndUpdate(sbn: StatusBarNotification?) {
         if (!sbn?.packageName.equals("com.example.floating_lyric")) {
+            val sbnExtras = sbn?.notification?.extras
+            if (sbnExtras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
 
-            if (sbn?.notification?.extras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
+                val token: MediaSession.Token =
+                    sbnExtras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
 
-                val token: MediaSession.Token = sbn.notification.extras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
-
-
-                /* Get the MediaController from the MOOV MediaSession token: */
-                controller = MediaController(applicationContext, token)
-    
-    
-                /* Get the music info from the MediaController */
-                song = controller?.metadata?.description?.title.toString()
-                singer = controller?.metadata?.description?.subtitle.toString()
-    
-                Log.i(TAG, "metadata.description: ${controller?.metadata?.description}")
-                Log.i(TAG, "title: ${controller?.metadata?.description?.title}")
-                Log.i(TAG, "subtitle: ${controller?.metadata?.description?.subtitle}")
-                Log.i(TAG, "description: ${controller?.metadata?.description?.description}")
-
-                startMoovRunnable()
-
-    
+                val controller = MediaController(applicationContext, token)
+                restartTimer(controller)
             }
         }
-
     }
 
-
-    /**
-     * Loop the lyric update mechanism every 100ms
-     */
-    private fun startMoovRunnable() {
-        // Log.i(TAG, "startMoovRunnable")
-        handler.removeCallbacks(moovRunnable)
-        handler.postDelayed(moovRunnable, 100)
-        // Log.i(TAG, "postDelayed moovRunnable")
-
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "onDestroy")
+        timer.cancel()
     }
 
-    /**
-     * Tracks the music progress every 100ms and update the displaying lyric
-     */
-    private val moovRunnable = Runnable {
+    private fun restartTimer(controller: MediaController) {
 
-        // Log.i(TAG, "moov runnable")
+        val packageName = controller.packageName
+        val metadata = controller.metadata
+        val duration = metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)
+        val album = metadata?.getString((MediaMetadata.METADATA_KEY_ALBUM))
+        val artist = metadata?.getString((MediaMetadata.METADATA_KEY_ARTIST))
+        val title = metadata?.getString((MediaMetadata.METADATA_KEY_TITLE))
 
-        val maxDuration = controller?.metadata?.getLong(MediaMetadata.METADATA_KEY_DURATION)
-//        val currentDuration = controller?.playbackState?.let { Date(it.position) }
-        val currentDuration = controller?.playbackState?.position
+//        Log.i(
+//            TAG, """
+//            title: $title
+//            album: $album
+//            artist: $artist
+//            duration: $duration
+//        """.trimIndent()
+//        )
 
-        // Log.i(TAG, "MAX: $MAX_DURATION, CURRENT: $CURRENT_DURATION")
+        timer.cancel()
+        timer = Timer()
+        timer.run {
+            scheduleAtFixedRate(object : TimerTask() {
 
-        // Pass data from one activity to another.
-        val intent = Intent(NOTIFICATION_INTENT)
-        // Log.i(TAG, "SINGER: $SINGER, SONG: $SONG, MAX: $MAX_DURATION, CURRENT: $CURRENT_DURATION")
+                @RequiresApi(Build.VERSION_CODES.O)
+                override fun run() {
+                    // Pass data from one activity to another.
+                    val position = controller.playbackState?.position
 
-        if (maxDuration != null && currentDuration != null) {
+                    if (duration != null && position != null) {
+                        val intent = Intent(NOTIFICATION_INTENT)
+
+                        ToFlutterMessage.mediaPlayerName = packageName
+                        ToFlutterMessage.title = title.toString()
+                        ToFlutterMessage.artist = artist.toString()
+                        ToFlutterMessage.duration = duration
+                        ToFlutterMessage.position = position
 
 
-            intent.putExtra(PACKAGE_NAME, packageName)
-            intent.putExtra(SINGER, singer)
-            intent.putExtra(SONG, song)
-            intent.putExtra(MAX_DURATION, maxDuration)
-            intent.putExtra(CURRENT_DURATION, currentDuration)
 
-            // Log.i(TAG, "sent broadcast")
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            ToFlutterMessage.isPlaying = controller.playbackState?.isActive == true
+                        }
+
+                        ToFlutterMessage.isShowing =
+                            CustomAlertWindow.getInstance(inflater, windowManager).isShowing
+                        if (ToFlutterMessage.isShowing) {
+                            Handler(Looper.getMainLooper()).post {
+                                CustomAlertWindow.getInstance(inflater, windowManager)
+                                    .update(title, artist, duration, position, FromFlutterMessage.lyricLine)
+                            }
+                        }
+
+                        sendBroadcast(intent)
+                    }
+                }
+            }, 0, 100)
         }
-        sendBroadcast(intent)
-
-
-        startMoovRunnable()
     }
-
 
 }

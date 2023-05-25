@@ -1,12 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.floating_lyric">
 
-  <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-  <uses-permission android:name="android.permission.FOREGROUND_SERVICE " />
-  <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE " />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
    <application
-   
         android:label="Floating Lyrics"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
@@ -46,11 +45,6 @@
             <action android:name="android.service.notification.NotificationListenerService" />
         </intent-filter>
     </service>
-
-    <service
-           android:name="com.phan_tech.flutter_overlay_apps.OverlayService"
-           android:exported="false" />
-    </application>
-
+   </application>
 
 </manifest>
