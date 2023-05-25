@@ -16,7 +16,7 @@ final lrcProcessorProvider = Provider((ref) {
 class LrcProcessor {
   LrcProcessor(this.ref);
 
-  final ProviderRef ref;
+  final ProviderRef<Object?> ref;
 
   /// Returns a list of failed files if any
   Future<List<PlatformFile>> pickLrcFiles() async {

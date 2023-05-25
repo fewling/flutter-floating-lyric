@@ -35,7 +35,6 @@ class _MainScreenState extends ConsumerState<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mainStateProvider);
-    final notifier = ref.watch(mainStateProvider.notifier);
 
     final metaData = state.screens[state.screenIndex];
 

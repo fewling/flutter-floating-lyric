@@ -29,7 +29,7 @@ enum PlatformMethods {
 class _PlatformInvoker {
   _PlatformInvoker(this.ref);
 
-  ProviderRef ref;
+  ProviderRef<Object?> ref;
 
   Future<bool?> checkNotificationListenerPermission() => _platform
       .invokeMethod(PlatformMethods.checkNotificationListenerPermission.name);
