@@ -18,6 +18,7 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
     }
 
     private lateinit var eventChannel: EventChannel
+    private var receiver: MyBroadcastReceiver? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -36,13 +37,13 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
         val intentFilter = IntentFilter()
         intentFilter.addAction(NOTIFICATION_INTENT)
 
-        val receiver = events?.let { MyBroadcastReceiver(it) }
+        receiver = events?.let { MyBroadcastReceiver(it) }!!
         context.registerReceiver(receiver, intentFilter)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-//        context.unregisterReceiver()
+        context.unregisterReceiver(receiver)
     }
 
     override fun onCancel(arguments: Any?) {
