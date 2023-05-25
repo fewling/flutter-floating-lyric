@@ -140,7 +140,7 @@ class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
   }
 
   void updateWindowOpacity(double value) {
-    ref.read(preferenceProvider.notifier).opacity = value.ceilToDouble();
+    ref.read(preferenceProvider.notifier).updateOpacity(value.ceilToDouble());
     ref.read(platformInvokerProvider).updateWindowOpacity(value);
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_setters_without_getters
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,33 +21,31 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
   static const backgroundColorKey = 'backgroundColor';
 
   @override
-  PreferenceState build() => const PreferenceState();
+  PreferenceState build() {
+    return PreferenceState(
+      opacity: ref.watch(sharedPreferenceProvider).getDouble(opacityKey) ?? 50,
+      color: ref.watch(sharedPreferenceProvider).getInt(colorKey) ??
+          Colors.deepPurple.value,
+      backgroundColor:
+          ref.watch(sharedPreferenceProvider).getInt(backgroundColorKey) ??
+              Colors.black.value,
+    );
+  }
 
-  double get opacity =>
-      ref.read(sharedPreferenceProvider).getDouble(opacityKey) ?? 50;
-
-  int get color =>
-      ref.read(sharedPreferenceProvider).getInt(colorKey) ??
-      Colors.deepPurple.value;
-
-  int get backgroundColor =>
-      ref.read(sharedPreferenceProvider).getInt(backgroundColorKey) ??
-      Colors.black.value;
-
-  set opacity(double value) => ref
+  void updateOpacity(double value) => ref
       .read(sharedPreferenceProvider)
       .setDouble(opacityKey, value)
-      .then((_) => state = state.copyWith(opacity: value));
+      .then((result) => state = state.copyWith(opacity: value));
 
-  set color(int value) => ref
+  void updateColor(int value) => ref
       .read(sharedPreferenceProvider)
       .setInt(colorKey, value)
-      .then((_) => state = state.copyWith(color: value));
+      .then((result) => state = state.copyWith(color: value));
 
-  set backgroundColor(int value) => ref
+  void updateBackgroundColor(int value) => ref
       .read(sharedPreferenceProvider)
       .setInt(backgroundColorKey, value)
-      .then((_) => state = state.copyWith(color: value));
+      .then((result) => state = state.copyWith(backgroundColor: value));
 }
 
 @freezed
