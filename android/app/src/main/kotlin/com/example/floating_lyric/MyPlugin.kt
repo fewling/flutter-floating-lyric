@@ -149,13 +149,13 @@ class MyPlugin :
 
             "showFloatingWindow" -> {
                 Toast.makeText(mContext, "showFloatingWindow", Toast.LENGTH_SHORT).show()
-                CustomAlertWindow.getInstance(inflater, windowManager).show()
 
                 val arg = call.arguments as Map<String, Any>
                 Log.i(TAG, "onMethodCall: arg: $arg")
                 FromFlutterMessage.opacity = arg["opacity"] as Double
                 FromFlutterMessage.color = arg["color"] as Long
 //                FromFlutterMessage.backgroundColor = (arg["backgroundColor"] as Long).toInt()
+                CustomAlertWindow.getInstance(inflater, windowManager).show()
             }
 
             "closeFloatingWindow" -> {
