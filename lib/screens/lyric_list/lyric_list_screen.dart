@@ -115,22 +115,13 @@ class _LyricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return ListTile(
       title: Text(title ?? ''),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.edit),
-            tooltip: 'Edit',
-          ),
-          IconButton(
-            onPressed: onDelete,
-            icon: const Icon(Icons.delete),
-            tooltip: 'Delete',
-          ),
-        ],
+      trailing: IconButton(
+        onPressed: onDelete,
+        icon: Icon(Icons.remove_circle_outline, color: colorScheme.error),
+        tooltip: 'Delete',
       ),
     );
   }

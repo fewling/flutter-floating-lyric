@@ -283,7 +283,7 @@ class _ReminderStep extends StatelessWidget {
         ),
         ListTile(
           title: Text(
-            '3. Find the "Lyric List" tab in the drawer to edit/delete the imported lyrics.',
+            '3. Find the "Lyric List" tab in the drawer to delete the imported lyrics.',
           ),
         ),
         ListTile(
