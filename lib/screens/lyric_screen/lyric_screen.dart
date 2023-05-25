@@ -84,8 +84,9 @@ class LyricScreen extends ConsumerWidget {
         Step(
           isActive: state.currentStep == 2,
           title: const ListTile(
-            title: Text('Import .lrc Files'),
-            subtitle: Text('you only need to do this once'),
+            title: Text('Import All Your .lrc Files'),
+            subtitle: Text('Please make sure your .lrc files satisfy '
+                'one of the conditions below:'),
           ),
           content: const _LrcFormatStep(),
         ),
@@ -189,44 +190,54 @@ class _LrcFormatStep extends ConsumerWidget {
     final state = ref.watch(lyricStateProvider);
     final notifier = ref.watch(lyricStateProvider.notifier);
 
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       children: [
-        const ListTile(
-            title: Text(
-                'Pick a .LRC file matching ONE of the following conditions:')),
-        RadioListTile(
-          value: 0,
-          groupValue: ref
+        ListTile(
+          leading: ref
               .watch(lyricExistsProvider('${state.title} - ${state.artist}'))
               .when(
-                data: (data) => data ? 0 : -1,
-                error: (_, __) => -1,
-                loading: () => -1,
+                data: (data) => data
+                    ? const Icon(Icons.check_box_rounded)
+                    : const Icon(Icons.check_box_outline_blank_rounded),
+                error: (_, __) =>
+                    const Icon(Icons.check_box_outline_blank_rounded),
+                loading: () =>
+                    const Icon(Icons.check_box_outline_blank_rounded),
               ),
-          onChanged: null,
           title: const Text('File name:'),
-          subtitle: Text('${state.title} - ${state.artist}.lrc'),
+          subtitle: Text(
+            '${state.title} - ${state.artist}.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
         ),
-        RadioListTile(
-          value: 1,
-          groupValue: ref
+        ListTile(
+          leading: ref
               .watch(lyricExistsProvider('${state.artist} - ${state.title}'))
               .when(
-                data: (data) => data ? 1 : -1,
-                error: (_, __) => -1,
-                loading: () => -1,
+                data: (data) => data
+                    ? const Icon(Icons.check_box_rounded)
+                    : const Icon(Icons.check_box_outline_blank_rounded),
+                error: (_, __) =>
+                    const Icon(Icons.check_box_outline_blank_rounded),
+                loading: () =>
+                    const Icon(Icons.check_box_outline_blank_rounded),
               ),
           title: const Text('File name:'),
-          subtitle: Text('${state.artist} - ${state.title}.lrc'),
-          onChanged: null,
+          subtitle: Text(
+            '${state.artist} - ${state.title}.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
         ),
-        RadioListTile(
-          value: 2,
-          groupValue: -1,
-          title: Text('Your .lrc file contains:\n'
-              '[ti:${state.title}]\n'
-              '[ar:${state.artist}]'),
-          onChanged: null,
+        ListTile(
+          leading: const Icon(Icons.check_box_outline_blank),
+          title: const Text('The file contains:'),
+          subtitle: Text(
+            '[ti:${state.title}]\n'
+            '[ar:${state.artist}]',
+            style: TextStyle(color: colorScheme.outline),
+          ),
         ),
         const SizedBox(height: 8),
         SizedBox(
