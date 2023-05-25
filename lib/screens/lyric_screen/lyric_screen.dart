@@ -280,6 +280,11 @@ class _ReminderStep extends StatelessWidget {
             '4. Killing this app will not close the floating window but will stop the lyric update.',
           ),
         ),
+        ListTile(
+          title: Text(
+            '5. If LRC file correctly imported but not showing, please try to restart the app.',
+          ),
+        ),
       ],
     );
   }
