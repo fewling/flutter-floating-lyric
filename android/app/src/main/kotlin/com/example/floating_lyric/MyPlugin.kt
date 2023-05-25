@@ -38,7 +38,6 @@ class MyPlugin :
     private val CHANNEL = "floating_lyric/method_channel"
     private val REQUEST_CODE_NOTIFICATION_LISTENER = 1
     private val REQUEST_CODE_READ_STORAGE = 2
-    private val REQUEST_CODE_3RD_MUSIC_PLAYER = 3
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         Log.i(TAG, "onAttachedToEngine")
@@ -148,13 +147,14 @@ class MyPlugin :
             }
 
             "showFloatingWindow" -> {
-                Toast.makeText(mContext, "showFloatingWindow", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(mContext, "showFloatingWindow", Toast.LENGTH_SHORT).show()
 
                 val arg = call.arguments as Map<String, Any>
                 Log.i(TAG, "onMethodCall: arg: $arg")
                 FromFlutterMessage.opacity = arg["opacity"] as Double
                 FromFlutterMessage.color = arg["color"] as Long
-//                FromFlutterMessage.backgroundColor = (arg["backgroundColor"] as Long).toInt()
+//                FromFlutterMessage.backgroundColor = arg["backgroundColor"] as Long
+                Log.i(TAG, "FromFlutterMessage.color : ${FromFlutterMessage.color}")
                 CustomAlertWindow.getInstance(inflater, windowManager).show()
             }
 

@@ -1,7 +1,6 @@
 package com.example.floating_lyric
 
-import android.graphics.Color
-import android.graphics.PixelFormat
+import android.graphics.*
 import android.os.Build
 import android.util.Log
 import android.view.*
@@ -9,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import java.math.BigInteger.valueOf
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -116,7 +116,12 @@ class CustomAlertWindow(
         })
 
         val color =
-            Color.argb((FromFlutterMessage.opacity / 100 * 255).toInt(), 0, 0, 0) // red color with alpha
+            Color.argb(
+                (FromFlutterMessage.opacity / 100 * 255).toInt(),
+                0,
+                0,
+                0
+            ) // red color with alpha
         containerView.setBackgroundColor(color)
 
         windowManager.addView(alertView, layoutParams)
@@ -138,20 +143,32 @@ class CustomAlertWindow(
     @RequiresApi(Build.VERSION_CODES.O)
     fun update(title: String?, artist: String?, duration: Long, position: Long, lyricLine: String) {
 //        alertView.setBackgroundColor(Color.valueOf(FlutterMessage.backgroundColor).toArgb())
-
-        val color =
-            Color.argb((FromFlutterMessage.opacity / 100 * 255).toInt(), 0, 0, 0) // red color with alpha
-        containerView.setBackgroundColor(color)
 //        containerView.alpha = (FlutterMessage.opacity/100 * 255).toFloat()
 
+
+        // Setting colors
+        val color = valueOf(FromFlutterMessage.color).toInt()
+        val bgColor = Color.argb((FromFlutterMessage.opacity / 100 * 255).toInt(), 0, 0, 0)
+        containerView.setBackgroundColor(bgColor)
+        floatingTitleTextView.setTextColor(color)
+        floatingLyricTextView.setTextColor(color)
+        floatingStartTimeTextView.setTextColor(color)
+        floatingMaxTimeTextView.setTextColor(color)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            floatingCloseImageButton.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
+            floatingMusicSeekBar.thumb.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
+            floatingMusicSeekBar.progressDrawable.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
+        }
+
+
+        // Setting content
         floatingTitleTextView.text = "$title - $artist"
         floatingLyricTextView.text = lyricLine
 
-        floatingMusicSeekBar.max = duration.toInt() ?: 0
-        floatingMusicSeekBar.progress = position.toInt() ?: 0
+        floatingMusicSeekBar.max = duration.toInt()
+        floatingMusicSeekBar.progress = position.toInt()
         if (floatingMusicSeekBar.progress == duration.toInt())
             floatingMusicSeekBar.progress = 0
-
 
         val formatter = SimpleDateFormat("mm:ss.SS")
         formatter.timeZone = TimeZone.getTimeZone("GMT")
