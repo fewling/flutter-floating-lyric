@@ -51,9 +51,9 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
 @freezed
 class PreferenceState with _$PreferenceState {
   const factory PreferenceState({
-    @Default(50) double opacity,
-    @Default(0xFF673AB7) int color,
-    @Default(0xFF000000) int backgroundColor,
+    required double opacity,
+    required int color,
+    required int backgroundColor,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) =>
