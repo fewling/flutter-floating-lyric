@@ -12,8 +12,8 @@ class MainState with _$MainState {
     @Default(0)
         int screenIndex,
     @Default(<ChildMetaData>[
-      ChildMetaData(title: 'Lyric', child: LyricScreen()),
-      ChildMetaData(title: 'Lyric List', child: LyricListScreen()),
+      ChildMetaData(title: 'Floating Window', child: LyricScreen()),
+      ChildMetaData(title: 'Stored Lyric', child: LyricListScreen()),
     ])
         List<ChildMetaData> screens,
   }) = _MainState;
