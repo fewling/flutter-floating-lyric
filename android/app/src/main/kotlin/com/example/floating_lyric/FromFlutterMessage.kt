@@ -3,6 +3,8 @@ package com.example.floating_lyric
 object FromFlutterMessage {
     var lyricLine: String = ""
     var opacity: Double = 50.0
-    var color: Long = 0xFF673AB7
-//    var backgroundColor : Long = 0xFF000000
+    var r: Int = 255
+    var g: Int = 255
+    var b: Int = 255
+    var a: Int = 255
 }

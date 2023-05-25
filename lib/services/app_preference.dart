@@ -26,9 +26,6 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
       opacity: ref.watch(sharedPreferenceProvider).getDouble(opacityKey) ?? 50,
       color: ref.watch(sharedPreferenceProvider).getInt(colorKey) ??
           Colors.deepPurple.value,
-      backgroundColor:
-          ref.watch(sharedPreferenceProvider).getInt(backgroundColorKey) ??
-              Colors.black.value,
     );
   }
 
@@ -37,15 +34,10 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
       .setDouble(opacityKey, value)
       .then((result) => state = state.copyWith(opacity: value));
 
-  void updateColor(int value) => ref
-      .read(sharedPreferenceProvider)
-      .setInt(colorKey, value)
-      .then((result) => state = state.copyWith(color: value));
-
-  void updateBackgroundColor(int value) => ref
-      .read(sharedPreferenceProvider)
-      .setInt(backgroundColorKey, value)
-      .then((result) => state = state.copyWith(backgroundColor: value));
+  Future<void> updateColor(Color color) async {
+    ref.read(sharedPreferenceProvider).setInt(colorKey, color.value);
+    state = state.copyWith(color: color.value);
+  }
 }
 
 @freezed
@@ -53,7 +45,6 @@ class PreferenceState with _$PreferenceState {
   const factory PreferenceState({
     required double opacity,
     required int color,
-    required int backgroundColor,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) =>

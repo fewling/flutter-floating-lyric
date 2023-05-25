@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,7 +22,7 @@ class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
 
   void updateStep(int value) => state = state.copyWith(currentStep: value);
 
-  Future<void> toggleWindowVisibility(_) async {
+  Future<void> toggleWindowVisibility() async {
     final nativeIsShowing =
         await ref.read(platformInvokerProvider).checkFloatingWindow();
 
@@ -141,6 +142,11 @@ class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
 
   void updateWindowOpacity(double value) {
     ref.read(preferenceProvider.notifier).updateOpacity(value.ceilToDouble());
-    ref.read(platformInvokerProvider).updateWindowOpacity(value);
+    ref.read(platformInvokerProvider).updateWindowOpacity();
+  }
+
+  void updateWindowColor(Color color) {
+    ref.read(preferenceProvider.notifier).updateColor(color);
+    ref.read(platformInvokerProvider).updateWindowColor();
   }
 }

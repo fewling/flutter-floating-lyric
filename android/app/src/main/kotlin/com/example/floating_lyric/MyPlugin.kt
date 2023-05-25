@@ -147,14 +147,13 @@ class MyPlugin :
             }
 
             "showFloatingWindow" -> {
-//                Toast.makeText(mContext, "showFloatingWindow", Toast.LENGTH_SHORT).show()
-
                 val arg = call.arguments as Map<String, Any>
                 Log.i(TAG, "onMethodCall: arg: $arg")
                 FromFlutterMessage.opacity = arg["opacity"] as Double
-                FromFlutterMessage.color = arg["color"] as Long
-//                FromFlutterMessage.backgroundColor = arg["backgroundColor"] as Long
-                Log.i(TAG, "FromFlutterMessage.color : ${FromFlutterMessage.color}")
+                FromFlutterMessage.r = arg["r"] as Int
+                FromFlutterMessage.g = arg["g"] as Int
+                FromFlutterMessage.b = arg["b"] as Int
+                FromFlutterMessage.a = arg["a"] as Int
                 CustomAlertWindow.getInstance(inflater, windowManager).show()
             }
 
@@ -173,6 +172,14 @@ class MyPlugin :
             "updateWindowOpacity" -> {
                 val arg = call.arguments as Map<String, Any>
                 FromFlutterMessage.opacity = arg["opacity"] as Double
+            }
+
+            "updateWindowColor" -> {
+                val arg = call.arguments as Map<String, Any>
+                FromFlutterMessage.r = arg["r"] as Int
+                FromFlutterMessage.g = arg["g"] as Int
+                FromFlutterMessage.b = arg["b"] as Int
+                FromFlutterMessage.a = arg["a"] as Int
             }
 
             else -> {

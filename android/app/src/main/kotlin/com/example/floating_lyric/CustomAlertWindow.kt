@@ -147,7 +147,12 @@ class CustomAlertWindow(
 
 
         // Setting colors
-        val color = valueOf(FromFlutterMessage.color).toInt()
+        val color = Color.argb(
+            FromFlutterMessage.a,
+            FromFlutterMessage.r,
+            FromFlutterMessage.g,
+            FromFlutterMessage.b
+        )
         val bgColor = Color.argb((FromFlutterMessage.opacity / 100 * 255).toInt(), 0, 0, 0)
         containerView.setBackgroundColor(bgColor)
         floatingTitleTextView.setTextColor(color)
@@ -156,8 +161,10 @@ class CustomAlertWindow(
         floatingMaxTimeTextView.setTextColor(color)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             floatingCloseImageButton.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
-            floatingMusicSeekBar.thumb.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
-            floatingMusicSeekBar.progressDrawable.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
+            floatingMusicSeekBar.thumb.colorFilter =
+                BlendModeColorFilter(color, BlendMode.SRC_IN)
+            floatingMusicSeekBar.progressDrawable.colorFilter =
+                BlendModeColorFilter(color, BlendMode.SRC_IN)
         }
 
 

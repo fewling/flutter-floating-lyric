@@ -24,6 +24,7 @@ enum PlatformMethods {
   checkFloatingWindow,
 
   updateWindowOpacity,
+  updateWindowColor,
 }
 
 class _PlatformInvoker {
@@ -52,10 +53,20 @@ class _PlatformInvoker {
   Future<void> start3rdMusicPlayer() =>
       _platform.invokeMethod(PlatformMethods.start3rdMusicPlayer.name);
 
-  Future<bool?> showFloatingWindow() => _platform.invokeMethod(
-        PlatformMethods.showFloatingWindow.name,
-        ref.read(preferenceProvider).toJson(),
-      );
+  Future<bool?> showFloatingWindow() {
+    final pref = ref.read(preferenceProvider);
+    final color = Color(pref.color);
+    return _platform.invokeMethod(
+      PlatformMethods.showFloatingWindow.name,
+      {
+        'opacity': pref.opacity,
+        'r': color.red,
+        'g': color.green,
+        'b': color.blue,
+        'a': color.alpha,
+      },
+    );
+  }
 
   Future<bool?> closeFloatingWindow() =>
       _platform.invokeMethod(PlatformMethods.closeFloatingWindow.name);
@@ -66,8 +77,14 @@ class _PlatformInvoker {
   Future<bool?> checkFloatingWindow() =>
       _platform.invokeMethod(PlatformMethods.checkFloatingWindow.name);
 
-  Future<void> updateWindowOpacity(double opacity) => _platform.invokeMethod(
+  Future<void> updateWindowOpacity() => _platform.invokeMethod(
         PlatformMethods.updateWindowOpacity.name,
-        ref.read(preferenceProvider).toJson(),
+        {'opacity': ref.read(preferenceProvider).opacity},
       );
+
+  void updateWindowColor() {
+    final color = Color(ref.read(preferenceProvider).color);
+    _platform.invokeMapMethod(PlatformMethods.updateWindowColor.name,
+        {'r': color.red, 'g': color.green, 'b': color.blue, 'a': color.alpha});
+  }
 }

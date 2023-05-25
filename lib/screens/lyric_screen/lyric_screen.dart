@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../services/app_preference.dart';
@@ -111,20 +112,60 @@ class _WindowSettingsStep extends ConsumerWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ListTile(
-          enabled: state.isFloatingWindowShown,
           leading: Icon(state.isFloatingWindowShown
               ? Icons.visibility
               : Icons.visibility_off),
           title: const Text('Enable'),
           trailing: Switch(
             value: state.isFloatingWindowShown,
-            onChanged: notifier.toggleWindowVisibility,
+            onChanged: (_) => notifier.toggleWindowVisibility(),
           ),
+          onTap: () => notifier.toggleWindowVisibility(),
+        ),
+        ListTile(
+          title: const Text('Color Scheme'),
+          leading: const Icon(Icons.color_lens),
+          enabled: state.isFloatingWindowShown,
+          trailing: ColoredBox(
+            color: Color(ref.watch(preferenceProvider).color),
+            child: const SizedBox(width: 24, height: 24),
+          ),
+          onTap: () {
+            showDialog(
+              builder: (context) => AlertDialog(
+                title: const Text('Pick a color!'),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: Color(ref.watch(preferenceProvider).color),
+                    onColorChanged: (color) =>
+                        notifier.updateWindowColor(color),
+                    paletteType: PaletteType.hueWheel,
+                    hexInputBar: true,
+                  ),
+                  // Use Material color picker:
+                  // child: MaterialPicker(
+                  //   pickerColor: Color(ref.watch(preferenceProvider).color),
+                  //   onColorChanged: (color) =>
+                  //       notifier.updateWindowColor(color),
+                  //   enableLabel: true, // only on portrait mode
+                  // ),
+                ),
+                actions: [
+                  ElevatedButton(
+                    child: const Text('Got it'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+              context: context,
+            );
+          },
         ),
         ListTile(
           enabled: state.isFloatingWindowShown,
-          leading: const Icon(Icons.window),
-          title: const Text('Window Transparency'),
+          leading: const Icon(Icons.opacity),
+          trailing: Text('${pref.opacity}%'),
+          title: const Text('Window Opacity'),
         ),
         Slider(
           max: 100,
