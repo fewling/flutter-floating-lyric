@@ -7,6 +7,7 @@ import '../../services/lyric_file_processor.dart';
 import '../../widgets/fail_import_dialog.dart';
 
 final _isLoadingProvider = StateProvider((_) => false);
+final _filterProvider = StateProvider.autoDispose((_) => '');
 
 class LyricListScreen extends ConsumerWidget {
   const LyricListScreen({super.key});
@@ -16,41 +17,59 @@ class LyricListScreen extends ConsumerWidget {
     final rawLyrics = ref.watch(allRawLyricsProvider);
 
     return rawLyrics.when(
-      error: (error, stackTrace) =>
-          Text('error: $error\n' 'stacktrace: $stackTrace'),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      data: (data) => Scaffold(
-        body: data.isEmpty
-            ? const Center(child: Text('No lyrics found.'))
-            : ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) => _LyricTile(
-                  title: data[index].fileName,
-                  onDelete: () =>
-                      _promptDeleteDialog(context, ref, data[index]),
-                ),
-              ),
-        bottomNavigationBar: _BottomBar(
-          onDeleteAllPressed: () => _promptDeleteAllDialog(context, ref),
-        ),
-        floatingActionButton: _ImportFAB(
-            isLoading: ref.watch(_isLoadingProvider),
-            onPressed: () {
-              ref.read(_isLoadingProvider.notifier).state = true;
-              ref.read(lrcProcessorProvider).pickLrcFiles().then((failed) {
-                ref.read(_isLoadingProvider.notifier).state = false;
-
-                if (failed.isNotEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => FailedImportDialog(failed),
-                  );
-                }
-                ref.invalidate(allRawLyricsProvider);
-              });
-            }),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
+      error: (error, stackTrace) => Text(
+        'Please contact the developer.\n'
+        'error: $error\n'
+        'stacktrace: $stackTrace',
       ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      data: (data) {
+        final filter = ref.watch(_filterProvider);
+        if (filter.isNotEmpty) {
+          data = data
+              .where(
+                  (element) => element.fileName!.toLowerCase().contains(filter))
+              .toList();
+        }
+        return Scaffold(
+          body: data.isEmpty
+              ? const Center(child: Text('No lyrics found.'))
+              : ListView.builder(
+                  itemCount: data.length,
+                  itemBuilder: (context, index) => _LyricTile(
+                    title: data[index].fileName,
+                    onDelete: () => _promptDeleteDialog(
+                      context,
+                      ref,
+                      data[index],
+                    ),
+                  ),
+                ),
+          bottomNavigationBar: _BottomBar(
+            onDeleteAllPressed: () => _promptDeleteAllDialog(context, ref),
+            onSearch: (value) =>
+                ref.read(_filterProvider.notifier).state = value,
+          ),
+          floatingActionButton: _ImportFAB(
+              isLoading: ref.watch(_isLoadingProvider),
+              onPressed: () {
+                ref.read(_isLoadingProvider.notifier).state = true;
+                ref.read(lrcProcessorProvider).pickLrcFiles().then((failed) {
+                  ref.read(_isLoadingProvider.notifier).state = false;
+
+                  if (failed.isNotEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (_) => FailedImportDialog(failed),
+                    );
+                  }
+                  ref.invalidate(allRawLyricsProvider);
+                });
+              }),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.endContained,
+        );
+      },
     );
   }
 
@@ -145,10 +164,18 @@ class _ImportFAB extends StatelessWidget {
   }
 }
 
-class _BottomBar extends StatelessWidget {
-  const _BottomBar({this.onDeleteAllPressed});
+class _BottomBar extends StatefulWidget {
+  const _BottomBar({this.onDeleteAllPressed, required this.onSearch});
 
+  final void Function(String value) onSearch;
   final void Function()? onDeleteAllPressed;
+
+  @override
+  State<_BottomBar> createState() => _BottomBarState();
+}
+
+class _BottomBarState extends State<_BottomBar> {
+  var _isSearching = false;
 
   @override
   Widget build(BuildContext context) {
@@ -158,29 +185,32 @@ class _BottomBar extends StatelessWidget {
       child: BottomAppBar(
         child: Row(
           children: [
-            IconButton(
-              onPressed: () => showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: const Text('Filter Lyric'),
-                  content: const Text('Work in Progress'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text('OK'),
-                    ),
-                  ],
+            Flexible(
+              child: AnimatedCrossFade(
+                firstChild: IconButton(
+                  onPressed: () => setState(() => _isSearching = true),
+                  icon: Icon(_isSearching ? Icons.search_off : Icons.search),
+                  tooltip: 'Search',
                 ),
+                secondChild: TextField(
+                  onChanged: (value) => widget.onSearch(value),
+                  decoration: InputDecoration(
+                    icon: IconButton.filledTonal(
+                      onPressed: () => setState(() => _isSearching = false),
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    hintText: 'Filename',
+                    border: InputBorder.none,
+                  ),
+                ),
+                crossFadeState: _isSearching
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                duration: const Duration(milliseconds: 300),
               ),
-              icon: const Icon(Icons.filter_alt_rounded),
-              tooltip: 'Filter',
             ),
             IconButton(
-              onPressed: onDeleteAllPressed,
+              onPressed: widget.onDeleteAllPressed,
               icon: const Icon(Icons.delete),
               tooltip: 'Delete All',
             ),
