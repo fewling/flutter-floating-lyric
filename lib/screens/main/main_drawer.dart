@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 import '../../services/app_preference.dart';
 import 'main_state_provider.dart';
@@ -36,13 +37,25 @@ class MainDrawer extends ConsumerWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton.filledTonal(
-              onPressed: () =>
-                  ref.read(preferenceProvider.notifier).toggleBrightness(),
-              icon: Icon(brightness == Brightness.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    final inAppReview = InAppReview.instance;
+                    inAppReview.openStoreListing();
+                  },
+                  icon: const Icon(Icons.rate_review_outlined),
+                ),
+                IconButton.filledTonal(
+                  onPressed: () =>
+                      ref.read(preferenceProvider.notifier).toggleBrightness(),
+                  icon: Icon(brightness == Brightness.light
+                      ? Icons.dark_mode_outlined
+                      : Icons.light_mode),
+                ),
+              ],
             ),
           ),
         ],
