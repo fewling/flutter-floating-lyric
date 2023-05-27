@@ -55,10 +55,13 @@ class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
       final dbHelper = ref.read(dbHelperProvider);
 
       final isNewSong = state.title != title;
-      final lrcDB = isNewSong ? await dbHelper.getLyric(title, artist) : null;
-      final isLyricFound = lrcDB != null;
 
       if (isNewSong) {
+        final lrcDB = isNewSong ? await dbHelper.getLyric(title, artist) : null;
+        final isLyricFound = lrcDB != null;
+
+        Logger.d(
+            'isNewSong: $isNewSong, isLyricFound: $isLyricFound, title: $title, state.title: ${state.title}');
         if (isLyricFound) {
           state = state.copyWith(
               mediaPlayerName: mediaPlayerName,
@@ -109,14 +112,14 @@ class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
     }
   }
 
-  void sendLyricToNative() {
+  Future<void> sendLyricToNative() async {
     final invoker = ref.read(platformInvokerProvider);
 
     final position = state.position;
     final lrc = state.currentLrc;
 
     if (lrc == null) {
-      invoker.updateFloatingWindow('No Lyric Found');
+      await invoker.updateFloatingWindow('No Lyric Found');
     } else {
       for (final line in lrc.lines.reversed) {
         if (position > line.time.inMilliseconds || line == lrc.lines.first) {
