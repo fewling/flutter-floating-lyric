@@ -47,6 +47,7 @@ class FloatingLyricApp extends ConsumerWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Color(pref.color),
+        brightness: pref.isLight ? Brightness.light : Brightness.dark,
       ),
       home: allGranted ? const MainScreen() : const PermissionScreen(),
     );

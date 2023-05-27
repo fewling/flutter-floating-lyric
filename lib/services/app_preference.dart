@@ -19,6 +19,7 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
   static const opacityKey = 'opacity';
   static const colorKey = 'color';
   static const backgroundColorKey = 'backgroundColor';
+  static const brightnessKey = 'brightness';
 
   @override
   PreferenceState build() {
@@ -26,6 +27,8 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
       opacity: ref.watch(sharedPreferenceProvider).getDouble(opacityKey) ?? 50,
       color: ref.watch(sharedPreferenceProvider).getInt(colorKey) ??
           Colors.deepPurple.value,
+      isLight:
+          ref.watch(sharedPreferenceProvider).getBool(brightnessKey) ?? true,
     );
   }
 
@@ -34,10 +37,15 @@ class PreferenceNotifier extends Notifier<PreferenceState> {
       .setDouble(opacityKey, value)
       .then((result) => state = state.copyWith(opacity: value));
 
-  Future<void> updateColor(Color color) async {
-    ref.read(sharedPreferenceProvider).setInt(colorKey, color.value);
-    state = state.copyWith(color: color.value);
-  }
+  void updateColor(Color color) => ref
+      .read(sharedPreferenceProvider)
+      .setInt(colorKey, color.value)
+      .then((value) => state = state.copyWith(color: color.value));
+
+  void toggleBrightness() => ref
+      .read(sharedPreferenceProvider)
+      .setBool(brightnessKey, !state.isLight)
+      .then((value) => state = state.copyWith(isLight: !state.isLight));
 }
 
 @freezed
@@ -45,6 +53,7 @@ class PreferenceState with _$PreferenceState {
   const factory PreferenceState({
     required double opacity,
     required int color,
+    required bool isLight,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) =>

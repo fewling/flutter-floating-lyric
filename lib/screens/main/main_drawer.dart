@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../services/app_preference.dart';
 import 'main_state_provider.dart';
 
 class MainDrawer extends ConsumerWidget {
@@ -9,17 +10,42 @@ class MainDrawer extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(mainStateProvider);
+    final brightness = Theme.of(context).brightness;
+
     return Drawer(
-      child: ListView.builder(
-        itemCount: state.screens.length,
-        itemBuilder: (context, index) => ListTile(
-          title: Text(state.screens[index].title),
-          selected: state.screenIndex == index,
-          onTap: () {
-            ref.read(mainStateProvider.notifier).updateScreenIndex(index);
-            Navigator.pop(context);
-          },
-        ),
+      child: Column(
+        children: [
+          Expanded(
+            child: NavigationRail(
+              extended: true,
+              selectedIndex: state.screenIndex,
+              onDestinationSelected: (index) {
+                ref.read(mainStateProvider.notifier).updateScreenIndex(index);
+                Navigator.pop(context);
+              },
+              destinations: const [
+                NavigationRailDestination(
+                  icon: Icon(Icons.window_outlined),
+                  label: Text('Floating Window'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.audio_file_outlined),
+                  label: Text('Stored Lyric'),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton.filledTonal(
+              onPressed: () =>
+                  ref.read(preferenceProvider.notifier).toggleBrightness(),
+              icon: Icon(brightness == Brightness.light
+                  ? Icons.dark_mode
+                  : Icons.light_mode),
+            ),
+          ),
+        ],
       ),
     );
   }
