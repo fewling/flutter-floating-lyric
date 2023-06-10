@@ -2,6 +2,7 @@ package com.example.floating_lyric
 
 import android.Manifest
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -143,7 +144,12 @@ class MyPlugin :
             "start3rdMusicPlayer" -> {
                 val intent =
                     Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC)
-                mActivity?.startActivity(intent)
+                try {
+                    mActivity?.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    // Handle the case where no music app is found on the device
+                    Toast.makeText(mActivity, "Could not found music app on device, please open one manually if exists.", Toast.LENGTH_LONG).show()
+                }
             }
 
             "showFloatingWindow" -> {
