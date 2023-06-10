@@ -43,7 +43,7 @@ class MainActivity : FlutterActivity(), EventChannel.StreamHandler {
 
     override fun onDestroy() {
         super.onDestroy()
-        context.unregisterReceiver(receiver)
+        if (receiver != null) context.unregisterReceiver(receiver)
     }
 
     override fun onCancel(arguments: Any?) {
