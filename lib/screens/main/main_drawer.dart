@@ -17,19 +17,18 @@ class MainDrawer extends ConsumerWidget {
       child: Column(
         children: [
           Expanded(
-            child: NavigationRail(
-              extended: true,
+            child: NavigationDrawer(
               selectedIndex: state.screenIndex,
               onDestinationSelected: (index) {
                 ref.read(mainStateProvider.notifier).updateScreenIndex(index);
                 Navigator.pop(context);
               },
-              destinations: const [
-                NavigationRailDestination(
+              children: const [
+                NavigationDrawerDestination(
                   icon: Icon(Icons.window_outlined),
                   label: Text('Floating Window'),
                 ),
-                NavigationRailDestination(
+                NavigationDrawerDestination(
                   icon: Icon(Icons.audio_file_outlined),
                   label: Text('Stored Lyric'),
                 ),
