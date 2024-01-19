@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../models/lrc.dart';
+import '../../../models/lrc.dart';
 
 part 'lyric_screen_state.freezed.dart';
 

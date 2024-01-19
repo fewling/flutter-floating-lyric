@@ -48,7 +48,9 @@ class MyNotificationListener : NotificationListenerService() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
-        checkAndUpdate(sbn)
+        for (notification in activeNotifications) {
+            checkAndUpdate(notification)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -64,6 +66,7 @@ class MyNotificationListener : NotificationListenerService() {
         if (!sbn?.packageName.equals("com.example.floating_lyric")) {
             val sbnExtras = sbn?.notification?.extras
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                Log.d(TAG, "checkAndUpdate, sdk >= TIRAMISU")
                 val token = sbnExtras?.getParcelable(
                     Notification.EXTRA_MEDIA_SESSION,
                     MediaSession.Token::class.java
@@ -75,12 +78,13 @@ class MyNotificationListener : NotificationListenerService() {
                 }
 
             } else if (sbnExtras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
-                    val token =
-                        sbnExtras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
+                Log.d(TAG, "checkAndUpdate, sdk < TIRAMISU")
+                val token =
+                    sbnExtras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
 
-                    val controller = MediaController(applicationContext, token)
-                    restartTimer(controller)
-                }
+                val controller = MediaController(applicationContext, token)
+                restartTimer(controller)
+            }
         }
     }
 
@@ -128,34 +132,30 @@ class MyNotificationListener : NotificationListenerService() {
                         ToFlutterMessage.duration = duration
                         ToFlutterMessage.position = position
 
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             ToFlutterMessage.isPlaying = controller.playbackState?.isActive == true
+//                            Log.d(TAG, "isActive: ${controller.playbackState?.isActive}")
                         } else {
                             when (controller.playbackState?.state) {
                                 PlaybackState.STATE_PLAYING -> {
                                     ToFlutterMessage.isPlaying = true
+//                                    Log.d(TAG, "STATE_PLAYING")
                                 }
                                 PlaybackState.STATE_PAUSED -> {
                                     ToFlutterMessage.isPlaying = false
-                                }
-                                PlaybackState.STATE_BUFFERING -> {
-                                    ToFlutterMessage.isPlaying = false
-                                }
-                                PlaybackState.STATE_CONNECTING -> {
-                                    ToFlutterMessage.isPlaying = false
+//                                    Log.d(TAG, "STATE_PAUSED")
                                 }
                                 PlaybackState.STATE_ERROR -> {
                                     ToFlutterMessage.isPlaying = false
-                                }
-                                PlaybackState.STATE_NONE -> {
-                                    ToFlutterMessage.isPlaying = false
+//                                    Log.d(TAG, "STATE_ERROR")
                                 }
                                 PlaybackState.STATE_STOPPED -> {
                                     ToFlutterMessage.isPlaying = false
+//                                    Log.d(TAG, "STATE_STOPPED")
                                 }
                             }
                         }
+
 
                         ToFlutterMessage.isShowing =
                             CustomAlertWindow.getInstance(inflater, windowManager).isShowing

@@ -1,24 +1,29 @@
 // ignore_for_file: avoid_dynamic_calls
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../models/lrc.dart';
-import '../../services/app_preference.dart';
-import '../../services/db_helper.dart';
-import '../../services/lyric_file_processor.dart';
-import '../../services/platform_invoker.dart';
-import 'lyric_screen_state.dart';
+import '../../../models/lrc.dart';
+import '../../../services/app_preference.dart';
+import '../../../services/db_helper.dart';
+import '../../../services/lyric_file_processor.dart';
+import '../../../services/platform_invoker.dart';
+import '../domain/lyric_screen_state.dart';
 
 final lyricStateProvider =
     NotifierProvider<LyricScreenStateNotifier, LyricScreenState>(
         LyricScreenStateNotifier.new);
 
 class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
+  static const eventChannel = EventChannel('Floating Lyric Channel');
+
   @override
-  LyricScreenState build() => const LyricScreenState(currentStep: 0);
+  LyricScreenState build() {
+    eventChannel.receiveBroadcastStream().listen(updateFromEventChannel);
+    return const LyricScreenState(currentStep: 0);
+  }
 
   void updateStep(int value) => state = state.copyWith(currentStep: value);
 

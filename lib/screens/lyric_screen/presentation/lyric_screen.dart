@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../services/app_preference.dart';
-import '../../services/db_helper.dart';
-import '../../services/platform_invoker.dart';
-import '../../widgets/fail_import_dialog.dart';
-import 'lyric_screen_state_provider.dart';
+import '../../../services/app_preference.dart';
+import '../../../services/db_helper.dart';
+import '../../../services/platform_invoker.dart';
+import '../../../widgets/fail_import_dialog.dart';
+import 'lyric_screen_notifier.dart';
 
 class LyricScreen extends ConsumerWidget {
   const LyricScreen({super.key});
