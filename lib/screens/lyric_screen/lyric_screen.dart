@@ -53,6 +53,7 @@ class LyricScreen extends ConsumerWidget {
                     SizedBox(
                       width: double.infinity,
                       child: FloatingActionButton.large(
+                        heroTag: 'play',
                         onPressed: () => Future.delayed(
                             const Duration(milliseconds: 100),
                             () => ref
@@ -243,6 +244,7 @@ class _LrcFormatStep extends ConsumerWidget {
         SizedBox(
           width: double.maxFinite,
           child: FloatingActionButton.large(
+            heroTag: 'import',
             onPressed: () => state.isProcessingFiles
                 ? null
                 : notifier.pickLyrics().then((failedFiles) {

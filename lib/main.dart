@@ -5,11 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/lyric_model.dart';
-import 'screens/main/main_screen.dart';
-import 'screens/permission/permission_screen.dart';
 import 'services/app_preference.dart';
 import 'services/db_helper.dart';
-import 'services/permission_provider.dart';
+import 'utils/routing/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,19 +35,21 @@ class FloatingLyricApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final permissionState = ref.watch(permissionStateProvider);
-    final allGranted = permissionState.isSystemAlertWindowGranted &&
-        permissionState.isNotificationListenerGranted;
+    final isLight = ref.watch(
+      preferenceProvider.select((value) => value.isLight),
+    );
 
-    final pref = ref.watch(preferenceProvider);
+    final colorSchemeSeed = ref.watch(
+      preferenceProvider.select((value) => value.color),
+    );
 
-    return MaterialApp(
+    return MaterialApp.router(
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Color(pref.color),
-        brightness: pref.isLight ? Brightness.light : Brightness.dark,
+        colorSchemeSeed: Color(colorSchemeSeed),
+        brightness: isLight ? Brightness.light : Brightness.dark,
       ),
-      home: allGranted ? const MainScreen() : const PermissionScreen(),
+      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }

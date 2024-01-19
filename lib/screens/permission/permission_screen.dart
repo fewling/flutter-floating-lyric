@@ -44,10 +44,10 @@ class _PermissionScreenState extends ConsumerState<PermissionScreen>
     final permissionState = ref.watch(permissionStateProvider);
     final permissionNotifier = ref.watch(permissionStateProvider.notifier);
 
-    Logger.d('''building
+    Logger.d('''
     permissionState.isSystemAlertWindowGranted: ${permissionState.isSystemAlertWindowGranted}
     permissionState.isNotificationListenerGranted: ${permissionState.isNotificationListenerGranted}
-''');
+    ''');
     const bodyStyle = TextStyle(fontSize: 19.0);
 
     const pageDecoration = PageDecoration(
