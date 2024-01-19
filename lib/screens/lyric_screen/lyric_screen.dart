@@ -197,7 +197,8 @@ class _LrcFormatStep extends ConsumerWidget {
       children: [
         ListTile(
           leading: ref
-              .watch(lyricExistsProvider('${state.title} - ${state.artist}'))
+              .watch(lyricExistsProvider(
+                  fileName: '${state.title} - ${state.artist}'))
               .when(
                 data: (data) => data
                     ? const Icon(Icons.check_box_rounded)
@@ -215,7 +216,8 @@ class _LrcFormatStep extends ConsumerWidget {
         ),
         ListTile(
           leading: ref
-              .watch(lyricExistsProvider('${state.artist} - ${state.title}'))
+              .watch(lyricExistsProvider(
+                  fileName: '${state.artist} - ${state.title}'))
               .when(
                 data: (data) => data
                     ? const Icon(Icons.check_box_rounded)

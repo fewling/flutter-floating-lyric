@@ -1,22 +1,23 @@
 import 'package:flutter_easylogger/flutter_logger.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/lyric_model.dart';
 
-final dbHelperProvider = Provider<DBHelper>((_) => throw UnimplementedError());
+part 'db_helper.g.dart';
 
-final allRawLyricsProvider =
-    FutureProvider.autoDispose<List<LrcDB>>((ref) async {
-  final dbHelper = ref.watch(dbHelperProvider);
-  return dbHelper.allRawLyrics;
-});
+@Riverpod(keepAlive: true)
+DBHelper dbHelper(DbHelperRef ref) => throw UnimplementedError();
 
-final lyricExistsProvider =
-    FutureProvider.autoDispose.family<bool, String>((ref, fileName) async {
-  final dbHelper = ref.watch(dbHelperProvider);
-  return dbHelper.fileNameExists(fileName);
-});
+@riverpod
+FutureOr<List<LrcDB>> allRawLyrics(AllRawLyricsRef ref) {
+  return ref.watch(dbHelperProvider).allRawLyrics;
+}
+
+@riverpod
+FutureOr<bool> lyricExists(LyricExistsRef ref, {required String fileName}) {
+  return ref.watch(dbHelperProvider).fileNameExists(fileName);
+}
 
 class DBHelper {
   DBHelper(Isar isar) {
