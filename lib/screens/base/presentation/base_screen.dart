@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../utils/routing/app_routes.dart';
 import '../domain/base_drawer_routes.dart';
 import 'base_notifier.dart';
 
@@ -18,8 +17,9 @@ class BaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final fullPath = GoRouterState.of(context).fullPath;
 
-    final index = AppRoute.values.indexWhere((route) => route.path == fullPath);
-    final title = index > -1 ? AppRoute.values[index].name : 'Home';
+    final index = BaseDrawerRoutes.values
+        .indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
+    final title = index > -1 ? BaseDrawerRoutes.values[index].label : 'Home';
 
     return Scaffold(
       appBar: AppBar(title: Text(title)),
