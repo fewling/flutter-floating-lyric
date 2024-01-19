@@ -1,5 +1,6 @@
 package com.example.floating_lyric
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -7,9 +8,11 @@ import android.content.Intent
 import android.media.MediaMetadata
 import android.media.session.MediaController
 import android.media.session.MediaSession
+import android.media.session.PlaybackState
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore.Audio.Media
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
@@ -60,14 +63,24 @@ class MyNotificationListener : NotificationListenerService() {
     private fun checkAndUpdate(sbn: StatusBarNotification?) {
         if (!sbn?.packageName.equals("com.example.floating_lyric")) {
             val sbnExtras = sbn?.notification?.extras
-            if (sbnExtras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                val token = sbnExtras?.getParcelable(
+                    Notification.EXTRA_MEDIA_SESSION,
+                    MediaSession.Token::class.java
+                )
 
-                val token: MediaSession.Token =
-                    sbnExtras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
+                if (token != null) {
+                    val controller = MediaController(applicationContext, token)
+                    restartTimer(controller)
+                }
 
-                val controller = MediaController(applicationContext, token)
-                restartTimer(controller)
-            }
+            } else if (sbnExtras?.get(Notification.EXTRA_MEDIA_SESSION) != null) {
+                    val token =
+                        sbnExtras[Notification.EXTRA_MEDIA_SESSION] as MediaSession.Token
+
+                    val controller = MediaController(applicationContext, token)
+                    restartTimer(controller)
+                }
         }
     }
 
@@ -100,6 +113,7 @@ class MyNotificationListener : NotificationListenerService() {
         timer.run {
             scheduleAtFixedRate(object : TimerTask() {
 
+                @SuppressLint("SwitchIntDef")
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun run() {
                     // Pass data from one activity to another.
@@ -115,9 +129,32 @@ class MyNotificationListener : NotificationListenerService() {
                         ToFlutterMessage.position = position
 
 
-
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             ToFlutterMessage.isPlaying = controller.playbackState?.isActive == true
+                        } else {
+                            when (controller.playbackState?.state) {
+                                PlaybackState.STATE_PLAYING -> {
+                                    ToFlutterMessage.isPlaying = true
+                                }
+                                PlaybackState.STATE_PAUSED -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                                PlaybackState.STATE_BUFFERING -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                                PlaybackState.STATE_CONNECTING -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                                PlaybackState.STATE_ERROR -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                                PlaybackState.STATE_NONE -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                                PlaybackState.STATE_STOPPED -> {
+                                    ToFlutterMessage.isPlaying = false
+                                }
+                            }
                         }
 
                         ToFlutterMessage.isShowing =
@@ -125,7 +162,13 @@ class MyNotificationListener : NotificationListenerService() {
                         if (ToFlutterMessage.isShowing) {
                             Handler(Looper.getMainLooper()).post {
                                 CustomAlertWindow.getInstance(inflater, windowManager)
-                                    .update(title, artist, duration, position, FromFlutterMessage.lyricLine)
+                                    .update(
+                                        title,
+                                        artist,
+                                        duration,
+                                        position,
+                                        FromFlutterMessage.lyricLine
+                                    )
                             }
                         }
 
