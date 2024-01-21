@@ -1,0 +1,53 @@
+StatusBarNotification(
+pkg=com.now.moov 
+user=UserHandle{
+    0
+} 
+id=1001 
+tag=null 
+key=0|com.now.moov|1001|null|10395: Notification(channel=default_channel_id shortcut=null contentView=null vibrate=null sound=null defaults=0x0 flags=0x68 color=0x00000000 category=transport groupKey=media3_group_key actions=4 vis=PUBLIC))
+
+
+Bundle[
+    {
+        android.title=紅顏如霜, 
+        android.reduced.images=true, 
+        android.subText=null
+        , android.template=android.app.Notification$MediaStyle
+        , android.showChronometer=true
+        , android.text=周杰倫
+        , android.progress=0
+        , android.progressMax=0
+        , android.appInfo=Supplier{VAL_PARCELABLE@520+1568
+        }, 
+        android.showWhen=true, 
+        android.largeIcon=Icon(typ=BITMAP size=126x126), 
+        android.infoText=null, 
+        android.mediaSession=Supplier{VAL_PARCELABLE@2500+128
+        }, android.progressIndeterminate=false, android.remoteInputHistory=null, android.compactActions=[
+            0,
+            1,
+            2
+        ]
+    }
+]
+
+
+
+StatusBarNotification(pkg=com.sonyericsson.music user=UserHandle{
+    0
+} id=2 tag=null key=0|com.sonyericsson.music|2|null|10270: Notification(channel=playback shortcut=null contentView=null vibrate=null sound=null tick defaults=0x0 flags=0x60 color=0x00000000 category=transport actions=3 vis=PUBLIC))
+
+
+
+Bundle[
+    {android.title=七里香, android.reduced.images=true, android.subText=null, android.template=android.app.Notification$MediaStyle, android.showChronometer=false, android.text=周杰倫, android.progress=0, android.progressMax=0, android.appInfo=Supplier{VAL_PARCELABLE@516+2568
+        }, android.showWhen=false, android.largeIcon=Icon(typ=BITMAP size=126x126), android.infoText=null, 
+        android.mediaSession=Supplier{VAL_PARCELABLE@3496+128
+        }, android.progressIndeterminate=false, android.remoteInputHistory=null, android.colorized=false, android.compactActions=[
+            0,
+            1,
+            2
+        ]
+    }
+]

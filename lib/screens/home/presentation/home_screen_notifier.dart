@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_dynamic_calls
 
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_easylogger/flutter_logger.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/lrc.dart';
 import '../../../services/app_preference.dart';
 import '../../../services/db_helper.dart';
+import '../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/platform_invoker.dart';
 import '../domain/home_screen_state.dart';
@@ -17,11 +20,10 @@ final lyricStateProvider =
         HomeScreenStateNotifier.new);
 
 class HomeScreenStateNotifier extends Notifier<HomeScreenState> {
-  static const eventChannel = EventChannel('Floating Lyric Channel');
-
   @override
   HomeScreenState build() {
-    eventChannel.receiveBroadcastStream().listen(updateFromEventChannel);
+    mediaStateStream.listen((event) {});
+
     return const HomeScreenState(currentStep: 0);
   }
 
