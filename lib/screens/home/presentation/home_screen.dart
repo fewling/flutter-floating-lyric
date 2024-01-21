@@ -8,10 +8,10 @@ import '../../../services/app_preference.dart';
 import '../../../services/db_helper.dart';
 import '../../../services/platform_invoker.dart';
 import '../../../widgets/fail_import_dialog.dart';
-import 'lyric_screen_notifier.dart';
+import 'home_screen_notifier.dart';
 
-class LyricScreen extends ConsumerWidget {
-  const LyricScreen({super.key});
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(lyricStateProvider);

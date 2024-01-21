@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../screens/base/presentation/base_screen.dart';
+import '../../screens/home/presentation/home_screen.dart';
 import '../../screens/lyric_list/lyric_list_screen.dart';
-import '../../screens/lyric_screen/presentation/lyric_screen.dart';
 import '../../screens/permission/permission_screen.dart';
 import '../../screens/report/report_screen.dart';
 import '../../screens/settings/settings_screen.dart';
@@ -54,7 +54,7 @@ GoRouter appRouter(AppRouterRef ref) {
             parentNavigatorKey: shellKey,
             path: AppRoute.home.path,
             name: AppRoute.home.name,
-            builder: (context, state) => const LyricScreen(),
+            builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
             parentNavigatorKey: shellKey,

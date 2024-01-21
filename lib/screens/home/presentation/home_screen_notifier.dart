@@ -10,19 +10,19 @@ import '../../../services/app_preference.dart';
 import '../../../services/db_helper.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/platform_invoker.dart';
-import '../domain/lyric_screen_state.dart';
+import '../domain/home_screen_state.dart';
 
 final lyricStateProvider =
-    NotifierProvider<LyricScreenStateNotifier, LyricScreenState>(
-        LyricScreenStateNotifier.new);
+    NotifierProvider<HomeScreenStateNotifier, HomeScreenState>(
+        HomeScreenStateNotifier.new);
 
-class LyricScreenStateNotifier extends Notifier<LyricScreenState> {
+class HomeScreenStateNotifier extends Notifier<HomeScreenState> {
   static const eventChannel = EventChannel('Floating Lyric Channel');
 
   @override
-  LyricScreenState build() {
+  HomeScreenState build() {
     eventChannel.receiveBroadcastStream().listen(updateFromEventChannel);
-    return const LyricScreenState(currentStep: 0);
+    return const HomeScreenState(currentStep: 0);
   }
 
   void updateStep(int value) => state = state.copyWith(currentStep: value);
