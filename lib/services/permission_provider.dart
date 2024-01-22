@@ -1,17 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'platform_invoker.dart';
+import 'method_channels/permission_method_invoker.dart';
 
 part 'permission_provider.freezed.dart';
 
 final _notificationListenerPermissionProvider = FutureProvider((ref) async {
-  final invoker = ref.watch(platformInvokerProvider);
+  final invoker = ref.watch(permissionMethodInvokerProvider.notifier);
   return invoker.checkNotificationListenerPermission();
 });
 
 final _systemAlertWindowPermissionProvider = FutureProvider((ref) async {
-  final invoker = ref.watch(platformInvokerProvider);
+  final invoker = ref.watch(permissionMethodInvokerProvider.notifier);
   return invoker.checkSystemAlertWindowPermission();
 });
 
@@ -24,7 +24,7 @@ class PermissionNotifier extends Notifier<PermissionState> {
   PermissionState build() => _newState();
 
   void requestNotificationListener() {
-    final invoker = ref.read(platformInvokerProvider);
+    final invoker = ref.read(permissionMethodInvokerProvider.notifier);
     invoker.requestNotificationListenerPermission().then((value) =>
         state = state.copyWith(isNotificationListenerGranted: value ?? false));
   }
@@ -32,7 +32,7 @@ class PermissionNotifier extends Notifier<PermissionState> {
   void requestSystemAlertWindow() {
     // https://stackoverflow.com/questions/41603332/onrequestpermissionsresult-not-being-triggered-for-overlay-permission
     // ACTION_MANAGE_OVERLAY_PERMISSION does not return ActivityResult
-    final invoker = ref.read(platformInvokerProvider);
+    final invoker = ref.read(permissionMethodInvokerProvider.notifier);
     invoker.requestSystemAlertWindowPermission();
   }
 

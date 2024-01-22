@@ -8,6 +8,7 @@ import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/floating_window/floating_window_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
+import '../../../services/method_channels/permission_method_invoker.dart';
 import '../domain/home_state.dart';
 
 part 'home_screen_notifier.g.dart';
@@ -79,5 +80,9 @@ class HomeNotifier extends _$HomeNotifier {
       title: '',
     );
     return failed;
+  }
+
+  void start3rdMusicPlayer() {
+    ref.read(permissionMethodInvokerProvider.notifier).start3rdMusicPlayer();
   }
 }

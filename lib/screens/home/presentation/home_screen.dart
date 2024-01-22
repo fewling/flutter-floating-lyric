@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../services/app_preference.dart';
 import '../../../services/db_helper.dart';
-import '../../../services/platform_invoker.dart';
 import '../../../widgets/fail_import_dialog.dart';
 import 'home_screen_notifier.dart';
 
@@ -136,11 +133,9 @@ class MediaSettingContent extends ConsumerWidget {
                 width: double.infinity,
                 child: FloatingActionButton.large(
                   heroTag: 'play',
-                  onPressed: () => Future.delayed(
-                      const Duration(milliseconds: 100),
-                      () => ref
-                          .read(platformInvokerProvider)
-                          .start3rdMusicPlayer()),
+                  onPressed: ref
+                      .read(homeNotifierProvider.notifier)
+                      .start3rdMusicPlayer,
                   child: const Text('Start A Music App'),
                 ),
               ),

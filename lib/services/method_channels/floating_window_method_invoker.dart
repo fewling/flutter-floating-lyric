@@ -7,8 +7,6 @@ import '../floating_lyrics/floating_lyric_notifier.dart';
 
 part 'floating_window_method_invoker.g.dart';
 
-const _channel = MethodChannel('floating_lyric/window_method_channel');
-
 enum WindowPlatformMethod {
   showFloatingWindow,
   closeFloatingWindow,
@@ -20,6 +18,8 @@ enum WindowPlatformMethod {
 
 @Riverpod(keepAlive: true)
 class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
+  static const _channel = MethodChannel('floating_lyric/window_method_channel');
+
   var _state = const WindowState();
 
   @override
