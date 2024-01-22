@@ -79,6 +79,10 @@ class HomeNotifier extends _$HomeNotifier {
       artist: '',
       title: '',
     );
+
+    // if new lyric found for current song, update it
+    ref.invalidate(lyricStateProvider);
+
     return failed;
   }
 
