@@ -93,7 +93,7 @@ class FloatingWindow(
                 floatingMusicSeekBar.visibility = View.VISIBLE
                 floatingMaxTimeTextView.visibility = View.VISIBLE
             } else {
-                floatingTitleTextView.visibility = View.INVISIBLE
+                floatingTitleTextView.visibility = View.GONE
                 floatingCloseImageButton.visibility = View.GONE
                 floatingStartTimeTextView.visibility = View.GONE
                 floatingMusicSeekBar.visibility = View.GONE

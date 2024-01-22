@@ -5,7 +5,6 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.WindowManager
-import com.example.floating_lyric.FromFlutterMessage
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -34,6 +33,8 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
         Log.i(TAG, "onDetachedFromEngine")
         mContext = null
         methodChannel.setMethodCallHandler(null)
+        floatingWindow?.hide()
+        floatingWindow = null
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
