@@ -43,7 +43,7 @@ class HomeScreen extends ConsumerWidget {
         ),
         Step(
           isActive: currentIndex == 2,
-          title: const ListTile(title: Text('Import All Your .lrc Files')),
+          title: const ListTile(title: Text('Import Local .lrc Files')),
           content: const LrcFormatContent(),
         ),
         Step(
