@@ -122,10 +122,6 @@ class MediaSettingContent extends ConsumerWidget {
                 return Text('Music Provider: $mediaAppName');
               },
             ),
-            subtitle: const Text(
-              'If the detected music provider is incorrect, '
-              'please restart your music player and try again.',
-            ),
           )
         : Column(
             children: [

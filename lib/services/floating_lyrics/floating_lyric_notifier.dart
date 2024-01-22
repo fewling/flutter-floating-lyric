@@ -46,6 +46,7 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
             duration: duration,
             isPlaying: isPlaying,
             currentLrc: null,
+            mediaPlayerName: mediaState.mediaPlayerName,
           );
 
           final lrcDB = await dbHelper.getLyric(title, artist);

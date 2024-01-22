@@ -185,6 +185,7 @@ class MediaNotificationListener : NotificationListenerService() {
                     if (debugLogTimerCountdown <= 0) {
                         e.printStackTrace()
                     }
+                    appName = controller.packageName
                 }
 
                 if (debugLogTimerCountdown <= 0) {
