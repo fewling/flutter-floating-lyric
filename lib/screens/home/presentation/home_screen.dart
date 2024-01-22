@@ -237,63 +237,83 @@ class WindowSettingContent extends ConsumerWidget {
   }
 }
 
-class LrcFormatContent extends StatelessWidget {
+class LrcFormatContent extends ConsumerWidget {
   const LrcFormatContent({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    final title = ref.watch(
+      homeNotifierProvider.select((state) => state.title),
+    );
+
+    final artist = ref.watch(
+      homeNotifierProvider.select((state) => state.artist),
+    );
+
+    final isProcessing = ref.watch(
+      homeNotifierProvider.select((state) => state.isProcessingFiles),
+    );
+
+    final txtTheme = Theme.of(context).textTheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ListTile(
-          title: const Text('File for current song should contain:'),
-          subtitle: Consumer(
-            builder: (context, ref, child) {
-              final title = ref.watch(
-                homeNotifierProvider.select((state) => state.title),
-              );
-              final artist = ref.watch(
-                homeNotifierProvider.select((state) => state.artist),
-              );
-              return Text(
-                '[ti:$title]\n'
-                '[ar:$artist]',
-                style: TextStyle(color: colorScheme.outline),
-              );
-            },
+          titleTextStyle: txtTheme.titleSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer,
+          ),
+          title: const Text(
+            'Your LRC file should match one of the following formats:',
           ),
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final isProcessing = ref.watch(
-              homeNotifierProvider.select((state) => state.isProcessingFiles),
-            );
-            return isProcessing
-                ? ElevatedButton.icon(
-                    onPressed: null,
-                    icon: const Center(child: CircularProgressIndicator()),
-                    label: const Text('Importing...'),
-                  )
-                : ElevatedButton.icon(
-                    onPressed: () => ref
-                        .read(homeNotifierProvider.notifier)
-                        .importLRCs()
-                        .then((failedFiles) {
-                      ref.invalidate(allRawLyricsProvider);
-                      if (failedFiles.isNotEmpty) {
-                        showDialog(
-                          context: context,
-                          builder: (_) => FailedImportDialog(failedFiles),
-                        );
-                      }
-                    }),
-                    icon: const Icon(Icons.drive_folder_upload_outlined),
-                    label: const Text('Import'),
-                  );
-          },
+        ListTile(
+          title: const Text('1. File name should be:'),
+          subtitle: SelectableText(
+            '$title - $artist.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
         ),
+        ListTile(
+          title: const Text('2. File name should be:'),
+          subtitle: SelectableText(
+            '$artist - $title.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
+        ),
+        ListTile(
+          title: const Text('3. File should contain:'),
+          subtitle: SelectableText(
+            '[ti:$title]\n'
+            '[ar:$artist]',
+            style: TextStyle(color: colorScheme.outline),
+          ),
+        ),
+        if (isProcessing)
+          ElevatedButton.icon(
+            onPressed: null,
+            icon: const Center(child: CircularProgressIndicator()),
+            label: const Text('Importing...'),
+          )
+        else
+          ElevatedButton.icon(
+            onPressed: () => ref
+                .read(homeNotifierProvider.notifier)
+                .importLRCs()
+                .then((failedFiles) {
+              ref.invalidate(allRawLyricsProvider);
+              if (failedFiles.isNotEmpty) {
+                showDialog(
+                  context: context,
+                  builder: (_) => FailedImportDialog(failedFiles),
+                );
+              }
+            }),
+            icon: const Icon(Icons.drive_folder_upload_outlined),
+            label: const Text('Import'),
+          ),
       ],
     );
   }
