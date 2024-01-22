@@ -1,6 +1,7 @@
 enum AppRoute {
   home(path: '/'),
-  localLyrics(path: '/local-lyrics'),
+  localLyrics(path: '/local-lyric'),
+  localLyricDetail(path: '/local-lyric-detail'),
   settings(path: '/settings'),
   bugReport(path: '/bug-report'),
   permission(path: '/permission');

@@ -4,7 +4,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../screens/base/presentation/base_screen.dart';
 import '../../screens/home/presentation/home_screen.dart';
-import '../../screens/lyric_list/lyric_list_screen.dart';
+import '../../screens/lyric_detail/lyric_detail_screen.dart';
+import '../../screens/lyric_list/presentation/lyric_list_screen.dart';
 import '../../screens/permission/permission_screen.dart';
 import '../../screens/report/report_screen.dart';
 import '../../screens/settings/settings_screen.dart';
@@ -44,6 +45,12 @@ GoRouter appRouter(AppRouterRef ref) {
         path: AppRoute.permission.path,
         name: AppRoute.permission.name,
         builder: (context, state) => const PermissionScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: rootKey,
+        path: AppRoute.localLyricDetail.path,
+        name: AppRoute.localLyricDetail.name,
+        builder: (context, state) => const LyricDetailScreen(),
       ),
       ShellRoute(
         navigatorKey: shellKey,
