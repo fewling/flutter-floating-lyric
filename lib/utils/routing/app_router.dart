@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../screens/base/presentation/base_screen.dart';
 import '../../screens/home/presentation/home_screen.dart';
-import '../../screens/lyric_detail/lyric_detail_screen.dart';
+import '../../screens/lyric_detail/presentation/lyric_detail_screen.dart';
 import '../../screens/lyric_list/presentation/lyric_list_screen.dart';
 import '../../screens/permission/permission_screen.dart';
 import '../../screens/report/report_screen.dart';
@@ -50,7 +50,12 @@ GoRouter appRouter(AppRouterRef ref) {
         parentNavigatorKey: rootKey,
         path: AppRoute.localLyricDetail.path,
         name: AppRoute.localLyricDetail.name,
-        builder: (context, state) => const LyricDetailScreen(),
+        builder: (context, state) {
+          final id = state.pathParameters['id'];
+          // TODO: show error page
+          if (id == null) return const SizedBox.shrink();
+          return LyricDetailScreen(id: id);
+        },
       ),
       ShellRoute(
         navigatorKey: shellKey,

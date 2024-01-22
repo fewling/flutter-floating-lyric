@@ -25,6 +25,7 @@ class LyricListScreen extends StatelessWidget {
         builder: (context, ref, _) => FloatingActionButton(
           hoverElevation: 16,
           tooltip: 'Import',
+          child: const Icon(Icons.add),
           onPressed: () => ref
               .read(lyricListNotifierProvider.notifier)
               .importFiles()
@@ -81,7 +82,9 @@ class LyricListView extends ConsumerWidget {
                 itemCount: lyrics.length,
                 itemBuilder: (context, index) => _LyricTile(
                   title: lyrics[index].fileName,
-                  onTap: () {},
+                  onTap: () => ref
+                      .read(lyricListNotifierProvider.notifier)
+                      .editLyric(lyrics[index]),
                   onDelete: () => _promptDeleteDialog(
                     context,
                     ref,

@@ -15,6 +15,11 @@ FutureOr<List<LrcDB>> allRawLyrics(AllRawLyricsRef ref) {
 }
 
 @riverpod
+FutureOr<LrcDB?> lyricByID(LyricByIDRef ref, {required int id}) {
+  return ref.watch(dbHelperProvider).getLyricByID(id);
+}
+
+@riverpod
 FutureOr<bool> lyricExists(LyricExistsRef ref, {required String fileName}) {
   return ref.watch(dbHelperProvider).fileNameExists(fileName);
 }
@@ -30,6 +35,10 @@ class DBHelper {
       await _isar.lrcDBs.filter().fileNameEqualTo(fileName).count() > 0;
 
   Future<List<LrcDB>> get allRawLyrics => _isar.lrcDBs.where().findAll();
+
+  Future<LrcDB?> getLyricByID(int id) {
+    return _isar.lrcDBs.where().idEqualTo(id).findFirst();
+  }
 
   Future<LrcDB?>? getLyric(String title, String artist) async {
     final result = await _isar.lrcDBs
@@ -68,4 +77,13 @@ class DBHelper {
       _isar.writeTxn(() => _isar.lrcDBs.delete(lyric.id));
 
   Future<void> deleteAllLyrics() => _isar.writeTxn(() => _isar.lrcDBs.clear());
+
+  Future<Id> updateLyric(LrcDB lrc) {
+    return _isar
+        .writeTxn(() => _isar.lrcDBs.put(lrc))
+        .onError((error, stackTrace) {
+      Logger.e('Error updating lyric: $error\nstacktrace: $stackTrace');
+      return -1;
+    });
+  }
 }

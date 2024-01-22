@@ -5,6 +5,8 @@ import '../../../models/lyric_model.dart';
 import '../../../services/db_helper.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
+import '../../../utils/routing/app_router.dart';
+import '../../../utils/routing/app_routes.dart';
 import '../domain/lyric_list_state.dart';
 import 'lyric_list_filter_notifier.dart';
 
@@ -57,4 +59,10 @@ class LyricListNotifier extends _$LyricListNotifier {
 
     return failed;
   }
+
+  Future<Object?> editLyric(LrcDB lyric) =>
+      ref.read(appRouterProvider).pushNamed(
+        AppRoute.localLyricDetail.name,
+        pathParameters: {'id': lyric.id.toString()},
+      );
 }
