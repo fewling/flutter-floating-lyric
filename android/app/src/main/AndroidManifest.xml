@@ -45,15 +45,6 @@
             android:value="2" />
 
        <service
-           android:label="floating_lyric_service"
-           android:name="com.example.floating_lyric.MyNotificationListener"
-           android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-           android:exported="true">
-           <intent-filter>
-               <action android:name="android.service.notification.NotificationListenerService" />
-           </intent-filter>
-       </service>
-       <service
            android:label="Floating Lyric Service"
            android:name="com.example.floating_lyric.features.media_tracker.MediaNotificationListener"
            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"

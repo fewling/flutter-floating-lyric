@@ -23,5 +23,8 @@ class MediaStateBroadcastReceiver(private val eventSink: EventChannel.EventSink)
 
         val data = mediaStates?.map { it.toMap() }
         eventSink.success(data)
+
+
+        // Also update floating window state
     }
 }

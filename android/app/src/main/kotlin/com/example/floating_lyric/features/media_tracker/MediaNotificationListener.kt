@@ -16,6 +16,8 @@ import android.media.session.MediaController
 import android.media.session.PlaybackState
 import android.os.Handler
 import android.os.Looper
+import com.example.floating_lyric.features.floating_window.WindowState
+import com.example.floating_lyric.features.floating_window.WindowStateBroadcastReceiver
 import java.util.*
 
 
@@ -213,14 +215,14 @@ class MediaNotificationListener : NotificationListenerService() {
                 mediaStates.add(mediaState)
             }
 
-            val intent = Intent().apply {
+            val mediaStateIntent = Intent().apply {
                 action = MediaStateBroadcastReceiver.ACTION_MEDIA_STATE_CHANGED
                 putParcelableArrayListExtra(
                     MediaStateBroadcastReceiver.EXTRA_MEDIA_STATE,
                     mediaStates
                 )
             }
-            sendBroadcast(intent)
+            sendBroadcast(mediaStateIntent)
 
             // Repeat this runnable code block again another `HANDLER_PERIOD` milliseconds
             handler.postDelayed(this::startPeriodicHandler, HANDLER_PERIOD)

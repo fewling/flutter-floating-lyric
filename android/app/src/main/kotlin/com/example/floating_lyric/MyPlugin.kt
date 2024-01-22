@@ -24,7 +24,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 
 
-@RequiresApi(Build.VERSION_CODES.M)
 class MyPlugin :
     FlutterPlugin, MethodChannel.MethodCallHandler, ActivityAware,
     PluginRegistry.ActivityResultListener {
@@ -152,40 +151,8 @@ class MyPlugin :
                 }
             }
 
-            "showFloatingWindow" -> {
-                val arg = call.arguments as Map<String, Any>
-                Log.i(TAG, "onMethodCall: arg: $arg")
-                FromFlutterMessage.opacity = arg["opacity"] as Double
-                FromFlutterMessage.r = arg["r"] as Int
-                FromFlutterMessage.g = arg["g"] as Int
-                FromFlutterMessage.b = arg["b"] as Int
-                FromFlutterMessage.a = arg["a"] as Int
-                CustomAlertWindow.getInstance(inflater, windowManager).show()
-            }
-
-            "closeFloatingWindow" -> {
-                CustomAlertWindow.getInstance(inflater, windowManager).hide()
-            }
-
-            "updateFloatingWindow" -> {
-                FromFlutterMessage.lyricLine = call.arguments as String
-            }
-
             "test" -> {
                 Toast.makeText(mContext, "Test Method", Toast.LENGTH_SHORT).show()
-            }
-
-            "updateWindowOpacity" -> {
-                val arg = call.arguments as Map<String, Any>
-                FromFlutterMessage.opacity = arg["opacity"] as Double
-            }
-
-            "updateWindowColor" -> {
-                val arg = call.arguments as Map<String, Any>
-                FromFlutterMessage.r = arg["r"] as Int
-                FromFlutterMessage.g = arg["g"] as Int
-                FromFlutterMessage.b = arg["b"] as Int
-                FromFlutterMessage.a = arg["a"] as Int
             }
 
             else -> {

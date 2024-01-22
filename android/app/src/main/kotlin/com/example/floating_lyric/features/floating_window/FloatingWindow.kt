@@ -1,57 +1,76 @@
-package com.example.floating_lyric
+package com.example.floating_lyric.features.floating_window
 
-import android.graphics.*
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.Color
+import android.graphics.PixelFormat
 import android.os.Build
 import android.util.Log
 import android.view.*
 import android.widget.ImageButton
 import android.widget.SeekBar
 import android.widget.TextView
+import com.example.floating_lyric.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CustomAlertWindow(
+class FloatingWindow(
     private val inflater: LayoutInflater,
-    private val windowManager: WindowManager
+    private val windowManager: WindowManager,
+    private val onWindowClose: () -> Unit
 ) {
-    companion object {
-        private const val TAG = "CustomAlertWindow"
-        private var instance: CustomAlertWindow? = null
 
-        fun getInstance(inflater: LayoutInflater, windowManager: WindowManager): CustomAlertWindow {
-            if (instance == null) {
-                instance = CustomAlertWindow(inflater, windowManager)
-            }
-            return instance!!
-        }
+    companion object {
+        private const val TAG = "FloatingWindow"
     }
 
-    private lateinit var alertView: View
-    private lateinit var containerView: View
+    private val layoutParams: WindowManager.LayoutParams =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+        } else {
+            WindowManager.LayoutParams(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+        }.apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = 0
+            y = 0
+        }
 
-    private lateinit var floatingLyricTextView: TextView
-    private lateinit var floatingTitleTextView: TextView
-    private lateinit var floatingCloseImageButton: ImageButton
-    private lateinit var floatingStartTimeTextView: TextView
-    private lateinit var floatingMusicSeekBar: SeekBar
-    private lateinit var floatingMaxTimeTextView: TextView
+    private val alertView: View
+    private val containerView: View
+
+    private val floatingLyricTextView: TextView
+    private val floatingTitleTextView: TextView
+    private val floatingCloseImageButton: ImageButton
+    private val floatingStartTimeTextView: TextView
+    private val floatingMusicSeekBar: SeekBar
+    private val floatingMaxTimeTextView: TextView
 
     private var showLyricOnly: Boolean = false
-    var isShowing: Boolean = false
 
-    fun show() {
-        Log.i(TAG, "show: isShowing: $isShowing")
-        val layoutParams = WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-            PixelFormat.TRANSLUCENT
-        )
+    var state: WindowState = WindowState(
+        isVisible = true,
+        lyricLine = "",
+        opacity = 50.0,
+        r = 255,
+        g = 255,
+        b = 255,
+        a = 255,
+    )
 
-        layoutParams.gravity = Gravity.TOP or Gravity.START
-        layoutParams.x = 0
-        layoutParams.y = 0
+    init {
+        Log.i(TAG, "Init")
 
         alertView = inflater.inflate(R.layout.floating_lyric_service_layout, null)
         containerView = alertView.findViewById(R.id.notification_main_column_container)
@@ -114,72 +133,89 @@ class CustomAlertWindow(
 
         val color =
             Color.argb(
-                (FromFlutterMessage.opacity / 100 * 255).toInt(),
+                (state.opacity / 100 * 255).toInt(),
                 0,
                 0,
                 0
             ) // red color with alpha
         containerView.setBackgroundColor(color)
 
+    }
+
+    fun show() {
+        Log.i(TAG, "show()")
         windowManager.addView(alertView, layoutParams)
-        isShowing = true
-        ToFlutterMessage.isShowing = true
+
+        updateState(state.copy(isVisible = true))
     }
 
     fun hide() {
-        Log.i(TAG, "hide: isShowing: $isShowing")
+        Log.i(TAG, "hide()")
         try {
             windowManager.removeView(alertView)
-            isShowing = false
-            ToFlutterMessage.isShowing = false
+            updateState(state.copy(isVisible = false))
+            onWindowClose()
+
         } catch (e: Exception) {
             Log.e(TAG, e.toString())
         }
     }
 
-    fun update(title: String?, artist: String?, duration: Long, position: Long, lyricLine: String) {
-//        alertView.setBackgroundColor(Color.valueOf(FlutterMessage.backgroundColor).toArgb())
-//        containerView.alpha = (FlutterMessage.opacity/100 * 255).toFloat()
+
+    fun updateState(state: WindowState) {
+        this.state = state
+        updateTitle()
+        updateProgressBar()
+        updateLyricLine()
+        updateColor()
+    }
+
+    private fun updateTitle() {
+        floatingTitleTextView.text = state.title
+    }
+
+    private fun updateProgressBar() {
+        floatingMusicSeekBar.max = state.seekBarMax
+        floatingMusicSeekBar.progress = state.seekBarProgress
+        if (floatingMusicSeekBar.progress == state.seekBarMax)
+            floatingMusicSeekBar.progress = 0
+
+        val formatter = SimpleDateFormat("mm:ss.SS")
+        formatter.timeZone = TimeZone.getTimeZone("GMT")
+        try {
+            floatingStartTimeTextView.text = formatter.format(state.seekBarProgress)
+            floatingMaxTimeTextView.text = formatter.format(state.seekBarMax)
+        } catch (e: Exception) {
+            Log.e(TAG, "format error: $e")
+        }
+    }
 
 
-        // Setting colors
+    private fun updateLyricLine() {
+        floatingLyricTextView.text = state.lyricLine
+    }
+
+    private fun updateColor() {
         val color = Color.argb(
-            FromFlutterMessage.a,
-            FromFlutterMessage.r,
-            FromFlutterMessage.g,
-            FromFlutterMessage.b
+            state.a,
+            state.r,
+            state.g,
+            state.b,
         )
-        val bgColor = Color.argb((FromFlutterMessage.opacity / 100 * 255).toInt(), 0, 0, 0)
+
+        val bgColor = Color.argb((state.opacity / 100 * 255).toInt(), 0, 0, 0)
         containerView.setBackgroundColor(bgColor)
         floatingTitleTextView.setTextColor(color)
         floatingLyricTextView.setTextColor(color)
         floatingStartTimeTextView.setTextColor(color)
         floatingMaxTimeTextView.setTextColor(color)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             floatingCloseImageButton.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
             floatingMusicSeekBar.thumb.colorFilter =
                 BlendModeColorFilter(color, BlendMode.SRC_IN)
             floatingMusicSeekBar.progressDrawable.colorFilter =
                 BlendModeColorFilter(color, BlendMode.SRC_IN)
-        }
-
-
-        // Setting content
-        floatingTitleTextView.text = "$title - $artist"
-        floatingLyricTextView.text = lyricLine
-
-        floatingMusicSeekBar.max = duration.toInt()
-        floatingMusicSeekBar.progress = position.toInt()
-        if (floatingMusicSeekBar.progress == duration.toInt())
-            floatingMusicSeekBar.progress = 0
-
-        val formatter = SimpleDateFormat("mm:ss.SS")
-        formatter.timeZone = TimeZone.getTimeZone("GMT")
-        try {
-            floatingStartTimeTextView.text = formatter.format(position)
-            floatingMaxTimeTextView.text = formatter.format(duration)
-        } catch (e: Exception) {
-            Log.e(TAG, "format error: $e")
         }
     }
 }
