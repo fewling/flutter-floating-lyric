@@ -1,12 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../models/lrc.dart';
+import '../../models/lrc.dart';
 
-part 'home_screen_state.freezed.dart';
+part 'floating_lyric_state.freezed.dart';
 
 @freezed
-class HomeScreenState with _$HomeScreenState {
-  const factory HomeScreenState({
+class FloatingLyricState with _$FloatingLyricState {
+  const factory FloatingLyricState({
     required int currentStep,
     @Default(false) bool isFloatingWindowShown,
     @Default(false) bool isPlaying,
@@ -17,5 +17,6 @@ class HomeScreenState with _$HomeScreenState {
     @Default('') String mediaPlayerName,
     Lrc? currentLrc,
     @Default(false) bool isProcessingFiles,
-  }) = _HomeScreenState;
+    String? currentLine,
+  }) = _FloatingLyricState;
 }

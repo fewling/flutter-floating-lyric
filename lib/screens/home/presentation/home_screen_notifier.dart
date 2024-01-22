@@ -1,143 +1,61 @@
 // ignore_for_file: avoid_dynamic_calls
 
-import 'dart:async';
+import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_easylogger/flutter_logger.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../models/lrc.dart';
-import '../../../services/app_preference.dart';
-import '../../../services/db_helper.dart';
-import '../../../services/event_channels/media_states/media_state_event_channel.dart';
+import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
+import '../../../services/floating_window/floating_window_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
-import '../../../services/platform_invoker.dart';
-import '../domain/home_screen_state.dart';
+import '../domain/home_state.dart';
 
-final lyricStateProvider =
-    NotifierProvider<HomeScreenStateNotifier, HomeScreenState>(
-        HomeScreenStateNotifier.new);
+part 'home_screen_notifier.g.dart';
 
-class HomeScreenStateNotifier extends Notifier<HomeScreenState> {
+@Riverpod(keepAlive: true)
+class HomeNotifier extends _$HomeNotifier {
   @override
-  HomeScreenState build() {
-    mediaStateStream.listen((event) {});
+  HomeState build() {
+    ref.listen(
+      lyricStateProvider,
+      (_, next) {
+        final progress = next.position / next.duration;
 
-    return const HomeScreenState(currentStep: 0);
+        state = state.copyWith(
+          isPlaying: next.isPlaying,
+          title: next.title,
+          artist: next.artist,
+          mediaAppName: next.mediaPlayerName,
+          progress: progress.isFinite || progress.isNaN ? progress : 0.0,
+        );
+      },
+    );
+
+    ref.listen(
+      floatingWindowNotifierProvider,
+      (_, next) {
+        state = state.copyWith(isWindowVisible: next.isVisible);
+      },
+    );
+
+    return const HomeState();
   }
 
-  void updateStep(int value) => state = state.copyWith(currentStep: value);
-
-  Future<void> toggleWindowVisibility() async {
-    final nativeIsShowing =
-        await ref.read(platformInvokerProvider).checkFloatingWindow();
-
-    if (nativeIsShowing == null) return;
-
-    final invoker = ref.read(platformInvokerProvider);
-    if (!nativeIsShowing) {
-      invoker.showFloatingWindow();
-    } else if (nativeIsShowing) {
-      invoker.closeFloatingWindow();
-    }
-
-    final isNativeShowingAfterToggle =
-        await ref.read(platformInvokerProvider).checkFloatingWindow();
-    state = state.copyWith(
-        isFloatingWindowShown: isNativeShowingAfterToggle ?? false);
+  void updateStep(int value) {
+    state = state.copyWith(currentIndex: value);
   }
 
-  Future<void> updateFromEventChannel(event) async {
-    try {
-      final mediaPlayerName = event['mediaPlayerName'] as String;
-      final title = event['title'] as String;
-      final artist = event['artist'] as String;
-      final position = event['position'] as double;
-      final duration = event['duration'] as double;
-      final isPlaying = event['isPlaying'] as bool;
-      final isShowing = event['isShowing'] as bool;
-      // Logger.i('updateFromEventChannel: $event');
-
-      final dbHelper = ref.read(dbHelperProvider);
-
-      final isNewSong = state.title != title;
-
-      if (isNewSong) {
-        final lrcDB = isNewSong ? await dbHelper.getLyric(title, artist) : null;
-        final isLyricFound = lrcDB != null;
-
-        Logger.d(
-            'isNewSong: $isNewSong, isLyricFound: $isLyricFound, title: $title, state.title: ${state.title}');
-        if (isLyricFound) {
-          state = state.copyWith(
-              mediaPlayerName: mediaPlayerName,
-              title: title,
-              artist: artist,
-              position: position,
-              duration: duration,
-              isPlaying: isPlaying,
-              isFloatingWindowShown: isShowing,
-              currentLrc: Lrc(lrcDB.content ?? ''));
-        } else {
-          state = state.copyWith(
-              mediaPlayerName: mediaPlayerName,
-              title: title,
-              artist: artist,
-              position: position,
-              duration: duration,
-              isPlaying: isPlaying,
-              isFloatingWindowShown: isShowing,
-              currentLrc: null);
-        }
-      } else {
-        if (state.isFloatingWindowShown == isShowing) {
-          state = state.copyWith(
-            mediaPlayerName: mediaPlayerName,
-            title: title,
-            artist: artist,
-            position: position,
-            duration: duration,
-            isPlaying: isPlaying,
-          );
-        } else {
-          state = state.copyWith(
-            mediaPlayerName: mediaPlayerName,
-            title: title,
-            artist: artist,
-            position: position,
-            duration: duration,
-            isPlaying: isPlaying,
-            isFloatingWindowShown: isShowing,
-          );
-        }
-      }
-
-      if (isPlaying) sendLyricToNative();
-    } catch (e) {
-      Logger.e(e);
-    }
+  void toggleWindow(bool value) {
+    // TODO
   }
 
-  Future<void> sendLyricToNative() async {
-    final invoker = ref.read(platformInvokerProvider);
-
-    final position = state.position;
-    final lrc = state.currentLrc;
-
-    if (lrc == null) {
-      await invoker.updateFloatingWindow('No Lyric Found');
-    } else {
-      for (final line in lrc.lines.reversed) {
-        if (position > line.time.inMilliseconds || line == lrc.lines.first) {
-          invoker.updateFloatingWindow(line.line);
-          break;
-        }
-      }
-    }
+  void updateWindowColor(Color value) {
+    // TODO
   }
 
-  Future<List<PlatformFile>> pickLyrics() async {
+  void updateWindowOpacity(double value) {}
+
+  Future<List<PlatformFile>> importLRCs() async {
     state = state.copyWith(isProcessingFiles: true);
     final failed = await ref.read(lrcProcessorProvider).pickLrcFiles();
 
@@ -145,18 +63,7 @@ class HomeScreenStateNotifier extends Notifier<HomeScreenState> {
       isProcessingFiles: false,
       artist: '',
       title: '',
-      currentLrc: null,
     );
     return failed;
-  }
-
-  void updateWindowOpacity(double value) {
-    ref.read(preferenceProvider.notifier).updateOpacity(value.ceilToDouble());
-    ref.read(platformInvokerProvider).updateWindowOpacity();
-  }
-
-  void updateWindowColor(Color color) {
-    ref.read(preferenceProvider.notifier).updateColor(color);
-    ref.read(platformInvokerProvider).updateWindowColor();
   }
 }

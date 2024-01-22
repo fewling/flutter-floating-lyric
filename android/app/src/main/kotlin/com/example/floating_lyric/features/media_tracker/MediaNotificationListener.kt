@@ -194,6 +194,7 @@ class MediaNotificationListener : NotificationListenerService() {
                         album: $album
                         artist: $artist
                         duration: $duration
+                        position: $position
                         isPlaying: $isPlaying
                     """.trimIndent()
                     )
