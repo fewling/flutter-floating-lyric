@@ -5,8 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/lyric_model.dart';
-import 'services/app_preference.dart';
 import 'services/db_helper.dart';
+import 'services/preferences/app_preference_notifier.dart';
 import 'utils/routing/app_router.dart';
 
 Future<void> main() async {
@@ -36,11 +36,11 @@ class FloatingLyricApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLight = ref.watch(
-      preferenceProvider.select((value) => value.isLight),
+      preferenceNotifierProvider.select((value) => value.isLight),
     );
 
     final colorSchemeSeed = ref.watch(
-      preferenceProvider.select((value) => value.color),
+      preferenceNotifierProvider.select((value) => value.appColorScheme),
     );
 
     return MaterialApp.router(

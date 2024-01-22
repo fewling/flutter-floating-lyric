@@ -3,8 +3,8 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../services/app_preference.dart';
 import '../../../services/db_helper.dart';
+import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../widgets/fail_import_dialog.dart';
 import 'home_screen_notifier.dart';
 
@@ -174,7 +174,7 @@ class WindowSettingContent extends ConsumerWidget {
           leading: const Icon(Icons.color_lens),
           enabled: visibleFloatingWindow,
           trailing: ColoredBox(
-            color: Color(ref.watch(preferenceProvider).color),
+            color: Color(ref.watch(preferenceNotifierProvider).color),
             child: const SizedBox(width: 24, height: 24),
           ),
           onTap: () => showDialog(
@@ -184,7 +184,7 @@ class WindowSettingContent extends ConsumerWidget {
                 child: Consumer(
                   builder: (context, ref, child) {
                     final color = ref.watch(
-                      preferenceProvider.select((value) => value.color),
+                      preferenceNotifierProvider.select((value) => value.color),
                     );
                     return ColorPicker(
                       pickerColor: Color(color),
@@ -213,7 +213,7 @@ class WindowSettingContent extends ConsumerWidget {
           trailing: Consumer(
             builder: (context, ref, child) {
               final opacity = ref.watch(
-                preferenceProvider.select((value) => value.opacity),
+                preferenceNotifierProvider.select((value) => value.opacity),
               );
               return Text('$opacity%');
             },
@@ -223,7 +223,7 @@ class WindowSettingContent extends ConsumerWidget {
         Consumer(
           builder: (context, ref, child) {
             final opacity = ref.watch(
-              preferenceProvider.select((value) => value.opacity),
+              preferenceNotifierProvider.select((value) => value.opacity),
             );
             return Slider(
               max: 100,

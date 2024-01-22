@@ -3,12 +3,12 @@ import 'dart:ui';
 import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../services/app_preference.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/floating_window/floating_window_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
 import '../../../services/method_channels/permission_method_invoker.dart';
+import '../../../services/preferences/app_preference_notifier.dart';
 import '../domain/home_state.dart';
 
 part 'home_screen_notifier.g.dart';
@@ -63,11 +63,11 @@ class HomeNotifier extends _$HomeNotifier {
   }
 
   void updateWindowColor(Color value) {
-    ref.read(preferenceProvider.notifier).updateColor(value);
+    ref.read(preferenceNotifierProvider.notifier).updateColor(value);
   }
 
   void updateWindowOpacity(double value) {
-    ref.read(preferenceProvider.notifier).updateOpacity(value);
+    ref.read(preferenceNotifierProvider.notifier).updateOpacity(value);
   }
 
   Future<List<PlatformFile>> importLRCs() async {
