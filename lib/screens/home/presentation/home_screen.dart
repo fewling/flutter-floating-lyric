@@ -334,17 +334,16 @@ class OnlineLyricContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Consumer(
-          builder: (context, ref, child) {
-            final title = ref.watch(
-              homeNotifierProvider.select((s) => s.mediaState?.title ?? ''),
-            );
-
-            return ListTile(
-              title: const Text('Title'),
-              subtitle: Text(title),
-            );
-          },
+        ListTile(
+          title: const Text('Title'),
+          subtitle: Consumer(
+            builder: (context, ref, child) {
+              final title = ref.watch(
+                homeNotifierProvider.select((s) => s.mediaState?.title ?? ''),
+              );
+              return Text(title);
+            },
+          ),
         ),
         ListTile(
           title: const Text('Artist'),
@@ -379,6 +378,40 @@ class OnlineLyricContent extends StatelessWidget {
               return Text('${duration / 1000} seconds');
             },
           ),
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            return ElevatedButton(
+              onPressed: () => ref
+                  .read(homeNotifierProvider.notifier)
+                  .fetchLyric()
+                  .then((lrcResponse) {
+                final content = lrcResponse.syncedLyrics ??
+                    lrcResponse.plainLyrics ??
+                    'No lyric found for this song.';
+
+                return showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    icon: const Icon(Icons.info_outline),
+                    title: const Text('Lyric Fetch Result'),
+                    content: SelectableText(content),
+                    actions: [
+                      TextButton(
+                        onPressed: context.pop,
+                        child: const Text('Close'),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('Save'),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+              child: const Text('Fetch'),
+            );
+          },
         ),
       ],
     );

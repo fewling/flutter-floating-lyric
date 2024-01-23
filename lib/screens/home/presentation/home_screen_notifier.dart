@@ -5,6 +5,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/floating_window/floating_window_notifier.dart';
+import '../../../services/lrclib/data/lrclib_response.dart';
+import '../../../services/lrclib/repo/lrclib_repository.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
 import '../../../services/method_channels/permission_method_invoker.dart';
@@ -80,5 +82,20 @@ class HomeNotifier extends _$HomeNotifier {
 
   void start3rdMusicPlayer() {
     ref.read(permissionMethodInvokerProvider.notifier).start3rdMusicPlayer();
+  }
+
+  Future<LrcLibResponse> fetchLyric() async {
+    if (state.mediaState == null) throw Exception('No media state found');
+
+    final response = await ref.read(
+      lyricProvider(
+        trackName: state.mediaState!.title,
+        artistName: state.mediaState!.artist,
+        albumName: state.mediaState!.album,
+        duration: state.mediaState!.duration ~/ 1000,
+      ).future,
+    );
+
+    return response;
   }
 }
