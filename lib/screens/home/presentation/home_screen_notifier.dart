@@ -18,29 +18,18 @@ class HomeNotifier extends _$HomeNotifier {
   @override
   HomeState build() {
     ref.listen(
-      lyricStateProvider,
-      (_, next) {
-        final progress = next.position / next.duration;
-
-        state = state.copyWith(
-          isPlaying: next.isPlaying,
-          title: next.title,
-          artist: next.artist,
-          mediaAppName: next.mediaPlayerName,
-          progress: progress.isFinite || progress.isNaN ? progress : 0.0,
-        );
+      lyricStateProvider.select((value) => value.mediaState),
+      (prev, next) {
+        if (prev == next) return;
+        state = state.copyWith(mediaState: next);
       },
     );
 
     ref.listen(
-      floatingWindowNotifierProvider,
+      floatingWindowNotifierProvider.select((value) => value.isVisible),
       (prev, next) {
-        final progress = next.seekBarProgress / next.seekBarMax;
-
-        state = state.copyWith(
-          isWindowVisible: next.isVisible,
-          progress: progress.isInfinite || progress.isNaN ? 0.0 : progress,
-        );
+        if (prev == next) return;
+        state = state.copyWith(isWindowVisible: next);
       },
     );
 
@@ -76,8 +65,11 @@ class HomeNotifier extends _$HomeNotifier {
 
     state = state.copyWith(
       isProcessingFiles: false,
-      artist: '',
-      title: '',
+      mediaState: state.mediaState?.copyWith(
+        title: '',
+        artist: '',
+        album: '',
+      ),
     );
 
     // if new lyric found for current song, update it

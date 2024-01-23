@@ -17,11 +17,11 @@ class HomeScreen extends ConsumerWidget {
     );
 
     final isPlaying = ref.watch(
-      homeNotifierProvider.select((state) => state.isPlaying),
+      homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false),
     );
 
     final visibleFloatingWindow = ref.watch(
-      homeNotifierProvider.select((state) => state.isWindowVisible),
+      homeNotifierProvider.select((s) => s.isWindowVisible),
     );
 
     return Stepper(
@@ -48,6 +48,11 @@ class HomeScreen extends ConsumerWidget {
         ),
         Step(
           isActive: currentIndex == 3,
+          title: const ListTile(title: Text('Fetch Lyrics Online')),
+          content: const OnlineLyricContent(),
+        ),
+        Step(
+          isActive: currentIndex == 4,
           title: const ListTile(title: Text('Reminders')),
           content: const ReminderStep(),
         ),
@@ -62,19 +67,17 @@ class MediaSettingTitle extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isPlaying = ref.watch(
-      homeNotifierProvider.select((state) => state.isPlaying),
-    );
+        homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false));
 
     return isPlaying
         ? ListTile(
             title: Consumer(
               builder: (context, ref, child) {
-                final title = ref.watch(
-                  homeNotifierProvider.select((state) => state.title),
-                );
-                final artist = ref.watch(
-                  homeNotifierProvider.select((state) => state.artist),
-                );
+                final title = ref.watch(homeNotifierProvider
+                    .select((s) => s.mediaState?.title ?? ''));
+                final artist = ref.watch(homeNotifierProvider
+                    .select((s) => s.mediaState?.artist ?? ''));
+
                 return Text(
                   'Currently Playing: $title - $artist',
                   maxLines: 1,
@@ -84,10 +87,15 @@ class MediaSettingTitle extends ConsumerWidget {
             ),
             subtitle: Consumer(
               builder: (context, ref, child) {
-                final progress = ref.watch(
-                  homeNotifierProvider.select((state) => state.progress),
+                final position = ref.watch(homeNotifierProvider
+                    .select((s) => s.mediaState?.position ?? 0));
+                final duration = ref.watch(homeNotifierProvider
+                    .select((value) => value.mediaState?.duration ?? 0));
+                final progress = position / duration;
+
+                return LinearProgressIndicator(
+                  value: progress.isInfinite || progress.isNaN ? 0 : progress,
                 );
-                return LinearProgressIndicator(value: progress);
               },
             ),
           )
@@ -106,7 +114,7 @@ class MediaSettingContent extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     final isPlaying = ref.watch(
-      homeNotifierProvider.select((state) => state.isPlaying),
+      homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false),
     );
 
     return isPlaying
@@ -116,7 +124,7 @@ class MediaSettingContent extends ConsumerWidget {
               builder: (context, ref, child) {
                 final mediaAppName = ref.watch(
                   homeNotifierProvider.select(
-                    (state) => state.mediaAppName,
+                    (s) => s.mediaState?.mediaPlayerName ?? '',
                   ),
                 );
                 return Text('Music Provider: $mediaAppName');
@@ -245,11 +253,11 @@ class LrcFormatContent extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     final title = ref.watch(
-      homeNotifierProvider.select((state) => state.title),
+      homeNotifierProvider.select((s) => s.mediaState?.title),
     );
 
     final artist = ref.watch(
-      homeNotifierProvider.select((state) => state.artist),
+      homeNotifierProvider.select((s) => s.mediaState?.artist),
     );
 
     final isProcessing = ref.watch(
@@ -314,6 +322,64 @@ class LrcFormatContent extends ConsumerWidget {
             icon: const Icon(Icons.drive_folder_upload_outlined),
             label: const Text('Import'),
           ),
+      ],
+    );
+  }
+}
+
+class OnlineLyricContent extends StatelessWidget {
+  const OnlineLyricContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Consumer(
+          builder: (context, ref, child) {
+            final title = ref.watch(
+              homeNotifierProvider.select((s) => s.mediaState?.title ?? ''),
+            );
+
+            return ListTile(
+              title: const Text('Title'),
+              subtitle: Text(title),
+            );
+          },
+        ),
+        ListTile(
+          title: const Text('Artist'),
+          subtitle: Consumer(
+            builder: (context, ref, child) {
+              final artist = ref.watch(
+                homeNotifierProvider.select((s) => s.mediaState?.artist ?? ''),
+              );
+              return Text(artist);
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Album'),
+          subtitle: Consumer(
+            builder: (context, ref, child) {
+              final album = ref.watch(
+                homeNotifierProvider.select((s) => s.mediaState?.album ?? ''),
+              );
+              return Text(album);
+            },
+          ),
+        ),
+        ListTile(
+          title: const Text('Duration'),
+          subtitle: Consumer(
+            builder: (context, ref, child) {
+              final duration = ref.watch(
+                homeNotifierProvider.select((s) => s.mediaState?.duration ?? 0),
+              );
+
+              return Text('${duration / 1000} seconds');
+            },
+          ),
+        ),
       ],
     );
   }

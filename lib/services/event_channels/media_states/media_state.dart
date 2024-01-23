@@ -8,6 +8,7 @@ class MediaState with _$MediaState {
     required String mediaPlayerName,
     required String title,
     required String artist,
+    required String album,
     required double position,
     required double duration,
     required bool isPlaying,

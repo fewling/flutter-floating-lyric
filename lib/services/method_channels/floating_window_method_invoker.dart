@@ -37,11 +37,12 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
     ref.listen(
       lyricStateProvider,
       (prev, next) {
+        final mediaState = next.mediaState;
         _state = _state.copyWith(
-          title: '${next.title} - ${next.artist}',
+          title: '${mediaState?.title} - ${mediaState?.artist}',
           lyricLine: next.currentLine ?? 'No lyric',
-          seekBarMax: next.duration.toInt(),
-          seekBarProgress: next.position.toInt(),
+          seekBarMax: mediaState?.duration.toInt() ?? 0,
+          seekBarProgress: mediaState?.position.toInt() ?? 0,
         );
         updateFloatingWindow();
       },

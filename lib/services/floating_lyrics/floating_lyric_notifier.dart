@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,7 +5,6 @@ import '../../models/lrc.dart';
 import '../db_helper.dart';
 import '../event_channels/media_states/media_state.dart';
 import '../event_channels/media_states/media_state_event_channel.dart';
-import '../lyric_file_processor.dart';
 import 'floating_lyric_state.dart';
 
 final lyricStateProvider =
@@ -17,11 +15,8 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
   @override
   FloatingLyricState build() {
     mediaStateStream.listen(updateFromEventChannel);
-
-    return const FloatingLyricState(currentStep: 0);
+    return const FloatingLyricState();
   }
-
-  void updateStep(int value) => state = state.copyWith(currentStep: value);
 
   Future<void> updateFromEventChannel(List<MediaState> mediaStates) async {
     try {
@@ -32,21 +27,16 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
         final artist = mediaState.artist;
         final position = mediaState.position;
         final duration = mediaState.duration;
-        final isPlaying = mediaState.isPlaying;
         final currentLrc = state.currentLrc;
 
         final dbHelper = ref.read(dbHelperProvider);
-        final isNewSong = state.title != title || state.artist != artist;
+        final isNewSong = state.mediaState?.title != title ||
+            state.mediaState?.artist != artist;
 
         if (isNewSong) {
           state = state.copyWith(
-            title: title,
-            artist: artist,
-            position: position,
-            duration: duration,
-            isPlaying: isPlaying,
+            mediaState: mediaState,
             currentLrc: null,
-            mediaPlayerName: mediaState.mediaPlayerName,
           );
 
           final lrcDB = await dbHelper.getLyric(title, artist);
@@ -62,8 +52,10 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
                 line == currentLrc.lines.first) {
               state = state.copyWith(
                 currentLine: line.line,
-                position: position,
-                duration: duration,
+                mediaState: state.mediaState?.copyWith(
+                  position: position,
+                  duration: duration,
+                ),
               );
               break;
             }
@@ -71,8 +63,10 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
         } else if (currentLrc == null) {
           state = state.copyWith(
             currentLine: 'No Lyric Found',
-            position: position,
-            duration: duration,
+            mediaState: state.mediaState?.copyWith(
+              position: position,
+              duration: duration,
+            ),
           );
         }
         break;
@@ -80,18 +74,5 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
     } catch (e) {
       Logger.e(e);
     }
-  }
-
-  Future<List<PlatformFile>> pickLyrics() async {
-    state = state.copyWith(isProcessingFiles: true);
-    final failed = await ref.read(lrcProcessorProvider).pickLrcFiles();
-
-    state = state.copyWith(
-      isProcessingFiles: false,
-      artist: '',
-      title: '',
-      currentLrc: null,
-    );
-    return failed;
   }
 }

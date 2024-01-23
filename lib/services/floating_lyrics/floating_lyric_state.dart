@@ -1,22 +1,15 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/lrc.dart';
+import '../event_channels/media_states/media_state.dart';
 
 part 'floating_lyric_state.freezed.dart';
 
 @freezed
 class FloatingLyricState with _$FloatingLyricState {
   const factory FloatingLyricState({
-    required int currentStep,
-    @Default(false) bool isFloatingWindowShown,
-    @Default(false) bool isPlaying,
-    @Default(0) double position,
-    @Default(0) double duration,
-    @Default('') String title,
-    @Default('') String artist,
-    @Default('') String mediaPlayerName,
+    @Default(null) MediaState? mediaState,
     Lrc? currentLrc,
-    @Default(false) bool isProcessingFiles,
     String? currentLine,
   }) = _FloatingLyricState;
 }
