@@ -86,4 +86,8 @@ class DBHelper {
       return -1;
     });
   }
+
+  Future<Id> putLyric(LrcDB lrcDB) {
+    return _isar.writeTxn(() => _isar.lrcDBs.put(lrcDB));
+  }
 }

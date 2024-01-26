@@ -1,8 +1,11 @@
 import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:isar/isar.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../models/lyric_model.dart';
+import '../../../services/db_helper.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/floating_window/floating_window_notifier.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
@@ -84,18 +87,37 @@ class HomeNotifier extends _$HomeNotifier {
     ref.read(permissionMethodInvokerProvider.notifier).start3rdMusicPlayer();
   }
 
-  Future<LrcLibResponse> fetchLyric() async {
+  Future<LrcLibResponse?> fetchLyric() async {
     if (state.mediaState == null) throw Exception('No media state found');
 
-    final response = await ref.read(
-      lyricProvider(
-        trackName: state.mediaState!.title,
-        artistName: state.mediaState!.artist,
-        albumName: state.mediaState!.album,
-        duration: state.mediaState!.duration ~/ 1000,
-      ).future,
-    );
+    try {
+      final response = await ref.read(
+        lyricProvider(
+          trackName: state.mediaState!.title,
+          artistName: state.mediaState!.artist,
+          albumName: state.mediaState!.album,
+          duration: state.mediaState!.duration ~/ 1000,
+        ).future,
+      );
 
-    return response;
+      return response;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
+    final lrcDB = LrcDB()
+      ..fileName = '${lrcResponse.trackName} - ${lrcResponse.artistName}'
+      ..title = lrcResponse.trackName
+      ..artist = lrcResponse.artistName
+      ..content = lrcResponse.syncedLyrics;
+
+    final id = await ref.read(dbHelperProvider).putLyric(lrcDB);
+
+    // if new lyric found for current song, update it
+    if (id >= 0) ref.invalidate(lyricStateProvider);
+
+    return id;
   }
 }

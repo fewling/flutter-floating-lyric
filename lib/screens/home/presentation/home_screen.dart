@@ -38,22 +38,23 @@ class HomeScreen extends ConsumerWidget {
         Step(
           isActive: currentIndex == 1,
           state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
-          title: const ListTile(title: Text('Floating Window Settings')),
+          title: const Text('Floating Window Settings'),
           content: const WindowSettingContent(),
         ),
         Step(
           isActive: currentIndex == 2,
-          title: const ListTile(title: Text('Import Local .lrc Files')),
+          title: const Text('Import Local .lrc Files'),
           content: const LrcFormatContent(),
         ),
         Step(
           isActive: currentIndex == 3,
-          title: const ListTile(title: Text('Fetch Lyrics Online')),
+          title: const Text('Fetch Lyrics Online'),
           content: const OnlineLyricContent(),
+          subtitle: const Text('Powered by lrclib (Experimental)'),
         ),
         Step(
           isActive: currentIndex == 4,
-          title: const ListTile(title: Text('Reminders')),
+          title: const Text('Reminders'),
           content: const ReminderStep(),
         ),
       ],
@@ -69,40 +70,39 @@ class MediaSettingTitle extends ConsumerWidget {
     final isPlaying = ref.watch(
         homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false));
 
-    return isPlaying
-        ? ListTile(
-            title: Consumer(
-              builder: (context, ref, child) {
-                final title = ref.watch(homeNotifierProvider
-                    .select((s) => s.mediaState?.title ?? ''));
-                final artist = ref.watch(homeNotifierProvider
-                    .select((s) => s.mediaState?.artist ?? ''));
+    final title = ref
+        .watch(homeNotifierProvider.select((s) => s.mediaState?.title ?? ''));
+    final artist = ref
+        .watch(homeNotifierProvider.select((s) => s.mediaState?.artist ?? ''));
 
-                return Text(
-                  'Currently Playing: $title - $artist',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                );
-              },
-            ),
-            subtitle: Consumer(
-              builder: (context, ref, child) {
-                final position = ref.watch(homeNotifierProvider
-                    .select((s) => s.mediaState?.position ?? 0));
-                final duration = ref.watch(homeNotifierProvider
-                    .select((value) => value.mediaState?.duration ?? 0));
-                final progress = position / duration;
+    final position = ref
+        .watch(homeNotifierProvider.select((s) => s.mediaState?.position ?? 0));
+    final duration = ref.watch(homeNotifierProvider
+        .select((value) => value.mediaState?.duration ?? 0));
+    final progress = position / duration;
 
-                return LinearProgressIndicator(
-                  value: progress.isInfinite || progress.isNaN ? 0 : progress,
-                );
-              },
-            ),
+    final label = isPlaying
+        ? Text(
+            'Currently Playing: $title - $artist',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           )
-        : const ListTile(
-            title: Text('Play a song'),
-            subtitle: Text('with your favorite music player'),
-          );
+        : const Text('Play a song');
+
+    final progressBar = isPlaying
+        ? LinearProgressIndicator(
+            value: progress.isInfinite || progress.isNaN ? 0 : progress,
+          )
+        : const SizedBox();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        label,
+        const SizedBox(height: 8),
+        progressBar,
+      ],
+    );
   }
 }
 
@@ -386,8 +386,8 @@ class OnlineLyricContent extends StatelessWidget {
                   .read(homeNotifierProvider.notifier)
                   .fetchLyric()
                   .then((lrcResponse) {
-                final content = lrcResponse.syncedLyrics ??
-                    lrcResponse.plainLyrics ??
+                final content = lrcResponse?.syncedLyrics ??
+                    lrcResponse?.plainLyrics ??
                     'No lyric found for this song.';
 
                 return showDialog(
@@ -401,10 +401,14 @@ class OnlineLyricContent extends StatelessWidget {
                         onPressed: context.pop,
                         child: const Text('Close'),
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('Save'),
-                      ),
+                      if (lrcResponse != null)
+                        TextButton(
+                          onPressed: () => ref
+                              .read(homeNotifierProvider.notifier)
+                              .saveLyric(lrcResponse)
+                              .then((id) => _showLyricFetchResult(context, id)),
+                          child: const Text('Save'),
+                        ),
                     ],
                   ),
                 );
@@ -415,6 +419,33 @@ class OnlineLyricContent extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _showLyricFetchResult(BuildContext context, int id) {
+    context.pop();
+    final colorScheme = Theme.of(context).colorScheme;
+
+    if (id >= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Lyric saved successfully',
+            style: TextStyle(color: colorScheme.onSecondary),
+          ),
+          backgroundColor: colorScheme.secondary,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Error saving lyric',
+            style: TextStyle(color: colorScheme.onError),
+          ),
+          backgroundColor: colorScheme.error,
+        ),
+      );
+    }
   }
 }
 
