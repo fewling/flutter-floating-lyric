@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../utils/routing/app_router.dart';
-import '../../../utils/routing/app_routes.dart';
+import '../domain/base_drawer_routes.dart';
 
 part 'base_notifier.g.dart';
 
@@ -11,7 +11,7 @@ class BaseNotifier extends _$BaseNotifier {
   void build() {}
 
   void onNavDrawerDestinationSelected(int index) {
-    final route = AppRoute.values[index];
+    final route = BaseDrawerRoutes.values[index];
     ref.read(appRouterProvider).goNamed(route.name);
   }
 }

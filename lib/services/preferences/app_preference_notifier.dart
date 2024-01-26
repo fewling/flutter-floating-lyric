@@ -44,4 +44,9 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       .read(sharedPreferenceProvider)
       .setBool(brightnessKey, !state.isLight)
       .then((value) => state = state.copyWith(isLight: !state.isLight));
+
+  void updateAppColorScheme(int colorValue) => ref
+      .read(sharedPreferenceProvider)
+      .setInt(appColorSchemeKey, colorValue)
+      .then((value) => state = state.copyWith(appColorScheme: colorValue));
 }

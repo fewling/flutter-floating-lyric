@@ -8,7 +8,7 @@ import '../../screens/lyric_detail/presentation/lyric_detail_screen.dart';
 import '../../screens/lyric_list/presentation/lyric_list_screen.dart';
 import '../../screens/permission/permission_screen.dart';
 import '../../screens/report/report_screen.dart';
-import '../../screens/settings/settings_screen.dart';
+import '../../screens/settings/presentation/settings_screen.dart';
 import '../../services/permission_provider.dart';
 import 'app_routes.dart';
 import 'app_routes_observer.dart';
