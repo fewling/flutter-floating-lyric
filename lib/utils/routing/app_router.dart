@@ -7,7 +7,6 @@ import '../../screens/home/presentation/home_screen.dart';
 import '../../screens/lyric_detail/presentation/lyric_detail_screen.dart';
 import '../../screens/lyric_list/presentation/lyric_list_screen.dart';
 import '../../screens/permission/permission_screen.dart';
-import '../../screens/report/report_screen.dart';
 import '../../screens/settings/presentation/settings_screen.dart';
 import '../../services/permission_provider.dart';
 import 'app_routes.dart';
@@ -79,12 +78,6 @@ GoRouter appRouter(AppRouterRef ref) {
             path: AppRoute.settings.path,
             name: AppRoute.settings.name,
             builder: (context, state) => const SettingsScreen(),
-          ),
-          GoRoute(
-            parentNavigatorKey: shellKey,
-            path: AppRoute.bugReport.path,
-            name: AppRoute.bugReport.name,
-            builder: (context, state) => const ReportScreen(),
           ),
         ],
       ),
