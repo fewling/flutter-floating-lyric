@@ -52,11 +52,6 @@ class HomeScreen extends ConsumerWidget {
           content: const OnlineLyricContent(),
           subtitle: const Text('Powered by lrclib (Experimental)'),
         ),
-        Step(
-          isActive: currentIndex == 4,
-          title: const Text('Reminders'),
-          content: const ReminderStep(),
-        ),
       ],
     );
   }
@@ -446,42 +441,5 @@ class OnlineLyricContent extends StatelessWidget {
         ),
       );
     }
-  }
-}
-
-class ReminderStep extends StatelessWidget {
-  const ReminderStep({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        ListTile(
-          title: Text(
-            '1. You can drag the floating window to anywhere on the screen.',
-          ),
-        ),
-        ListTile(
-          title: Text(
-            '2. You can tap the floating window to show/hide the title, progress and button.',
-          ),
-        ),
-        ListTile(
-          title: Text(
-            '3. Find the "Lyric List" tab in the drawer to delete the imported lyrics.',
-          ),
-        ),
-        ListTile(
-          title: Text(
-            '4. Killing this app will not close the floating window but will stop the lyric update.',
-          ),
-        ),
-        ListTile(
-          title: Text(
-            '5. If LRC file correctly imported but not showing, please try to restart the app.',
-          ),
-        ),
-      ],
-    );
   }
 }
