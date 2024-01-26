@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../services/db_helper.dart';
 import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../widgets/fail_import_dialog.dart';
+import '../../../widgets/loading_widget.dart';
 import 'home_screen_notifier.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -328,6 +329,7 @@ class OnlineLyricContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         ListTile(
           title: const Text('Title'),
@@ -376,39 +378,48 @@ class OnlineLyricContent extends StatelessWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            return ElevatedButton(
-              onPressed: () => ref
-                  .read(homeNotifierProvider.notifier)
-                  .fetchLyric()
-                  .then((lrcResponse) {
-                final content = lrcResponse?.syncedLyrics ??
-                    lrcResponse?.plainLyrics ??
-                    'No lyric found for this song.';
+            final isSearching = ref.watch(
+              homeNotifierProvider.select((s) => s.isSearchingOnline),
+            );
+            return ElevatedButton.icon(
+              onPressed: isSearching
+                  ? null
+                  : () => ref
+                          .read(homeNotifierProvider.notifier)
+                          .fetchLyric()
+                          .then((lrcResponse) {
+                        final content = lrcResponse?.syncedLyrics ??
+                            lrcResponse?.plainLyrics ??
+                            'No lyric found for this song.';
 
-                return showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    icon: const Icon(Icons.info_outline),
-                    title: const Text('Lyric Fetch Result'),
-                    content: SelectableText(content),
-                    actions: [
-                      TextButton(
-                        onPressed: context.pop,
-                        child: const Text('Close'),
-                      ),
-                      if (lrcResponse != null)
-                        TextButton(
-                          onPressed: () => ref
-                              .read(homeNotifierProvider.notifier)
-                              .saveLyric(lrcResponse)
-                              .then((id) => _showLyricFetchResult(context, id)),
-                          child: const Text('Save'),
-                        ),
-                    ],
-                  ),
-                );
-              }),
-              child: const Text('Fetch'),
+                        return showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            icon: const Icon(Icons.info_outline),
+                            title: const Text('Lyric Fetch Result'),
+                            content: SelectableText(content),
+                            actions: [
+                              TextButton(
+                                onPressed: context.pop,
+                                child: const Text('Close'),
+                              ),
+                              if (lrcResponse != null)
+                                TextButton(
+                                  onPressed: () => ref
+                                      .read(homeNotifierProvider.notifier)
+                                      .saveLyric(lrcResponse)
+                                      .then((id) =>
+                                          _showLyricFetchResult(context, id)),
+                                  child: const Text('Save'),
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
+              label: const Text('Search'),
+              icon: isSearching
+                  ? const LoadingWidget()
+                  : const Icon(Icons.search),
             );
           },
         ),

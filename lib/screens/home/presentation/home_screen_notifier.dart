@@ -91,6 +91,7 @@ class HomeNotifier extends _$HomeNotifier {
     if (state.mediaState == null) throw Exception('No media state found');
 
     try {
+      state = state.copyWith(isSearchingOnline: true);
       final response = await ref.read(
         lyricProvider(
           trackName: state.mediaState!.title,
@@ -99,9 +100,11 @@ class HomeNotifier extends _$HomeNotifier {
           duration: state.mediaState!.duration ~/ 1000,
         ).future,
       );
+      state = state.copyWith(isSearchingOnline: false);
 
       return response;
     } catch (e) {
+      state = state.copyWith(isSearchingOnline: false);
       return null;
     }
   }

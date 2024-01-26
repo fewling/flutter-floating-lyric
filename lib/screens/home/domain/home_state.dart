@@ -11,5 +11,6 @@ class HomeState with _$HomeState {
     @Default(null) MediaState? mediaState,
     @Default(false) bool isWindowVisible,
     @Default(false) bool isProcessingFiles,
+    @Default(false) bool isSearchingOnline,
   }) = _HomeState;
 }
