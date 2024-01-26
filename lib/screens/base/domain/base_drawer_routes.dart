@@ -10,7 +10,7 @@ enum BaseDrawerRoutes {
   ),
   localLyrics(
     route: AppRoute.localLyrics,
-    label: 'Local Lyrics',
+    label: 'Stored Lyrics',
     icon: Icons.audio_file_outlined,
   ),
   settings(
