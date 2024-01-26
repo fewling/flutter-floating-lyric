@@ -17,11 +17,6 @@ enum BaseDrawerRoutes {
     route: AppRoute.settings,
     label: 'Settings',
     icon: Icons.settings_outlined,
-  ),
-  bugReport(
-    route: AppRoute.bugReport,
-    label: 'Bug Report',
-    icon: Icons.bug_report_outlined,
   );
 
   const BaseDrawerRoutes({

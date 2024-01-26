@@ -3,7 +3,6 @@ enum AppRoute {
   localLyrics(path: '/local-lyric'),
   localLyricDetail(path: '/local-lyric-detail/:id'),
   settings(path: '/settings'),
-  bugReport(path: '/bug-report'),
   permission(path: '/permission');
 
   const AppRoute({

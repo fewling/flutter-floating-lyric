@@ -55,6 +55,17 @@ class SettingsScreen extends StatelessWidget {
             ),
           ),
           Consumer(
+            builder: (context, ref, child) => ListTile(
+              leading: Icon(Icons.email_outlined, color: primary),
+              title: const Text('Bug Report/Feature Request'),
+              subtitle: const Text('Send us your feedback'),
+              trailing: const Icon(Icons.arrow_forward_ios_outlined),
+              onTap: ref
+                  .read(settingsNotifierProvider.notifier)
+                  .launchFeedbackEmail,
+            ),
+          ),
+          Consumer(
             builder: (context, ref, child) {
               final version = ref.watch(versionProvider).when(
                     data: (data) => data,

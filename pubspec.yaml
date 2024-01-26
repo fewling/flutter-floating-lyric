@@ -23,7 +23,7 @@ dependencies:
   flutter_easylogger: ^2.3.3
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
-  url_launcher: ^6.2.3
+  url_launcher: ^6.2.4
   auto_size_text: ^3.0.0
   path_provider: ^2.1.2
   in_app_review: ^2.0.8
