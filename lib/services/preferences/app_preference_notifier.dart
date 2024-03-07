@@ -17,6 +17,8 @@ class PreferenceNotifier extends _$PreferenceNotifier {
   static const windowColorKey = 'window color';
   static const brightnessKey = 'brightness';
   static const appColorSchemeKey = 'app color scheme';
+  static const showMillisecondsKey = 'show milliseconds';
+  static const showProgressBarKey = 'show progress bar';
 
   @override
   PreferenceState build() {
@@ -27,6 +29,8 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       color: sp.getInt(windowColorKey) ?? Colors.deepPurple.value,
       isLight: sp.getBool(brightnessKey) ?? true,
       appColorScheme: sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value,
+      showMilliseconds: sp.getBool(showMillisecondsKey) ?? true,
+      showProgressBar: sp.getBool(showProgressBarKey) ?? true,
     );
   }
 
@@ -49,4 +53,16 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       .read(sharedPreferenceProvider)
       .setInt(appColorSchemeKey, colorValue)
       .then((value) => state = state.copyWith(appColorScheme: colorValue));
+
+  void toggleShowMilliseconds() => ref
+      .read(sharedPreferenceProvider)
+      .setBool(showMillisecondsKey, !state.showMilliseconds)
+      .then((value) =>
+          state = state.copyWith(showMilliseconds: !state.showMilliseconds));
+
+  void toggleShowProgressBar() => ref
+      .read(sharedPreferenceProvider)
+      .setBool(showProgressBarKey, !state.showProgressBar)
+      .then((value) =>
+          state = state.copyWith(showProgressBar: !state.showProgressBar));
 }

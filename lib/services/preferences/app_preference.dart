@@ -10,6 +10,8 @@ class PreferenceState with _$PreferenceState {
     required int color,
     required bool isLight,
     required int appColorScheme,
+    required bool showMilliseconds,
+    required bool showProgressBar,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) =>

@@ -15,6 +15,8 @@ data class WindowState(
     val a: Int = 255,
     var seekBarMax: Int = 0,
     var seekBarProgress: Int = 0,
+    var showMillis: Boolean = true,
+    var showProgressBar: Boolean = true,
 
     ) : Parcelable {
 
@@ -30,6 +32,8 @@ data class WindowState(
             "a" to a,
             "seekBarMax" to seekBarMax,
             "seekBarProgress" to seekBarProgress,
+            "showMillis" to showMillis,
+            "showProgressBar" to showProgressBar,
         )
     }
 
@@ -45,6 +49,8 @@ data class WindowState(
             a = map["a"] as Int,
             seekBarMax = map["seekBarMax"] as Int,
             seekBarProgress = map["seekBarProgress"] as Int,
+            showMillis = map["showMillis"] as Boolean,
+            showProgressBar = map["showProgressBar"] as Boolean,
         )
     }
 }

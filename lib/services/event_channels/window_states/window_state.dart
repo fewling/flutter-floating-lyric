@@ -16,6 +16,8 @@ class WindowState with _$WindowState {
     @Default(255) int a,
     @Default(0) int seekBarMax,
     @Default(0) int seekBarProgress,
+    @Default(true) bool showMillis,
+    @Default(true) bool showProgressBar,
   }) = _WindowState;
 
   factory WindowState.fromJson(Map<String, dynamic> json) =>

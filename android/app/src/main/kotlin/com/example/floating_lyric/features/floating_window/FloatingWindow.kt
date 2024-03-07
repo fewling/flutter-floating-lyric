@@ -67,6 +67,8 @@ class FloatingWindow(
         g = 255,
         b = 255,
         a = 255,
+        showMillis = true,
+        showProgressBar = true
     )
 
     init {
@@ -161,11 +163,30 @@ class FloatingWindow(
         }
     }
 
+    private fun showProgressBar() {
+        floatingMusicSeekBar.visibility = View.VISIBLE
+        floatingStartTimeTextView.visibility = View.VISIBLE
+        floatingMaxTimeTextView.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        floatingMusicSeekBar.visibility = View.GONE
+        floatingStartTimeTextView.visibility = View.GONE
+        floatingMaxTimeTextView.visibility = View.GONE
+    }
+
 
     fun updateState(state: WindowState) {
         this.state = state
         updateTitle()
-        updateProgressBar()
+
+        if (state.showProgressBar) {
+            showProgressBar()
+            updateProgressBar()
+        } else {
+            hideProgressBar()
+        }
+
         updateLyricLine()
         updateColor()
     }
@@ -180,7 +201,8 @@ class FloatingWindow(
         if (floatingMusicSeekBar.progress == state.seekBarMax)
             floatingMusicSeekBar.progress = 0
 
-        val formatter = SimpleDateFormat("mm:ss.SS")
+        val pattern = if (state.showMillis) "mm:ss.SS" else "mm:ss"
+        val formatter = SimpleDateFormat(pattern)
         formatter.timeZone = TimeZone.getTimeZone("GMT")
         try {
             floatingStartTimeTextView.text = formatter.format(state.seekBarProgress)

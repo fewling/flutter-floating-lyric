@@ -231,8 +231,52 @@ class WindowSettingContent extends ConsumerWidget {
               value: opacity,
               label: '$opacity%',
               onChanged: visibleFloatingWindow
-                  ? ref.watch(homeNotifierProvider.notifier).updateWindowOpacity
+                  ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity
                   : null,
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final showMillis = ref.watch(
+              preferenceNotifierProvider.select(
+                (value) => value.showMilliseconds,
+              ),
+            );
+            return ListTile(
+              enabled: visibleFloatingWindow,
+              leading: const Icon(Icons.timelapse),
+              title: showMillis
+                  ? const Text('Show Milliseconds')
+                  : const Text('Hide Milliseconds'),
+              trailing: Switch(
+                value: showMillis,
+                onChanged: ref
+                    .read(homeNotifierProvider.notifier)
+                    .toggleMillisVisibility,
+              ),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final showBar = ref.watch(
+              preferenceNotifierProvider.select(
+                (value) => value.showProgressBar,
+              ),
+            );
+            return ListTile(
+              enabled: visibleFloatingWindow,
+              leading: const Icon(Icons.linear_scale),
+              title: showBar
+                  ? const Text('Show Progress Bar')
+                  : const Text('Hide Progress Bar'),
+              trailing: Switch(
+                value: showBar,
+                onChanged: ref
+                    .read(homeNotifierProvider.notifier)
+                    .toggleProgressBarVisibility,
+              ),
             );
           },
         ),

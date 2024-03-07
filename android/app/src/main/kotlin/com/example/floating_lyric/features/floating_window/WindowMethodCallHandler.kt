@@ -123,6 +123,27 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                 )
                 floatingWindow!!.updateState(newState)
             }
+
+            "updateMillisVisibility" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    showMillis = arg["showMillis"] as Boolean
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
+            "updateProgressBarVisibility" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    showProgressBar = arg["showProgressBar"] as Boolean
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
         }
     }
 }

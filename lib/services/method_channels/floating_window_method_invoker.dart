@@ -14,6 +14,8 @@ enum WindowPlatformMethod {
   updateWindowOpacity,
   updateWindowColor,
   updateWindowProgress,
+  updateMillisVisibility,
+  updateProgressBarVisibility,
 }
 
 @Riverpod(keepAlive: true)
@@ -73,6 +75,26 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
         updateWindowOpacity();
       },
     );
+
+    ref.listen(
+      preferenceNotifierProvider.select((value) => value.showMilliseconds),
+      (prev, next) {
+        if (prev == next) return;
+
+        _state = _state.copyWith(showMillis: next);
+        updateMillisVisibility();
+      },
+    );
+
+    ref.listen(
+      preferenceNotifierProvider.select((value) => value.showProgressBar),
+      (prev, next) {
+        if (prev == next) return;
+
+        _state = _state.copyWith(showProgressBar: next);
+        updateProgressBarVisibility();
+      },
+    );
   }
 
   Future<void> showFloatingWindow() => _channel.invokeMethod(
@@ -95,6 +117,16 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
 
   Future<void> updateWindowColor() => _channel.invokeMethod(
         WindowPlatformMethod.updateWindowColor.name,
+        _state.toJson(),
+      );
+
+  Future<void> updateMillisVisibility() => _channel.invokeMethod(
+        WindowPlatformMethod.updateMillisVisibility.name,
+        _state.toJson(),
+      );
+
+  Future<void> updateProgressBarVisibility() => _channel.invokeMethod(
+        WindowPlatformMethod.updateProgressBarVisibility.name,
         _state.toJson(),
       );
 }

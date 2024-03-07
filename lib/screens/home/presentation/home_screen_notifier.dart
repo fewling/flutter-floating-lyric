@@ -64,6 +64,14 @@ class HomeNotifier extends _$HomeNotifier {
     ref.read(preferenceNotifierProvider.notifier).updateOpacity(value);
   }
 
+  void toggleMillisVisibility(bool value) {
+    ref.read(preferenceNotifierProvider.notifier).toggleShowMilliseconds();
+  }
+
+  void toggleProgressBarVisibility(bool value) {
+    ref.read(preferenceNotifierProvider.notifier).toggleShowProgressBar();
+  }
+
   Future<List<PlatformFile>> importLRCs() async {
     state = state.copyWith(isProcessingFiles: true);
     final failed = await ref.read(lrcProcessorProvider).pickLrcFiles();
