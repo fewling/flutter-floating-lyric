@@ -89,17 +89,17 @@ class FloatingWindow(
             showLyricOnly = !showLyricOnly
             /* Display/hide certain views in floating window: */
             if (showLyricOnly) {
-                floatingTitleTextView.visibility = View.VISIBLE
-                floatingCloseImageButton.visibility = View.VISIBLE
-                floatingStartTimeTextView.visibility = View.VISIBLE
-                floatingMusicSeekBar.visibility = View.VISIBLE
-                floatingMaxTimeTextView.visibility = View.VISIBLE
-            } else {
                 floatingTitleTextView.visibility = View.GONE
                 floatingCloseImageButton.visibility = View.GONE
                 floatingStartTimeTextView.visibility = View.GONE
                 floatingMusicSeekBar.visibility = View.GONE
                 floatingMaxTimeTextView.visibility = View.GONE
+            } else {
+                floatingTitleTextView.visibility = View.VISIBLE
+                floatingCloseImageButton.visibility = View.VISIBLE
+                floatingStartTimeTextView.visibility = View.VISIBLE
+                floatingMusicSeekBar.visibility = View.VISIBLE
+                floatingMaxTimeTextView.visibility = View.VISIBLE
             }
         }
         alertView.setOnTouchListener(object : View.OnTouchListener {
@@ -179,12 +179,14 @@ class FloatingWindow(
     fun updateState(state: WindowState) {
         this.state = state
         updateTitle()
+        updateProgressBar()
 
-        if (state.showProgressBar) {
-            showProgressBar()
-            updateProgressBar()
-        } else {
-            hideProgressBar()
+        if (showLyricOnly) {
+            if (state.showProgressBar) {
+                showProgressBar()
+            } else {
+                hideProgressBar()
+            }
         }
 
         updateLyricLine()

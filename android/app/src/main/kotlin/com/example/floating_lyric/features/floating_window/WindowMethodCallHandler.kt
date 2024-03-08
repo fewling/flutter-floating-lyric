@@ -73,6 +73,8 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                     a = arg["a"] as Int,
                     seekBarMax = arg["seekBarMax"] as Int,
                     seekBarProgress = arg["seekBarProgress"] as Int,
+                    showMillis = arg["showMillis"] as Boolean,
+                    showProgressBar = arg["showProgressBar"] as Boolean,
                 )
                 floatingWindow?.updateState(state)
                 floatingWindow?.show()
