@@ -17,7 +17,8 @@ import java.util.*
 class FloatingWindow(
     private val inflater: LayoutInflater,
     private val windowManager: WindowManager,
-    private val onWindowClose: () -> Unit
+    private val onWindowClose: () -> Unit,
+    var state: WindowState,
 ) {
 
     companion object {
@@ -59,18 +60,6 @@ class FloatingWindow(
 
     private var showLyricOnly: Boolean = false
 
-    var state: WindowState = WindowState(
-        isVisible = true,
-        lyricLine = "",
-        opacity = 50.0,
-        r = 255,
-        g = 255,
-        b = 255,
-        a = 255,
-        showMillis = true,
-        showProgressBar = true
-    )
-
     init {
         Log.i(TAG, "Init")
 
@@ -91,9 +80,12 @@ class FloatingWindow(
             if (showLyricOnly) {
                 floatingTitleTextView.visibility = View.GONE
                 floatingCloseImageButton.visibility = View.GONE
-                floatingStartTimeTextView.visibility = View.GONE
-                floatingMusicSeekBar.visibility = View.GONE
-                floatingMaxTimeTextView.visibility = View.GONE
+
+                if (!state.showProgressBar) {
+                    floatingStartTimeTextView.visibility = View.GONE
+                    floatingMusicSeekBar.visibility = View.GONE
+                    floatingMaxTimeTextView.visibility = View.GONE
+                }
             } else {
                 floatingTitleTextView.visibility = View.VISIBLE
                 floatingCloseImageButton.visibility = View.VISIBLE

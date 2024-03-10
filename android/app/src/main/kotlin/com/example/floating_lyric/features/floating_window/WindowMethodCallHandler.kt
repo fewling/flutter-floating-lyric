@@ -48,20 +48,6 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                 val arg = call.arguments as Map<*, *>
                 Log.i(TAG, "showFloatingWindow: arg: $arg")
 
-                if (floatingWindow == null) {
-                    floatingWindow = FloatingWindow(inflater, windowManager, onWindowClose = {
-                        val intent = Intent().apply {
-                            action = WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED
-                            putExtra(
-                                WindowStateBroadcastReceiver.EXTRA_WINDOW_STATE,
-                                floatingWindow?.state
-                            )
-                        }
-                        mContext?.sendBroadcast(intent)
-                        floatingWindow = null
-                    })
-                }
-
                 val state = WindowState(
                     isVisible = true,
                     title = arg["title"] as String,
@@ -76,7 +62,24 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                     showMillis = arg["showMillis"] as Boolean,
                     showProgressBar = arg["showProgressBar"] as Boolean,
                 )
-                floatingWindow?.updateState(state)
+
+                if (floatingWindow == null) {
+                    floatingWindow = FloatingWindow(
+                        inflater,
+                        windowManager,
+                        state = state,
+                        onWindowClose = {
+                            val intent = Intent().apply {
+                                action = WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED
+                                putExtra(
+                                    WindowStateBroadcastReceiver.EXTRA_WINDOW_STATE,
+                                    floatingWindow?.state
+                                )
+                            }
+                            mContext?.sendBroadcast(intent)
+                            floatingWindow = null
+                        })
+                }
                 floatingWindow?.show()
 
                 val intent = Intent().apply {
