@@ -34,6 +34,8 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
       b: color.blue,
       a: color.alpha,
       opacity: pref.opacity,
+      showMillis: pref.showMilliseconds,
+      showProgressBar: pref.showProgressBar,
     );
 
     ref.listen(
