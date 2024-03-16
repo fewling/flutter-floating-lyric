@@ -171,7 +171,7 @@ class WindowSettingContent extends ConsumerWidget {
         ),
         ListTile(
           title: const Text('Color Scheme'),
-          leading: const Icon(Icons.color_lens),
+          leading: const Icon(Icons.color_lens_outlined),
           enabled: visibleFloatingWindow,
           trailing: ColoredBox(
             color: Color(ref.watch(preferenceNotifierProvider).color),
@@ -216,7 +216,7 @@ class WindowSettingContent extends ConsumerWidget {
             );
             return ListTile(
               enabled: visibleFloatingWindow,
-              leading: const Icon(Icons.timelapse),
+              leading: const Icon(Icons.timelapse_outlined),
               title: showMillis
                   ? const Text('Show Milliseconds')
                   : const Text('Hide Milliseconds'),
@@ -238,7 +238,7 @@ class WindowSettingContent extends ConsumerWidget {
             );
             return ListTile(
               enabled: visibleFloatingWindow,
-              leading: const Icon(Icons.linear_scale),
+              leading: const Icon(Icons.linear_scale_outlined),
               title: showBar
                   ? const Text('Show Progress Bar')
                   : const Text('Hide Progress Bar'),
@@ -253,7 +253,7 @@ class WindowSettingContent extends ConsumerWidget {
         ),
         ListTile(
           enabled: visibleFloatingWindow,
-          leading: const Icon(Icons.opacity),
+          leading: const Icon(Icons.opacity_outlined),
           trailing: Consumer(
             builder: (context, ref, child) {
               final opacity = ref.watch(
