@@ -134,6 +134,7 @@ class FloatingWindow(
             ) // red color with alpha
         containerView.setBackgroundColor(color)
 
+        floatingLyricTextView.textSize = state.fontSize.toFloat()
     }
 
     fun show() {
@@ -209,6 +210,7 @@ class FloatingWindow(
 
     private fun updateLyricLine() {
         floatingLyricTextView.text = state.lyricLine
+        floatingLyricTextView.textSize = state.fontSize.toFloat()
     }
 
     private fun updateColor() {

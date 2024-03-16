@@ -169,6 +169,54 @@ class WindowSettingContent extends ConsumerWidget {
           value: visibleFloatingWindow,
           onChanged: ref.read(homeNotifierProvider.notifier).toggleWindow,
         ),
+        Consumer(
+          builder: (context, ref, child) {
+            final showMillis = ref.watch(
+              preferenceNotifierProvider.select(
+                (value) => value.showMilliseconds,
+              ),
+            );
+            return ListTile(
+              enabled: visibleFloatingWindow,
+              leading: const Icon(Icons.timelapse_outlined),
+              title: showMillis
+                  ? const Text('Show Milliseconds')
+                  : const Text('Hide Milliseconds'),
+              trailing: Switch(
+                value: showMillis,
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : ref
+                        .read(homeNotifierProvider.notifier)
+                        .toggleMillisVisibility,
+              ),
+            );
+          },
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final showBar = ref.watch(
+              preferenceNotifierProvider.select(
+                (value) => value.showProgressBar,
+              ),
+            );
+            return ListTile(
+              enabled: visibleFloatingWindow,
+              leading: const Icon(Icons.linear_scale_outlined),
+              title: showBar
+                  ? const Text('Show Progress Bar')
+                  : const Text('Hide Progress Bar'),
+              trailing: Switch(
+                value: showBar,
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : ref
+                        .read(homeNotifierProvider.notifier)
+                        .toggleProgressBarVisibility,
+              ),
+            );
+          },
+        ),
         ListTile(
           title: const Text('Color Scheme'),
           leading: const Icon(Icons.color_lens_outlined),
@@ -207,50 +255,6 @@ class WindowSettingContent extends ConsumerWidget {
             context: context,
           ),
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final showMillis = ref.watch(
-              preferenceNotifierProvider.select(
-                (value) => value.showMilliseconds,
-              ),
-            );
-            return ListTile(
-              enabled: visibleFloatingWindow,
-              leading: const Icon(Icons.timelapse_outlined),
-              title: showMillis
-                  ? const Text('Show Milliseconds')
-                  : const Text('Hide Milliseconds'),
-              trailing: Switch(
-                value: showMillis,
-                onChanged: ref
-                    .read(homeNotifierProvider.notifier)
-                    .toggleMillisVisibility,
-              ),
-            );
-          },
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final showBar = ref.watch(
-              preferenceNotifierProvider.select(
-                (value) => value.showProgressBar,
-              ),
-            );
-            return ListTile(
-              enabled: visibleFloatingWindow,
-              leading: const Icon(Icons.linear_scale_outlined),
-              title: showBar
-                  ? const Text('Show Progress Bar')
-                  : const Text('Hide Progress Bar'),
-              trailing: Switch(
-                value: showBar,
-                onChanged: ref
-                    .read(homeNotifierProvider.notifier)
-                    .toggleProgressBarVisibility,
-              ),
-            );
-          },
-        ),
         ListTile(
           enabled: visibleFloatingWindow,
           leading: const Icon(Icons.opacity_outlined),
@@ -276,6 +280,39 @@ class WindowSettingContent extends ConsumerWidget {
               label: '${opacity.toInt()}%',
               onChanged: visibleFloatingWindow
                   ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity
+                  : null,
+            );
+          },
+        ),
+        ListTile(
+          enabled: visibleFloatingWindow,
+          leading: const Icon(Icons.format_size_outlined),
+          trailing: Consumer(
+            builder: (context, ref, child) {
+              final fontSize = ref.watch(
+                preferenceNotifierProvider.select((value) => value.fontSize),
+              );
+
+              return Text('$fontSize');
+            },
+          ),
+          title: const Text('Lyrics Font Size'),
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final fontSize = ref.watch(
+              preferenceNotifierProvider.select((value) => value.fontSize),
+            );
+
+            return Slider(
+              min: 4,
+              max: 72,
+              value: fontSize.toDouble(),
+              label: '$fontSize%',
+              onChanged: visibleFloatingWindow
+                  ? (value) => ref
+                      .read(homeNotifierProvider.notifier)
+                      .updateFontSize(value.toInt())
                   : null,
             );
           },

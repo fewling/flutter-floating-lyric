@@ -19,6 +19,7 @@ class PreferenceNotifier extends _$PreferenceNotifier {
   static const appColorSchemeKey = 'app color scheme';
   static const showMillisecondsKey = 'show milliseconds';
   static const showProgressBarKey = 'show progress bar';
+  static const fontSizeKey = 'font size';
 
   @override
   PreferenceState build() {
@@ -31,6 +32,7 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       appColorScheme: sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value,
       showMilliseconds: sp.getBool(showMillisecondsKey) ?? true,
       showProgressBar: sp.getBool(showProgressBarKey) ?? true,
+      fontSize: sp.getInt(fontSizeKey) ?? 24,
     );
   }
 
@@ -65,4 +67,9 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       .setBool(showProgressBarKey, !state.showProgressBar)
       .then((value) =>
           state = state.copyWith(showProgressBar: !state.showProgressBar));
+
+  void updateFontSize(int fontSize) => ref
+      .read(sharedPreferenceProvider)
+      .setInt(fontSizeKey, fontSize)
+      .then((result) => state = state.copyWith(fontSize: fontSize));
 }

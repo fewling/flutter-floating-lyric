@@ -18,6 +18,7 @@ class WindowState with _$WindowState {
     @Default(0) int seekBarProgress,
     @Default(true) bool showMillis,
     @Default(true) bool showProgressBar,
+    @Default(24) int fontSize,
   }) = _WindowState;
 
   factory WindowState.fromJson(Map<String, dynamic> json) =>

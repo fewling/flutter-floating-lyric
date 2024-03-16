@@ -61,6 +61,7 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                     seekBarProgress = arg["seekBarProgress"] as Int,
                     showMillis = arg["showMillis"] as Boolean,
                     showProgressBar = arg["showProgressBar"] as Boolean,
+                    fontSize = arg["fontSize"] as Int
                 )
 
                 if (floatingWindow == null) {
@@ -147,6 +148,20 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                     showProgressBar = arg["showProgressBar"] as Boolean
                 )
                 floatingWindow!!.updateState(newState)
+            }
+
+            "updateFontSize" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    fontSize = arg["fontSize"] as Int
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
+            else -> {
+                result.notImplemented()
             }
 
         }

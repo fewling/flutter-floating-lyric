@@ -17,6 +17,7 @@ data class WindowState(
     var seekBarProgress: Int = 0,
     var showMillis: Boolean = true,
     var showProgressBar: Boolean = true,
+    var fontSize: Int = 24,
 
     ) : Parcelable {
 
@@ -34,6 +35,7 @@ data class WindowState(
             "seekBarProgress" to seekBarProgress,
             "showMillis" to showMillis,
             "showProgressBar" to showProgressBar,
+            "fontSize" to fontSize,
         )
     }
 
@@ -51,6 +53,7 @@ data class WindowState(
             seekBarProgress = map["seekBarProgress"] as Int,
             showMillis = map["showMillis"] as Boolean,
             showProgressBar = map["showProgressBar"] as Boolean,
+            fontSize = map["fontSize"] as Int,
         )
     }
 }

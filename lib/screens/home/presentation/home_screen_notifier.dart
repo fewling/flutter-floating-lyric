@@ -72,6 +72,10 @@ class HomeNotifier extends _$HomeNotifier {
     ref.read(preferenceNotifierProvider.notifier).toggleShowProgressBar();
   }
 
+  void updateFontSize(int value) {
+    ref.read(preferenceNotifierProvider.notifier).updateFontSize(value);
+  }
+
   Future<List<PlatformFile>> importLRCs() async {
     state = state.copyWith(isProcessingFiles: true);
     final failed = await ref.read(lrcProcessorProvider).pickLrcFiles();

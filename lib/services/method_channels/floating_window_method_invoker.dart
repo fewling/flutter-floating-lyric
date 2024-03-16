@@ -16,6 +16,7 @@ enum WindowPlatformMethod {
   updateWindowProgress,
   updateMillisVisibility,
   updateProgressBarVisibility,
+  updateFontSize,
 }
 
 @Riverpod(keepAlive: true)
@@ -36,6 +37,7 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
       opacity: pref.opacity,
       showMillis: pref.showMilliseconds,
       showProgressBar: pref.showProgressBar,
+      fontSize: pref.fontSize,
     );
 
     ref.listen(
@@ -97,6 +99,16 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
         updateProgressBarVisibility();
       },
     );
+
+    ref.listen(
+      preferenceNotifierProvider.select((value) => value.fontSize),
+      (prev, next) {
+        if (prev == next) return;
+
+        _state = _state.copyWith(fontSize: next);
+        updateFontSize();
+      },
+    );
   }
 
   Future<void> showFloatingWindow() => _channel.invokeMethod(
@@ -129,6 +141,11 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
 
   Future<void> updateProgressBarVisibility() => _channel.invokeMethod(
         WindowPlatformMethod.updateProgressBarVisibility.name,
+        _state.toJson(),
+      );
+
+  Future<void> updateFontSize() => _channel.invokeMethod(
+        WindowPlatformMethod.updateFontSize.name,
         _state.toJson(),
       );
 }
