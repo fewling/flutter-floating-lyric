@@ -207,35 +207,6 @@ class WindowSettingContent extends ConsumerWidget {
             context: context,
           ),
         ),
-        ListTile(
-          enabled: visibleFloatingWindow,
-          leading: const Icon(Icons.opacity),
-          trailing: Consumer(
-            builder: (context, ref, child) {
-              final opacity = ref.watch(
-                preferenceNotifierProvider.select((value) => value.opacity),
-              );
-              return Text('$opacity%');
-            },
-          ),
-          title: const Text('Window Opacity'),
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final opacity = ref.watch(
-              preferenceNotifierProvider.select((value) => value.opacity),
-            );
-            return Slider(
-              max: 100,
-              divisions: 20,
-              value: opacity,
-              label: '$opacity%',
-              onChanged: visibleFloatingWindow
-                  ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity
-                  : null,
-            );
-          },
-        ),
         Consumer(
           builder: (context, ref, child) {
             final showMillis = ref.watch(
@@ -277,6 +248,35 @@ class WindowSettingContent extends ConsumerWidget {
                     .read(homeNotifierProvider.notifier)
                     .toggleProgressBarVisibility,
               ),
+            );
+          },
+        ),
+        ListTile(
+          enabled: visibleFloatingWindow,
+          leading: const Icon(Icons.opacity),
+          trailing: Consumer(
+            builder: (context, ref, child) {
+              final opacity = ref.watch(
+                preferenceNotifierProvider.select((value) => value.opacity),
+              );
+              return Text('${opacity.toInt()}%');
+            },
+          ),
+          title: const Text('Window Opacity'),
+        ),
+        Consumer(
+          builder: (context, ref, child) {
+            final opacity = ref.watch(
+              preferenceNotifierProvider.select((value) => value.opacity),
+            );
+            return Slider(
+              max: 100,
+              divisions: 20,
+              value: opacity,
+              label: '${opacity.toInt()}%',
+              onChanged: visibleFloatingWindow
+                  ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity
+                  : null,
             );
           },
         ),
