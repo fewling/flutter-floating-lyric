@@ -41,7 +41,7 @@ class MediaNotificationListener : NotificationListenerService() {
         Log.i(TAG, "onDestroy")
 
         handler.removeCallbacksAndMessages(null)
-        handler.looper.quit()
+     // handler.looper.quit() // Main looper is not allowed to quit
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {
