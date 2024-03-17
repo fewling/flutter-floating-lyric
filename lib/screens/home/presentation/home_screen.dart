@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../services/db_helper.dart';
+import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../widgets/fail_import_dialog.dart';
 import '../../../widgets/loading_widget.dart';
@@ -412,6 +413,20 @@ class OnlineLyricContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
+        Consumer(
+          builder: (context, ref, child) {
+            final autoFetch = ref.watch(
+              preferenceNotifierProvider.select((s) => s.autoFetchOnline),
+            );
+            return SwitchListTile(
+              title: const Text('Auto Fetch'),
+              value: autoFetch,
+              onChanged: ref
+                  .read(preferenceNotifierProvider.notifier)
+                  .toggleAutoFetchOnline,
+            );
+          },
+        ),
         ListTile(
           title: const Text('Title'),
           subtitle: Consumer(
@@ -462,8 +477,11 @@ class OnlineLyricContent extends StatelessWidget {
             final isSearching = ref.watch(
               homeNotifierProvider.select((s) => s.isSearchingOnline),
             );
+            final isAutoSearching = ref.watch(
+              lyricStateProvider.select((s) => s.isSearchingOnline),
+            );
             return ElevatedButton.icon(
-              onPressed: isSearching
+              onPressed: isSearching || isAutoSearching
                   ? null
                   : () => ref
                           .read(homeNotifierProvider.notifier)

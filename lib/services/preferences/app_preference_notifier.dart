@@ -20,6 +20,7 @@ class PreferenceNotifier extends _$PreferenceNotifier {
   static const showMillisecondsKey = 'show milliseconds';
   static const showProgressBarKey = 'show progress bar';
   static const fontSizeKey = 'font size';
+  static const autoFetchOnlineKey = 'auto fetch online';
 
   @override
   PreferenceState build() {
@@ -33,6 +34,7 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       showMilliseconds: sp.getBool(showMillisecondsKey) ?? true,
       showProgressBar: sp.getBool(showProgressBarKey) ?? true,
       fontSize: sp.getInt(fontSizeKey) ?? 24,
+      autoFetchOnline: sp.getBool(autoFetchOnlineKey) ?? false,
     );
   }
 
@@ -72,4 +74,9 @@ class PreferenceNotifier extends _$PreferenceNotifier {
       .read(sharedPreferenceProvider)
       .setInt(fontSizeKey, fontSize)
       .then((result) => state = state.copyWith(fontSize: fontSize));
+
+  void toggleAutoFetchOnline(bool value) => ref
+      .read(sharedPreferenceProvider)
+      .setBool(autoFetchOnlineKey, value)
+      .then((result) => state = state.copyWith(autoFetchOnline: value));
 }

@@ -1,10 +1,15 @@
 import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 
 import '../../models/lrc.dart';
+import '../../models/lyric_model.dart';
 import '../db_helper.dart';
 import '../event_channels/media_states/media_state.dart';
 import '../event_channels/media_states/media_state_event_channel.dart';
+import '../lrclib/data/lrclib_response.dart';
+import '../lrclib/repo/lrclib_repository.dart';
+import '../preferences/app_preference_notifier.dart';
 import 'floating_lyric_state.dart';
 
 final lyricStateProvider =
@@ -12,8 +17,33 @@ final lyricStateProvider =
         FloatingLyricNotifier.new);
 
 class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
+  late bool _autoFetchOnline;
+
   @override
   FloatingLyricState build() {
+    _autoFetchOnline = ref.read(
+      preferenceNotifierProvider.select((value) => value.autoFetchOnline),
+    );
+
+    ref.listen(
+      preferenceNotifierProvider,
+      (prev, next) {
+        if (prev == next) return;
+        _autoFetchOnline = next.autoFetchOnline;
+        if (_autoFetchOnline) {
+          final title = state.mediaState?.title;
+          final artist = state.mediaState?.artist;
+
+          if (title == null && artist == null) return;
+
+          hasLyric(title!, artist!).then((hasLyric) {
+            if (hasLyric) return;
+            fetchLyric(title, artist);
+          });
+        }
+      },
+    );
+
     mediaStateStream.listen(updateFromEventChannel);
     return const FloatingLyricState();
   }
@@ -42,9 +72,11 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
           final lrcDB = await dbHelper.getLyric(title, artist);
           final isLyricFound = lrcDB != null;
           if (isLyricFound) {
-            state = state.copyWith(
-              currentLrc: Lrc(lrcDB.content ?? ''),
-            );
+            state = state.copyWith(currentLrc: Lrc(lrcDB.content ?? ''));
+            break;
+          } else if (_autoFetchOnline) {
+            final success = await fetchLyric(title, artist);
+            if (success) break;
           }
         } else if (currentLrc != null) {
           for (final line in currentLrc.lines.reversed) {
@@ -69,10 +101,56 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
             ),
           );
         }
-        break;
       }
     } catch (e) {
       Logger.e(e);
     }
+  }
+
+  Future<bool> hasLyric(String title, String artist) async {
+    final dbHelper = ref.read(dbHelperProvider);
+    final lrcDB = await dbHelper.getLyric(title, artist);
+    return lrcDB != null;
+  }
+
+  Future<bool> fetchLyric(String title, String artist) async {
+    if (state.mediaState == null) return false;
+
+    try {
+      state = state.copyWith(isSearchingOnline: true);
+      final response = await ref.read(
+        lyricProvider(
+          trackName: state.mediaState!.title,
+          artistName: state.mediaState!.artist,
+          albumName: state.mediaState!.album,
+          duration: state.mediaState!.duration ~/ 1000,
+        ).future,
+      );
+      state = state.copyWith(isSearchingOnline: false);
+      if (response.syncedLyrics?.toString().isEmpty ?? true) return false;
+
+      final id = await saveLyric(response);
+      if (id < 0) return false;
+
+      final dbHelper = ref.read(dbHelperProvider);
+      final lrcDB = await dbHelper.getLyricByID(id);
+      state = state.copyWith(currentLrc: Lrc(lrcDB?.content ?? ''));
+
+      return true;
+    } catch (e) {
+      state = state.copyWith(isSearchingOnline: false);
+      return false;
+    }
+  }
+
+  Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
+    final lrcDB = LrcDB()
+      ..fileName = '${lrcResponse.trackName} - ${lrcResponse.artistName}'
+      ..title = lrcResponse.trackName
+      ..artist = lrcResponse.artistName
+      ..content = lrcResponse.syncedLyrics;
+
+    final id = await ref.read(dbHelperProvider).putLyric(lrcDB);
+    return id;
   }
 }

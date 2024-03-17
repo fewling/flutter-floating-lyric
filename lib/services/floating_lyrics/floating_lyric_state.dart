@@ -11,5 +11,7 @@ class FloatingLyricState with _$FloatingLyricState {
     @Default(null) MediaState? mediaState,
     Lrc? currentLrc,
     String? currentLine,
+    @Default(false) bool shouldSearchOnline,
+    @Default(false) bool isSearchingOnline,
   }) = _FloatingLyricState;
 }
