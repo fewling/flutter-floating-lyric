@@ -26,11 +26,10 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
     );
 
     ref.listen(
-      preferenceNotifierProvider,
+      preferenceNotifierProvider.select((value) => value.autoFetchOnline),
       (prev, next) {
-        if (prev == next) return;
-        _autoFetchOnline = next.autoFetchOnline;
-        if (_autoFetchOnline) {
+        _autoFetchOnline = next;
+        if (_autoFetchOnline && state.currentLrc == null) {
           final title = state.mediaState?.title;
           final artist = state.mediaState?.artist;
 
@@ -127,7 +126,10 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
         ).future,
       );
       state = state.copyWith(isSearchingOnline: false);
-      if (response.syncedLyrics?.toString().isEmpty ?? true) return false;
+      final synced = response.syncedLyrics?.toString();
+      final plain = response.plainLyrics?.toString();
+      final content = synced ?? plain ?? '';
+      if (content.isEmpty) return false;
 
       final id = await saveLyric(response);
       if (id < 0) return false;
@@ -144,11 +146,16 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
   }
 
   Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
+    final content = lrcResponse.syncedLyrics?.toString() ??
+        lrcResponse.plainLyrics?.toString() ??
+        '';
+    if (content.isEmpty) return -1;
+
     final lrcDB = LrcDB()
       ..fileName = '${lrcResponse.trackName} - ${lrcResponse.artistName}'
       ..title = lrcResponse.trackName
       ..artist = lrcResponse.artistName
-      ..content = lrcResponse.syncedLyrics;
+      ..content = content;
 
     final id = await ref.read(dbHelperProvider).putLyric(lrcDB);
     return id;

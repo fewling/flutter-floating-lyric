@@ -43,13 +43,13 @@ class DBHelper {
   Future<LrcDB?>? getLyric(String title, String artist) async {
     final result = await _isar.lrcDBs
         .filter()
-        .fileNameEqualTo('$title - $artist')
+        .fileNameEqualTo('$title - $artist', caseSensitive: false)
         .findFirst();
     if (result != null) return result;
 
     final resultReverse = await _isar.lrcDBs
         .filter()
-        .fileNameEqualTo('$artist - $title')
+        .fileNameEqualTo('$artist - $title', caseSensitive: false)
         .findFirst();
     if (resultReverse != null) return resultReverse;
 
