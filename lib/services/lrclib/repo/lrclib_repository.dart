@@ -49,9 +49,8 @@ class LrcLibRepository {
       Logger.e('Failed to get lyric from LrcLib');
       throw Exception('Could not find lyric');
     } else {
-      Logger.d('Got lyric from LrcLib');
-      final body = response.body;
-      final json = jsonDecode(body) as Map<String, dynamic>;
+      // https://stackoverflow.com/a/71596683/13921129
+      final json = jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       return LrcLibResponse.fromJson(json);
     }
   }
