@@ -427,38 +427,71 @@ class OnlineLyricContent extends StatelessWidget {
             );
           },
         ),
-        ListTile(
-          title: const Text('Title'),
-          subtitle: Consumer(
-            builder: (context, ref, child) {
-              final title = ref.watch(
-                homeNotifierProvider.select((s) => s.mediaState?.title ?? ''),
-              );
-              return Text(title);
-            },
-          ),
+        Consumer(
+          builder: (_, ref, __) {
+            final isEditingTitle = ref.watch(
+              homeNotifierProvider.select((s) => s.isEditingTitle),
+            );
+
+            final title = ref.watch(
+              homeNotifierProvider.select((s) => s.titleAlt),
+            );
+
+            return isEditingTitle
+                ? TitleAltField(title: title)
+                : ListTile(
+                    title: const Text('Title'),
+                    subtitle: Text(title ?? ''),
+                    onTap: () => ref
+                        .read(homeNotifierProvider.notifier)
+                        .toggleEdit(title: true),
+                    trailing: const Icon(Icons.edit_outlined),
+                  );
+          },
         ),
-        ListTile(
-          title: const Text('Artist'),
-          subtitle: Consumer(
-            builder: (context, ref, child) {
-              final artist = ref.watch(
-                homeNotifierProvider.select((s) => s.mediaState?.artist ?? ''),
-              );
-              return Text(artist);
-            },
-          ),
+        Consumer(
+          builder: (context, ref, child) {
+            final isEditingArtist = ref.watch(
+              homeNotifierProvider.select((s) => s.isEditingArtist),
+            );
+
+            final artist = ref.watch(
+              homeNotifierProvider.select((s) => s.artistAlt ?? ''),
+            );
+
+            return isEditingArtist
+                ? ArtistAltField(artist: artist)
+                : ListTile(
+                    title: const Text('Artist'),
+                    subtitle: Text(artist),
+                    onTap: () => ref
+                        .read(homeNotifierProvider.notifier)
+                        .toggleEdit(artist: true),
+                    trailing: const Icon(Icons.edit_outlined),
+                  );
+          },
         ),
-        ListTile(
-          title: const Text('Album'),
-          subtitle: Consumer(
-            builder: (context, ref, child) {
-              final album = ref.watch(
-                homeNotifierProvider.select((s) => s.mediaState?.album ?? ''),
-              );
-              return Text(album);
-            },
-          ),
+        Consumer(
+          builder: (context, ref, child) {
+            final isEditingAlbum = ref.watch(
+              homeNotifierProvider.select((s) => s.isEditingAlbum),
+            );
+
+            final album = ref.watch(
+              homeNotifierProvider.select((s) => s.albumAlt ?? ''),
+            );
+
+            return isEditingAlbum
+                ? AlbumAltField(album: album)
+                : ListTile(
+                    title: const Text('Album'),
+                    subtitle: Text(album),
+                    onTap: () => ref
+                        .read(homeNotifierProvider.notifier)
+                        .toggleEdit(album: true),
+                    trailing: const Icon(Icons.edit_outlined),
+                  );
+          },
         ),
         ListTile(
           title: const Text('Duration'),
@@ -480,8 +513,11 @@ class OnlineLyricContent extends StatelessWidget {
             final isAutoSearching = ref.watch(
               lyricStateProvider.select((s) => s.isSearchingOnline),
             );
+            final noMediaState = ref.watch(
+              homeNotifierProvider.select((s) => s.mediaState == null),
+            );
             return ElevatedButton.icon(
-              onPressed: isSearching || isAutoSearching
+              onPressed: isSearching || isAutoSearching || noMediaState
                   ? null
                   : () => ref
                           .read(homeNotifierProvider.notifier)
@@ -551,5 +587,152 @@ class OnlineLyricContent extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class TitleAltField extends StatefulWidget {
+  const TitleAltField({
+    super.key,
+    this.title,
+  });
+
+  final String? title;
+
+  @override
+  State<TitleAltField> createState() => _TitleAltFieldState();
+}
+
+class _TitleAltFieldState extends State<TitleAltField> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.title ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => TextFormField(
+        controller: _controller,
+        autofocus: true,
+        onFieldSubmitted: ref.read(homeNotifierProvider.notifier).saveTitleAlt,
+        decoration: InputDecoration(
+          labelText: 'Title',
+          hintText: 'Title of the song',
+          suffixIcon: IconButton(
+            onPressed: () => ref
+                .read(homeNotifierProvider.notifier)
+                .saveTitleAlt(_controller.text),
+            icon: const Icon(Icons.done),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ArtistAltField extends StatefulWidget {
+  const ArtistAltField({
+    super.key,
+    this.artist,
+  });
+
+  final String? artist;
+
+  @override
+  State<ArtistAltField> createState() => _ArtistAltFieldState();
+}
+
+class _ArtistAltFieldState extends State<ArtistAltField> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.artist ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => TextFormField(
+        controller: _controller,
+        autofocus: true,
+        onFieldSubmitted: ref.read(homeNotifierProvider.notifier).saveArtistAlt,
+        decoration: InputDecoration(
+          labelText: 'Artist',
+          hintText: 'Artist of the song',
+          suffixIcon: IconButton(
+            onPressed: () => ref
+                .read(homeNotifierProvider.notifier)
+                .saveArtistAlt(_controller.text),
+            icon: const Icon(Icons.done),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AlbumAltField extends StatefulWidget {
+  const AlbumAltField({
+    super.key,
+    this.album,
+  });
+
+  final String? album;
+
+  @override
+  State<AlbumAltField> createState() => _AlbumAltFieldState();
+}
+
+class _AlbumAltFieldState extends State<AlbumAltField> {
+  final _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = widget.album ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, child) => TextFormField(
+        controller: _controller,
+        autofocus: true,
+        onFieldSubmitted: ref.read(homeNotifierProvider.notifier).saveAlbumAlt,
+        decoration: InputDecoration(
+          labelText: 'Album',
+          hintText: 'Album of the song',
+          suffixIcon: IconButton(
+            onPressed: () => ref
+                .read(homeNotifierProvider.notifier)
+                .saveAlbumAlt(_controller.text),
+            icon: const Icon(Icons.done),
+          ),
+        ),
+      ),
+    );
   }
 }

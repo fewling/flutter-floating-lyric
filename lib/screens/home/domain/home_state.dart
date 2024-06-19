@@ -12,5 +12,11 @@ class HomeState with _$HomeState {
     @Default(false) bool isWindowVisible,
     @Default(false) bool isProcessingFiles,
     @Default(false) bool isSearchingOnline,
+    @Default(null) String? titleAlt,
+    @Default(null) String? artistAlt,
+    @Default(null) String? albumAlt,
+    @Default(false) bool isEditingTitle,
+    @Default(false) bool isEditingArtist,
+    @Default(false) bool isEditingAlbum,
   }) = _HomeState;
 }
