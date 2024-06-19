@@ -26,7 +26,21 @@ class HomeNotifier extends _$HomeNotifier {
       lyricStateProvider.select((value) => value.mediaState),
       (prev, next) {
         if (prev == next) return;
-        state = state.copyWith(mediaState: next);
+
+        final songChanged = prev?.title != next?.title ||
+            prev?.artist != next?.artist ||
+            prev?.album != next?.album;
+
+        final titleAlt = songChanged ? next?.title : state.titleAlt;
+        final artistAlt = songChanged ? next?.artist : state.artistAlt;
+        final albumAlt = songChanged ? next?.album : state.albumAlt;
+
+        state = state.copyWith(
+          mediaState: next,
+          titleAlt: titleAlt,
+          artistAlt: artistAlt,
+          albumAlt: albumAlt,
+        );
       },
     );
 
@@ -106,9 +120,9 @@ class HomeNotifier extends _$HomeNotifier {
       state = state.copyWith(isSearchingOnline: true);
       final response = await ref.read(
         lyricProvider(
-          trackName: state.mediaState!.title,
-          artistName: state.mediaState!.artist,
-          albumName: state.mediaState!.album,
+          trackName: state.titleAlt ?? state.mediaState!.title,
+          artistName: state.artistAlt ?? state.mediaState!.artist,
+          albumName: state.albumAlt ?? state.mediaState!.album,
           duration: state.mediaState!.duration ~/ 1000,
         ).future,
       );
@@ -122,10 +136,13 @@ class HomeNotifier extends _$HomeNotifier {
   }
 
   Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
+    final media = state.mediaState;
+    if (media == null) throw Exception('No media state found');
+
     final lrcDB = LrcDB()
-      ..fileName = '${lrcResponse.trackName} - ${lrcResponse.artistName}'
-      ..title = lrcResponse.trackName
-      ..artist = lrcResponse.artistName
+      ..fileName = '${media.title} - ${media.artist}'
+      ..title = media.title
+      ..artist = media.artist
       ..content = lrcResponse.syncedLyrics;
 
     final id = await ref.read(dbHelperProvider).putLyric(lrcDB);
@@ -134,5 +151,33 @@ class HomeNotifier extends _$HomeNotifier {
     if (id >= 0) ref.invalidate(lyricStateProvider);
 
     return id;
+  }
+
+  void saveTitleAlt(String value) {
+    state = state.copyWith(titleAlt: value, isEditingTitle: false);
+  }
+
+  void saveArtistAlt(String value) {
+    state = state.copyWith(artistAlt: value, isEditingArtist: false);
+  }
+
+  void saveAlbumAlt(String value) {
+    state = state.copyWith(albumAlt: value, isEditingAlbum: false);
+  }
+
+  void toggleEdit({
+    bool? title,
+    bool? artist,
+    bool? album,
+  }) {
+    state = state.copyWith(
+      isEditingTitle: title ?? false,
+      isEditingArtist: artist ?? false,
+      isEditingAlbum: album ?? false,
+    );
+  }
+
+  void updateTitleAlt(String value) {
+    state = state.copyWith(titleAlt: value);
   }
 }
