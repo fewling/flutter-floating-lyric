@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -43,10 +44,12 @@ class LrcLibRepository {
         '&artist_name=$artistName'
         '&album_name=$albumName'
         '&duration=$duration');
+    if (kDebugMode) Logger.d('Getting lyric from LrcLib, url: $url');
+
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
-      Logger.e('Failed to get lyric from LrcLib');
+      if (kDebugMode) Logger.e('Failed to get lyric from LrcLib, response: ${response.body}');
       throw Exception('Could not find lyric');
     } else {
       // https://stackoverflow.com/a/71596683/13921129
