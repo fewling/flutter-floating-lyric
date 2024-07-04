@@ -53,12 +53,14 @@ class FloatingWindow(
 
     private val floatingLyricTextView: TextView
     private val floatingTitleTextView: TextView
+    private val floatingLockImageButton: ImageButton
     private val floatingCloseImageButton: ImageButton
     private val floatingStartTimeTextView: TextView
     private val floatingMusicSeekBar: SeekBar
     private val floatingMaxTimeTextView: TextView
 
     private var showLyricOnly: Boolean = false
+    private var isLocked: Boolean = false
 
     init {
         Log.i(TAG, "Init")
@@ -67,12 +69,18 @@ class FloatingWindow(
         containerView = alertView.findViewById(R.id.notification_main_column_container)
         floatingLyricTextView = alertView.findViewById(R.id.floating_lyric_text_view)
         floatingTitleTextView = alertView.findViewById(R.id.floating_title_text_view)
+        floatingLockImageButton = alertView.findViewById(R.id.floating_image_button_lock)
         floatingCloseImageButton = alertView.findViewById(R.id.floating_image_button_close)
         floatingStartTimeTextView = alertView.findViewById(R.id.floating_start_time_text_view)
         floatingMaxTimeTextView = alertView.findViewById(R.id.floating_max_time_text_view)
         floatingMusicSeekBar = alertView.findViewById(R.id.floating_music_seekbar)
         floatingMusicSeekBar.setOnTouchListener { _, _ -> true }
 
+        setLockButtonIcon()
+        floatingLockImageButton.setOnClickListener {
+            isLocked = !isLocked
+            setLockButtonIcon()
+        }
         floatingCloseImageButton.setOnClickListener { hide() }
         alertView.setOnClickListener {
             showLyricOnly = !showLyricOnly
@@ -80,6 +88,7 @@ class FloatingWindow(
             if (showLyricOnly) {
                 floatingTitleTextView.visibility = View.GONE
                 floatingCloseImageButton.visibility = View.GONE
+                floatingLockImageButton.visibility = View.GONE
 
                 if (!state.showProgressBar) {
                     floatingStartTimeTextView.visibility = View.GONE
@@ -89,6 +98,7 @@ class FloatingWindow(
             } else {
                 floatingTitleTextView.visibility = View.VISIBLE
                 floatingCloseImageButton.visibility = View.VISIBLE
+                floatingLockImageButton.visibility = View.VISIBLE
                 floatingStartTimeTextView.visibility = View.VISIBLE
                 floatingMusicSeekBar.visibility = View.VISIBLE
                 floatingMaxTimeTextView.visibility = View.VISIBLE
@@ -100,6 +110,8 @@ class FloatingWindow(
             var px = 0.0
             var py = 0.0
             override fun onTouch(v: View?, event: MotionEvent): Boolean {
+                if (isLocked) return false
+
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         x = layoutParams.x.toDouble()
@@ -135,6 +147,18 @@ class FloatingWindow(
         containerView.setBackgroundColor(color)
 
         floatingLyricTextView.textSize = state.fontSize.toFloat()
+
+        alertView.isClickable = false
+        alertView.isFocusable = false
+        alertView.isEnabled = false
+    }
+
+    private fun setLockButtonIcon() {
+        if (isLocked) {
+            floatingLockImageButton.setImageResource(R.drawable.ic_lock)
+        } else {
+            floatingLockImageButton.setImageResource(R.drawable.ic_unlock)
+        }
     }
 
     fun show() {
@@ -230,6 +254,7 @@ class FloatingWindow(
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             floatingCloseImageButton.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
+            floatingLockImageButton.colorFilter = BlendModeColorFilter(color, BlendMode.SRC_IN)
             floatingMusicSeekBar.thumb.colorFilter =
                 BlendModeColorFilter(color, BlendMode.SRC_IN)
             floatingMusicSeekBar.progressDrawable.colorFilter =
