@@ -53,7 +53,6 @@ class HomeNotifier extends _$HomeNotifier {
     ref.listen(
       floatingWindowNotifierProvider.select((value) => value.isLocked),
       (prev, next) {
-        if (prev == next) return;
         state = state.copyWith(isWindowLocked: next);
         ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(next);
       },

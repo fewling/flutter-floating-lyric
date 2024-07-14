@@ -123,6 +123,9 @@ class FloatingWindow(
             var px = 0.0
             var py = 0.0
             override fun onTouch(v: View?, event: MotionEvent): Boolean {
+                
+                if (state.isLocked) return false
+
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         x = layoutParams.x.toDouble()
