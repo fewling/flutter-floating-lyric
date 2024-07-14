@@ -2,6 +2,7 @@ package com.example.floating_lyric.features.media_tracker
 
 import android.content.Context
 import android.content.IntentFilter
+import android.os.Build
 import android.util.Log
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.EventChannel.EventSink
@@ -24,7 +25,15 @@ class MediaStateEventStreamHandler(private val context: Context) : StreamHandler
         intentFilter.addAction(MediaStateBroadcastReceiver.ACTION_MEDIA_STATE_CHANGED)
 
         mediaStateReceiver = MediaStateBroadcastReceiver(eventSink)
-        context.registerReceiver(mediaStateReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(
+                mediaStateReceiver,
+                intentFilter,
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            context.registerReceiver(mediaStateReceiver, intentFilter)
+        }
     }
 
     override fun onCancel(arguments: Any?) {
