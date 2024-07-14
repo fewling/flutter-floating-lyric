@@ -61,14 +61,12 @@ class PreferenceNotifier extends _$PreferenceNotifier {
   void toggleShowMilliseconds() => ref
       .read(sharedPreferenceProvider)
       .setBool(showMillisecondsKey, !state.showMilliseconds)
-      .then((value) =>
-          state = state.copyWith(showMilliseconds: !state.showMilliseconds));
+      .then((value) => state = state.copyWith(showMilliseconds: !state.showMilliseconds));
 
   void toggleShowProgressBar() => ref
       .read(sharedPreferenceProvider)
       .setBool(showProgressBarKey, !state.showProgressBar)
-      .then((value) =>
-          state = state.copyWith(showProgressBar: !state.showProgressBar));
+      .then((value) => state = state.copyWith(showProgressBar: !state.showProgressBar));
 
   void updateFontSize(int fontSize) => ref
       .read(sharedPreferenceProvider)
