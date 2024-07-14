@@ -27,12 +27,9 @@ class SettingsScreen extends StatelessWidget {
             builder: (context, ref, child) => ListTile(
               leading: Icon(Icons.brightness_2_outlined, color: primary),
               title: const Text('Use Dark Mode'),
-              onTap:
-                  ref.read(settingsNotifierProvider.notifier).toggleBrightness,
+              onTap: ref.read(settingsNotifierProvider.notifier).toggleBrightness,
               trailing: Switch(
-                onChanged: (_) => ref
-                    .read(settingsNotifierProvider.notifier)
-                    .toggleBrightness(),
+                onChanged: (_) => ref.read(settingsNotifierProvider.notifier).toggleBrightness(),
                 value: colorScheme.brightness == Brightness.dark,
               ),
             ),
@@ -45,11 +42,8 @@ class SettingsScreen extends StatelessWidget {
               context: context,
               builder: (_) => Consumer(
                 builder: (_, ref, __) => ColorPickerSheet(
-                  colorValue: ref.watch(preferenceNotifierProvider
-                      .select((pref) => pref.appColorScheme)),
-                  onColorChanged: ref
-                      .read(settingsNotifierProvider.notifier)
-                      .setAppColorScheme,
+                  colorValue: ref.watch(preferenceNotifierProvider.select((pref) => pref.appColorScheme)),
+                  onColorChanged: ref.read(settingsNotifierProvider.notifier).setAppColorScheme,
                 ),
               ),
             ),
@@ -60,9 +54,7 @@ class SettingsScreen extends StatelessWidget {
               title: const Text('Bug Report/Feature Request'),
               subtitle: const Text('Send us your feedback'),
               trailing: const Icon(Icons.arrow_forward_ios_outlined),
-              onTap: ref
-                  .read(settingsNotifierProvider.notifier)
-                  .launchFeedbackEmail,
+              onTap: ref.read(settingsNotifierProvider.notifier).launchFeedbackEmail,
             ),
           ),
           Consumer(
@@ -85,6 +77,26 @@ class SettingsScreen extends StatelessWidget {
                 ),
               );
             },
+          ),
+
+          const Divider(),
+
+          ListTile(
+            leading: Icon(Icons.info_outline, color: primary),
+            title: const Text('Known Issues'),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: SelectionArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('In some heavy customized Android OS like MIUI, ColorOS, HuaWei: '),
+                  Text('1. Could not retrieve necessary permissions.'),
+                  Text('2. Not detecting music app from notification bar.'),
+                ],
+              ),
+            ),
           ),
         ],
       ),
