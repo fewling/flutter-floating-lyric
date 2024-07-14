@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import io.flutter.plugin.common.EventChannel
 
 /// This class is used to receive the media state from the [MediaNotificationListener]
@@ -12,7 +13,9 @@ class MediaStateBroadcastReceiver(private val eventSink: EventChannel.EventSink)
     companion object {
         const val ACTION_MEDIA_STATE_CHANGED = "com.example.floating_lyric.ACTION_MEDIA_STATE_CHANGED"
         const val EXTRA_MEDIA_STATE = "com.example.floating_lyric.EXTRA_MEDIA_STATE"
+        const val TAG = "MediaStateBroadcast"
     }
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val mediaStates: ArrayList<MediaState>? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

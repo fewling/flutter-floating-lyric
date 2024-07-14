@@ -64,18 +64,13 @@ class MediaSettingTitle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isPlaying = ref.watch(
-        homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false));
+    final isPlaying = ref.watch(homeNotifierProvider.select((s) => s.mediaState?.isPlaying ?? false));
 
-    final title = ref
-        .watch(homeNotifierProvider.select((s) => s.mediaState?.title ?? ''));
-    final artist = ref
-        .watch(homeNotifierProvider.select((s) => s.mediaState?.artist ?? ''));
+    final title = ref.watch(homeNotifierProvider.select((s) => s.mediaState?.title ?? ''));
+    final artist = ref.watch(homeNotifierProvider.select((s) => s.mediaState?.artist ?? ''));
 
-    final position = ref
-        .watch(homeNotifierProvider.select((s) => s.mediaState?.position ?? 0));
-    final duration = ref.watch(homeNotifierProvider
-        .select((value) => value.mediaState?.duration ?? 0));
+    final position = ref.watch(homeNotifierProvider.select((s) => s.mediaState?.position ?? 0));
+    final duration = ref.watch(homeNotifierProvider.select((value) => value.mediaState?.duration ?? 0));
     final progress = position / duration;
 
     final label = isPlaying
@@ -134,9 +129,7 @@ class MediaSettingContent extends ConsumerWidget {
                 width: double.infinity,
                 child: FloatingActionButton.large(
                   heroTag: 'play',
-                  onPressed: ref
-                      .read(homeNotifierProvider.notifier)
-                      .start3rdMusicPlayer,
+                  onPressed: ref.read(homeNotifierProvider.notifier).start3rdMusicPlayer,
                   child: const Text('Start A Music App'),
                 ),
               ),
@@ -170,6 +163,23 @@ class WindowSettingContent extends ConsumerWidget {
           value: visibleFloatingWindow,
           onChanged: ref.read(homeNotifierProvider.notifier).toggleWindow,
         ),
+        ExpansionTile(
+          enabled: visibleFloatingWindow,
+          leading: const Icon(Icons.timelapse_outlined),
+          title: const Text('Lock Settings'),
+          children: [
+            Consumer(
+              builder: (context, ref, child) {
+                final isLocked = ref.watch(homeNotifierProvider.select((s) => s.isWindowLocked));
+                return SwitchListTile(
+                  title: isLocked ? const Text('Locked') : const Text('Unlocked'),
+                  value: isLocked,
+                  onChanged: ref.read(homeNotifierProvider.notifier).toggleLockWindow,
+                );
+              },
+            ),
+          ],
+        ),
         Consumer(
           builder: (context, ref, child) {
             final showMillis = ref.watch(
@@ -180,16 +190,11 @@ class WindowSettingContent extends ConsumerWidget {
             return ListTile(
               enabled: visibleFloatingWindow,
               leading: const Icon(Icons.timelapse_outlined),
-              title: showMillis
-                  ? const Text('Show Milliseconds')
-                  : const Text('Hide Milliseconds'),
+              title: showMillis ? const Text('Show Milliseconds') : const Text('Hide Milliseconds'),
               trailing: Switch(
                 value: showMillis,
-                onChanged: !visibleFloatingWindow
-                    ? null
-                    : ref
-                        .read(homeNotifierProvider.notifier)
-                        .toggleMillisVisibility,
+                onChanged:
+                    !visibleFloatingWindow ? null : ref.read(homeNotifierProvider.notifier).toggleMillisVisibility,
               ),
             );
           },
@@ -204,16 +209,11 @@ class WindowSettingContent extends ConsumerWidget {
             return ListTile(
               enabled: visibleFloatingWindow,
               leading: const Icon(Icons.linear_scale_outlined),
-              title: showBar
-                  ? const Text('Show Progress Bar')
-                  : const Text('Hide Progress Bar'),
+              title: showBar ? const Text('Show Progress Bar') : const Text('Hide Progress Bar'),
               trailing: Switch(
                 value: showBar,
-                onChanged: !visibleFloatingWindow
-                    ? null
-                    : ref
-                        .read(homeNotifierProvider.notifier)
-                        .toggleProgressBarVisibility,
+                onChanged:
+                    !visibleFloatingWindow ? null : ref.read(homeNotifierProvider.notifier).toggleProgressBarVisibility,
               ),
             );
           },
@@ -237,9 +237,7 @@ class WindowSettingContent extends ConsumerWidget {
                     );
                     return ColorPicker(
                       pickerColor: Color(color),
-                      onColorChanged: ref
-                          .read(homeNotifierProvider.notifier)
-                          .updateWindowColor,
+                      onColorChanged: ref.read(homeNotifierProvider.notifier).updateWindowColor,
                       paletteType: PaletteType.hueWheel,
                       hexInputBar: true,
                     );
@@ -279,9 +277,7 @@ class WindowSettingContent extends ConsumerWidget {
               divisions: 20,
               value: opacity,
               label: '${opacity.toInt()}%',
-              onChanged: visibleFloatingWindow
-                  ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity
-                  : null,
+              onChanged: visibleFloatingWindow ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity : null,
             );
           },
         ),
@@ -311,9 +307,7 @@ class WindowSettingContent extends ConsumerWidget {
               value: fontSize.toDouble(),
               label: '$fontSize%',
               onChanged: visibleFloatingWindow
-                  ? (value) => ref
-                      .read(homeNotifierProvider.notifier)
-                      .updateFontSize(value.toInt())
+                  ? (value) => ref.read(homeNotifierProvider.notifier).updateFontSize(value.toInt())
                   : null,
             );
           },
@@ -385,10 +379,7 @@ class LrcFormatContent extends ConsumerWidget {
           )
         else
           ElevatedButton.icon(
-            onPressed: () => ref
-                .read(homeNotifierProvider.notifier)
-                .importLRCs()
-                .then((failedFiles) {
+            onPressed: () => ref.read(homeNotifierProvider.notifier).importLRCs().then((failedFiles) {
               ref.invalidate(allRawLyricsProvider);
               if (failedFiles.isNotEmpty) {
                 showDialog(
@@ -421,9 +412,7 @@ class OnlineLyricContent extends StatelessWidget {
             return SwitchListTile(
               title: const Text('Auto Fetch'),
               value: autoFetch,
-              onChanged: ref
-                  .read(preferenceNotifierProvider.notifier)
-                  .toggleAutoFetchOnline,
+              onChanged: ref.read(preferenceNotifierProvider.notifier).toggleAutoFetchOnline,
             );
           },
         ),
@@ -442,9 +431,7 @@ class OnlineLyricContent extends StatelessWidget {
                 : ListTile(
                     title: const Text('Title'),
                     subtitle: Text(title ?? ''),
-                    onTap: () => ref
-                        .read(homeNotifierProvider.notifier)
-                        .toggleEdit(title: true),
+                    onTap: () => ref.read(homeNotifierProvider.notifier).toggleEdit(title: true),
                     trailing: const Icon(Icons.edit_outlined),
                   );
           },
@@ -464,9 +451,7 @@ class OnlineLyricContent extends StatelessWidget {
                 : ListTile(
                     title: const Text('Artist'),
                     subtitle: Text(artist),
-                    onTap: () => ref
-                        .read(homeNotifierProvider.notifier)
-                        .toggleEdit(artist: true),
+                    onTap: () => ref.read(homeNotifierProvider.notifier).toggleEdit(artist: true),
                     trailing: const Icon(Icons.edit_outlined),
                   );
           },
@@ -486,9 +471,7 @@ class OnlineLyricContent extends StatelessWidget {
                 : ListTile(
                     title: const Text('Album'),
                     subtitle: Text(album),
-                    onTap: () => ref
-                        .read(homeNotifierProvider.notifier)
-                        .toggleEdit(album: true),
+                    onTap: () => ref.read(homeNotifierProvider.notifier).toggleEdit(album: true),
                     trailing: const Icon(Icons.edit_outlined),
                   );
           },
@@ -519,13 +502,9 @@ class OnlineLyricContent extends StatelessWidget {
             return ElevatedButton.icon(
               onPressed: isSearching || isAutoSearching || noMediaState
                   ? null
-                  : () => ref
-                          .read(homeNotifierProvider.notifier)
-                          .fetchLyric()
-                          .then((lrcResponse) {
-                        final content = lrcResponse?.syncedLyrics ??
-                            lrcResponse?.plainLyrics ??
-                            'No lyric found for this song.';
+                  : () => ref.read(homeNotifierProvider.notifier).fetchLyric().then((lrcResponse) {
+                        final content =
+                            lrcResponse?.syncedLyrics ?? lrcResponse?.plainLyrics ?? 'No lyric found for this song.';
 
                         return showDialog(
                           context: context,
@@ -543,8 +522,7 @@ class OnlineLyricContent extends StatelessWidget {
                                   onPressed: () => ref
                                       .read(homeNotifierProvider.notifier)
                                       .saveLyric(lrcResponse)
-                                      .then((id) =>
-                                          _showLyricFetchResult(context, id)),
+                                      .then((id) => _showLyricFetchResult(context, id)),
                                   child: const Text('Save'),
                                 ),
                             ],
@@ -552,9 +530,7 @@ class OnlineLyricContent extends StatelessWidget {
                         );
                       }),
               label: const Text('Search'),
-              icon: isSearching
-                  ? const LoadingWidget()
-                  : const Icon(Icons.search),
+              icon: isSearching ? const LoadingWidget() : const Icon(Icons.search),
             );
           },
         ),
@@ -628,9 +604,7 @@ class _TitleAltFieldState extends State<TitleAltField> {
           labelText: 'Title',
           hintText: 'Title of the song',
           suffixIcon: IconButton(
-            onPressed: () => ref
-                .read(homeNotifierProvider.notifier)
-                .saveTitleAlt(_controller.text),
+            onPressed: () => ref.read(homeNotifierProvider.notifier).saveTitleAlt(_controller.text),
             icon: const Icon(Icons.done),
           ),
         ),
@@ -677,9 +651,7 @@ class _ArtistAltFieldState extends State<ArtistAltField> {
           labelText: 'Artist',
           hintText: 'Artist of the song',
           suffixIcon: IconButton(
-            onPressed: () => ref
-                .read(homeNotifierProvider.notifier)
-                .saveArtistAlt(_controller.text),
+            onPressed: () => ref.read(homeNotifierProvider.notifier).saveArtistAlt(_controller.text),
             icon: const Icon(Icons.done),
           ),
         ),
@@ -726,9 +698,7 @@ class _AlbumAltFieldState extends State<AlbumAltField> {
           labelText: 'Album',
           hintText: 'Album of the song',
           suffixIcon: IconButton(
-            onPressed: () => ref
-                .read(homeNotifierProvider.notifier)
-                .saveAlbumAlt(_controller.text),
+            onPressed: () => ref.read(homeNotifierProvider.notifier).saveAlbumAlt(_controller.text),
             icon: const Icon(Icons.done),
           ),
         ),

@@ -17,6 +17,7 @@ enum WindowPlatformMethod {
   updateMillisVisibility,
   updateProgressBarVisibility,
   updateFontSize,
+  setWindowLock,
 }
 
 @Riverpod(keepAlive: true)
@@ -45,9 +46,7 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
       (prev, next) {
         final mediaState = next.mediaState;
 
-        final msg = next.isSearchingOnline
-            ? 'Searching lyric...'
-            : next.currentLine ?? 'No lyric';
+        final msg = next.isSearchingOnline ? 'Searching lyric...' : next.currentLine ?? 'No lyric';
 
         _state = _state.copyWith(
           title: '${mediaState?.title} - ${mediaState?.artist}',
@@ -121,8 +120,7 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
         _state.toJson(),
       );
 
-  Future<void> closeFloatingWindow() =>
-      _channel.invokeMethod(WindowPlatformMethod.closeFloatingWindow.name);
+  Future<void> closeFloatingWindow() => _channel.invokeMethod(WindowPlatformMethod.closeFloatingWindow.name);
 
   Future<void> updateFloatingWindow() => _channel.invokeMethod(
         WindowPlatformMethod.updateFloatingWindowState.name,
@@ -153,4 +151,12 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
         WindowPlatformMethod.updateFontSize.name,
         _state.toJson(),
       );
+
+  void setWindowLock(bool value) {
+    _state = _state.copyWith(isLocked: value);
+    _channel.invokeMethod(
+      WindowPlatformMethod.setWindowLock.name,
+      _state.toJson(),
+    );
+  }
 }

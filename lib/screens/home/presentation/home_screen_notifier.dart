@@ -27,9 +27,7 @@ class HomeNotifier extends _$HomeNotifier {
       (prev, next) {
         if (prev == next) return;
 
-        final songChanged = prev?.title != next?.title ||
-            prev?.artist != next?.artist ||
-            prev?.album != next?.album;
+        final songChanged = prev?.title != next?.title || prev?.artist != next?.artist || prev?.album != next?.album;
 
         final titleAlt = songChanged ? next?.title : state.titleAlt;
         final artistAlt = songChanged ? next?.artist : state.artistAlt;
@@ -49,6 +47,15 @@ class HomeNotifier extends _$HomeNotifier {
       (prev, next) {
         if (prev == next) return;
         state = state.copyWith(isWindowVisible: next);
+      },
+    );
+
+    ref.listen(
+      floatingWindowNotifierProvider.select((value) => value.isLocked),
+      (prev, next) {
+        if (prev == next) return;
+        state = state.copyWith(isWindowLocked: next);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(next);
       },
     );
 
@@ -179,5 +186,10 @@ class HomeNotifier extends _$HomeNotifier {
 
   void updateTitleAlt(String value) {
     state = state.copyWith(titleAlt: value);
+  }
+
+  void toggleLockWindow(bool value) {
+    state = state.copyWith(isWindowLocked: value);
+    ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(value);
   }
 }

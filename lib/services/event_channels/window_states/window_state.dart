@@ -19,8 +19,8 @@ class WindowState with _$WindowState {
     @Default(true) bool showMillis,
     @Default(true) bool showProgressBar,
     @Default(24) int fontSize,
+    @Default(false) bool isLocked,
   }) = _WindowState;
 
-  factory WindowState.fromJson(Map<String, dynamic> json) =>
-      _$WindowStateFromJson(json);
+  factory WindowState.fromJson(Map<String, dynamic> json) => _$WindowStateFromJson(json);
 }

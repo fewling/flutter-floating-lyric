@@ -10,6 +10,7 @@ class HomeState with _$HomeState {
     @Default(0) int currentIndex,
     @Default(null) MediaState? mediaState,
     @Default(false) bool isWindowVisible,
+    @Default(false) bool isWindowLocked,
     @Default(false) bool isProcessingFiles,
     @Default(false) bool isSearchingOnline,
     @Default(null) String? titleAlt,

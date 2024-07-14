@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_easylogger/flutter_logger.dart';
 
 import 'window_state.dart';
 
@@ -16,6 +17,9 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
     final a = windowState['a'] as int;
     final seekBarMax = windowState['seekBarMax'] as int;
     final seekBarProgress = windowState['seekBarProgress'] as int;
+    final isLocked = windowState['isLocked'] as bool;
+
+    Logger.d('Received window state.isLocked: $isLocked');
 
     return WindowState(
       isVisible: isVisible,
@@ -27,6 +31,7 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
       a: a,
       seekBarMax: seekBarMax,
       seekBarProgress: seekBarProgress,
+      isLocked: isLocked,
     );
   },
 );

@@ -2,6 +2,7 @@ package com.example.floating_lyric.features.floating_window
 
 import android.content.Context
 import android.content.IntentFilter
+import android.os.Build
 import android.util.Log
 import io.flutter.plugin.common.EventChannel
 
@@ -23,7 +24,15 @@ class WindowEventStreamHandler(private val context: Context) : EventChannel.Stre
         intentFilter.addAction(WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED)
 
         windowStateReceiver = WindowStateBroadcastReceiver(eventSink)
-        context.registerReceiver(windowStateReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(
+                windowStateReceiver,
+                intentFilter,
+                Context.RECEIVER_EXPORTED
+            )
+        } else {
+            context.registerReceiver(windowStateReceiver, intentFilter)
+        }
     }
 
     override fun onCancel(arguments: Any?) {
