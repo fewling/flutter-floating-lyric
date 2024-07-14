@@ -46,15 +46,24 @@ class HomeNotifier extends _$HomeNotifier {
       floatingWindowNotifierProvider.select((value) => value.isVisible),
       (prev, next) {
         if (prev == next) return;
-        state = state.copyWith(isWindowVisible: next);
+
+        final isLocked = next ? state.isWindowLocked : false;
+        final isTouchThrough = next ? state.isWindowTouchThrough : false;
+        state = state.copyWith(
+          isWindowVisible: next,
+          isWindowLocked: isLocked,
+          isWindowTouchThrough: isTouchThrough,
+        );
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(isLocked);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(isTouchThrough);
       },
     );
 
     ref.listen(
-      floatingWindowNotifierProvider.select((value) => value.isLocked),
+      floatingWindowNotifierProvider,
       (prev, next) {
-        state = state.copyWith(isWindowLocked: next);
-        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(next);
+        state = state.copyWith(isWindowLocked: next.isLocked);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(next.isLocked);
       },
     );
 
@@ -190,5 +199,10 @@ class HomeNotifier extends _$HomeNotifier {
   void toggleLockWindow(bool value) {
     state = state.copyWith(isWindowLocked: value);
     ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(value);
+  }
+
+  void toggleTouchThrough(bool value) {
+    state = state.copyWith(isWindowTouchThrough: value);
+    ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(value);
   }
 }

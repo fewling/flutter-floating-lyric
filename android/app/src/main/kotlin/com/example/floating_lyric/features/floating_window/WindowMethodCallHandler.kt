@@ -197,6 +197,16 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                 floatingWindow!!.updateState(newState)
             }
 
+            "setWindowTouchThrough" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    isTouchThrough = arg["isTouchThrough"] as Boolean
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
             else -> {
                 result.notImplemented()
             }

@@ -18,6 +18,7 @@ enum WindowPlatformMethod {
   updateProgressBarVisibility,
   updateFontSize,
   setWindowLock,
+  setWindowTouchThrough,
 }
 
 @Riverpod(keepAlive: true)
@@ -156,6 +157,14 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
     _state = _state.copyWith(isLocked: value);
     _channel.invokeMethod(
       WindowPlatformMethod.setWindowLock.name,
+      _state.toJson(),
+    );
+  }
+
+  void setWindowTouchThrough(bool value) {
+    _state = _state.copyWith(isTouchThrough: value);
+    _channel.invokeMethod(
+      WindowPlatformMethod.setWindowTouchThrough.name,
       _state.toJson(),
     );
   }

@@ -123,7 +123,7 @@ class FloatingWindow(
             var px = 0.0
             var py = 0.0
             override fun onTouch(v: View?, event: MotionEvent): Boolean {
-                
+
                 if (state.isLocked) return false
 
                 when (event.action) {
@@ -201,6 +201,7 @@ class FloatingWindow(
         updateLyricLine()
         updateColor()
         updateWindowLock()
+        updateWindowTouchThrough()
     }
 
     private fun updateTitle() {
@@ -264,6 +265,19 @@ class FloatingWindow(
         } else {
             lockImageButton.visibility = View.GONE
             lockOpenImageButton.visibility = View.VISIBLE
+        }
+    }
+
+    private fun updateWindowTouchThrough() {
+        val flag = if (state.isTouchThrough) {
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        } else {
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        }
+
+        if (layoutParams.flags != flag) {
+            layoutParams.flags = flag
+            windowManager.updateViewLayout(alertView, layoutParams)
         }
     }
 }

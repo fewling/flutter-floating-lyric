@@ -20,6 +20,7 @@ class WindowState with _$WindowState {
     @Default(true) bool showProgressBar,
     @Default(24) int fontSize,
     @Default(false) bool isLocked,
+    @Default(false) bool isTouchThrough,
   }) = _WindowState;
 
   factory WindowState.fromJson(Map<String, dynamic> json) => _$WindowStateFromJson(json);
