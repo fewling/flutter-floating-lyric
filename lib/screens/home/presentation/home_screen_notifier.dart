@@ -49,12 +49,15 @@ class HomeNotifier extends _$HomeNotifier {
 
         final isLocked = next ? state.isWindowLocked : false;
         final isTouchThrough = next ? state.isWindowTouchThrough : false;
+        final ignoreTouch = next ? state.isWIndowIgnoreTouch : false;
         state = state.copyWith(
           isWindowVisible: next,
           isWindowLocked: isLocked,
           isWindowTouchThrough: isTouchThrough,
+          isWIndowIgnoreTouch: ignoreTouch,
         );
         ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(isLocked);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowIgnoreTouch(ignoreTouch);
         ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(isTouchThrough);
       },
     );
@@ -204,5 +207,10 @@ class HomeNotifier extends _$HomeNotifier {
   void toggleTouchThrough(bool value) {
     state = state.copyWith(isWindowTouchThrough: value);
     ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(value);
+  }
+
+  void toggleIgnoreTouch(bool value) {
+    state = state.copyWith(isWIndowIgnoreTouch: value);
+    ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowIgnoreTouch(value);
   }
 }

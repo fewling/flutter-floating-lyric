@@ -79,41 +79,53 @@ class FloatingWindow(
         musicSeekBar = alertView.findViewById(R.id.floating_music_seekbar)
         musicSeekBar.setOnTouchListener { _, _ -> true }
 
-        closeImageButton.setOnClickListener { hide() }
+        closeImageButton.setOnClickListener {
+            if (state.ignoreTouch.not()) {
+                hide()
+            }
+        }
         lockImageButton.setOnClickListener {
-            onLockBtnPressed()
+            if (state.ignoreTouch.not()) {
+                onLockBtnPressed()
+            }
         }
         lockOpenImageButton.setOnClickListener {
-            onLockOpenBtnPressed()
+            if (state.ignoreTouch.not()) {
+                onLockOpenBtnPressed()
+            }
         }
         alertView.setOnClickListener {
-            showLyricOnly = !showLyricOnly
-            /* Display/hide certain views in floating window: */
-            if (showLyricOnly) {
-                titleTextView.visibility = View.GONE
-                closeImageButton.visibility = View.GONE
-                lockImageButton.visibility = View.GONE
-                lockOpenImageButton.visibility = View.GONE
+            if (state.ignoreTouch.not()) {
 
-                if (this.state.showProgressBar.not()) {
-                    startTimeTextView.visibility = View.GONE
-                    musicSeekBar.visibility = View.GONE
-                    maxTimeTextView.visibility = View.GONE
-                }
-            } else {
-                titleTextView.visibility = View.VISIBLE
-                closeImageButton.visibility = View.VISIBLE
-                lockImageButton.visibility = View.VISIBLE
-                startTimeTextView.visibility = View.VISIBLE
-                musicSeekBar.visibility = View.VISIBLE
-                maxTimeTextView.visibility = View.VISIBLE
+                showLyricOnly = !showLyricOnly
 
-                if (this.state.isLocked) {
-                    lockImageButton.visibility = View.VISIBLE
-                    lockOpenImageButton.visibility = View.GONE
-                } else {
+                /* Display/hide certain views in floating window: */
+                if (showLyricOnly) {
+                    titleTextView.visibility = View.GONE
+                    closeImageButton.visibility = View.GONE
                     lockImageButton.visibility = View.GONE
-                    lockOpenImageButton.visibility = View.VISIBLE
+                    lockOpenImageButton.visibility = View.GONE
+
+                    if (this.state.showProgressBar.not()) {
+                        startTimeTextView.visibility = View.GONE
+                        musicSeekBar.visibility = View.GONE
+                        maxTimeTextView.visibility = View.GONE
+                    }
+                } else {
+                    titleTextView.visibility = View.VISIBLE
+                    closeImageButton.visibility = View.VISIBLE
+                    lockImageButton.visibility = View.VISIBLE
+                    startTimeTextView.visibility = View.VISIBLE
+                    musicSeekBar.visibility = View.VISIBLE
+                    maxTimeTextView.visibility = View.VISIBLE
+
+                    if (this.state.isLocked) {
+                        lockImageButton.visibility = View.VISIBLE
+                        lockOpenImageButton.visibility = View.GONE
+                    } else {
+                        lockImageButton.visibility = View.GONE
+                        lockOpenImageButton.visibility = View.VISIBLE
+                    }
                 }
             }
         }
