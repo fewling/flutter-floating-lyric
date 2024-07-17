@@ -18,6 +18,8 @@ data class WindowState(
     var showMillis: Boolean = true,
     var showProgressBar: Boolean = true,
     var fontSize: Int = 24,
+    var isLocked: Boolean = false,
+    var isTouchThrough: Boolean = false,
 
     ) : Parcelable {
 
@@ -36,6 +38,8 @@ data class WindowState(
             "showMillis" to showMillis,
             "showProgressBar" to showProgressBar,
             "fontSize" to fontSize,
+            "isLocked" to isLocked,
+            "isTouchThrough" to isTouchThrough,
         )
     }
 
@@ -54,6 +58,8 @@ data class WindowState(
             showMillis = map["showMillis"] as Boolean,
             showProgressBar = map["showProgressBar"] as Boolean,
             fontSize = map["fontSize"] as Int,
+            isLocked = map["isLocked"] as Boolean,
+            isTouchThrough = map["isTouchThrough"] as Boolean,
         )
     }
 }

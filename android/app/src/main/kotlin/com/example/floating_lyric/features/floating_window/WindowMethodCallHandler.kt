@@ -69,6 +69,27 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                         inflater,
                         windowManager,
                         state = state,
+                        onLockBtnPressed = {
+                            val intent = Intent().apply {
+                                action = WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED
+                                putExtra(
+                                    WindowStateBroadcastReceiver.EXTRA_WINDOW_STATE,
+                                    floatingWindow?.state?.copy(isLocked = false)
+                                )
+                            }
+                            mContext?.sendBroadcast(intent)
+                        },
+
+                        onLockOpenBtnPressed = {
+                            val intent = Intent().apply {
+                                action = WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED
+                                putExtra(
+                                    WindowStateBroadcastReceiver.EXTRA_WINDOW_STATE,
+                                    floatingWindow?.state?.copy(isLocked = true)
+                                )
+                            }
+                            mContext?.sendBroadcast(intent)
+                        },
                         onWindowClose = {
                             val intent = Intent().apply {
                                 action = WindowStateBroadcastReceiver.ACTION_WINDOW_STATE_CHANGED
@@ -103,7 +124,13 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                 if (floatingWindow == null) return
 
                 val arg = call.arguments as Map<*, *>
-                val newState = floatingWindow!!.state.fromMap(arg)
+//                val newState = floatingWindow!!.state.fromMap(arg)
+                val newState = floatingWindow!!.state.copy(
+                    title = arg["title"] as String,
+                    lyricLine = arg["lyricLine"] as String,
+                    seekBarMax = arg["seekBarMax"] as Int,
+                    seekBarProgress = arg["seekBarProgress"] as Int,
+                )
                 floatingWindow!!.updateState(newState)
             }
 
@@ -156,6 +183,26 @@ class WindowMethodCallHandler : FlutterPlugin, MethodChannel.MethodCallHandler {
                 val arg = call.arguments as Map<*, *>
                 val newState = floatingWindow!!.state.copy(
                     fontSize = arg["fontSize"] as Int
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
+            "setWindowLock" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    isLocked = arg["isLocked"] as Boolean
+                )
+                floatingWindow!!.updateState(newState)
+            }
+
+            "setWindowTouchThrough" -> {
+                if (floatingWindow == null) return
+
+                val arg = call.arguments as Map<*, *>
+                val newState = floatingWindow!!.state.copy(
+                    isTouchThrough = arg["isTouchThrough"] as Boolean
                 )
                 floatingWindow!!.updateState(newState)
             }

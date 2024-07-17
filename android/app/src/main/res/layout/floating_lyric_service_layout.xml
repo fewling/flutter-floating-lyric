@@ -34,10 +34,18 @@
                 android:id="@+id/floating_image_button_lock"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="4dp"
                 android:layout_weight="0.5"
-                android:background="@android:color/transparent"
+                android:background="@drawable/border"
+                android:visibility="gone"
                 android:src="@drawable/ic_lock" />
+
+            <ImageButton
+                android:id="@+id/floating_image_button_lock_open"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/border"
+                android:src="@drawable/ic_lock_open" />
 
             <ImageButton
                 android:id="@+id/floating_image_button_close"
@@ -45,7 +53,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
                 android:layout_weight="0.5"
-                android:background="@android:color/transparent"
+                android:background="@drawable/border"
                 android:src="@drawable/ic_close" />
         </LinearLayout>
 
@@ -70,9 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/floating_music_seekbar"
                 android:autoSizeTextType="uniform"
+                android:gravity="center"
                 android:text="00:00:00"
                 android:textColor="#815ac0"
-                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

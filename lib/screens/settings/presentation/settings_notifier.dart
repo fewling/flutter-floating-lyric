@@ -10,12 +10,10 @@ class SettingsNotifier extends _$SettingsNotifier {
   @override
   void build() {}
 
-  void setAppColorScheme(int colorValue) => ref
-      .read(preferenceNotifierProvider.notifier)
-      .updateAppColorScheme(colorValue);
+  void setAppColorScheme(int colorValue) =>
+      ref.read(preferenceNotifierProvider.notifier).updateAppColorScheme(colorValue);
 
-  void toggleBrightness() =>
-      ref.read(preferenceNotifierProvider.notifier).toggleBrightness();
+  void toggleBrightness() => ref.read(preferenceNotifierProvider.notifier).toggleBrightness();
 
   void launchFeedbackEmail() {
     final uri = Uri(
@@ -27,9 +25,6 @@ class SettingsNotifier extends _$SettingsNotifier {
   }
 
   String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((e) =>
-            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
+    return params.entries.map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
   }
 }

@@ -55,3 +55,58 @@ flowchart TD
     P --> |No| S[Set `currentLine` to 'No lyrics found']
     J --> T[Update floating window]
 ```
+
+## Flutter x Android Communication
+
+```mermaid
+flowchart TD
+
+    subgraph Flutter
+        mediaStateStream["mediaStateStream"]
+        windowStateStream["windowStateStream"]
+        floatingWindowNotifier["FloatingWindowNotifier"]
+        homeScreenNotifier["HomeScreenNotifier"]
+        methodInvoker["FloatingWindowMethodInvoker"]
+        lyricStateProvider["lyricStateProvider"]
+
+        windowStateStream --> floatingWindowNotifier
+        floatingWindowNotifier --> homeScreenNotifier
+
+        mediaStateStream --> lyricStateProvider
+        lyricStateProvider --> | subscription | methodInvoker
+        homeScreenNotifier -.-> | user | methodInvoker
+    end
+
+    subgraph Android
+        mainActivity["MainActivity"]
+
+        subgraph FloatingWindow
+            floatingWindow["FloatingWindow"]
+            windowEventStreamHandler["WindowEventStreamHandler"]
+            methodCallHandler["WindowMethodCallHandler"]
+            windowStateBroadcastReceiver["WindowStateBroadcastReceiver"]
+
+            windowEventStreamHandler --> | register & init with `eventSink` | windowStateBroadcastReceiver
+            methodCallHandler --> floatingWindow
+            floatingWindow -.-> | `onClose` | windowStateBroadcastReceiver
+        end
+
+        subgraph MediaState
+            mediaNotificationListener["MediaNotificationListener"]
+            mediaStateStreamHandler["MediaStateEventStreamHandler"]
+            mediaStateBroadcastReceiver["MediaStateBroadcastReceiver"]
+
+            mediaStateStreamHandler --> | register & init with `eventSink` | mediaStateBroadcastReceiver
+            mediaNotificationListener --> | if active: periodic | mediaStateBroadcastReceiver
+        end
+    end
+
+    mainActivity --> | init with `context` | windowEventStreamHandler
+    mainActivity --> | init with `context` | mediaStateStreamHandler
+
+    windowStateBroadcastReceiver --> | event channel: `WindowState` | windowStateStream
+    mediaStateBroadcastReceiver --> | event channel: `MediaState` | mediaStateStream
+
+    methodInvoker --> | method channel | methodCallHandler
+
+```

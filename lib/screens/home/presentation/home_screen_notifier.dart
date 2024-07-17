@@ -27,9 +27,7 @@ class HomeNotifier extends _$HomeNotifier {
       (prev, next) {
         if (prev == next) return;
 
-        final songChanged = prev?.title != next?.title ||
-            prev?.artist != next?.artist ||
-            prev?.album != next?.album;
+        final songChanged = prev?.title != next?.title || prev?.artist != next?.artist || prev?.album != next?.album;
 
         final titleAlt = songChanged ? next?.title : state.titleAlt;
         final artistAlt = songChanged ? next?.artist : state.artistAlt;
@@ -48,7 +46,24 @@ class HomeNotifier extends _$HomeNotifier {
       floatingWindowNotifierProvider.select((value) => value.isVisible),
       (prev, next) {
         if (prev == next) return;
-        state = state.copyWith(isWindowVisible: next);
+
+        final isLocked = next ? state.isWindowLocked : false;
+        final isTouchThrough = next ? state.isWindowTouchThrough : false;
+        state = state.copyWith(
+          isWindowVisible: next,
+          isWindowLocked: isLocked,
+          isWindowTouchThrough: isTouchThrough,
+        );
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(isLocked);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(isTouchThrough);
+      },
+    );
+
+    ref.listen(
+      floatingWindowNotifierProvider,
+      (prev, next) {
+        state = state.copyWith(isWindowLocked: next.isLocked);
+        ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(next.isLocked);
       },
     );
 
@@ -179,5 +194,15 @@ class HomeNotifier extends _$HomeNotifier {
 
   void updateTitleAlt(String value) {
     state = state.copyWith(titleAlt: value);
+  }
+
+  void toggleLockWindow(bool value) {
+    state = state.copyWith(isWindowLocked: value);
+    ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowLock(value);
+  }
+
+  void toggleTouchThrough(bool value) {
+    state = state.copyWith(isWindowTouchThrough: value);
+    ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowTouchThrough(value);
   }
 }
