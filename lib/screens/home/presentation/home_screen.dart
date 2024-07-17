@@ -295,31 +295,76 @@ class WindowSettingContent extends ConsumerWidget {
             );
           },
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final isLocked = ref.watch(homeNotifierProvider.select((s) => s.isWindowLocked));
-            return SwitchListTile(
-              value: isLocked,
-              title: isLocked ? const Text('Locked Window') : const Text('Movable Window'),
-              onChanged: visibleFloatingWindow ? ref.read(homeNotifierProvider.notifier).toggleLockWindow : null,
-            );
-          },
-        ),
-        Consumer(
-          builder: (context, ref, child) {
-            final isTouchThru = ref.watch(homeNotifierProvider.select((s) => s.isWindowTouchThrough));
-            return SwitchListTile(
-              value: isTouchThru,
-              title: const Text('Touch Through ⚠️'),
-              subtitle: isTouchThru
-                  ? const Text(
-                      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
-                      "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
-                    )
-                  : null,
-              onChanged: visibleFloatingWindow ? ref.read(homeNotifierProvider.notifier).toggleTouchThrough : null,
-            );
-          },
+        ListTile(
+          title: const Text('Window Interactions'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Consumer(
+                builder: (context, ref, child) {
+                  final isLocked = ref.watch(homeNotifierProvider.select((s) => s.isWindowLocked));
+                  return SegmentedButton(
+                    selected: {isLocked},
+                    onSelectionChanged: (v) => ref.read(homeNotifierProvider.notifier).toggleLockWindow(v.first),
+                    segments: [
+                      ButtonSegment(
+                        value: false,
+                        label: const Text('Movable'),
+                        icon: const Icon(Icons.drag_handle_outlined),
+                        enabled: visibleFloatingWindow,
+                      ),
+                      ButtonSegment(
+                        value: true,
+                        label: const Text('Locked'),
+                        icon: const Icon(Icons.lock_outlined),
+                        enabled: visibleFloatingWindow,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final isIgnoreTouch = ref.watch(homeNotifierProvider.select((s) => s.isWIndowIgnoreTouch));
+                  return SegmentedButton(
+                    selected: {isIgnoreTouch},
+                    onSelectionChanged: (v) => ref.read(homeNotifierProvider.notifier).toggleIgnoreTouch(v.first),
+                    segments: [
+                      ButtonSegment(
+                        value: false,
+                        label: const Text('Handle Touch'),
+                        icon: const Icon(Icons.touch_app_outlined),
+                        enabled: visibleFloatingWindow,
+                      ),
+                      ButtonSegment(
+                        value: true,
+                        label: const Text('Ignore Touch'),
+                        icon: const Icon(Icons.do_not_touch_outlined),
+                        enabled: visibleFloatingWindow,
+                      ),
+                    ],
+                  );
+                },
+              ),
+              Consumer(
+                builder: (context, ref, child) {
+                  final isTouchThru = ref.watch(homeNotifierProvider.select((s) => s.isWindowTouchThrough));
+                  return SwitchListTile(
+                    value: isTouchThru,
+                    title: const Text('Touch Through ⚠️'),
+                    subtitle: isTouchThru
+                        ? const Text(
+                            'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
+                            "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
+                          )
+                        : null,
+                    onChanged:
+                        visibleFloatingWindow ? ref.read(homeNotifierProvider.notifier).toggleTouchThrough : null,
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ],
     );

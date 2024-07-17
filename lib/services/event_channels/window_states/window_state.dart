@@ -21,6 +21,7 @@ class WindowState with _$WindowState {
     @Default(24) int fontSize,
     @Default(false) bool isLocked,
     @Default(false) bool isTouchThrough,
+    @Default(false) bool ignoreTouch,
   }) = _WindowState;
 
   factory WindowState.fromJson(Map<String, dynamic> json) => _$WindowStateFromJson(json);

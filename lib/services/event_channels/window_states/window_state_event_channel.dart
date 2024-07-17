@@ -18,6 +18,7 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
     final seekBarMax = windowState['seekBarMax'] as int;
     final seekBarProgress = windowState['seekBarProgress'] as int;
     final isLocked = windowState['isLocked'] as bool;
+    final ignoreTouch = windowState['ignoreTouch'] as bool;
 
     Logger.d('Received window state.isLocked: $isLocked');
 
@@ -32,6 +33,7 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
       seekBarMax: seekBarMax,
       seekBarProgress: seekBarProgress,
       isLocked: isLocked,
+      ignoreTouch: ignoreTouch,
     );
   },
 );

@@ -12,6 +12,7 @@ class HomeState with _$HomeState {
     @Default(false) bool isWindowVisible,
     @Default(false) bool isWindowLocked,
     @Default(false) bool isWindowTouchThrough,
+    @Default(false) bool isWIndowIgnoreTouch,
     @Default(false) bool isProcessingFiles,
     @Default(false) bool isSearchingOnline,
     @Default(null) String? titleAlt,

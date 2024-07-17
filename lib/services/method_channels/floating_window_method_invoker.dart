@@ -19,6 +19,7 @@ enum WindowPlatformMethod {
   updateFontSize,
   setWindowLock,
   setWindowTouchThrough,
+  setWindowIgnoreTouch,
 }
 
 @Riverpod(keepAlive: true)
@@ -165,6 +166,14 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
     _state = _state.copyWith(isTouchThrough: value);
     _channel.invokeMethod(
       WindowPlatformMethod.setWindowTouchThrough.name,
+      _state.toJson(),
+    );
+  }
+
+  void setWindowIgnoreTouch(bool ignoreTouch) {
+    _state = _state.copyWith(ignoreTouch: ignoreTouch);
+    _channel.invokeMethod(
+      WindowPlatformMethod.setWindowIgnoreTouch.name,
       _state.toJson(),
     );
   }

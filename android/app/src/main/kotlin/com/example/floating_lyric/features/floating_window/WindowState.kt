@@ -20,6 +20,7 @@ data class WindowState(
     var fontSize: Int = 24,
     var isLocked: Boolean = false,
     var isTouchThrough: Boolean = false,
+    var ignoreTouch: Boolean = false,
 
     ) : Parcelable {
 
@@ -40,6 +41,7 @@ data class WindowState(
             "fontSize" to fontSize,
             "isLocked" to isLocked,
             "isTouchThrough" to isTouchThrough,
+            "ignoreTouch" to ignoreTouch,
         )
     }
 
@@ -60,6 +62,7 @@ data class WindowState(
             fontSize = map["fontSize"] as Int,
             isLocked = map["isLocked"] as Boolean,
             isTouchThrough = map["isTouchThrough"] as Boolean,
+            ignoreTouch = map["ignoreTouch"] as Boolean,
         )
     }
 }
