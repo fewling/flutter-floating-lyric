@@ -1,3 +1,5 @@
+part of 'app_router.dart';
+
 enum AppRoute {
   home(path: '/'),
   localLyrics(path: '/local-lyric'),

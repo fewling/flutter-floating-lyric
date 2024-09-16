@@ -1,4 +1,4 @@
-import 'package:file_picker/src/platform_file.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/lyric_model.dart';
@@ -6,7 +6,6 @@ import '../../../services/db_helper.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../v4/configs/routes/app_router.dart';
-import '../../../v4/configs/routes/app_routes.dart';
 import '../domain/lyric_list_state.dart';
 import 'lyric_list_filter_notifier.dart';
 

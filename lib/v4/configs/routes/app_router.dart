@@ -9,10 +9,10 @@ import '../../../screens/lyric_list/presentation/lyric_list_screen.dart';
 import '../../../screens/permission/permission_screen.dart';
 import '../../../screens/settings/presentation/settings_screen.dart';
 import '../../../services/permission_provider.dart';
-import 'app_routes.dart';
 import 'app_routes_observer.dart';
 
 part 'app_router.g.dart';
+part 'app_routes.dart';
 
 @riverpod
 GoRouter appRouter(AppRouterRef ref) {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../v4/configs/routes/app_routes.dart';
+import '../../../v4/configs/routes/app_router.dart';
 
 enum BaseDrawerRoutes {
   home(
