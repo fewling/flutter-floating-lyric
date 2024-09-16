@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_easylogger/flutter_logger.dart';
 
+import '../../../utils/logger.dart';
 import 'window_state.dart';
 
 const _channelName = 'Floating Lyric Window State Channel';
@@ -20,7 +20,7 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
     final isLocked = windowState['isLocked'] as bool;
     final ignoreTouch = windowState['ignoreTouch'] as bool;
 
-    Logger.d('Received window state.isLocked: $isLocked');
+    logger.d('Received window state.isLocked: $isLocked');
 
     return WindowState(
       isVisible: isVisible,
