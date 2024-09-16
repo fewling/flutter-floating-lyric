@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../utils/routing/app_router.dart';
+import '../../../v4/configs/routes/app_router.dart';
 import '../domain/base_drawer_routes.dart';
 
 part 'base_notifier.g.dart';

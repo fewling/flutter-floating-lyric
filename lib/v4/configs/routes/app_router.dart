@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../screens/base/presentation/base_screen.dart';
-import '../../screens/home/presentation/home_screen.dart';
-import '../../screens/lyric_detail/presentation/lyric_detail_screen.dart';
-import '../../screens/lyric_list/presentation/lyric_list_screen.dart';
-import '../../screens/permission/permission_screen.dart';
-import '../../screens/settings/presentation/settings_screen.dart';
-import '../../services/permission_provider.dart';
+import '../../../screens/base/presentation/base_screen.dart';
+import '../../../screens/home/presentation/home_screen.dart';
+import '../../../screens/lyric_detail/presentation/lyric_detail_screen.dart';
+import '../../../screens/lyric_list/presentation/lyric_list_screen.dart';
+import '../../../screens/permission/permission_screen.dart';
+import '../../../screens/settings/presentation/settings_screen.dart';
+import '../../../services/permission_provider.dart';
 import 'app_routes.dart';
 import 'app_routes_observer.dart';
 
@@ -21,8 +21,7 @@ GoRouter appRouter(AppRouterRef ref) {
 
   final allGranted = ValueNotifier(false);
   ref.listen(permissionStateProvider, (_, next) {
-    allGranted.value =
-        next.isSystemAlertWindowGranted && next.isNotificationListenerGranted;
+    allGranted.value = next.isSystemAlertWindowGranted && next.isNotificationListenerGranted;
   });
 
   final router = GoRouter(
