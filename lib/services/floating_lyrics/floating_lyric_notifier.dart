@@ -1,9 +1,9 @@
-import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
 import '../../models/lrc.dart';
 import '../../models/lyric_model.dart';
+import '../../utils/logger.dart';
 import '../db_helper.dart';
 import '../event_channels/media_states/media_state.dart';
 import '../event_channels/media_states/media_state_event_channel.dart';
@@ -12,8 +12,7 @@ import '../lrclib/repo/lrclib_repository.dart';
 import '../preferences/app_preference_notifier.dart';
 import 'floating_lyric_state.dart';
 
-final lyricStateProvider =
-    NotifierProvider<FloatingLyricNotifier, FloatingLyricState>(FloatingLyricNotifier.new);
+final lyricStateProvider = NotifierProvider<FloatingLyricNotifier, FloatingLyricState>(FloatingLyricNotifier.new);
 
 class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
   late bool _autoFetchOnline;
@@ -105,7 +104,7 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
         }
       }
     } catch (e) {
-      Logger.e(e);
+      logger.e(e);
     }
   }
 
@@ -149,8 +148,7 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
   }
 
   Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
-    final content =
-        lrcResponse.syncedLyrics?.toString() ?? lrcResponse.plainLyrics?.toString() ?? '';
+    final content = lrcResponse.syncedLyrics?.toString() ?? lrcResponse.plainLyrics?.toString() ?? '';
     if (content.isEmpty) return -1;
 
     final lrcDB = LrcDB()

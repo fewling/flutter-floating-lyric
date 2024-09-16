@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_easylogger/flutter_logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/lrc.dart';
 import '../models/lyric_model.dart';
+import '../utils/logger.dart';
 import 'db_helper.dart';
 
 final lrcProcessorProvider = Provider((ref) {
@@ -42,12 +42,12 @@ class LrcProcessor {
         final lyrics = result.success;
         failed.addAll(result.failed);
         final ids = await ref.read(dbHelperProvider).addBatchLyrics(lyrics);
-        Logger.i('inserted ids: $ids');
+        logger.i('inserted ids: $ids');
         batch.clear();
       }
     }
 
-    Logger.e('failed: $failed');
+    logger.e('failed: $failed');
     return failed;
   }
 }
@@ -83,11 +83,11 @@ Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
         ..title = title
         ..content = processed);
     } catch (e) {
-      Logger.e('Error processing file $fileName: $e');
+      logger.e('Error processing file $fileName: $e');
       failed.add(item);
     }
   }
-  Logger.i('lyrics length: ${lrcDbList.length}');
+  logger.i('lyrics length: ${lrcDbList.length}');
   return LrcProcessResult(lrcDbList, failed);
 }
 
@@ -96,8 +96,7 @@ String _sortLrc(String lrc) {
   final newLines = [];
   for (final line in lines) {
     if (line.contains('[') && line.contains(']')) {
-      final timeTags =
-          line.substring(line.indexOf('['), line.lastIndexOf(']') + 1);
+      final timeTags = line.substring(line.indexOf('['), line.lastIndexOf(']') + 1);
       final text = line.substring(line.lastIndexOf(']') + 1);
       final timeTagList = timeTags.split(']');
       for (final tag in timeTagList) {
