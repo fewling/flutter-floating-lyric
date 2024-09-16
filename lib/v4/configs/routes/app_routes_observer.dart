@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../logger.dart';
+import '../../../utils/logger.dart';
 
 class AppRouteObserver extends NavigatorObserver {
   @override

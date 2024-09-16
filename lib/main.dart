@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'models/lyric_model.dart';
 import 'services/db_helper.dart';
 import 'services/preferences/app_preference_notifier.dart';
-import 'utils/routing/app_router.dart';
+import 'v4/configs/routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

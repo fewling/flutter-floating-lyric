@@ -5,8 +5,8 @@ import '../../../models/lyric_model.dart';
 import '../../../services/db_helper.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
 import '../../../services/lyric_file_processor.dart';
-import '../../../utils/routing/app_router.dart';
-import '../../../utils/routing/app_routes.dart';
+import '../../../v4/configs/routes/app_router.dart';
+import '../../../v4/configs/routes/app_routes.dart';
 import '../domain/lyric_list_state.dart';
 import 'lyric_list_filter_notifier.dart';
 
@@ -28,21 +28,14 @@ class LyricListNotifier extends _$LyricListNotifier {
       final artist = element.artist?.toLowerCase() ?? '';
       final title = element.title?.toLowerCase() ?? '';
 
-      return fileName.contains(searchTerm) ||
-          artist.contains(searchTerm) ||
-          title.contains(searchTerm);
+      return fileName.contains(searchTerm) || artist.contains(searchTerm) || title.contains(searchTerm);
     }).toList());
   }
 
-  Future<void> deleteLyric(LrcDB lrcDB) => ref
-      .read(dbHelperProvider)
-      .deleteLyric(lrcDB)
-      .then((_) => ref.invalidateSelf());
+  Future<void> deleteLyric(LrcDB lrcDB) =>
+      ref.read(dbHelperProvider).deleteLyric(lrcDB).then((_) => ref.invalidateSelf());
 
-  Future<void> deleteAllLyrics() => ref
-      .read(dbHelperProvider)
-      .deleteAllLyrics()
-      .then((_) => ref.invalidateSelf());
+  Future<void> deleteAllLyrics() => ref.read(dbHelperProvider).deleteAllLyrics().then((_) => ref.invalidateSelf());
 
   Future<List<PlatformFile>> importFiles() async {
     final value = state.valueOrNull;
@@ -60,8 +53,7 @@ class LyricListNotifier extends _$LyricListNotifier {
     return failed;
   }
 
-  Future<Object?> editLyric(LrcDB lyric) =>
-      ref.read(appRouterProvider).pushNamed(
+  Future<Object?> editLyric(LrcDB lyric) => ref.read(appRouterProvider).pushNamed(
         AppRoute.localLyricDetail.name,
         pathParameters: {'id': lyric.id.toString()},
       );
