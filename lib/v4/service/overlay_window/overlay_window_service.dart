@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
+import '../../../utils/logger.dart';
 import '../../features/overlay_window/bloc/overlay_window_bloc.dart';
 
 class OverlayWindowService {
@@ -11,9 +12,12 @@ class OverlayWindowService {
     );
   }
 
-  Future<void> toggle() async {
+  Future<void> toggle({
+    required int height,
+  }) async {
+    logger.f('height: $height');
     await FlutterOverlayWindow.showOverlay(
-      height: 600,
+      height: height,
       enableDrag: true,
       positionGravity: PositionGravity.auto,
     );

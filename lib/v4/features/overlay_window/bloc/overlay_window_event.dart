@@ -4,8 +4,16 @@ sealed class OverlayWindowEvent {
   const OverlayWindowEvent();
 }
 
+final class OverlayWindowLoaded extends OverlayWindowEvent {
+  const OverlayWindowLoaded();
+}
+
 final class OverlayWindowToggled extends OverlayWindowEvent {
   const OverlayWindowToggled();
+}
+
+final class OverlayWindowSizeChanged extends OverlayWindowEvent {
+  const OverlayWindowSizeChanged();
 }
 
 final class LyricStateUpdated extends OverlayWindowEvent {

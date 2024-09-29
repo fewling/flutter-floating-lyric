@@ -12,10 +12,11 @@ class OverlayWindowState with _$OverlayWindowState {
     double? position,
 
     // Styles
-    double? height,
+    @Default(300) int height,
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
+    required double devicePixelRatio,
   }) = _OverlayWindowState;
 
   factory OverlayWindowState.fromJson(Map<String, dynamic> json) => _$OverlayWindowStateFromJson(json);

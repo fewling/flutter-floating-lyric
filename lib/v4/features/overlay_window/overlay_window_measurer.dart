@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/extensions/custom_extensions.dart';
+import '../../../utils/logger.dart';
 import 'bloc/overlay_window_bloc.dart';
 
+final overlayWindowMeasureKey = GlobalKey();
+
+/// Must sync the UI with [OverlayWindow]
 class OverlayWindowMeasurer extends StatelessWidget {
   const OverlayWindowMeasurer({super.key});
 
@@ -11,11 +15,17 @@ class OverlayWindowMeasurer extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<OverlayWindowBloc>().state;
 
-    return Scaffold(
-      backgroundColor: Colors.amber,
-      body: Padding(
+    return NotificationListener<SizeChangedLayoutNotification>(
+      onNotification: (notification) {
+        logger.f('OverlayWindowMeasurer.notification: $notification');
+        context.read<OverlayWindowBloc>().add(const OverlayWindowSizeChanged());
+        return true;
+      },
+      child: Padding(
+        key: overlayWindowMeasureKey,
         padding: const EdgeInsets.all(4.0),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               children: [
@@ -34,16 +44,16 @@ class OverlayWindowMeasurer extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(state.line1 ?? ''),
+              child: Text(state.line1 ?? '...'),
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: Text(state.line2 ?? ''),
+              child: Text(state.line2 ?? '...'),
             ),
             Row(
               children: [
                 Text(
-                  state.positionLeftLabel ?? '',
+                  state.positionLeftLabel ?? '...',
                 ),
                 Expanded(
                   child: LinearProgressIndicator(
@@ -51,11 +61,11 @@ class OverlayWindowMeasurer extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  state.positionRightLabel ?? '',
+                  state.positionRightLabel ?? '...',
                 ),
               ].separatedBy(const SizedBox(width: 8)).toList(),
             )
-          ].separatedBy(const SizedBox(height: 8)).toList(),
+          ].separatedBy(const SizedBox(height: 4)).toList(),
         ),
       ),
     );

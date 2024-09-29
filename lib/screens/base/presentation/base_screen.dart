@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../v4/features/device_info/device_info_listener.dart';
 import '../../../v4/features/lyric_state_listener/lyric_state_listener.dart';
 import '../domain/base_drawer_routes.dart';
 import 'base_notifier.dart';
@@ -39,8 +40,10 @@ class BaseScreen extends StatelessWidget {
           },
         ),
       ),
-      body: LyricStateListener(
-        child: child,
+      body: DeviceInfoListener(
+        child: LyricStateListener(
+          child: child,
+        ),
       ),
     );
   }
