@@ -11,8 +11,8 @@ import 'services/lrclib/repo/lrclib_repository.dart';
 import 'v4/configs/routes/app_router.dart';
 import 'v4/features/overlay_window/overlay_window.dart';
 import 'v4/features/preference/bloc/preference_bloc.dart';
-import 'v4/features/preference/preference_listener.dart';
 import 'v4/repos/local/preference_repo.dart';
+import 'v4/service/preference/preference_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +41,14 @@ Future<void> main() async {
             create: (context) => PreferenceRepo(sharedPreferences: pref),
           ),
         ],
-        child: const FloatingLyricApp(),
+        child: BlocProvider(
+          create: (context) => PreferenceBloc(
+            spService: PreferenceService(
+              spRepo: context.read<PreferenceRepo>(),
+            ),
+          )..add(const PreferenceEventLoad()),
+          child: const FloatingLyricApp(),
+        ),
       ),
     ),
   );
@@ -74,15 +81,13 @@ class FloatingLyricApp extends ConsumerWidget {
       (bloc) => bloc.state.appColorScheme,
     );
 
-    return PreferenceListener(
-      child: MaterialApp.router(
-        theme: ThemeData(
-          useMaterial3: true,
-          colorSchemeSeed: Color(colorSchemeSeed),
-          brightness: isLight ? Brightness.light : Brightness.dark,
-        ),
-        routerConfig: ref.watch(appRouterProvider),
+    return MaterialApp.router(
+      theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Color(colorSchemeSeed),
+        brightness: isLight ? Brightness.light : Brightness.dark,
       ),
+      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }
