@@ -8,7 +8,7 @@ class ColorPickerSheet extends StatelessWidget {
   });
 
   final int colorValue;
-  final void Function(int colorValue)? onColorChanged;
+  final void Function(Color color)? onColorChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +35,7 @@ class ColorPickerSheet extends StatelessWidget {
         Expanded(
           child: GridView.builder(
             itemCount: Colors.primaries.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 100),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100),
             itemBuilder: (_, index) {
               final c = Colors.primaries[index % Colors.primaries.length];
 
@@ -48,12 +47,11 @@ class ColorPickerSheet extends StatelessWidget {
                       color: c,
                       borderRadius: BorderRadius.circular(20),
                       child: InkWell(
-                        onTap: () => onColorChanged?.call(c.value),
+                        onTap: () => onColorChanged?.call(c),
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    if (colorValue == c.value)
-                      const Positioned.fill(child: Icon(Icons.check))
+                    if (colorValue == c.value) const Positioned.fill(child: Icon(Icons.check))
                   ],
                 ),
               );

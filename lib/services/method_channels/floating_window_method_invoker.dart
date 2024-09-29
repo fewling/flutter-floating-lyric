@@ -3,7 +3,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../event_channels/window_states/window_state.dart';
 import '../floating_lyrics/floating_lyric_notifier.dart';
-import '../preferences/app_preference_notifier.dart';
 
 part 'floating_window_method_invoker.g.dart';
 
@@ -30,19 +29,6 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
 
   @override
   void build() {
-    final pref = ref.read(preferenceNotifierProvider);
-    final color = Color(pref.color);
-    _state = _state.copyWith(
-      r: color.red,
-      g: color.green,
-      b: color.blue,
-      a: color.alpha,
-      opacity: pref.opacity,
-      showMillis: pref.showMilliseconds,
-      showProgressBar: pref.showProgressBar,
-      fontSize: pref.fontSize,
-    );
-
     ref.listen(
       lyricStateProvider,
       (prev, next) {
@@ -57,62 +43,6 @@ class FloatingWindowMethodInvoker extends _$FloatingWindowMethodInvoker {
           seekBarProgress: mediaState?.position.toInt() ?? 0,
         );
         updateFloatingWindow();
-      },
-    );
-
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.color),
-      (prev, next) {
-        if (prev == next) return;
-
-        final color = Color(next);
-        _state = _state.copyWith(
-          r: color.red,
-          g: color.green,
-          b: color.blue,
-          a: color.alpha,
-        );
-        updateWindowColor();
-      },
-    );
-
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.opacity),
-      (prev, next) {
-        if (prev == next) return;
-
-        _state = _state.copyWith(opacity: next);
-        updateWindowOpacity();
-      },
-    );
-
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.showMilliseconds),
-      (prev, next) {
-        if (prev == next) return;
-
-        _state = _state.copyWith(showMillis: next);
-        updateMillisVisibility();
-      },
-    );
-
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.showProgressBar),
-      (prev, next) {
-        if (prev == next) return;
-
-        _state = _state.copyWith(showProgressBar: next);
-        updateProgressBarVisibility();
-      },
-    );
-
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.fontSize),
-      (prev, next) {
-        if (prev == next) return;
-
-        _state = _state.copyWith(fontSize: next);
-        updateFontSize();
       },
     );
   }

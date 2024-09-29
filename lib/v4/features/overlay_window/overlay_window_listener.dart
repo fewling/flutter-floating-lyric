@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../utils/extensions/custom_extensions.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
+import '../preference/bloc/preference_bloc.dart';
 import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindowListener extends StatelessWidget {
@@ -19,6 +20,9 @@ class OverlayWindowListener extends StatelessWidget {
       listeners: [
         BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
           listener: _onLyricStateUpdated,
+        ),
+        BlocListener<PreferenceBloc, PreferenceState>(
+          listener: _onPreferenceStateUpdated,
         ),
       ],
       child: child,
@@ -45,6 +49,22 @@ class OverlayWindowListener extends StatelessWidget {
           position: position.toDouble(),
           positionLeftLabel: currentDuration.mmss(),
           positionRightLabel: maxDuration.mmss(),
+        ));
+  }
+
+  void _onPreferenceStateUpdated(BuildContext context, PreferenceState state) {
+    final opacity = state.opacity;
+    final color = state.color;
+    final fontSize = state.fontSize;
+    final showProgressBar = state.showProgressBar;
+    final showMillis = state.showMilliseconds;
+
+    context.read<OverlayWindowBloc>().add(WindowStyleUpdated(
+          opacity: opacity,
+          color: color,
+          fontSize: fontSize,
+          showProgressBar: showProgressBar,
+          showMillis: showMillis,
         ));
   }
 }

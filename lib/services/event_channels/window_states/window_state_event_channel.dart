@@ -11,10 +11,6 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
     final isVisible = windowState['isVisible'] as bool;
     final title = windowState['title'] as String;
     final lyricLine = windowState['lyricLine'] as String;
-    final r = windowState['r'] as int;
-    final g = windowState['g'] as int;
-    final b = windowState['b'] as int;
-    final a = windowState['a'] as int;
     final seekBarMax = windowState['seekBarMax'] as int;
     final seekBarProgress = windowState['seekBarProgress'] as int;
     final isLocked = windowState['isLocked'] as bool;
@@ -26,10 +22,6 @@ final windowStateStream = windowStateChannel.receiveBroadcastStream().map(
       isVisible: isVisible,
       title: title,
       lyricLine: lyricLine,
-      r: r,
-      g: g,
-      b: b,
-      a: a,
       seekBarMax: seekBarMax,
       seekBarProgress: seekBarProgress,
       isLocked: isLocked,

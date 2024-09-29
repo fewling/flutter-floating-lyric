@@ -33,3 +33,19 @@ final class LyricStateUpdated extends OverlayWindowEvent {
   final String positionRightLabel;
   final double position;
 }
+
+final class WindowStyleUpdated extends OverlayWindowEvent {
+  const WindowStyleUpdated({
+    required this.opacity,
+    required this.color,
+    required this.fontSize,
+    required this.showProgressBar,
+    required this.showMillis,
+  });
+
+  final double opacity;
+  final int color;
+  final int fontSize;
+  final bool showProgressBar;
+  final bool showMillis;
+}

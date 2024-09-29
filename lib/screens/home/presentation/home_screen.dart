@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../services/db_helper.dart';
 import '../../../services/floating_lyrics/floating_lyric_notifier.dart';
-import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../v4/features/overlay_window/bloc/overlay_window_bloc.dart';
 import '../../../v4/features/overlay_window/overlay_window_listener.dart';
 import '../../../v4/features/overlay_window/overlay_window_measurer.dart';
+import '../../../v4/features/preference/bloc/preference_bloc.dart';
 import '../../../v4/service/overlay_window/overlay_window_service.dart';
 import '../../../widgets/fail_import_dialog.dart';
 import '../../../widgets/loading_widget.dart';
@@ -193,40 +193,40 @@ class WindowSettingContent extends ConsumerWidget {
           value: visibleFloatingWindow,
           onChanged: ref.read(homeNotifierProvider.notifier).toggleWindow,
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final showMillis = ref.watch(
-              preferenceNotifierProvider.select(
-                (value) => value.showMilliseconds,
-              ),
+        Builder(
+          builder: (context) {
+            final showMillis = context.select<PreferenceBloc, bool>(
+              (bloc) => bloc.state.showMilliseconds,
             );
+
             return ListTile(
               enabled: visibleFloatingWindow,
               leading: const Icon(Icons.timelapse_outlined),
               title: showMillis ? const Text('Show Milliseconds') : const Text('Hide Milliseconds'),
               trailing: Switch(
                 value: showMillis,
-                onChanged:
-                    !visibleFloatingWindow ? null : ref.read(homeNotifierProvider.notifier).toggleMillisVisibility,
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : (value) => context.read<PreferenceBloc>().add(const ShowMillisecondsToggled()),
               ),
             );
           },
         ),
-        Consumer(
-          builder: (context, ref, child) {
-            final showBar = ref.watch(
-              preferenceNotifierProvider.select(
-                (value) => value.showProgressBar,
-              ),
+        Builder(
+          builder: (context) {
+            final showBar = context.select<PreferenceBloc, bool>(
+              (bloc) => bloc.state.showProgressBar,
             );
+
             return ListTile(
               enabled: visibleFloatingWindow,
               leading: const Icon(Icons.linear_scale_outlined),
               title: showBar ? const Text('Show Progress Bar') : const Text('Hide Progress Bar'),
               trailing: Switch(
                 value: showBar,
-                onChanged:
-                    !visibleFloatingWindow ? null : ref.read(homeNotifierProvider.notifier).toggleProgressBarVisibility,
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : (value) => context.read<PreferenceBloc>().add(const ShowProgressBarToggled()),
               ),
             );
           },
@@ -235,34 +235,44 @@ class WindowSettingContent extends ConsumerWidget {
           title: const Text('Color Scheme'),
           leading: const Icon(Icons.color_lens_outlined),
           enabled: visibleFloatingWindow,
-          trailing: ColoredBox(
-            color: Color(ref.watch(preferenceNotifierProvider).color),
-            child: const SizedBox(width: 24, height: 24),
-          ),
+          trailing: Builder(builder: (context) {
+            final color = context.select<PreferenceBloc, int>(
+              (bloc) => bloc.state.color,
+            );
+
+            return ColoredBox(
+              color: Color(color),
+              child: const SizedBox(width: 24, height: 24),
+            );
+          }),
           onTap: () => showDialog(
-            builder: (context) => AlertDialog(
-              title: const Text('Pick a color!'),
-              content: SingleChildScrollView(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final color = ref.watch(
-                      preferenceNotifierProvider.select((value) => value.color),
-                    );
-                    return ColorPicker(
-                      pickerColor: Color(color),
-                      onColorChanged: ref.read(homeNotifierProvider.notifier).updateWindowColor,
-                      paletteType: PaletteType.hueWheel,
-                      hexInputBar: true,
-                    );
-                  },
+            builder: (dialogCtx) => BlocProvider.value(
+              value: context.read<PreferenceBloc>(),
+              child: AlertDialog(
+                title: const Text('Pick a color!'),
+                content: SingleChildScrollView(
+                  child: Builder(
+                    builder: (context) {
+                      final color = context.select<PreferenceBloc, int>(
+                        (bloc) => bloc.state.color,
+                      );
+
+                      return ColorPicker(
+                        pickerColor: Color(color),
+                        onColorChanged: (value) => context.read<PreferenceBloc>().add(ColorUpdated(value)),
+                        paletteType: PaletteType.hueWheel,
+                        hexInputBar: true,
+                      );
+                    },
+                  ),
                 ),
+                actions: [
+                  ElevatedButton(
+                    onPressed: dialogCtx.pop,
+                    child: const Text('Got it'),
+                  ),
+                ],
               ),
-              actions: [
-                ElevatedButton(
-                  onPressed: context.pop,
-                  child: const Text('Got it'),
-                ),
-              ],
             ),
             context: context,
           ),
@@ -272,9 +282,10 @@ class WindowSettingContent extends ConsumerWidget {
           leading: const Icon(Icons.opacity_outlined),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final opacity = ref.watch(
-                preferenceNotifierProvider.select((value) => value.opacity),
+              final opacity = context.select<PreferenceBloc, double>(
+                (bloc) => bloc.state.opacity,
               );
+
               return Text('${opacity.toInt()}%');
             },
           ),
@@ -282,15 +293,15 @@ class WindowSettingContent extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final opacity = ref.watch(
-              preferenceNotifierProvider.select((value) => value.opacity),
+            final opacity = context.select<PreferenceBloc, double>(
+              (bloc) => bloc.state.opacity,
             );
             return Slider(
               max: 100,
               divisions: 20,
               value: opacity,
               label: '${opacity.toInt()}%',
-              onChanged: visibleFloatingWindow ? ref.read(homeNotifierProvider.notifier).updateWindowOpacity : null,
+              onChanged: visibleFloatingWindow ? (o) => context.read<PreferenceBloc>().add(OpacityUpdated(o)) : null,
             );
           },
         ),
@@ -299,8 +310,8 @@ class WindowSettingContent extends ConsumerWidget {
           leading: const Icon(Icons.format_size_outlined),
           trailing: Consumer(
             builder: (context, ref, child) {
-              final fontSize = ref.watch(
-                preferenceNotifierProvider.select((value) => value.fontSize),
+              final fontSize = context.select<PreferenceBloc, int>(
+                (bloc) => bloc.state.fontSize,
               );
 
               return Text('$fontSize');
@@ -310,8 +321,8 @@ class WindowSettingContent extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            final fontSize = ref.watch(
-              preferenceNotifierProvider.select((value) => value.fontSize),
+            final fontSize = context.select<PreferenceBloc, int>(
+              (bloc) => bloc.state.fontSize,
             );
 
             return Slider(
@@ -320,7 +331,7 @@ class WindowSettingContent extends ConsumerWidget {
               value: fontSize.toDouble(),
               label: '$fontSize%',
               onChanged: visibleFloatingWindow
-                  ? (value) => ref.read(homeNotifierProvider.notifier).updateFontSize(value.toInt())
+                  ? (value) => context.read<PreferenceBloc>().add(FontSizeUpdated(value.toInt()))
                   : null,
             );
           },
@@ -333,6 +344,7 @@ class WindowSettingContent extends ConsumerWidget {
               Consumer(
                 builder: (context, ref, child) {
                   final isLocked = ref.watch(homeNotifierProvider.select((s) => s.isWindowLocked));
+
                   return SegmentedButton(
                     selected: {isLocked},
                     onSelectionChanged: (v) => ref.read(homeNotifierProvider.notifier).toggleLockWindow(v.first),
@@ -490,13 +502,13 @@ class OnlineLyricContent extends StatelessWidget {
       children: [
         Consumer(
           builder: (context, ref, child) {
-            final autoFetch = ref.watch(
-              preferenceNotifierProvider.select((s) => s.autoFetchOnline),
+            final autoFetchOnline = context.select<PreferenceBloc, bool>(
+              (bloc) => bloc.state.autoFetchOnline,
             );
             return SwitchListTile(
               title: const Text('Auto Fetch'),
-              value: autoFetch,
-              onChanged: ref.read(preferenceNotifierProvider.notifier).toggleAutoFetchOnline,
+              value: autoFetchOnline,
+              onChanged: (value) => context.read<PreferenceBloc>().add(const AutoFetchOnlineToggled()),
             );
           },
         ),

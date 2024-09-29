@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../utils/constants/app_info.dart';
+import '../../../v4/features/preference/bloc/preference_bloc.dart';
 import '../../../widgets/color_picker_sheet.dart';
 import 'settings_notifier.dart';
 
@@ -27,9 +28,9 @@ class SettingsScreen extends StatelessWidget {
             builder: (context, ref, child) => ListTile(
               leading: Icon(Icons.brightness_2_outlined, color: primary),
               title: const Text('Use Dark Mode'),
-              onTap: ref.read(settingsNotifierProvider.notifier).toggleBrightness,
+              onTap: () => context.read<PreferenceBloc>().add(const BrightnessToggled()),
               trailing: Switch(
-                onChanged: (_) => ref.read(settingsNotifierProvider.notifier).toggleBrightness(),
+                onChanged: (_) => context.read<PreferenceBloc>().add(const BrightnessToggled()),
                 value: colorScheme.brightness == Brightness.dark,
               ),
             ),
@@ -40,10 +41,11 @@ class SettingsScreen extends StatelessWidget {
             trailing: Icon(Icons.square, color: colorScheme.primary),
             onTap: () => showModalBottomSheet(
               context: context,
-              builder: (_) => Consumer(
-                builder: (_, ref, __) => ColorPickerSheet(
-                  colorValue: ref.watch(preferenceNotifierProvider.select((pref) => pref.appColorScheme)),
-                  onColorChanged: ref.read(settingsNotifierProvider.notifier).setAppColorScheme,
+              builder: (modalCtx) => BlocProvider.value(
+                value: context.read<PreferenceBloc>(),
+                child: ColorPickerSheet(
+                  colorValue: context.watch<PreferenceBloc>().state.color,
+                  onColorChanged: (color) => context.read<PreferenceBloc>().add(ColorUpdated(color)),
                 ),
               ),
             ),
