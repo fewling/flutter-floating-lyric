@@ -3,6 +3,9 @@ part of 'overlay_window_bloc.dart';
 @freezed
 class OverlayWindowState with _$OverlayWindowState {
   const factory OverlayWindowState({
+    // State
+    @Default(false) bool isWindowVisible,
+
     // Data
     String? title,
     String? line1,
