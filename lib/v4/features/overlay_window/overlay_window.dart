@@ -49,58 +49,72 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
       );
     }
 
-    return Theme(
-      data: ThemeData(
-        colorSchemeSeed: Color(_state!.color ?? 0),
-        useMaterial3: true,
-      ),
-      child: Scaffold(
-        backgroundColor: Color(_state!.color ?? 0),
-        body: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              if (_debugText != null) Text(_debugText!),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(_state?.title ?? ''),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.remove),
-                  ),
-                  IconButton(
-                    onPressed: () => FlutterOverlayWindow.closeOverlay(),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+    // 0 ~ 100
+    final opacity = (_state!.opacity ?? 50).toInt();
+    final foregroundColor = Color(_state!.color ?? 0);
+
+    return Scaffold(
+      backgroundColor: Colors.black.withOpacity(opacity / 100),
+      body: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          children: [
+            if (_debugText != null)
+              Text(
+                _debugText!,
+                style: TextStyle(color: foregroundColor),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(_state?.line1 ?? ''),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _state?.title ?? '',
+                    style: TextStyle(color: foregroundColor),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.remove, color: foregroundColor),
+                ),
+                IconButton(
+                  onPressed: () => FlutterOverlayWindow.closeOverlay(),
+                  icon: Icon(Icons.close, color: foregroundColor),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _state?.line1 ?? '',
+                style: TextStyle(color: foregroundColor),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(_state?.line2 ?? ''),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                _state?.line2 ?? '',
+                style: TextStyle(color: foregroundColor),
               ),
-              Row(
-                children: [
-                  Text(
-                    _state?.positionLeftLabel ?? '',
+            ),
+            Row(
+              children: [
+                Text(
+                  _state?.positionLeftLabel ?? '',
+                  style: TextStyle(color: foregroundColor),
+                ),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: _state?.position ?? 0,
+                    color: foregroundColor,
                   ),
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: _state?.position ?? 0,
-                    ),
-                  ),
-                  Text(
-                    _state?.positionRightLabel ?? '',
-                  ),
-                ].separatedBy(const SizedBox(width: 8)).toList(),
-              )
-            ].separatedBy(const SizedBox(height: 4)).toList(),
-          ),
+                ),
+                Text(
+                  _state?.positionRightLabel ?? '',
+                  style: TextStyle(color: foregroundColor),
+                ),
+              ].separatedBy(const SizedBox(width: 8)).toList(),
+            )
+          ].separatedBy(const SizedBox(height: 4)).toList(),
         ),
       ),
     );
