@@ -181,8 +181,8 @@ class WindowSettingContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final visibleFloatingWindow = ref.watch(
-      homeNotifierProvider.select((state) => state.isWindowVisible),
+    final visibleFloatingWindow = context.select<OverlayWindowBloc, bool>(
+      (bloc) => bloc.state.isWindowVisible,
     );
 
     return Column(
@@ -191,7 +191,7 @@ class WindowSettingContent extends ConsumerWidget {
         SwitchListTile(
           title: const Text('Enable'),
           value: visibleFloatingWindow,
-          onChanged: ref.read(homeNotifierProvider.notifier).toggleWindow,
+          onChanged: (_) => context.read<OverlayWindowBloc>().add(const OverlayWindowToggled()),
         ),
         Builder(
           builder: (context) {
@@ -280,8 +280,8 @@ class WindowSettingContent extends ConsumerWidget {
         ListTile(
           enabled: visibleFloatingWindow,
           leading: const Icon(Icons.opacity_outlined),
-          trailing: Consumer(
-            builder: (context, ref, child) {
+          trailing: Builder(
+            builder: (context) {
               final opacity = context.select<PreferenceBloc, double>(
                 (bloc) => bloc.state.opacity,
               );
@@ -291,8 +291,8 @@ class WindowSettingContent extends ConsumerWidget {
           ),
           title: const Text('Window Opacity'),
         ),
-        Consumer(
-          builder: (context, ref, child) {
+        Builder(
+          builder: (context) {
             final opacity = context.select<PreferenceBloc, double>(
               (bloc) => bloc.state.opacity,
             );
@@ -308,8 +308,8 @@ class WindowSettingContent extends ConsumerWidget {
         ListTile(
           enabled: visibleFloatingWindow,
           leading: const Icon(Icons.format_size_outlined),
-          trailing: Consumer(
-            builder: (context, ref, child) {
+          trailing: Builder(
+            builder: (context) {
               final fontSize = context.select<PreferenceBloc, int>(
                 (bloc) => bloc.state.fontSize,
               );
@@ -500,8 +500,8 @@ class OnlineLyricContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Consumer(
-          builder: (context, ref, child) {
+        Builder(
+          builder: (context) {
             final autoFetchOnline = context.select<PreferenceBloc, bool>(
               (bloc) => bloc.state.autoFetchOnline,
             );

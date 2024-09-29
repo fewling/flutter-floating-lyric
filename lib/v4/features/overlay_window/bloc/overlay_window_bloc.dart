@@ -30,8 +30,17 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
 
   final OverlayWindowService _overlayWindowService;
 
-  void _onLoaded(OverlayWindowLoaded event, Emitter<OverlayWindowState> emit) {
-    add(const OverlayWindowSizeChanged());
+  Future<void> _onLoaded(OverlayWindowLoaded event, Emitter<OverlayWindowState> emit) async {
+    emit(state.copyWith(
+      height: _getHeight().toInt(),
+    ));
+
+    await emit.forEach(
+      _overlayWindowService.isActive,
+      onData: (isActive) => state.copyWith(
+        isWindowVisible: isActive,
+      ),
+    );
   }
 
   void _onLyricUpdated(LyricStateUpdated event, Emitter<OverlayWindowState> emit) {
@@ -59,11 +68,8 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   }
 
   void _onSizeChanged(OverlayWindowSizeChanged event, Emitter<OverlayWindowState> emit) {
-    final renderObj = overlayWindowMeasureKey.currentContext?.findRenderObject();
-    final syze = renderObj?.semanticBounds.size;
-
     emit(state.copyWith(
-      height: syze?.height.toInt() ?? state.height,
+      height: _getHeight().toInt(),
     ));
   }
 
@@ -75,5 +81,12 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
       showProgressBar: event.showProgressBar,
       showMillis: event.showMillis,
     ));
+  }
+
+  double _getHeight() {
+    final renderObj = overlayWindowMeasureKey.currentContext?.findRenderObject();
+    final syze = renderObj?.semanticBounds.size;
+
+    return syze?.height ?? state.height.toDouble();
   }
 }
