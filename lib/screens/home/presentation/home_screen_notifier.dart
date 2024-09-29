@@ -15,9 +15,7 @@ import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
 import '../../../services/method_channels/permission_method_invoker.dart';
 import '../../../services/preferences/app_preference_notifier.dart';
-import '../../../utils/extensions/custom_extensions.dart';
 import '../../../v4/features/overlay_window/floating_overlay_service.dart';
-import '../../../v4/features/overlay_window/overlay_window_lyric_state.dart';
 import '../domain/home_state.dart';
 
 part 'home_screen_notifier.g.dart';
@@ -26,36 +24,6 @@ part 'home_screen_notifier.g.dart';
 class HomeNotifier extends _$HomeNotifier {
   @override
   HomeState build() {
-    ref.listen(
-      lyricStateProvider,
-      (prev, next) {
-        if (prev == next) return;
-
-        final mediaState = next.mediaState;
-
-        final title = mediaState == null ? '' : '${mediaState.title} - ${mediaState.artist}';
-        final line1 = next.currentLine;
-
-        final current = mediaState?.position.toInt() ?? 0;
-        final max = mediaState?.duration.toInt() ?? 0;
-        final position = max == 0 ? 0 : current / max;
-
-        final currentDuration = Duration(milliseconds: current);
-        final maxDuration = Duration(milliseconds: mediaState?.duration.toInt() ?? 0);
-
-        ref.read(floatingOverlayServiceProvider).setLyricState(
-              OverlayWindowLyricState(
-                title: title,
-                line1: line1 ?? 'No line 1',
-                line2: line1 ?? 'No line 2',
-                position: position.toDouble(),
-                positionLeftLabel: currentDuration.mmss(),
-                positionRightLabel: maxDuration.mmss(),
-              ),
-            );
-      },
-    );
-
     ref.listen(
       lyricStateProvider.select((value) => value.mediaState),
       (prev, next) {

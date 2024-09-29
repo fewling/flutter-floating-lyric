@@ -5,10 +5,7 @@ import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/extensions/custom_extensions.dart';
-import 'floating_overlay_event.dart';
-import 'floating_overlay_state_types.dart';
-import 'overlay_window_lyric_state.dart';
-import 'overlay_window_style_state.dart';
+import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindow extends ConsumerStatefulWidget {
   const OverlayWindow({super.key});
@@ -19,8 +16,7 @@ class OverlayWindow extends ConsumerStatefulWidget {
 
 class _OverlayWindowState extends ConsumerState<OverlayWindow> {
   String? _debugText;
-  OverlayWindowLyricState? _lyricState;
-  OverlayWindowStyleState? _styleState;
+  OverlayWindowState? _state;
 
   @override
   void initState() {
@@ -29,17 +25,8 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
     FlutterOverlayWindow.overlayListener.listen((event) {
       setState(() {
         try {
-          final evJson = jsonDecode(event.toString()) as Map<String, dynamic>;
-          final ev = FloatingOverlayEvent.fromJson(evJson);
-
-          switch (ev.type) {
-            case FloatingOverlayStateTypes.lyricState:
-              _lyricState = ev.lyricState;
-              break;
-            case FloatingOverlayStateTypes.styleState:
-              _styleState = ev.styleState;
-              break;
-          }
+          final json = jsonDecode(event.toString());
+          _state = OverlayWindowState.fromJson(json as Map<String, dynamic>);
         } catch (e) {
           _debugText = e.toString();
         }
@@ -49,7 +36,7 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
 
   @override
   Widget build(BuildContext context) {
-    if (_lyricState == null) {
+    if (_state == null) {
       return Material(
         child: Container(
           color: Colors.red.shade300,
@@ -70,7 +57,7 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
             Row(
               children: [
                 Expanded(
-                  child: Text(_lyricState!.title),
+                  child: Text(_state?.title ?? ''),
                 ),
                 IconButton(
                   onPressed: () {},
@@ -84,24 +71,24 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
             ),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(_lyricState!.line1),
+              child: Text(_state?.line1 ?? ''),
             ),
             Align(
               alignment: Alignment.centerRight,
-              child: Text(_lyricState!.line2),
+              child: Text(_state?.line2 ?? ''),
             ),
             Row(
               children: [
                 Text(
-                  _lyricState!.positionLeftLabel,
+                  _state?.positionLeftLabel ?? '',
                 ),
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: _lyricState!.position,
+                    value: _state?.position ?? 0,
                   ),
                 ),
                 Text(
-                  _lyricState!.positionRightLabel,
+                  _state?.positionRightLabel ?? '',
                 ),
               ].separatedBy(const SizedBox(width: 8)).toList(),
             )

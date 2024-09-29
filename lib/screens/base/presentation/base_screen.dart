@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../v4/features/lyric_state_listener/lyric_state_listener.dart';
 import '../domain/base_drawer_routes.dart';
 import 'base_notifier.dart';
 
@@ -17,8 +18,7 @@ class BaseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final fullPath = GoRouterState.of(context).fullPath;
 
-    final index = BaseDrawerRoutes.values
-        .indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
+    final index = BaseDrawerRoutes.values.indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
     final title = index > -1 ? BaseDrawerRoutes.values[index].label : 'Home';
 
     return Scaffold(
@@ -34,14 +34,14 @@ class BaseScreen extends StatelessWidget {
               ),
           ],
           onDestinationSelected: (index) {
-            ref
-                .read(baseNotifierProvider.notifier)
-                .onNavDrawerDestinationSelected(index);
+            ref.read(baseNotifierProvider.notifier).onNavDrawerDestinationSelected(index);
             Scaffold.of(context).closeDrawer();
           },
         ),
       ),
-      body: child,
+      body: LyricStateListener(
+        child: child,
+      ),
     );
   }
 }
