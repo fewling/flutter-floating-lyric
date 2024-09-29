@@ -49,11 +49,14 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: Colors.amber,
-      body: ColoredBox(
-        color: Colors.red,
-        child: Padding(
+    return Theme(
+      data: ThemeData(
+        colorSchemeSeed: Color(_state!.color ?? 0),
+        useMaterial3: true,
+      ),
+      child: Scaffold(
+        backgroundColor: Color(_state!.color ?? 0),
+        body: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Column(
             children: [

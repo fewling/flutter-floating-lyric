@@ -33,6 +33,11 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   Future<void> _onLoaded(OverlayWindowLoaded event, Emitter<OverlayWindowState> emit) async {
     emit(state.copyWith(
       height: _getHeight().toInt(),
+      opacity: event.opacity,
+      color: event.color,
+      fontSize: event.fontSize.toDouble(),
+      showProgressBar: event.showProgressBar,
+      showMillis: event.showMillis,
     ));
 
     await emit.forEach(
