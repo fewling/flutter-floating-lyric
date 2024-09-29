@@ -70,6 +70,8 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     await _overlayWindowService.toggle(
       height: (state.height * state.devicePixelRatio).toInt() + 2, // +2 for floored value
     );
+
+    _overlayWindowService.sendData(state);
   }
 
   void _onSizeChanged(OverlayWindowSizeChanged event, Emitter<OverlayWindowState> emit) {
