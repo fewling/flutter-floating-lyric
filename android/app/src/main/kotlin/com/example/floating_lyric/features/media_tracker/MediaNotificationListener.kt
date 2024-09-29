@@ -189,6 +189,7 @@ class MediaNotificationListener : NotificationListenerService() {
                 }
 
                 if (debugLogTimerCountdown <= 0) {
+                    /*
                     Log.d(
                         TAG, """
                         extractNotificationInfo:
@@ -201,6 +202,7 @@ class MediaNotificationListener : NotificationListenerService() {
                         isPlaying: $isPlaying
                     """.trimIndent()
                     )
+                    */
                 }
 
 
