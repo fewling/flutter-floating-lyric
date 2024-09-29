@@ -4,6 +4,7 @@ import '../../models/lrc.dart';
 import '../event_channels/media_states/media_state.dart';
 
 part 'floating_lyric_state.freezed.dart';
+part 'floating_lyric_state.g.dart';
 
 @freezed
 class FloatingLyricState with _$FloatingLyricState {
@@ -14,4 +15,6 @@ class FloatingLyricState with _$FloatingLyricState {
     @Default(false) bool shouldSearchOnline,
     @Default(false) bool isSearchingOnline,
   }) = _FloatingLyricState;
+
+  factory FloatingLyricState.fromJson(Map<String, dynamic> json) => _$FloatingLyricStateFromJson(json);
 }

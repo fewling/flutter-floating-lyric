@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:isar/isar.dart';
 
-import '../../models/lrc.dart';
+import '../../models/lrc_builder.dart';
 import '../../models/lyric_model.dart';
 import '../../utils/logger.dart';
 import '../db_helper.dart';
@@ -74,7 +74,9 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
           final lrcDB = await dbHelper.getLyric(title, artist);
           final isLyricFound = lrcDB != null;
           if (isLyricFound) {
-            state = state.copyWith(currentLrc: Lrc(lrcDB.content ?? ''));
+            state = state.copyWith(
+              currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
+            );
             break;
           } else if (_autoFetchOnline) {
             final success = await fetchLyric(title, artist, album, duration);
@@ -138,7 +140,9 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
 
       final dbHelper = ref.read(dbHelperProvider);
       final lrcDB = await dbHelper.getLyricByID(id);
-      state = state.copyWith(currentLrc: Lrc(lrcDB?.content ?? ''));
+      state = state.copyWith(
+        currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
+      );
 
       return true;
     } catch (e) {

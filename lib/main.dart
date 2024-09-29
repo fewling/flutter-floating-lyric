@@ -8,6 +8,7 @@ import 'models/lyric_model.dart';
 import 'services/db_helper.dart';
 import 'services/preferences/app_preference_notifier.dart';
 import 'v4/configs/routes/app_router.dart';
+import 'v4/features/overlay_window/overlay_window.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,20 @@ Future<void> main() async {
         sharedPreferenceProvider.overrideWithValue(pref),
       ],
       child: const FloatingLyricApp(),
+    ),
+  );
+}
+
+@pragma('vm:entry-point')
+void overlayMain() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(
+    const ProviderScope(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: OverlayWindow(),
+      ),
     ),
   );
 }

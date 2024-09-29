@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/lrc.dart';
+import '../models/lrc_builder.dart';
 import '../models/lyric_model.dart';
 import '../utils/logger.dart';
 import 'db_helper.dart';
@@ -73,7 +73,7 @@ Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
 
     try {
       final processed = _sortLrc(content);
-      final lrc = Lrc(processed);
+      final lrc = LrcBuilder().buildLrc(processed);
       final title = lrc.title;
       final artist = lrc.artist;
 
