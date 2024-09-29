@@ -41,12 +41,16 @@ Future<void> main() async {
             create: (context) => PreferenceRepo(sharedPreferences: pref),
           ),
         ],
-        child: BlocProvider(
-          create: (context) => PreferenceBloc(
-            spService: PreferenceService(
-              spRepo: context.read<PreferenceRepo>(),
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => PreferenceBloc(
+                spService: PreferenceService(
+                  spRepo: context.read<PreferenceRepo>(),
+                ),
+              )..add(const PreferenceEventLoad()),
             ),
-          )..add(const PreferenceEventLoad()),
+          ],
           child: const FloatingLyricApp(),
         ),
       ),
