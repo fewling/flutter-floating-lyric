@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../utils/logger.dart';
 import '../../../service/overlay_window/overlay_window_service.dart';
 import '../overlay_window_measurer.dart';
 
@@ -24,6 +23,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
         LyricStateUpdated() => _onLyricUpdated(event, emit),
         OverlayWindowToggled() => _onToggled(event, emit),
         OverlayWindowSizeChanged() => _onSizeChanged(event, emit),
+        WindowStyleUpdated() => _onStyleUpdated(event, emit),
       },
     );
   }
@@ -61,10 +61,19 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   void _onSizeChanged(OverlayWindowSizeChanged event, Emitter<OverlayWindowState> emit) {
     final renderObj = overlayWindowMeasureKey.currentContext?.findRenderObject();
     final syze = renderObj?.semanticBounds.size;
-    logger.f('syze: $syze');
 
     emit(state.copyWith(
       height: syze?.height.toInt() ?? state.height,
+    ));
+  }
+
+  void _onStyleUpdated(WindowStyleUpdated event, Emitter<OverlayWindowState> emit) {
+    emit(state.copyWith(
+      fontSize: event.fontSize.toDouble(),
+      opacity: event.opacity,
+      color: event.color,
+      showProgressBar: event.showProgressBar,
+      showMillis: event.showMillis,
     ));
   }
 }

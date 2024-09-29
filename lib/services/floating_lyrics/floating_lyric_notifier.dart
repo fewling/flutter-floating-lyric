@@ -9,7 +9,6 @@ import '../event_channels/media_states/media_state.dart';
 import '../event_channels/media_states/media_state_event_channel.dart';
 import '../lrclib/data/lrclib_response.dart';
 import '../lrclib/repo/lrclib_repository.dart';
-import '../preferences/app_preference_notifier.dart';
 import 'floating_lyric_state.dart';
 
 final lyricStateProvider = NotifierProvider<FloatingLyricNotifier, FloatingLyricState>(FloatingLyricNotifier.new);
@@ -19,31 +18,31 @@ class FloatingLyricNotifier extends Notifier<FloatingLyricState> {
 
   @override
   FloatingLyricState build() {
-    _autoFetchOnline = ref.read(
-      preferenceNotifierProvider.select((value) => value.autoFetchOnline),
-    );
+    // _autoFetchOnline = ref.read(
+    //   preferenceNotifierProvider.select((value) => value.autoFetchOnline),
+    // );
 
-    ref.listen(
-      preferenceNotifierProvider.select((value) => value.autoFetchOnline),
-      (prev, next) {
-        _autoFetchOnline = next;
-        if (_autoFetchOnline && state.currentLrc == null) {
-          final title = state.mediaState?.title;
-          final artist = state.mediaState?.artist;
-          final album = state.mediaState?.album;
-          final duration = state.mediaState?.duration;
+    // ref.listen(
+    //   preferenceNotifierProvider.select((value) => value.autoFetchOnline),
+    //   (prev, next) {
+    //     _autoFetchOnline = next;
+    //     if (_autoFetchOnline && state.currentLrc == null) {
+    //       final title = state.mediaState?.title;
+    //       final artist = state.mediaState?.artist;
+    //       final album = state.mediaState?.album;
+    //       final duration = state.mediaState?.duration;
 
-          if (title == null && artist == null) return;
-          if (album == null) return;
-          if (duration == null || duration <= 0) return;
+    //       if (title == null && artist == null) return;
+    //       if (album == null) return;
+    //       if (duration == null || duration <= 0) return;
 
-          hasLyric(title!, artist!).then((hasLyric) {
-            if (hasLyric) return;
-            fetchLyric(title, artist, album, duration);
-          });
-        }
-      },
-    );
+    //       hasLyric(title!, artist!).then((hasLyric) {
+    //         if (hasLyric) return;
+    //         fetchLyric(title, artist, album, duration);
+    //       });
+    //     }
+    //   },
+    // );
 
     mediaStateStream.listen(updateFromEventChannel);
     return const FloatingLyricState();

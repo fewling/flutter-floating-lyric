@@ -8,9 +8,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'models/lyric_model.dart';
 import 'services/db_helper.dart';
 import 'services/lrclib/repo/lrclib_repository.dart';
-import 'services/preferences/app_preference_notifier.dart';
 import 'v4/configs/routes/app_router.dart';
 import 'v4/features/overlay_window/overlay_window.dart';
+import 'v4/features/preference/bloc/preference_bloc.dart';
+import 'v4/features/preference/preference_listener.dart';
+import 'v4/repos/local/preference_repo.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +28,6 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         dbHelperProvider.overrideWithValue(DBHelper(isar)),
-        sharedPreferenceProvider.overrideWithValue(pref),
       ],
       child: MultiRepositoryProvider(
         providers: [
@@ -35,6 +36,9 @@ Future<void> main() async {
           ),
           RepositoryProvider(
             create: (context) => LrcLibRepository(),
+          ),
+          RepositoryProvider(
+            create: (context) => PreferenceRepo(sharedPreferences: pref),
           ),
         ],
         child: const FloatingLyricApp(),
@@ -62,21 +66,23 @@ class FloatingLyricApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLight = ref.watch(
-      preferenceNotifierProvider.select((value) => value.isLight),
+    final isLight = context.select<PreferenceBloc, bool>(
+      (bloc) => bloc.state.isLight,
     );
 
-    final colorSchemeSeed = ref.watch(
-      preferenceNotifierProvider.select((value) => value.appColorScheme),
+    final colorSchemeSeed = context.select<PreferenceBloc, int>(
+      (bloc) => bloc.state.appColorScheme,
     );
 
-    return MaterialApp.router(
-      theme: ThemeData(
-        useMaterial3: true,
-        colorSchemeSeed: Color(colorSchemeSeed),
-        brightness: isLight ? Brightness.light : Brightness.dark,
+    return PreferenceListener(
+      child: MaterialApp.router(
+        theme: ThemeData(
+          useMaterial3: true,
+          colorSchemeSeed: Color(colorSchemeSeed),
+          brightness: isLight ? Brightness.light : Brightness.dark,
+        ),
+        routerConfig: ref.watch(appRouterProvider),
       ),
-      routerConfig: ref.watch(appRouterProvider),
     );
   }
 }

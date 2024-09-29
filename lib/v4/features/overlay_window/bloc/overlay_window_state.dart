@@ -13,9 +13,15 @@ class OverlayWindowState with _$OverlayWindowState {
 
     // Styles
     @Default(300) int height,
+    double? opacity,
+    int? color,
+    bool? showProgressBar,
+    bool? showMillis,
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
+
+    // Device
     required double devicePixelRatio,
   }) = _OverlayWindowState;
 

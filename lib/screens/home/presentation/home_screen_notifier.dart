@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:isar/isar.dart';
@@ -14,7 +13,6 @@ import '../../../services/lrclib/repo/lrclib_repository.dart';
 import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
 import '../../../services/method_channels/permission_method_invoker.dart';
-import '../../../services/preferences/app_preference_notifier.dart';
 import '../domain/home_state.dart';
 
 part 'home_screen_notifier.g.dart';
@@ -87,26 +85,6 @@ class HomeNotifier extends _$HomeNotifier {
     } else {
       invoker.closeFloatingWindow();
     }
-  }
-
-  void updateWindowColor(Color value) {
-    ref.read(preferenceNotifierProvider.notifier).updateColor(value);
-  }
-
-  void updateWindowOpacity(double value) {
-    ref.read(preferenceNotifierProvider.notifier).updateOpacity(value);
-  }
-
-  void toggleMillisVisibility(bool value) {
-    ref.read(preferenceNotifierProvider.notifier).toggleShowMilliseconds();
-  }
-
-  void toggleProgressBarVisibility(bool value) {
-    ref.read(preferenceNotifierProvider.notifier).toggleShowProgressBar();
-  }
-
-  void updateFontSize(int value) {
-    ref.read(preferenceNotifierProvider.notifier).updateFontSize(value);
   }
 
   Future<List<PlatformFile>> importLRCs() async {

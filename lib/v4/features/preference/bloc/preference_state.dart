@@ -1,7 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'app_preference.freezed.dart';
-part 'app_preference.g.dart';
+part of 'preference_bloc.dart';
 
 @freezed
 class PreferenceState with _$PreferenceState {
@@ -16,6 +13,5 @@ class PreferenceState with _$PreferenceState {
     required bool autoFetchOnline,
   }) = _PreferenceState;
 
-  factory PreferenceState.fromJson(Map<String, dynamic> json) =>
-      _$PreferenceStateFromJson(json);
+  factory PreferenceState.fromJson(Map<String, dynamic> json) => _$PreferenceStateFromJson(json);
 }
