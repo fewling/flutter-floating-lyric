@@ -10,6 +10,7 @@ import '../../../services/preferences/app_preference_notifier.dart';
 import '../../../v4/features/overlay_window/bloc/overlay_window_bloc.dart';
 import '../../../v4/features/overlay_window/overlay_window_listener.dart';
 import '../../../v4/features/overlay_window/overlay_window_measurer.dart';
+import '../../../v4/service/overlay_window/overlay_window_service.dart';
 import '../../../widgets/fail_import_dialog.dart';
 import '../../../widgets/loading_widget.dart';
 import 'home_screen_notifier.dart';
@@ -30,55 +31,59 @@ class HomeScreen extends ConsumerWidget {
       homeNotifierProvider.select((s) => s.isWindowVisible),
     );
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: ref.read(homeNotifierProvider.notifier).toggleOverlayWindow,
-        child: const Icon(Icons.bug_report_outlined),
+    return BlocProvider(
+      create: (context) => OverlayWindowBloc(
+        overlayWindowService: OverlayWindowService(),
       ),
-      body: Stack(
-        children: [
-          Opacity(
-            opacity: 0,
-            child: BlocProvider(
-              create: (context) => OverlayWindowBloc(),
-              child: const OverlayWindowListener(
-                child: OverlayWindowMeasurer(),
+      child: Builder(
+        builder: (context) => Scaffold(
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => context.read<OverlayWindowBloc>().add(const OverlayWindowToggled()),
+            child: const Icon(Icons.bug_report_outlined),
+          ),
+          body: Stack(
+            children: [
+              const Opacity(
+                opacity: 0,
+                child: OverlayWindowListener(
+                  child: OverlayWindowMeasurer(),
+                ),
               ),
-            ),
+              Positioned.fill(
+                child: Stepper(
+                  currentStep: currentIndex,
+                  onStepTapped: ref.watch(homeNotifierProvider.notifier).updateStep,
+                  controlsBuilder: (context, details) => const SizedBox(),
+                  steps: [
+                    Step(
+                      isActive: currentIndex == 0,
+                      state: isPlaying ? StepState.complete : StepState.indexed,
+                      title: const MediaSettingTitle(),
+                      content: const MediaSettingContent(),
+                    ),
+                    Step(
+                      isActive: currentIndex == 1,
+                      state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
+                      title: const Text('Floating Window Settings'),
+                      content: const WindowSettingContent(),
+                    ),
+                    Step(
+                      isActive: currentIndex == 2,
+                      title: const Text('Import Local .lrc Files'),
+                      content: const LrcFormatContent(),
+                    ),
+                    Step(
+                      isActive: currentIndex == 3,
+                      title: const Text('Fetch Lyrics Online'),
+                      content: const OnlineLyricContent(),
+                      subtitle: const Text('Powered by lrclib (Experimental)'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          Positioned.fill(
-            child: Stepper(
-              currentStep: currentIndex,
-              onStepTapped: ref.watch(homeNotifierProvider.notifier).updateStep,
-              controlsBuilder: (context, details) => const SizedBox(),
-              steps: [
-                Step(
-                  isActive: currentIndex == 0,
-                  state: isPlaying ? StepState.complete : StepState.indexed,
-                  title: const MediaSettingTitle(),
-                  content: const MediaSettingContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 1,
-                  state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
-                  title: const Text('Floating Window Settings'),
-                  content: const WindowSettingContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 2,
-                  title: const Text('Import Local .lrc Files'),
-                  content: const LrcFormatContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 3,
-                  title: const Text('Fetch Lyrics Online'),
-                  content: const OnlineLyricContent(),
-                  subtitle: const Text('Powered by lrclib (Experimental)'),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

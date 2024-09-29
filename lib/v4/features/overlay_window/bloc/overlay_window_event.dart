@@ -4,6 +4,10 @@ sealed class OverlayWindowEvent {
   const OverlayWindowEvent();
 }
 
+final class OverlayWindowToggled extends OverlayWindowEvent {
+  const OverlayWindowToggled();
+}
+
 final class LyricStateUpdated extends OverlayWindowEvent {
   const LyricStateUpdated({
     required this.title,

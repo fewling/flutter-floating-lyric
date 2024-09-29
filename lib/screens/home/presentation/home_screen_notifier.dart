@@ -15,7 +15,6 @@ import '../../../services/lyric_file_processor.dart';
 import '../../../services/method_channels/floating_window_method_invoker.dart';
 import '../../../services/method_channels/permission_method_invoker.dart';
 import '../../../services/preferences/app_preference_notifier.dart';
-import '../../../v4/features/overlay_window/floating_overlay_service.dart';
 import '../domain/home_state.dart';
 
 part 'home_screen_notifier.g.dart';
@@ -214,9 +213,5 @@ class HomeNotifier extends _$HomeNotifier {
   void toggleIgnoreTouch(bool value) {
     state = state.copyWith(isWIndowIgnoreTouch: value);
     ref.read(floatingWindowMethodInvokerProvider.notifier).setWindowIgnoreTouch(value);
-  }
-
-  void toggleOverlayWindow() {
-    ref.read(floatingOverlayServiceProvider).toggleFloatingOverlay();
   }
 }

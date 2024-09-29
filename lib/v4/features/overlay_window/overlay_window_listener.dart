@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 import '../../../utils/extensions/custom_extensions.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
@@ -20,20 +17,11 @@ class OverlayWindowListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<OverlayWindowBloc, OverlayWindowState>(
-          listener: _onWindowStateUpdated,
-        ),
         BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
           listener: _onLyricStateUpdated,
         ),
       ],
       child: child,
-    );
-  }
-
-  void _onWindowStateUpdated(BuildContext context, OverlayWindowState state) {
-    FlutterOverlayWindow.shareData(
-      jsonEncode(state.toJson()),
     );
   }
 
