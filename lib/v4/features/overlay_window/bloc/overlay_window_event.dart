@@ -24,10 +24,6 @@ final class OverlayWindowToggled extends OverlayWindowEvent {
   const OverlayWindowToggled();
 }
 
-final class OverlayWindowSizeChanged extends OverlayWindowEvent {
-  const OverlayWindowSizeChanged();
-}
-
 final class LyricStateUpdated extends OverlayWindowEvent {
   const LyricStateUpdated({
     required this.title,

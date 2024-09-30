@@ -30,6 +30,14 @@ class OverlayWindowService {
     _notifyIsActive(!isActive);
   }
 
+  void resizeWindow(int height) {
+    FlutterOverlayWindow.resizeOverlay(
+      WindowSize.matchParent,
+      height,
+      true,
+    );
+  }
+
   void _notifyIsActive(bool isActive) {
     _isActiveController.add(isActive);
   }

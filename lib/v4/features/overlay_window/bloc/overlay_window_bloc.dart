@@ -22,7 +22,6 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
         OverlayWindowLoaded() => _onLoaded(event, emit),
         LyricStateUpdated() => _onLyricUpdated(event, emit),
         OverlayWindowToggled() => _onToggled(event, emit),
-        OverlayWindowSizeChanged() => _onSizeChanged(event, emit),
         WindowStyleUpdated() => _onStyleUpdated(event, emit),
       },
     );
@@ -74,12 +73,6 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     _overlayWindowService.sendData(state);
   }
 
-  void _onSizeChanged(OverlayWindowSizeChanged event, Emitter<OverlayWindowState> emit) {
-    emit(state.copyWith(
-      height: _getHeight().toInt(),
-    ));
-  }
-
   void _onStyleUpdated(WindowStyleUpdated event, Emitter<OverlayWindowState> emit) {
     emit(state.copyWith(
       fontSize: event.fontSize.toDouble(),
@@ -87,7 +80,10 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
       color: event.color,
       showProgressBar: event.showProgressBar,
       showMillis: event.showMillis,
+      height: _getHeight().toInt(),
     ));
+
+    _overlayWindowService.resizeWindow(_getHeight().toInt());
   }
 
   double _getHeight() {
