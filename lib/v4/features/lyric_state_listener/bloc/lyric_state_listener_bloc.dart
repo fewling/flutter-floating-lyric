@@ -10,6 +10,7 @@ import '../../../../services/event_channels/media_states/media_state.dart';
 import '../../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../../services/lrclib/data/lrclib_response.dart';
 import '../../../../services/lrclib/repo/lrclib_repository.dart';
+import '../../../../utils/logger.dart';
 
 part 'lyric_state_listener_bloc.freezed.dart';
 part 'lyric_state_listener_bloc.g.dart';
@@ -36,6 +37,10 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   final LrcLibRepository _lyricRepository;
 
   Future<void> _onLoaded(LyricStateListenerLoaded event, Emitter<LyricStateListenerState> emit) async {
+    emit(state.copyWith(
+      isAutoFetch: event.isAutoFetch,
+    ));
+
     await emit.onEach(
       mediaStateStream,
       onData: (mediaStates) async {
@@ -56,17 +61,22 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
             emit(state.copyWith(
               mediaState: mediaState,
               currentLrc: null,
+              currentLine: 'Searching in local database...',
             ));
 
             final lrcDB = await _dbHelper.getLyric(title, artist);
             final isLyricFound = lrcDB != null;
+
+            logger.f('isLyricFound: $isLyricFound, state.isAutoFetch: ${state.isAutoFetch}');
             if (isLyricFound) {
+              logger.f('Lyric found in db: ${lrcDB.fileName}');
               emit(state.copyWith(
                 currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
               ));
 
               break;
             } else if (state.isAutoFetch) {
+              logger.f('Lyric not found in db, fetching online');
               final success = await _fetchLyric(
                 emit,
                 title: title,
@@ -74,6 +84,8 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
                 album: album,
                 duration: duration,
               );
+
+              logger.f('Lyric fetch success: $success');
               if (success) break;
             }
           } else if (currentLrc != null) {
@@ -91,7 +103,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
             }
           } else if (currentLrc == null) {
             emit(state.copyWith(
-              currentLine: 'No Lyric Found',
+              currentLine: state.isSearchingOnline ? 'Searching Online...' : 'No lyric found',
               mediaState: state.mediaState?.copyWith(
                 position: position,
                 duration: duration,
@@ -119,7 +131,10 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     if (state.mediaState == null) return false;
 
     try {
-      emit(state.copyWith(isSearchingOnline: true));
+      emit(state.copyWith(
+        isSearchingOnline: true,
+        currentLine: 'Searching Online...',
+      ));
 
       final response = await _lyricRepository.getLyric(
         trackName: title,

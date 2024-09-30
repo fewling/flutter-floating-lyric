@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../services/db_helper.dart';
 import '../../../services/lrclib/repo/lrclib_repository.dart';
+import '../preference/bloc/preference_bloc.dart';
 import 'bloc/lyric_state_listener_bloc.dart';
 
 class LyricStateListener extends ConsumerWidget {
@@ -20,13 +21,17 @@ class LyricStateListener extends ConsumerWidget {
       create: (context) => LyricStateListenerBloc(
         dbHelper: context.read<DBHelper>(),
         lyricRepository: context.read<LrcLibRepository>(),
-      )..add(LyricStateListenerLoaded()),
+      )..add(LyricStateListenerLoaded(
+          isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
+        )),
       child: Builder(
         builder: (context) => MultiBlocListener(
           listeners: [
-            BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
-              listenWhen: (previous, current) => previous != current,
-              listener: (context, state) {},
+            BlocListener<PreferenceBloc, PreferenceState>(
+              listenWhen: (previous, current) => previous.autoFetchOnline != current.autoFetchOnline,
+              listener: (context, state) => context.read<LyricStateListenerBloc>().add(AutoFetchUpdated(
+                    isAutoFetch: state.autoFetchOnline,
+                  )),
             ),
           ],
           child: child,

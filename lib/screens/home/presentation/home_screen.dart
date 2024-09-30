@@ -38,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
       body: Stack(
         children: [
           const Opacity(
-            opacity: 1,
+            opacity: 0,
             child: OverlayWindowListener(
               child: OverlayWindowMeasurer(),
             ),

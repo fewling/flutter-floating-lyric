@@ -31,7 +31,7 @@ class PreferenceRepo {
 
   int get fontSize => _sp.getInt(fontSizeKey) ?? 24;
 
-  bool get autoFetchOnline => _sp.getBool(autoFetchOnlineKey) ?? false;
+  bool get autoFetchOnline => _sp.getBool(autoFetchOnlineKey) ?? true;
 
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
