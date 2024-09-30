@@ -86,14 +86,20 @@ class _OverlayWindowState extends ConsumerState<OverlayWindow> {
               alignment: Alignment.centerLeft,
               child: Text(
                 _state?.line1 ?? '',
-                style: TextStyle(color: foregroundColor),
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: _state?.fontSize,
+                ),
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
                 _state?.line2 ?? '',
-                style: TextStyle(color: foregroundColor),
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: _state?.fontSize,
+                ),
               ),
             ),
             Row(
