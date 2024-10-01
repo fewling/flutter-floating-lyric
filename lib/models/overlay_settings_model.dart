@@ -6,6 +6,10 @@ part 'overlay_settings_model.g.dart';
 @freezed
 class OverlaySettingsModel with _$OverlaySettingsModel {
   const factory OverlaySettingsModel({
+    // Themes:
+    @Default(false) bool isLight,
+    @Default(0) int appColorScheme,
+
     // Data
     String? title,
     String? line1,

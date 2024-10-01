@@ -43,8 +43,8 @@ class SettingsScreen extends StatelessWidget {
               builder: (modalCtx) => BlocProvider.value(
                 value: context.read<PreferenceBloc>(),
                 child: ColorPickerSheet(
-                  colorValue: context.watch<PreferenceBloc>().state.color,
-                  onColorChanged: (color) => context.read<PreferenceBloc>().add(ColorUpdated(color)),
+                  colorValue: context.watch<PreferenceBloc>().state.appColorScheme,
+                  onColorChanged: (color) => context.read<PreferenceBloc>().add(AppColorSchemeUpdated(color)),
                 ),
               ),
             ),

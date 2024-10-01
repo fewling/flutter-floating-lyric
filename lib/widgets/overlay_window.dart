@@ -25,7 +25,8 @@ class OverlayWindow extends StatelessWidget {
         : _OverlayContent(
             opacity: settings.opacity?.toInt() ?? 50,
             debugText: debugText,
-            foregroundColor: settings.color == null ? null : Color(settings.color!),
+            // foregroundColor: settings.color == null ? null : Color(settings.color!),
+            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
             title: settings.title,
             onCloseTap: onCloseTap,
             line1: settings.line1,

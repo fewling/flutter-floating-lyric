@@ -25,9 +25,9 @@ final class BrightnessToggled extends PreferenceEvent {
 }
 
 final class AppColorSchemeUpdated extends PreferenceEvent {
-  const AppColorSchemeUpdated(this.colorValue);
+  const AppColorSchemeUpdated(this.color);
 
-  final int colorValue;
+  final Color color;
 }
 
 final class ShowMillisecondsToggled extends PreferenceEvent {
