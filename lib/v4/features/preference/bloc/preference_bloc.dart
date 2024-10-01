@@ -23,6 +23,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           showProgressBar: spService.showProgressBar,
           fontSize: spService.fontSize,
           autoFetchOnline: spService.autoFetchOnline,
+          showLine2: spService.showLine2,
         )) {
     on<PreferenceEvent>((event, emit) => switch (event) {
           PreferenceEventLoad() => _onLoaded(emit),
@@ -34,6 +35,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           ShowProgressBarToggled() => _onShowProgressBarToggled(event, emit),
           FontSizeUpdated() => _onFontSizeUpdated(event, emit),
           AutoFetchOnlineToggled() => _onAutoFetchOnlineToggled(event, emit),
+          ShowLine2Toggled() => _onShowLine2Toggled(event, emit),
         });
   }
 
@@ -94,6 +96,13 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.toggleAutoFetchOnline(!state.autoFetchOnline);
     if (isSuccess) {
       emit(state.copyWith(autoFetchOnline: !state.autoFetchOnline));
+    }
+  }
+
+  Future<void> _onShowLine2Toggled(ShowLine2Toggled event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.toggleShowLine2(!state.showLine2);
+    if (isSuccess) {
+      emit(state.copyWith(showLine2: !state.showLine2));
     }
   }
 }

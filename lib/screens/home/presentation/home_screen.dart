@@ -221,6 +221,25 @@ class WindowSettingContent extends ConsumerWidget {
             );
           },
         ),
+        Builder(
+          builder: (context) {
+            final showLine2 = context.select<PreferenceBloc, bool>(
+              (bloc) => bloc.state.showLine2,
+            );
+
+            return ListTile(
+              enabled: visibleFloatingWindow,
+              leading: const Icon(Icons.linear_scale_outlined),
+              title: showLine2 ? const Text('Show Line 2') : const Text('Hide Line 2'),
+              trailing: Switch(
+                value: showLine2,
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : (value) => context.read<PreferenceBloc>().add(const ShowLine2Toggled()),
+              ),
+            );
+          },
+        ),
         ListTile(
           title: const Text('Color Scheme'),
           leading: const Icon(Icons.color_lens_outlined),
@@ -309,8 +328,8 @@ class WindowSettingContent extends ConsumerWidget {
           ),
           title: const Text('Lyrics Font Size'),
         ),
-        Consumer(
-          builder: (context, ref, child) {
+        Builder(
+          builder: (context) {
             final fontSize = context.select<PreferenceBloc, int>(
               (bloc) => bloc.state.fontSize,
             );

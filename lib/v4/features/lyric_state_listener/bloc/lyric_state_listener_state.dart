@@ -9,6 +9,7 @@ class LyricStateListenerState with _$LyricStateListenerState {
     @Default(false) bool isAutoFetch,
     @Default(false) bool shouldSearchOnline,
     @Default(false) bool isSearchingOnline,
+    @Default(false) bool showLine2,
   }) = _LyricStateListenerState;
 
   factory LyricStateListenerState.fromJson(Map<String, dynamic> json) => _$LyricStateListenerStateFromJson(json);

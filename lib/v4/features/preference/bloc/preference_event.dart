@@ -38,6 +38,10 @@ final class ShowProgressBarToggled extends PreferenceEvent {
   const ShowProgressBarToggled();
 }
 
+final class ShowLine2Toggled extends PreferenceEvent {
+  const ShowLine2Toggled();
+}
+
 final class FontSizeUpdated extends PreferenceEvent {
   const FontSizeUpdated(this.fontSize);
 

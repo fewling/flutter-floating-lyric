@@ -11,6 +11,7 @@ class PreferenceState with _$PreferenceState {
     required bool showProgressBar,
     required int fontSize,
     required bool autoFetchOnline,
+    required bool showLine2,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) => _$PreferenceStateFromJson(json);
