@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../utils/extensions/custom_extensions.dart';
-import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
-import '../preference/bloc/preference_bloc.dart';
-import 'bloc/overlay_window_bloc.dart';
+import '../../../utils/extensions/custom_extensions.dart';
+import '../../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
+import '../../overlay_window/bloc/overlay_window_bloc.dart';
+import '../../preference/bloc/preference_bloc.dart';
 
 class OverlayWindowListener extends StatelessWidget {
   const OverlayWindowListener({
