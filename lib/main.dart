@@ -85,7 +85,7 @@ class _FloatingLyricAppState extends State<FloatingLyricApp> {
 
     _permissionBloc = PermissionBloc(
       permissionService: PermissionService(),
-    );
+    )..add(const PermissionEventInitial());
 
     _appRouter = AppRouter(
       permissionBloc: _permissionBloc,
