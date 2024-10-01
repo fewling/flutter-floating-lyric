@@ -5,21 +5,21 @@ import '../../utils/logger.dart';
 class AppRouteObserver extends NavigatorObserver {
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.d('didPush: $route');
+    logger.t('➕ AppRouteObserver.didPush, route.name: ${route.settings.name}');
   }
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.d('didPop: $route');
+    logger.t('➖ AppRouteObserver.didPop, route.name: ${route.settings.name}');
   }
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.d('didRemove: $route');
+    logger.t('❌ AppRouteObserver.didRemove, route.name: ${route.settings.name}');
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    logger.d('didReplace: $newRoute');
+    logger.t('🔃 AppRouteObserver.didReplace, route.name: ${oldRoute?.settings.name} ==> ${newRoute?.settings.name}');
   }
 }
