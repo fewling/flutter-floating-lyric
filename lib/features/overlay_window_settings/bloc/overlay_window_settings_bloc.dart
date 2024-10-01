@@ -121,9 +121,6 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     OverlayWindowVisibilityToggled event,
     Emitter<OverlayWindowSettingsState> emit,
   ) async {
-    final newState = state.copyWith(isWindowVisible: !state.isWindowVisible);
-    emit(newState);
-
     final renderObj = homeScreenOverlayWindowMeasureKey.currentContext?.findRenderObject();
     final height = renderObj?.semanticBounds.size.height.toInt() ?? 0;
 

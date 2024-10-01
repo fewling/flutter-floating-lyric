@@ -29,6 +29,7 @@ dependencies:
   package_info_plus: ^8.0.2
   flutter_overlay_window: ^0.4.5
   flutter_bloc: ^8.1.6
+  collection: ^1.18.0
 
 dev_dependencies:
   flutter_test:

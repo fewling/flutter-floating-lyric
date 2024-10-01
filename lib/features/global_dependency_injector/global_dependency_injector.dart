@@ -14,7 +14,6 @@ import '../app_info/bloc/app_info_bloc.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../lyric_state_listener/lyric_state_listener.dart';
 import '../message_channels/message_from_overlay_receiver/bloc/message_from_overlay_receiver_bloc.dart';
-import '../message_channels/message_from_overlay_receiver/message_from_overlay_receiver.dart';
 import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 import '../overlay_window_settings/overlay_window_settings.dart';
 import '../permissions/bloc/permission_bloc.dart';
@@ -49,12 +48,18 @@ class GlobalDependencyInjector extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PreferenceRepo(sharedPreferences: pref),
         ),
+        RepositoryProvider(
+          create: (context) => OverlayWindowService(devicePixelRatio: pxRatio),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider.value(value: permissionBloc),
           BlocProvider(
-            create: (context) => MessageFromOverlayReceiverBloc()..add(const MessageFromOverlayReceiverStarted()),
+            lazy: false,
+            create: (context) => MessageFromOverlayReceiverBloc(
+              overlayWindowService: context.read<OverlayWindowService>(),
+            )..add(const MessageFromOverlayReceiverStarted()),
           ),
           BlocProvider(
             create: (context) => PreferenceBloc(
@@ -76,10 +81,9 @@ class GlobalDependencyInjector extends StatelessWidget {
               )),
           ),
           BlocProvider(
+            lazy: false,
             create: (context) => OverlayWindowSettingsBloc(
-              overlayWindowService: OverlayWindowService(
-                devicePixelRatio: pxRatio,
-              ),
+              overlayWindowService: context.read<OverlayWindowService>(),
               toOverlayMessageService: ToOverlayMessageService(),
             )..add(OverlayWindowSettingsLoaded(
                 lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
@@ -88,10 +92,8 @@ class GlobalDependencyInjector extends StatelessWidget {
           ),
         ],
         child: LyricStateListener(
-          child: MessageFromOverlayReceiver(
-            child: OverlayWindowSettings(
-              child: child,
-            ),
+          child: OverlayWindowSettings(
+            child: child,
           ),
         ),
       ),
