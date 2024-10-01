@@ -1,14 +1,14 @@
 import 'package:isar/isar.dart';
 
 import '../../../models/lyric_model.dart';
-import '../../../services/db_helper.dart';
+import '../../../repos/local/local_db_repo.dart';
 
 class LocalDbService {
   LocalDbService({
-    required DBHelper dbHelper,
-  }) : _dbHelper = dbHelper;
+    required LocalDbRepo localDB,
+  }) : _localDB = localDB;
 
-  final DBHelper _dbHelper;
+  final LocalDbRepo _localDB;
 
   Future<void> saveLrc({
     required String title,
@@ -20,33 +20,33 @@ class LocalDbService {
       ..title = title
       ..artist = artist
       ..content = content;
-    await _dbHelper.putLyric(lrcDB);
+    await _localDB.putLyric(lrcDB);
   }
 
   Future<LrcDB?>? getLyric(String id) {
     final numId = int.tryParse(id);
     if (numId == null) return Future.value();
 
-    return _dbHelper.getLyricByID(numId);
+    return _localDB.getLyricByID(numId);
   }
 
   Future<List<LrcDB>> getAllLyrics() {
-    return _dbHelper.allRawLyrics;
+    return _localDB.allRawLyrics;
   }
 
   Future<List<LrcDB>> searchLyrics(String searchTerm) {
-    return _dbHelper.search(searchTerm);
+    return _localDB.search(searchTerm);
   }
 
   Future<Id> updateLrc(LrcDB lrcDb) {
-    return _dbHelper.updateLyric(lrcDb);
+    return _localDB.updateLyric(lrcDb);
   }
 
   Future<void> deleteLrc(LrcDB lrcDb) {
-    return _dbHelper.deleteLyric(lrcDb);
+    return _localDB.deleteLyric(lrcDb);
   }
 
   Future<void> deleteAllLyrics() {
-    return _dbHelper.deleteAllLyrics();
+    return _localDB.deleteAllLyrics();
   }
 }

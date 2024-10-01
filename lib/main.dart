@@ -10,10 +10,10 @@ import 'features/overlay_window/overlay_window.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'models/lyric_model.dart';
+import 'repos/local/local_db_repo.dart';
 import 'repos/local/preference_repo.dart';
 import 'service/permissions/permission_service.dart';
 import 'service/preference/preference_service.dart';
-import 'services/db_helper.dart';
 import 'services/lrclib/repo/lrclib_repository.dart';
 
 Future<void> main() async {
@@ -29,7 +29,7 @@ Future<void> main() async {
   runApp(MultiRepositoryProvider(
     providers: [
       RepositoryProvider(
-        create: (context) => DBHelper(isar),
+        create: (context) => LocalDbRepo(isar),
       ),
       RepositoryProvider(
         create: (context) => LrcLibRepository(),

@@ -1,31 +1,10 @@
 import 'package:isar/isar.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../models/lyric_model.dart';
-import '../utils/logger.dart';
+import '../../models/lyric_model.dart';
+import '../../utils/logger.dart';
 
-part 'db_helper.g.dart';
-
-@Riverpod(keepAlive: true)
-DBHelper dbHelper(DbHelperRef ref) => throw UnimplementedError();
-
-@riverpod
-FutureOr<List<LrcDB>> allRawLyrics(AllRawLyricsRef ref) {
-  return ref.watch(dbHelperProvider).allRawLyrics;
-}
-
-@riverpod
-FutureOr<LrcDB?> lyricByID(LyricByIDRef ref, {required int id}) {
-  return ref.watch(dbHelperProvider).getLyricByID(id);
-}
-
-@riverpod
-FutureOr<bool> lyricExists(LyricExistsRef ref, {required String fileName}) {
-  return ref.watch(dbHelperProvider).fileNameExists(fileName);
-}
-
-class DBHelper {
-  DBHelper(Isar isar) {
+class LocalDbRepo {
+  LocalDbRepo(Isar isar) {
     _isar = isar;
   }
 

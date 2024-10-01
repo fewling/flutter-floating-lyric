@@ -5,7 +5,7 @@ import 'package:isar/isar.dart';
 import '../../../models/lrc.dart';
 import '../../../models/lrc_builder.dart';
 import '../../../models/lyric_model.dart';
-import '../../../services/db_helper.dart';
+import '../../../repos/local/local_db_repo.dart';
 import '../../../services/event_channels/media_states/media_state.dart';
 import '../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
@@ -19,9 +19,9 @@ part 'lyric_state_listener_state.dart';
 
 class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateListenerState> {
   LyricStateListenerBloc({
-    required DBHelper dbHelper,
+    required LocalDbRepo localDB,
     required LrcLibRepository lyricRepository,
-  })  : _dbHelper = dbHelper,
+  })  : _localDB = localDB,
         _lyricRepository = lyricRepository,
         super(const LyricStateListenerState()) {
     on<LyricStateListenerEvent>(
@@ -34,7 +34,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   }
 
   // TODO(@fewling): replace with db service
-  final DBHelper _dbHelper;
+  final LocalDbRepo _localDB;
   final LrcLibRepository _lyricRepository;
 
   Future<void> _onLoaded(LyricStateListenerLoaded event, Emitter<LyricStateListenerState> emit) async {
@@ -67,7 +67,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               line2: null,
             ));
 
-            final lrcDB = await _dbHelper.getLyric(title, artist);
+            final lrcDB = await _localDB.getLyric(title, artist);
             final isLyricFound = lrcDB != null;
             if (isLyricFound) {
               logger.t('Lyric found in db: ${lrcDB.fileName}');
@@ -160,7 +160,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       final id = await saveLyric(response);
       if (id < 0) return false;
 
-      final lrcDB = await _dbHelper.getLyricByID(id);
+      final lrcDB = await _localDB.getLyricByID(id);
       emit(state.copyWith(
         currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
       ));
@@ -185,7 +185,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       ..artist = lrcResponse.artistName
       ..content = content;
 
-    final id = await _dbHelper.putLyric(lrcDB);
+    final id = await _localDB.putLyric(lrcDB);
     return id;
   }
 }

@@ -15,11 +15,11 @@ import '../../features/lyric_list/lyric_list_screen.dart';
 import '../../features/permissions/bloc/permission_bloc.dart';
 import '../../features/permissions/permission_screen.dart';
 import '../../features/settings/settings_screen.dart';
+import '../../repos/local/local_db_repo.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/lrc/lrc_process_service.dart';
 import '../../service/lrc_lib/lrc_lib_service.dart';
 import '../../service/permissions/permission_service.dart';
-import '../../services/db_helper.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
 import 'app_routes_observer.dart';
 
@@ -66,13 +66,13 @@ class AppRouter {
                 create: (context) => HomeBloc(
                   permissionService: PermissionService(),
                   lrcProcessorService: LrcProcessorService(
-                    dbHelper: context.read<DBHelper>(),
+                    localDB: context.read<LocalDbRepo>(),
                   ),
                   lrcLibService: LrcLibService(
                     lrcLibRepository: context.read<LrcLibRepository>(),
                   ),
                   localDbService: LocalDbService(
-                    dbHelper: context.read<DBHelper>(),
+                    localDB: context.read<LocalDbRepo>(),
                   ),
                 ),
                 child: const HomeScreen(),
@@ -92,7 +92,7 @@ class AppRouter {
                       return BlocProvider(
                         create: (context) => LyricDetailBloc(
                           localDbService: LocalDbService(
-                            dbHelper: context.read<DBHelper>(),
+                            localDB: context.read<LocalDbRepo>(),
                           ),
                         )..add(LyricDetailLoaded(id: id)),
                         child: const LyricDetailScreen(),
