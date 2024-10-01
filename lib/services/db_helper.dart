@@ -56,6 +56,21 @@ class DBHelper {
     return lyric;
   }
 
+  Future<List<LrcDB>> search(String searchTerm) async {
+    final foundLyrics = <LrcDB>{};
+
+    final titleF = _isar.lrcDBs.where().filter().titleContains(searchTerm, caseSensitive: false).findAll();
+    final artistF = _isar.lrcDBs.where().filter().artistContains(searchTerm, caseSensitive: false).findAll();
+
+    final results = await Future.wait([titleF, artistF]);
+
+    for (final result in results) {
+      foundLyrics.addAll(result);
+    }
+
+    return foundLyrics.toList();
+  }
+
   Future<List<Id>> addBatchLyrics(List<LrcDB> lyrics) {
     logger.i('Adding batch lyrics: ${lyrics.length} lyrics');
     return _isar.writeTxn(() => _isar.lrcDBs.putAll(lyrics)).onError((error, stackTrace) {

@@ -34,7 +34,7 @@ class LrcBuilder {
         final text = line.replaceAll(timeExp, '').trim();
         lines.add(LrcLine(
           time: time,
-          line: text,
+          content: text,
         ));
       } else if (metadataExp.hasMatch(line)) {
         final match = metadataExp.firstMatch(line)!;

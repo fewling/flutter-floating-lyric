@@ -26,6 +26,7 @@ analyzer:
 
 linter:
   rules:
+    prefer_foreach: ignore
     # This list is derived from the list of all available lints located at
     # https://github.com/dart-lang/linter/blob/master/example/all.yaml
     - always_declare_return_types

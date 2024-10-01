@@ -23,7 +23,7 @@ class Lrc with _$Lrc {
 class LrcLine with _$LrcLine {
   const factory LrcLine({
     required Duration time,
-    required String line,
+    required String content,
   }) = _LrcLine;
 
   factory LrcLine.fromJson(Map<String, dynamic> json) => _$LrcLineFromJson(json);
