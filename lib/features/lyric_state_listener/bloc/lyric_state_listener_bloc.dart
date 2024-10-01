@@ -1,11 +1,10 @@
+import 'package:floating_lyric/service/db/local/local_db_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/lrc.dart';
 import '../../../models/lrc_builder.dart';
-import '../../../models/lyric_model.dart';
-import '../../../repos/local/local_db_repo.dart';
 import '../../../services/event_channels/media_states/media_state.dart';
 import '../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
@@ -19,9 +18,9 @@ part 'lyric_state_listener_state.dart';
 
 class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateListenerState> {
   LyricStateListenerBloc({
-    required LocalDbRepo localDB,
+    required LocalDbService localDbService,
     required LrcLibRepository lyricRepository,
-  })  : _localDB = localDB,
+  })  : _localDbService = localDbService,
         _lyricRepository = lyricRepository,
         super(const LyricStateListenerState()) {
     on<LyricStateListenerEvent>(
@@ -33,8 +32,9 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     );
   }
 
-  // TODO(@fewling): replace with db service
-  final LocalDbRepo _localDB;
+  final LocalDbService _localDbService;
+
+  // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
 
   Future<void> _onLoaded(LyricStateListenerLoaded event, Emitter<LyricStateListenerState> emit) async {
@@ -67,7 +67,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               line2: null,
             ));
 
-            final lrcDB = await _localDB.getLyric(title, artist);
+            final lrcDB = await _localDbService.getLyricBySongInfo(title, artist);
             final isLyricFound = lrcDB != null;
             if (isLyricFound) {
               logger.t('Lyric found in db: ${lrcDB.fileName}');
@@ -160,7 +160,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       final id = await saveLyric(response);
       if (id < 0) return false;
 
-      final lrcDB = await _localDB.getLyricByID(id);
+      final lrcDB = await _localDbService.getLyricById(id.toString());
       emit(state.copyWith(
         currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
       ));
@@ -179,13 +179,11 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     final content = lrcResponse.syncedLyrics?.toString() ?? lrcResponse.plainLyrics?.toString() ?? '';
     if (content.isEmpty) return -1;
 
-    final lrcDB = LrcDB()
-      ..fileName = '${lrcResponse.trackName} - ${lrcResponse.artistName}'
-      ..title = lrcResponse.trackName
-      ..artist = lrcResponse.artistName
-      ..content = content;
-
-    final id = await _localDB.putLyric(lrcDB);
+    final id = await _localDbService.saveLrc(
+      title: lrcResponse.trackName,
+      artist: lrcResponse.artistName,
+      content: content,
+    );
     return id;
   }
 }

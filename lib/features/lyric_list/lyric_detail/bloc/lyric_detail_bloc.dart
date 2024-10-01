@@ -28,7 +28,7 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
   Future<void> _onLoaded(LyricDetailLoaded event, Emitter<LyricDetailState> emit) async {
     if (event.id == null) return;
 
-    final lrc = await _localDbService.getLyric(event.id!);
+    final lrc = await _localDbService.getLyricById(event.id!);
     emit(state.copyWith(
       lrcDB: lrc,
       originalContent: lrc?.content ?? '',
