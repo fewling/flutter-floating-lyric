@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/overlay_settings_model.dart';
+import '../../../service/message_channels/to_overlay_message_service.dart';
 import '../../../service/overlay_window/overlay_window_service.dart';
-import '../../../services/message_channels/to_overlay_message_service.dart';
 import '../../../utils/extensions/custom_extensions.dart';
 import '../../home/home_screen.dart';
 import '../../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
