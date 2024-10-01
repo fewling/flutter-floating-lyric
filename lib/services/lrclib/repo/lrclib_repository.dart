@@ -2,33 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../utils/logger.dart';
 import '../data/lrclib_response.dart';
-
-part 'lrclib_repository.g.dart';
-
-@riverpod
-LrcLibRepository lrcLibRepository(LrcLibRepositoryRef ref) {
-  return LrcLibRepository();
-}
-
-@riverpod
-FutureOr<LrcLibResponse> lyric(
-  LyricRef ref, {
-  required String trackName,
-  required String artistName,
-  required String albumName,
-  required int duration,
-}) {
-  return ref.watch(lrcLibRepositoryProvider).getLyric(
-        trackName: trackName,
-        artistName: artistName,
-        albumName: albumName,
-        duration: duration,
-      );
-}
 
 class LrcLibRepository {
   static const _baseUrl = 'https://lrclib.net/api';
