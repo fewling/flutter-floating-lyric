@@ -5,17 +5,17 @@ import 'package:flutter/foundation.dart';
 
 import '../../models/lrc_builder.dart';
 import '../../models/lyric_model.dart';
-import '../../services/db_helper.dart';
+import '../../repos/local/local_db_repo.dart';
 import '../../utils/logger.dart';
 
 class LrcProcessorService {
   LrcProcessorService({
-    required DBHelper dbHelper,
+    required LocalDbRepo localDB,
   }) {
-    _dbHelper = dbHelper;
+    _localDB = localDB;
   }
 
-  late final DBHelper _dbHelper;
+  late final LocalDbRepo _localDB;
 
   /// Returns a list of failed files if any
   Future<List<PlatformFile>> pickLrcFiles() async {
@@ -40,7 +40,7 @@ class LrcProcessorService {
         final result = await compute(processLrcFiles, batch);
         final lyrics = result.success;
         failed.addAll(result.failed);
-        final ids = await _dbHelper.addBatchLyrics(lyrics);
+        final ids = await _localDB.addBatchLyrics(lyrics);
         logger.i('inserted ids: $ids');
         batch.clear();
       }
