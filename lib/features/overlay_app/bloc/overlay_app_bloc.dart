@@ -18,18 +18,16 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
     );
   }
 
-  void _onStarted(OverlayAppStarted event, Emitter<OverlayAppState> emit) {
-    emit.forEach(
-      FlutterOverlayWindow.overlayListener,
-      onData: (data) {
-        try {
-          final json = jsonDecode(data.toString());
-          final state = OverlayAppState.fromJson(json as Map<String, dynamic>);
-          return state;
-        } catch (e) {
-          return const OverlayAppState();
-        }
-      },
-    );
-  }
+  void _onStarted(OverlayAppStarted event, Emitter<OverlayAppState> emit) => emit.forEach(
+        FlutterOverlayWindow.overlayListener,
+        onData: (data) {
+          try {
+            final json = jsonDecode(data.toString());
+            final state = OverlayAppState.fromJson(json as Map<String, dynamic>);
+            return state;
+          } catch (e) {
+            return const OverlayAppState();
+          }
+        },
+      );
 }

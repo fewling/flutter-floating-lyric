@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../configs/routes/app_router.dart';
 import '../device_info/device_info_listener.dart';
-import '../lyric_state_listener/lyric_state_listener.dart';
 
 part 'base_drawer_routes.dart';
 
@@ -42,9 +41,7 @@ class BaseShell extends StatelessWidget {
         ),
       ),
       body: DeviceInfoListener(
-        child: LyricStateListener(
-          child: child,
-        ),
+        child: child,
       ),
     );
   }

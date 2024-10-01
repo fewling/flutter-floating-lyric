@@ -39,6 +39,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         SaveTitleAltRequested() => _onSaveTitleAltRequested(event, emit),
         SaveArtistAltRequested() => _onSaveArtistAltRequested(event, emit),
         SaveAlbumAltRequested() => _onSaveAlbumAltRequested(event, emit),
+        MediaStateChanged() => _onMediaStateChanged(event, emit),
       },
     );
   }
@@ -78,11 +79,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     emit(state.copyWith(
       isProcessingFiles: false,
-      mediaState: state.mediaState?.copyWith(
-        title: '',
-        artist: '',
-        album: '',
-      ),
       failedFiles: failed,
     ));
   }
@@ -148,5 +144,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onSaveAlbumAltRequested(SaveAlbumAltRequested event, Emitter<HomeState> emit) {
     emit(state.copyWith(albumAlt: event.album, isEditingAlbum: false));
+  }
+
+  void _onMediaStateChanged(MediaStateChanged event, Emitter<HomeState> emit) {
+    emit(state.copyWith(mediaState: event.mediaState));
   }
 }
