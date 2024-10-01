@@ -5,9 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repos/local/local_db_repo.dart';
 import '../../repos/local/preference_repo.dart';
+import '../../service/db/local/local_db_service.dart';
+import '../../service/overlay_window/overlay_window_service.dart';
 import '../../service/preference/preference_service.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
 import '../app_info/bloc/app_info_bloc.dart';
+import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
+import '../overlay_window/bloc/overlay_window_bloc.dart';
+import '../overlay_window/overlay_window_listener.dart';
 import '../permissions/bloc/permission_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 
@@ -41,19 +46,49 @@ class GlobalDependencyInjector extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider.value(value: permissionBloc),
           BlocProvider(
             create: (context) => PreferenceBloc(
-              spService: PreferenceService(
-                spRepo: context.read<PreferenceRepo>(),
-              ),
+              spService: PreferenceService(spRepo: context.read<PreferenceRepo>()),
             )..add(const PreferenceEventLoad()),
           ),
           BlocProvider(
             create: (context) => AppInfoBloc()..add(const AppInfoLoaded()),
           ),
-          BlocProvider.value(value: permissionBloc),
+          BlocProvider(
+            create: (context) => LyricStateListenerBloc(
+              localDbService: LocalDbService(localDBRepo: context.read<LocalDbRepo>()),
+              lyricRepository: context.read<LrcLibRepository>(),
+            )..add(LyricStateListenerLoaded(
+                isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
+                showLine2: context.read<PreferenceBloc>().state.showLine2,
+              )),
+          ),
         ],
-        child: child,
+        child: Builder(builder: (context) {
+          final ratio = MediaQuery.of(context).devicePixelRatio;
+          final pref = context.watch<PreferenceBloc>().state;
+
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => OverlayWindowBloc(
+                  overlayWindowService: OverlayWindowService(),
+                  devicePixelRatio: ratio,
+                )..add(OverlayWindowLoaded(
+                    opacity: pref.opacity,
+                    color: pref.color,
+                    fontSize: pref.fontSize,
+                    showProgressBar: pref.showProgressBar,
+                    showMillis: pref.showMilliseconds,
+                  )),
+              ),
+            ],
+            child: OverlayWindowListener(
+              child: child,
+            ),
+          );
+        }),
       ),
     );
   }

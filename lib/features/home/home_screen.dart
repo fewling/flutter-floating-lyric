@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
@@ -288,7 +287,7 @@ class WindowSettingContent extends StatelessWidget {
                 ),
                 actions: [
                   ElevatedButton(
-                    onPressed: dialogCtx.pop,
+                    onPressed: () => Navigator.of(dialogCtx).pop(),
                     child: const Text('Got it'),
                   ),
                 ],
@@ -671,33 +670,6 @@ class OnlineLyricContent extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _showLyricFetchResult(BuildContext context, int id) {
-    context.pop();
-    final colorScheme = Theme.of(context).colorScheme;
-
-    if (id >= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Lyric saved successfully',
-            style: TextStyle(color: colorScheme.onSecondary),
-          ),
-          backgroundColor: colorScheme.secondary,
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'Error saving lyric',
-            style: TextStyle(color: colorScheme.onError),
-          ),
-          backgroundColor: colorScheme.error,
-        ),
-      );
-    }
   }
 }
 
