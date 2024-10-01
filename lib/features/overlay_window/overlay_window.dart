@@ -39,8 +39,8 @@ class _OverlayWindowState extends State<OverlayWindow> {
     }
 
     // 0 ~ 100
-    final opacity = (_state!.opacity ?? 50).toInt();
-    final foregroundColor = Color(_state!.color ?? 0);
+    final opacity = (_state!.settings.opacity ?? 50).toInt();
+    final foregroundColor = Color(_state!.settings.color ?? 0);
 
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(opacity / 100),
@@ -61,7 +61,7 @@ class _OverlayWindowState extends State<OverlayWindow> {
               children: [
                 Expanded(
                   child: Text(
-                    _state?.title ?? '',
+                    _state?.settings.title ?? '',
                     style: TextStyle(color: foregroundColor),
                   ),
                 ),
@@ -78,37 +78,37 @@ class _OverlayWindowState extends State<OverlayWindow> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                _state?.line1 ?? '',
+                _state?.settings.line1 ?? '',
                 style: TextStyle(
                   color: foregroundColor,
-                  fontSize: _state?.fontSize,
+                  fontSize: _state?.settings.fontSize,
                 ),
               ),
             ),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                _state?.line2 ?? '',
+                _state?.settings.line2 ?? '',
                 style: TextStyle(
                   color: foregroundColor,
-                  fontSize: _state?.fontSize,
+                  fontSize: _state?.settings.fontSize,
                 ),
               ),
             ),
             Row(
               children: [
                 Text(
-                  _state?.positionLeftLabel ?? '',
+                  _state?.settings.positionLeftLabel ?? '',
                   style: TextStyle(color: foregroundColor),
                 ),
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: _state?.position ?? 0,
+                    value: _state?.settings.position ?? 0,
                     color: foregroundColor,
                   ),
                 ),
                 Text(
-                  _state?.positionRightLabel ?? '',
+                  _state?.settings.positionRightLabel ?? '',
                   style: TextStyle(color: foregroundColor),
                 ),
               ].separatedBy(const SizedBox(width: 8)).toList(),

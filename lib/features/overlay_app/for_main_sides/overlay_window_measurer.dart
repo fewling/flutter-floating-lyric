@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../utils/extensions/custom_extensions.dart';
-import 'bloc/overlay_window_bloc.dart';
+import '../../../utils/extensions/custom_extensions.dart';
+import '../../overlay_window/bloc/overlay_window_bloc.dart';
 
 final overlayWindowMeasureKey = GlobalKey();
 
@@ -12,7 +12,7 @@ class OverlayWindowMeasurer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<OverlayWindowBloc>().state;
+    final windowSettings = context.watch<OverlayWindowBloc>().state.settings;
 
     return Padding(
       key: overlayWindowMeasureKey,
@@ -23,7 +23,7 @@ class OverlayWindowMeasurer extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(state.title ?? 'No title'),
+                child: Text(windowSettings.title ?? 'No title'),
               ),
               IconButton(
                 onPressed: () {},
@@ -38,33 +38,33 @@ class OverlayWindowMeasurer extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              state.line1 ?? '...',
+              windowSettings.line1 ?? '...',
               style: TextStyle(
-                fontSize: state.fontSize,
+                fontSize: windowSettings.fontSize,
               ),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              state.line2 ?? '...',
+              windowSettings.line2 ?? '...',
               style: TextStyle(
-                fontSize: state.fontSize,
+                fontSize: windowSettings.fontSize,
               ),
             ),
           ),
           Row(
             children: [
               Text(
-                state.positionLeftLabel ?? '...',
+                windowSettings.positionLeftLabel ?? '...',
               ),
               Expanded(
                 child: LinearProgressIndicator(
-                  value: state.position ?? 0,
+                  value: windowSettings.position ?? 0,
                 ),
               ),
               Text(
-                state.positionRightLabel ?? '...',
+                windowSettings.positionRightLabel ?? '...',
               ),
             ].separatedBy(const SizedBox(width: 8)).toList(),
           )

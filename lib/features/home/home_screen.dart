@@ -4,9 +4,9 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
+import '../overlay_app/for_main_sides/overlay_window_listener.dart';
+import '../overlay_app/for_main_sides/overlay_window_measurer.dart';
 import '../overlay_window/bloc/overlay_window_bloc.dart';
-import '../overlay_window/overlay_window_listener.dart';
-import '../overlay_window/overlay_window_measurer.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/home_bloc.dart';
 
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
     );
 
     final visibleFloatingWindow = context.select<OverlayWindowBloc, bool>(
-      (bloc) => bloc.state.isWindowVisible,
+      (bloc) => bloc.state.settings.isWindowVisible,
     );
 
     return Scaffold(
@@ -182,7 +182,7 @@ class WindowSettingContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final visibleFloatingWindow = context.select<OverlayWindowBloc, bool>(
-      (bloc) => bloc.state.isWindowVisible,
+      (bloc) => bloc.state.settings.isWindowVisible,
     );
 
     return Column(
