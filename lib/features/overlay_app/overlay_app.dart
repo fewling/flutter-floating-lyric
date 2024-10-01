@@ -25,18 +25,31 @@ class OverlayApp extends StatelessWidget {
         final windowSettings = context.select(
           (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
         );
+        final appColor = windowSettings?.appColorScheme;
 
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.dark(),
-          home: MessageFromMainReceiver(
-            child: windowSettings == null
-                ? const LoadingWidget()
-                : Scaffold(
-                    backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
-                    body: OverlayWindow(settings: windowSettings),
-                  ),
+          theme: ThemeData(
+            useMaterial3: true,
+            colorSchemeSeed: appColor == null ? null : Color(appColor),
+            brightness: (windowSettings?.isLight ?? true) ? Brightness.light : Brightness.dark,
           ),
+          home: Builder(builder: (context) {
+            return MessageFromMainReceiver(
+              child: windowSettings == null
+                  ? const LoadingWidget()
+                  : Scaffold(
+                      // backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
+                      backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(
+                            (windowSettings.opacity?.toInt() ?? 50) / 100,
+                          ),
+                      body: OverlayWindow(
+                        settings: windowSettings,
+                        // debugText: 'AppColor: $appColor',
+                      ),
+                    ),
+            );
+          }),
         );
       }),
     );

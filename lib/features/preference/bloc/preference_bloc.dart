@@ -65,9 +65,9 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
   }
 
   Future<void> _onAppColorSchemeUpdated(AppColorSchemeUpdated event, Emitter<PreferenceState> emit) async {
-    final isSuccess = await _spService.updateAppColorScheme(event.colorValue);
+    final isSuccess = await _spService.updateAppColorScheme(event.color.value);
     if (isSuccess) {
-      emit(state.copyWith(appColorScheme: event.colorValue));
+      emit(state.copyWith(appColorScheme: event.color.value));
     }
   }
 

@@ -46,11 +46,16 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
     final newState = state.copyWith(
       settings: state.settings.copyWith(
+        // pref:
         color: pref.color,
         fontSize: pref.fontSize.toDouble(),
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,
         showProgressBar: pref.showProgressBar,
+        isLight: pref.isLight,
+        appColorScheme: pref.appColorScheme,
+
+        // lyric:
         line1: lyric.line1,
         line2: lyric.line2,
         position: lyric.mediaState?.position,
@@ -79,6 +84,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,
         showProgressBar: pref.showProgressBar,
+        isLight: pref.isLight,
+        appColorScheme: pref.appColorScheme,
       ),
     );
 
