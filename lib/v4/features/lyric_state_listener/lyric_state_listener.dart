@@ -23,6 +23,7 @@ class LyricStateListener extends ConsumerWidget {
         lyricRepository: context.read<LrcLibRepository>(),
       )..add(LyricStateListenerLoaded(
           isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
+          showLine2: context.read<PreferenceBloc>().state.showLine2,
         )),
       child: Builder(
         builder: (context) => MultiBlocListener(

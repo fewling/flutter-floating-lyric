@@ -5,9 +5,11 @@ sealed class LyricStateListenerEvent {}
 final class LyricStateListenerLoaded extends LyricStateListenerEvent {
   LyricStateListenerLoaded({
     required this.isAutoFetch,
+    required this.showLine2,
   });
 
   final bool isAutoFetch;
+  final bool showLine2;
 }
 
 final class AutoFetchUpdated extends LyricStateListenerEvent {
@@ -16,4 +18,12 @@ final class AutoFetchUpdated extends LyricStateListenerEvent {
   });
 
   final bool isAutoFetch;
+}
+
+final class ShowLine2Updated extends LyricStateListenerEvent {
+  ShowLine2Updated({
+    required this.showLine2,
+  });
+
+  final bool showLine2;
 }

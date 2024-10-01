@@ -28,6 +28,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       (event, emit) => switch (event) {
         LyricStateListenerLoaded() => _onLoaded(event, emit),
         AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
+        ShowLine2Updated() => _onShowLine2Updated(event, emit),
       },
     );
   }
@@ -39,6 +40,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   Future<void> _onLoaded(LyricStateListenerLoaded event, Emitter<LyricStateListenerState> emit) async {
     emit(state.copyWith(
       isAutoFetch: event.isAutoFetch,
+      showLine2: event.showLine2,
     ));
 
     await emit.onEach(
@@ -118,6 +120,12 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   void _onAutoFetchUpdated(AutoFetchUpdated event, Emitter<LyricStateListenerState> emit) {
     emit(state.copyWith(
       isAutoFetch: event.isAutoFetch,
+    ));
+  }
+
+  void _onShowLine2Updated(ShowLine2Updated event, Emitter<LyricStateListenerState> emit) {
+    emit(state.copyWith(
+      showLine2: event.showLine2,
     ));
   }
 

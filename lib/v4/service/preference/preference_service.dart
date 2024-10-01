@@ -25,6 +25,8 @@ class PreferenceService {
 
   bool get autoFetchOnline => _spRepo.autoFetchOnline;
 
+  bool get showLine2 => _spRepo.showLine2;
+
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) => _spRepo.updateColor(color.value);
@@ -40,4 +42,6 @@ class PreferenceService {
   Future<bool> updateFontSize(int fontSize) => _spRepo.updateFontSize(fontSize);
 
   Future<bool> toggleAutoFetchOnline(bool value) => _spRepo.toggleAutoFetchOnline(value);
+
+  Future<bool> toggleShowLine2(bool value) => _spRepo.toggleShowLine2(value);
 }
