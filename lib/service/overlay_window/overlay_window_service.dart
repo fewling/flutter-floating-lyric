@@ -1,20 +1,17 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
-import '../../features/overlay_window/bloc/overlay_window_bloc.dart';
-
 class OverlayWindowService {
+  OverlayWindowService({
+    required this.devicePixelRatio,
+  });
+
+  final double devicePixelRatio;
+
   final _isActiveController = StreamController<bool>.broadcast();
 
   Stream<bool> get isActive => _isActiveController.stream;
-
-  void sendData(OverlayWindowState state) {
-    FlutterOverlayWindow.shareData(
-      jsonEncode(state.toJson()),
-    );
-  }
 
   Future<void> toggle({required int height}) async {
     final isActive = await FlutterOverlayWindow.isActive();
@@ -22,7 +19,7 @@ class OverlayWindowService {
       await FlutterOverlayWindow.closeOverlay();
     } else {
       await FlutterOverlayWindow.showOverlay(
-        height: height,
+        height: (height * devicePixelRatio).ceil() + 2,
         enableDrag: true,
         positionGravity: PositionGravity.auto,
       );

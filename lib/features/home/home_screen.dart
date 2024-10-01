@@ -4,11 +4,13 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
-import '../overlay_app/for_main_sides/overlay_window_listener.dart';
-import '../overlay_app/for_main_sides/overlay_window_measurer.dart';
-import '../overlay_window/bloc/overlay_window_bloc.dart';
+import '../../widgets/overlay_window.dart';
+import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
+import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/home_bloc.dart';
+
+final homeScreenOverlayWindowMeasureKey = GlobalKey();
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,55 +25,61 @@ class HomeScreen extends StatelessWidget {
       (bloc) => bloc.state.mediaState?.isPlaying ?? false,
     );
 
-    final visibleFloatingWindow = context.select<OverlayWindowBloc, bool>(
-      (bloc) => bloc.state.settings.isWindowVisible,
+    final visibleFloatingWindow = context.select<OverlayWindowSettingsBloc, bool>(
+      (bloc) => bloc.state.isWindowVisible,
     );
 
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.read<OverlayWindowBloc>().add(const OverlayWindowToggled()),
-        child: const Icon(Icons.bug_report_outlined),
-      ),
-      body: Stack(
-        children: [
-          const Opacity(
-            opacity: 0,
-            child: OverlayWindowListener(
-              child: OverlayWindowMeasurer(),
+    return BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+      listenWhen: (previous, current) => previous != current,
+      listener: (context, state) {
+        context.read<HomeBloc>().add(MediaStateChanged(state.mediaState));
+      },
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled()),
+          child: const Icon(Icons.bug_report_outlined),
+        ),
+        body: Stack(
+          children: [
+            Opacity(
+              opacity: 1,
+              child: OverlayWindow(
+                key: homeScreenOverlayWindowMeasureKey,
+                settings: context.select((OverlayWindowSettingsBloc bloc) => bloc.state.settings),
+              ),
             ),
-          ),
-          Stepper(
-            currentStep: currentIndex,
-            // onStepTapped: ref.watch(homeNotifierProvider.notifier).updateStep,
-            onStepTapped: (value) => context.read<HomeBloc>().add(StepTapped(value)),
-            controlsBuilder: (context, details) => const SizedBox(),
-            steps: [
-              Step(
-                isActive: currentIndex == 0,
-                state: isPlaying ? StepState.complete : StepState.indexed,
-                title: const MediaSettingTitle(),
-                content: const MediaSettingContent(),
-              ),
-              Step(
-                isActive: currentIndex == 1,
-                state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
-                title: const Text('Floating Window Settings'),
-                content: const WindowSettingContent(),
-              ),
-              Step(
-                isActive: currentIndex == 2,
-                title: const Text('Import Local .lrc Files'),
-                content: const LrcFormatContent(),
-              ),
-              Step(
-                isActive: currentIndex == 3,
-                title: const Text('Fetch Lyrics Online'),
-                content: const OnlineLyricContent(),
-                subtitle: const Text('Powered by lrclib (Experimental)'),
-              ),
-            ],
-          ),
-        ],
+            Stepper(
+              currentStep: currentIndex,
+              onStepTapped: (value) => context.read<HomeBloc>().add(StepTapped(value)),
+              controlsBuilder: (context, details) => const SizedBox(),
+              steps: [
+                Step(
+                  isActive: currentIndex == 0,
+                  state: isPlaying ? StepState.complete : StepState.indexed,
+                  title: const MediaSettingTitle(),
+                  content: const MediaSettingContent(),
+                ),
+                Step(
+                  isActive: currentIndex == 1,
+                  state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
+                  title: const Text('Floating Window Settings'),
+                  content: const WindowSettingContent(),
+                ),
+                Step(
+                  isActive: currentIndex == 2,
+                  title: const Text('Import Local .lrc Files'),
+                  content: const LrcFormatContent(),
+                ),
+                Step(
+                  isActive: currentIndex == 3,
+                  title: const Text('Fetch Lyrics Online'),
+                  content: const OnlineLyricContent(),
+                  subtitle: const Text('Powered by lrclib (Experimental)'),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -181,8 +189,8 @@ class WindowSettingContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visibleFloatingWindow = context.select<OverlayWindowBloc, bool>(
-      (bloc) => bloc.state.settings.isWindowVisible,
+    final visibleFloatingWindow = context.select<OverlayWindowSettingsBloc, bool>(
+      (bloc) => bloc.state.isWindowVisible,
     );
 
     return Column(
@@ -191,7 +199,7 @@ class WindowSettingContent extends StatelessWidget {
         SwitchListTile(
           title: const Text('Enable'),
           value: visibleFloatingWindow,
-          onChanged: (_) => context.read<OverlayWindowBloc>().add(const OverlayWindowToggled()),
+          onChanged: (_) => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled()),
         ),
         Builder(
           builder: (context) {

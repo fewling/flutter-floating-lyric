@@ -4,6 +4,12 @@ sealed class HomeEvent {
   const HomeEvent();
 }
 
+final class MediaStateChanged extends HomeEvent {
+  const MediaStateChanged(this.mediaState);
+
+  final MediaState? mediaState;
+}
+
 final class StepTapped extends HomeEvent {
   const StepTapped(this.index);
   final int index;
