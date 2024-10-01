@@ -5,8 +5,8 @@ import '../../../repos/local/local_db_repo.dart';
 
 class LocalDbService {
   LocalDbService({
-    required LocalDbRepo localDB,
-  }) : _localDB = localDB;
+    required LocalDbRepo localDBRepo,
+  }) : _localDB = localDBRepo;
 
   final LocalDbRepo _localDB;
 
@@ -20,7 +20,7 @@ class LocalDbService {
       ..title = title
       ..artist = artist
       ..content = content;
-    return await _localDB.putLyric(lrcDB);
+    return _localDB.putLyric(lrcDB);
   }
 
   Future<LrcDB?>? getLyricById(String id) {

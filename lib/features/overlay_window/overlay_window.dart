@@ -39,7 +39,7 @@ class _OverlayWindowState extends State<OverlayWindow> {
     if (_state == null) {
       // TODO(@fewling): Replace with a better loading indicator
       return Material(
-        child: Container(
+        child: ColoredBox(
           color: Colors.red.shade300,
           child: Center(
             child: Text(_debugText ?? 'No lyric state'),

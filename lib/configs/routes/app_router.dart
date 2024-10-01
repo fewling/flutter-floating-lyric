@@ -73,7 +73,7 @@ class AppRouter {
                     lrcLibRepository: context.read<LrcLibRepository>(),
                   ),
                   localDbService: LocalDbService(
-                    localDB: context.read<LocalDbRepo>(),
+                    localDBRepo: context.read<LocalDbRepo>(),
                   ),
                 ),
                 child: const HomeScreen(),
@@ -88,7 +88,7 @@ class AppRouter {
                   BlocProvider(
                     create: (context) => LyricListBloc(
                       localDbService: LocalDbService(
-                        localDB: context.read<LocalDbRepo>(),
+                        localDBRepo: context.read<LocalDbRepo>(),
                       ),
                       lrcProcessorService: LrcProcessorService(
                         localDB: context.read<LocalDbRepo>(),
@@ -107,7 +107,7 @@ class AppRouter {
                     return BlocProvider(
                       create: (context) => LyricDetailBloc(
                         localDbService: LocalDbService(
-                          localDB: context.read<LocalDbRepo>(),
+                          localDBRepo: context.read<LocalDbRepo>(),
                         ),
                       )..add(LyricDetailLoaded(id: id)),
                       child: const LyricDetailScreen(),
