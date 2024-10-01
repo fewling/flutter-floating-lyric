@@ -8,6 +8,7 @@ import '../../repos/local/preference_repo.dart';
 import '../../service/preference/preference_service.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
 import '../app_info/bloc/app_info_bloc.dart';
+import '../permissions/bloc/permission_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 
 class GlobalDependencyInjector extends StatelessWidget {
@@ -16,11 +17,13 @@ class GlobalDependencyInjector extends StatelessWidget {
     required this.child,
     required this.isar,
     required this.pref,
+    required this.permissionBloc,
   });
 
   final Widget child;
   final Isar isar;
   final SharedPreferences pref;
+  final PermissionBloc permissionBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,7 @@ class GlobalDependencyInjector extends StatelessWidget {
           BlocProvider(
             create: (context) => AppInfoBloc()..add(const AppInfoLoaded()),
           ),
+          BlocProvider.value(value: permissionBloc),
         ],
         child: child,
       ),
