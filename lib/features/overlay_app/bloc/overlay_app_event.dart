@@ -7,3 +7,7 @@ sealed class OverlayAppEvent {
 final class OverlayAppStarted extends OverlayAppEvent {
   const OverlayAppStarted();
 }
+
+final class CloseRequested extends OverlayAppEvent {
+  const CloseRequested();
+}
