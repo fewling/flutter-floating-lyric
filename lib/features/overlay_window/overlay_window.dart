@@ -1,9 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 
 import '../../utils/extensions/custom_extensions.dart';
+import '../overlay_app/bloc/overlay_app_bloc.dart';
 import 'bloc/overlay_window_bloc.dart';
 
 /// Must sync the UI with [OverlayWindowMeasurer]
@@ -19,30 +19,20 @@ class _OverlayWindowState extends State<OverlayWindow> {
   OverlayWindowState? _state;
 
   @override
-  void initState() {
-    super.initState();
-
-    FlutterOverlayWindow.overlayListener.listen((event) {
-      setState(() {
-        try {
-          final json = jsonDecode(event.toString());
-          _state = OverlayWindowState.fromJson(json as Map<String, dynamic>);
-        } catch (e) {
-          _debugText = e.toString();
-        }
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final debugText = context.watch<OverlayAppBloc>().state.debugText;
+
     if (_state == null) {
       // TODO(@fewling): Replace with a better loading indicator
       return Material(
         child: ColoredBox(
           color: Colors.red.shade300,
-          child: Center(
-            child: Text(_debugText ?? 'No lyric state'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(_debugText ?? 'No lyric state'),
+              Text(debugText, style: const TextStyle(color: Colors.white)),
+            ].separatedBy(const SizedBox(height: 8)).toList(),
           ),
         ),
       );
@@ -58,6 +48,10 @@ class _OverlayWindowState extends State<OverlayWindow> {
         padding: const EdgeInsets.all(4.0),
         child: Column(
           children: [
+            Text(
+              debugText,
+              style: TextStyle(color: foregroundColor),
+            ),
             if (_debugText != null)
               Text(
                 _debugText!,
