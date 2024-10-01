@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../models/lrc_builder.dart';
 import '../../models/lyric_model.dart';
 import '../../repos/local/local_db_repo.dart';
 import '../../utils/logger.dart';
+import '../../utils/lrc_builder.dart';
 
 class LrcProcessorService {
   LrcProcessorService({

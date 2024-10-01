@@ -3,13 +3,13 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/lrc.dart';
-import '../../../models/lrc_builder.dart';
 import '../../../service/db/local/local_db_service.dart';
 import '../../../services/event_channels/media_states/media_state.dart';
 import '../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
 import '../../../services/lrclib/repo/lrclib_repository.dart';
 import '../../../utils/logger.dart';
+import '../../../utils/lrc_builder.dart';
 
 part 'lyric_state_listener_bloc.freezed.dart';
 part 'lyric_state_listener_bloc.g.dart';
