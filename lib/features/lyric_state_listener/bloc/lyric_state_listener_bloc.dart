@@ -174,7 +174,6 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     }
   }
 
-  // TODO(@fewling): Replace with db service
   Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
     final content = lrcResponse.syncedLyrics?.toString() ?? lrcResponse.plainLyrics?.toString() ?? '';
     if (content.isEmpty) return -1;
