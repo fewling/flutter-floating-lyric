@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'configs/routes/app_router.dart';
 import 'features/global_dependency_injector/global_dependency_injector.dart';
-import 'features/overlay_window/overlay_window.dart';
+import 'features/overlay_app/overlay_app.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'models/lyric_model.dart';
@@ -41,13 +41,7 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 void overlayMain() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(
-    const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: OverlayWindow(),
-    ),
-  );
+  runApp(const OverlayApp());
 }
 
 class FloatingLyricApp extends StatelessWidget {
