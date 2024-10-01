@@ -1,10 +1,10 @@
 import 'package:file_picker/file_picker.dart';
-import 'package:floating_lyric/service/lrc/lrc_process_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/lyric_model.dart';
 import '../../../service/db/local/local_db_service.dart';
+import '../../../service/lrc/lrc_process_service.dart';
 
 part 'lyric_list_bloc.freezed.dart';
 part 'lyric_list_event.dart';
@@ -58,7 +58,7 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     emit(state.copyWith(lyrics: []));
   }
 
-  void _onImportLRCsRequested(ImportLRCsRequested event, Emitter<LyricListState> emit) async {
+  Future<void> _onImportLRCsRequested(ImportLRCsRequested event, Emitter<LyricListState> emit) async {
     final failed = await _lrcProcessorService.pickLrcFiles();
     emit(state.copyWith(failedImportFiles: failed));
   }

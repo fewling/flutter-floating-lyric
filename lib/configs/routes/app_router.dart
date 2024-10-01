@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/base/base_shell.dart';
 import '../../features/home/bloc/home_bloc.dart';
 import '../../features/home/home_screen.dart';
+import '../../features/lyric_list/bloc/lyric_list_bloc.dart';
 import '../../features/lyric_list/lyric_detail/bloc/lyric_detail_bloc.dart';
 import '../../features/lyric_list/lyric_detail/lyric_detail_screen.dart';
 import '../../features/lyric_list/lyric_list_screen.dart';
@@ -79,27 +80,42 @@ class AppRouter {
               ),
             ),
             GoRoute(
-                parentNavigatorKey: _shellKey,
-                path: AppRoute.localLyrics.path,
-                name: AppRoute.localLyrics.name,
-                builder: (context, state) => const LyricListScreen(),
-                routes: [
-                  GoRoute(
-                    path: AppRoute.localLyricDetail.path,
-                    name: AppRoute.localLyricDetail.name,
-                    builder: (context, state) {
-                      final id = state.pathParameters['id'];
-                      return BlocProvider(
-                        create: (context) => LyricDetailBloc(
-                          localDbService: LocalDbService(
-                            localDB: context.read<LocalDbRepo>(),
-                          ),
-                        )..add(LyricDetailLoaded(id: id)),
-                        child: const LyricDetailScreen(),
-                      );
-                    },
+              parentNavigatorKey: _shellKey,
+              path: AppRoute.localLyrics.path,
+              name: AppRoute.localLyrics.name,
+              builder: (context, state) => MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => LyricListBloc(
+                      localDbService: LocalDbService(
+                        localDB: context.read<LocalDbRepo>(),
+                      ),
+                      lrcProcessorService: LrcProcessorService(
+                        localDB: context.read<LocalDbRepo>(),
+                      ),
+                    )..add(const LyricListLoaded()),
                   ),
-                ]),
+                ],
+                child: const LyricListScreen(),
+              ),
+              routes: [
+                GoRoute(
+                  path: AppRoute.localLyricDetail.path,
+                  name: AppRoute.localLyricDetail.name,
+                  builder: (context, state) {
+                    final id = state.pathParameters['id'];
+                    return BlocProvider(
+                      create: (context) => LyricDetailBloc(
+                        localDbService: LocalDbService(
+                          localDB: context.read<LocalDbRepo>(),
+                        ),
+                      )..add(LyricDetailLoaded(id: id)),
+                      child: const LyricDetailScreen(),
+                    );
+                  },
+                ),
+              ],
+            ),
             GoRoute(
               parentNavigatorKey: _shellKey,
               path: AppRoute.settings.path,
