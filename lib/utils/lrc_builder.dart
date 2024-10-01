@@ -1,4 +1,4 @@
-import 'lrc.dart';
+import '../models/lrc.dart';
 
 class LrcBuilder {
   // Factory constructor to return the static instance
