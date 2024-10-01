@@ -1,3 +1,4 @@
+import 'package:floating_lyric/features/global_dependency_injector/global_dependency_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -5,16 +6,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'configs/routes/app_router.dart';
-import 'features/app_info/bloc/app_info_bloc.dart';
 import 'features/overlay_window/overlay_window.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'models/lyric_model.dart';
-import 'repos/local/local_db_repo.dart';
-import 'repos/local/preference_repo.dart';
 import 'service/permissions/permission_service.dart';
-import 'service/preference/preference_service.dart';
-import 'services/lrclib/repo/lrclib_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,34 +22,13 @@ Future<void> main() async {
   );
   final pref = await SharedPreferences.getInstance();
 
-  runApp(MultiRepositoryProvider(
-    providers: [
-      RepositoryProvider(
-        create: (context) => LocalDbRepo(isar),
-      ),
-      RepositoryProvider(
-        create: (context) => LrcLibRepository(),
-      ),
-      RepositoryProvider(
-        create: (context) => PreferenceRepo(sharedPreferences: pref),
-      ),
-    ],
-    child: MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => PreferenceBloc(
-            spService: PreferenceService(
-              spRepo: context.read<PreferenceRepo>(),
-            ),
-          )..add(const PreferenceEventLoad()),
-        ),
-        BlocProvider(
-          create: (context) => AppInfoBloc()..add(const AppInfoLoaded()),
-        ),
-      ],
+  runApp(
+    GlobalDependencyInjector(
+      isar: isar,
+      pref: pref,
       child: const FloatingLyricApp(),
     ),
-  ));
+  );
 }
 
 @pragma('vm:entry-point')
