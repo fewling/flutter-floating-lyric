@@ -10,7 +10,7 @@ class LocalDbService {
 
   final LocalDbRepo _localDB;
 
-  Future<void> saveLrc({
+  Future<int> saveLrc({
     required String title,
     required String artist,
     String? content,
@@ -20,14 +20,18 @@ class LocalDbService {
       ..title = title
       ..artist = artist
       ..content = content;
-    await _localDB.putLyric(lrcDB);
+    return await _localDB.putLyric(lrcDB);
   }
 
-  Future<LrcDB?>? getLyric(String id) {
+  Future<LrcDB?>? getLyricById(String id) {
     final numId = int.tryParse(id);
     if (numId == null) return Future.value();
 
     return _localDB.getLyricByID(numId);
+  }
+
+  Future<LrcDB?>? getLyricBySongInfo(String title, String artist) {
+    return _localDB.getLyric(title, artist);
   }
 
   Future<List<LrcDB>> getAllLyrics() {

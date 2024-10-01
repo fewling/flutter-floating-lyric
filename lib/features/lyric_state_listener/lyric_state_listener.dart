@@ -1,3 +1,4 @@
+import 'package:floating_lyric/service/db/local/local_db_service.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +19,9 @@ class LyricStateListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => LyricStateListenerBloc(
-        localDB: context.read<LocalDbRepo>(),
+        localDbService: LocalDbService(
+          localDB: context.read<LocalDbRepo>(),
+        ),
         lyricRepository: context.read<LrcLibRepository>(),
       )..add(LyricStateListenerLoaded(
           isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
