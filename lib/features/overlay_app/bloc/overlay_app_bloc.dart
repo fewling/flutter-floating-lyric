@@ -18,6 +18,7 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
       (event, emit) => switch (event) {
         OverlayAppStarted() => _onStarted(event, emit),
         CloseRequested() => _onCloseRequested(event, emit),
+        WindowTouched() => _onWindowTouched(event, emit),
       },
     );
   }
@@ -27,6 +28,14 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
   void _onStarted(OverlayAppStarted event, Emitter<OverlayAppState> emit) {}
 
   void _onCloseRequested(CloseRequested event, Emitter<OverlayAppState> emit) {
-    _toMainMessageService.sendMsg(const FromOverlayMsgModel(action: OverlayAction.close));
+    _toMainMessageService.sendMsg(const FromOverlayMsgModel(
+      action: OverlayAction.close,
+    ));
+  }
+
+  void _onWindowTouched(WindowTouched event, Emitter<OverlayAppState> emit) {
+    _toMainMessageService.sendMsg(const FromOverlayMsgModel(
+      action: OverlayAction.windowTouched,
+    ));
   }
 }

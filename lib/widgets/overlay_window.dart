@@ -23,18 +23,9 @@ class OverlayWindow extends StatelessWidget {
     return isLoading
         ? _OverlayLoadingIndicator(debugText: debugText)
         : _OverlayContent(
-            opacity: settings.opacity?.toInt() ?? 50,
             debugText: debugText,
-            // foregroundColor: settings.color == null ? null : Color(settings.color!),
-            foregroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
-            title: settings.title,
+            settings: settings,
             onCloseTap: onCloseTap,
-            line1: settings.line1,
-            lineFontSize: settings.fontSize,
-            line2: settings.line2,
-            positionLeftLabel: settings.positionLeftLabel,
-            position: settings.position,
-            positionRightLabel: settings.positionRightLabel,
           );
   }
 }
@@ -42,33 +33,22 @@ class OverlayWindow extends StatelessWidget {
 class _OverlayContent extends StatelessWidget {
   const _OverlayContent({
     super.key,
-    required this.opacity,
-    required this.debugText,
-    required this.foregroundColor,
-    required this.title,
+    required this.settings,
     required this.onCloseTap,
-    required this.line1,
-    required this.lineFontSize,
-    required this.line2,
-    required this.positionLeftLabel,
-    required this.position,
-    required this.positionRightLabel,
+    this.debugText,
   });
 
-  final int opacity;
+  final OverlaySettingsModel settings;
+
   final String? debugText;
-  final Color? foregroundColor;
-  final String? title;
   final void Function()? onCloseTap;
-  final String? line1;
-  final double? lineFontSize;
-  final String? line2;
-  final String? positionLeftLabel;
-  final double? position;
-  final String? positionRightLabel;
 
   @override
   Widget build(BuildContext context) {
+    final foregroundColor = settings.color == null ? null : Color(settings.color!);
+
+    final showLyricOnly = settings.showLyricOnly ?? false;
+
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: Column(
@@ -79,62 +59,64 @@ class _OverlayContent extends StatelessWidget {
               debugText!,
               style: TextStyle(color: foregroundColor),
             ),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title ?? '',
-                  style: TextStyle(color: foregroundColor),
+          if (!showLyricOnly)
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    settings.title ?? '',
+                    style: TextStyle(color: foregroundColor),
+                  ),
                 ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.remove, color: foregroundColor),
-              ),
-              IconButton(
-                onPressed: onCloseTap,
-                icon: Icon(Icons.close, color: foregroundColor),
-              ),
-            ],
-          ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.remove, color: foregroundColor),
+                ),
+                IconButton(
+                  onPressed: onCloseTap,
+                  icon: Icon(Icons.close, color: foregroundColor),
+                ),
+              ],
+            ),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              line1 ?? '',
+              settings.line1 ?? '',
               style: TextStyle(
                 color: foregroundColor,
-                fontSize: lineFontSize,
+                fontSize: settings.fontSize,
               ),
             ),
           ),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-              line2 ?? '',
+              settings.line2 ?? '',
               style: TextStyle(
                 color: foregroundColor,
-                fontSize: lineFontSize,
+                fontSize: settings.fontSize,
               ),
             ),
           ),
-          Row(
-            children: [
-              Text(
-                positionLeftLabel ?? '',
-                style: TextStyle(color: foregroundColor),
-              ),
-              Expanded(
-                child: LinearProgressIndicator(
-                  value: position ?? 0,
-                  color: foregroundColor,
+          if (!showLyricOnly)
+            Row(
+              children: [
+                Text(
+                  settings.positionLeftLabel ?? '',
+                  style: TextStyle(color: foregroundColor),
                 ),
-              ),
-              Text(
-                positionRightLabel ?? '',
-                style: TextStyle(color: foregroundColor),
-              ),
-            ].separatedBy(const SizedBox(width: 8)).toList(),
-          )
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: settings.position ?? 0,
+                    color: foregroundColor,
+                  ),
+                ),
+                Text(
+                  settings.positionRightLabel ?? '',
+                  style: TextStyle(color: foregroundColor),
+                ),
+              ].separatedBy(const SizedBox(width: 8)).toList(),
+            )
         ].separatedBy(const SizedBox(height: 4)).toList(),
       ),
     );

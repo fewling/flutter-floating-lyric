@@ -43,10 +43,12 @@ class HomeScreen extends StatelessWidget {
           children: [
             Opacity(
               opacity: 0,
-              child: OverlayWindow(
-                key: homeScreenOverlayWindowMeasureKey,
-                settings: context.select((OverlayWindowSettingsBloc bloc) => bloc.state.settings),
-                // debugText: 'AppColor: ${context.watch<OverlayWindowSettingsBloc>().state.settings.appColorScheme}',
+              child: Builder(
+                builder: (context) => OverlayWindow(
+                  key: homeScreenOverlayWindowMeasureKey,
+                  settings: context.select((OverlayWindowSettingsBloc bloc) => bloc.state.settings),
+                  // debugText: 'AppColor: ${context.watch<OverlayWindowSettingsBloc>().state.settings.appColorScheme}',
+                ),
               ),
             ),
             Stepper(

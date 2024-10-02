@@ -68,6 +68,7 @@ class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEven
     await emit.forEach(
       _receivePort.asBroadcastStream(),
       onData: (data) {
+        logger.d('Received data from overlay: $data');
         final msg = FromOverlayMsgModel.fromJson(data as Map<String, dynamic>);
 
         switch (msg.action) {
@@ -75,6 +76,10 @@ class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEven
             break;
           case OverlayAction.close:
             _overlayWindowService.close();
+            break;
+          case null:
+            break;
+          case OverlayAction.windowTouched:
             break;
         }
 
