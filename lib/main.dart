@@ -11,6 +11,7 @@ import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
+import 'service/platform_methods/platform_methods_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ Future<void> main() async {
 
   final permissionBloc = PermissionBloc(
     permissionService: PermissionService(),
+    platformMethodService: PlatformMethodsService(),
   )..add(const PermissionEventInitial());
 
   final router = AppRouter(permissionBloc: permissionBloc);
