@@ -11,7 +11,7 @@ class FromOverlayMsgModel with _$FromOverlayMsgModel {
       fromJson: _overlayActionFromJson,
       toJson: _overlayActionToJson,
     )
-    required OverlayAction action,
+    OverlayAction? action,
   }) = _FromOverlayMsgModel;
 
   factory FromOverlayMsgModel.fromJson(Map<String, dynamic> json) => _$FromOverlayMsgModelFromJson(json);
@@ -19,15 +19,22 @@ class FromOverlayMsgModel with _$FromOverlayMsgModel {
 
 enum OverlayAction {
   minimize('MINIMIZE'),
-  close('CLOSE');
+  close('CLOSE'),
+  windowTouched('WINDOW_TOUCHED');
 
   const OverlayAction(this.key);
 
   final String key;
 }
 
-OverlayAction _overlayActionFromJson(String value) {
+OverlayAction _overlayActionFromJson(String? value) {
   return OverlayAction.values.firstWhereOrNull((e) => e.key == value) ?? OverlayAction.close;
 }
 
-String _overlayActionToJson(OverlayAction action) => action.key;
+String? _overlayActionToJson(OverlayAction? action) => action?.key;
+
+extension OverlayActionX on OverlayAction {
+  bool get isMinimize => this == OverlayAction.minimize;
+  bool get isClose => this == OverlayAction.close;
+  bool get isWindowTouched => this == OverlayAction.windowTouched;
+}

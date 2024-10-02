@@ -11,3 +11,7 @@ final class OverlayAppStarted extends OverlayAppEvent {
 final class CloseRequested extends OverlayAppEvent {
   const CloseRequested();
 }
+
+final class WindowTouched extends OverlayAppEvent {
+  const WindowTouched();
+}

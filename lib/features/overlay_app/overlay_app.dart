@@ -37,19 +37,26 @@ class OverlayApp extends StatelessWidget {
             brightness: (windowSettings?.isLight ?? true) ? Brightness.light : Brightness.dark,
           ),
           home: Builder(builder: (context) {
-            return windowSettings == null
-                ? const LoadingWidget()
-                : Scaffold(
-                    // backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
-                    backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(
-                          (windowSettings.opacity?.toInt() ?? 50) / 100,
-                        ),
-                    body: OverlayWindow(
-                      settings: windowSettings,
-                      onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
-                      // debugText: 'AppColor: $appColor',
+            if (windowSettings == null) {
+              return const LoadingWidget();
+            } else {
+              return Scaffold(
+                // backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(
+                      (windowSettings.opacity?.toInt() ?? 50) / 100,
                     ),
-                  );
+                body: InkWell(
+                  onTap: () => context.read<OverlayAppBloc>().add(const WindowTouched()),
+                  child: OverlayWindow(
+                    settings: windowSettings,
+                    onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
+                    // debugText: 'AppColor: $appColor',
+                    debugText:
+                        windowSettings.showLyricOnly != null ? 'LyricOnly: ${windowSettings.showLyricOnly}' : 'null',
+                  ),
+                ),
+              );
+            }
           }),
         );
       }),
