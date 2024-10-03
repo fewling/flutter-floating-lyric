@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../service/permissions/permission_service.dart';
-import '../../../service/platform_methods/platform_methods_service.dart';
+import '../../../service/platform_methods/permission_channel_service.dart';
 import '../../../utils/logger.dart';
 
 part 'permission_bloc.freezed.dart';
@@ -12,7 +12,7 @@ part 'permission_state.dart';
 class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
   PermissionBloc({
     required PermissionService permissionService,
-    required PlatformMethodsService platformMethodService,
+    required PermissionChannelService platformMethodService,
   })  : _permissionService = permissionService,
         _platformMethodService = platformMethodService,
         super(const PermissionState()) {
@@ -24,7 +24,7 @@ class PermissionBloc extends Bloc<PermissionEvent, PermissionState> {
   }
 
   final PermissionService _permissionService;
-  final PlatformMethodsService _platformMethodService;
+  final PermissionChannelService _platformMethodService;
 
   Future<void> _onInitial(PermissionEventInitial event, Emitter<PermissionState> emit) async {
     final isListenerGranted = await _permissionService.checkNotificationListenerPermission();

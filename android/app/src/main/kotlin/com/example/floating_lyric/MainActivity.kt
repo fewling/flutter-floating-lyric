@@ -1,35 +1,78 @@
 package com.example.floating_lyric
 
-import com.example.floating_lyric.features.floating_window.WindowEventStreamHandler
-import com.example.floating_lyric.features.floating_window.WindowMethodCallHandler
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
+import android.util.Log
 import com.example.floating_lyric.features.media_tracker.MediaStateEventStreamHandler
+import com.example.floating_lyric.features.overlay_window.OverlayView
+import com.example.floating_lyric.features.overlay_window.OverlayWindowMethodHandler
 import com.example.floating_lyric.features.permissions.PermissionMethodCallHandler
+import io.flutter.FlutterInjector
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.embedding.engine.FlutterEngineGroup
+import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    
+
     companion object {
         private const val MEDIA_STATE_EVENT_CHANNEL = "Floating Lyric Media State Channel"
-        private const val WINDOW_STATE_EVENT_CHANNEL = "Floating Lyric Window State Channel"
     }
 
     private lateinit var mediaStateEventChannel: EventChannel
-    private lateinit var windowStateEventChannel: EventChannel
+
+    private var overlayView: OverlayView? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
+        val engineGroup = FlutterEngineGroup(this)
+
+        val overlayEntryPoint = DartExecutor.DartEntrypoint(
+            FlutterInjector.instance().flutterLoader().findAppBundlePath(),
+            "overlayView"
+        )
+        val overlayEngine = engineGroup.createAndRunEngine(this, overlayEntryPoint)
+        FlutterEngineCache.getInstance().put("OVERLAY_ENGINE", overlayEngine)
+
         flutterEngine.plugins.add(PermissionMethodCallHandler())
-        flutterEngine.plugins.add(WindowMethodCallHandler())
+//        flutterEngine.plugins.add(OverlayWindowMethodHandler())
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.app.methods/actions")
+            .also {
+                it.setMethodCallHandler { call, result ->
+                    when (call.method) {
+                        "show" -> {
+                            if (overlayView == null) {
+                                Log.i("Main", "Updating overlay view")
+                                overlayView = OverlayView(this)
+                            }
+                            Log.i("Main", "Adding overlay view")
+                            overlayView!!.addView()
+                            Log.i("Main", "Showing overlay view")
+                            overlayView!!.show()
+                            result.success(true)
+                        }
+
+                        "hide" -> {
+                            Log.i("Main", "Hiding overlay view")
+                            overlayView?.hide()
+                            Log.i("Main", "Removing overlay view")
+                            overlayView?.removeView()
+                            result.success(true)
+                        }
+                    }
+                }
+            }
+
 
         mediaStateEventChannel =
             EventChannel(flutterEngine.dartExecutor.binaryMessenger, MEDIA_STATE_EVENT_CHANNEL)
         mediaStateEventChannel.setStreamHandler(MediaStateEventStreamHandler(context))
-
-        windowStateEventChannel =
-            EventChannel(flutterEngine.dartExecutor.binaryMessenger, WINDOW_STATE_EVENT_CHANNEL)
-        windowStateEventChannel.setStreamHandler(WindowEventStreamHandler(context))
     }
 }

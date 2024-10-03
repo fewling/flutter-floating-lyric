@@ -28,6 +28,13 @@ dependencies:
   http: ^1.2.2
   package_info_plus: ^8.0.2
   flutter_overlay_window: ^0.4.5
+  # flutter_overlay_window:
+  #   git:
+  #     url: https://github.com/fewling/flutter_overlay_window
+  #     ref: main # branch name
+
+  # flutter_overlay_window:
+  #   path: ./flutter_overlay_window_pkg/flutter_overlay_window
   flutter_bloc: ^8.1.6
   collection: ^1.18.0
 

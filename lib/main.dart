@@ -11,7 +11,7 @@ import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
-import 'service/platform_methods/platform_methods_service.dart';
+import 'service/platform_methods/permission_channel_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ Future<void> main() async {
 
   final permissionBloc = PermissionBloc(
     permissionService: PermissionService(),
-    platformMethodService: PlatformMethodsService(),
+    platformMethodService: PermissionChannelService(),
   )..add(const PermissionEventInitial());
 
   final router = AppRouter(permissionBloc: permissionBloc);
@@ -41,9 +41,13 @@ Future<void> main() async {
 }
 
 @pragma('vm:entry-point')
-void overlayMain() {
+void overlayView() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const OverlayApp());
+  runApp(LayoutBuilder(builder: (context, constraints) {
+    return OverlayApp(
+      key: rootKey,
+    );
+  }));
 }
 
 class FloatingLyricApp extends StatelessWidget {

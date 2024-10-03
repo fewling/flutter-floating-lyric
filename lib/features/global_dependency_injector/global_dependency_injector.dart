@@ -8,6 +8,7 @@ import '../../repos/local/preference_repo.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/message_channels/to_overlay_message_service.dart';
 import '../../service/overlay_window/overlay_window_service.dart';
+import '../../service/platform_methods/window_channel_service.dart';
 import '../../service/preference/preference_service.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
 import '../app_info/bloc/app_info_bloc.dart';
@@ -85,6 +86,7 @@ class GlobalDependencyInjector extends StatelessWidget {
             create: (context) => OverlayWindowSettingsBloc(
               overlayWindowService: context.read<OverlayWindowService>(),
               toOverlayMessageService: ToOverlayMessageService(),
+              windowChannelService: WindowChannelService(),
             )..add(OverlayWindowSettingsLoaded(
                 lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
                 preferenceState: context.read<PreferenceBloc>().state,
