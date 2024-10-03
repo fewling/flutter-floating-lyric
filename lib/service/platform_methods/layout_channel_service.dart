@@ -11,4 +11,8 @@ class LayoutChannelService {
       {'width': width, 'height': height},
     );
   }
+
+  Future<void> moveWindow(double dy) {
+    return _channel.invokeMethod('moveWindow', {'dy': dy});
+  }
 }
