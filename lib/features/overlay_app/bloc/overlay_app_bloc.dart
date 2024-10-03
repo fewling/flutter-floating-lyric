@@ -23,6 +23,7 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
         CloseRequested() => _onCloseRequested(event, emit),
         WindowTouched() => _onWindowTouched(event, emit),
         WindowResized() => _onWindowResized(event, emit),
+        WindowMoved() => _onWindowMoved(event, emit),
       },
     );
   }
@@ -46,5 +47,9 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
 
   void _onWindowResized(WindowResized event, Emitter<OverlayAppState> emit) {
     _layoutChannelService.setLayout(event.width, event.height);
+  }
+
+  void _onWindowMoved(WindowMoved event, Emitter<OverlayAppState> emit) {
+    _layoutChannelService.moveWindow(event.dy);
   }
 }

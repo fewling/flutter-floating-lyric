@@ -1,6 +1,7 @@
 package com.example.floating_lyric.features.overlay_window
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
 import android.os.Build
@@ -8,6 +9,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
@@ -23,7 +25,8 @@ import java.util.concurrent.Executor
 class OverlayView(context: Context) {
     private var flutterView: FlutterView?
     private val flutterEngine: FlutterEngine?
-    private var windowManager: WindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    private var windowManager: WindowManager =
+        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var uiHandler: Handler
     private var executor: Executor
     private var addedToWindow = false
@@ -33,23 +36,33 @@ class OverlayView(context: Context) {
 
     companion object {
         const val OVERLAY_ENGINE: String = "OVERLAY_ENGINE"
-        private const val LAYOUT_FLAG =
-            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
     }
 
     init {
 
+        val layoutFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            WindowManager.LayoutParams.TYPE_PHONE
+        }
+
         layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
-            LAYOUT_FLAG,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            layoutFlag,
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    or (WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                    or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                    or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+                    or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED),
             PixelFormat.TRANSLUCENT
         ).apply {
-            gravity = Gravity.CENTER
-            y = 50
+            gravity = Gravity.TOP or Gravity.START
+            x = 0
+            y = 0
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+                layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
         }
         flutterEngine = FlutterEngineCache.getInstance().get(OVERLAY_ENGINE)
@@ -60,7 +73,8 @@ class OverlayView(context: Context) {
     }
 
     private fun setupLayoutMethodChannel(flutterEngine: FlutterEngine) {
-        val sizeChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.overlay.methods/layout")
+        val sizeChannel =
+            MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.overlay.methods/layout")
         sizeChannel.setMethodCallHandler { call: MethodCall, result: MethodChannel.Result ->
             when (call.method) {
                 "reportSize" -> {
@@ -75,11 +89,21 @@ class OverlayView(context: Context) {
                     updateViewWithLayoutParams()
                     result.success(true)
                 }
+
+                "moveWindow" -> {
+                    val dy = call.argument<Double>("dy")
+
+                    if (dy != null) {
+                        layoutParams.y += dy.toInt()
+                        windowManager.updateViewLayout(flutterView, layoutParams)
+                    }
+                }
             }
         }
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     fun addView() {
         Log.i("OverlayView Adding", "Added to window : $addedToWindow")
         Log.i("OverlayView Adding", "Flutter engine is there : ${flutterEngine != null}")
@@ -90,11 +114,9 @@ class OverlayView(context: Context) {
             flutterView = FlutterView(serviceContext, flutterSurfaceView)
             flutterView!!.attachToFlutterEngine(flutterEngine)
             flutterEngine.lifecycleChannel.appIsResumed()
-            windowManager.addView(
-                flutterView, layoutParams
-            )
+            windowManager.addView(flutterView, layoutParams)
         } catch (e: Exception) {
-            Log.e("OverlayView","Error adding overlay view")
+            Log.e("OverlayView", "Error adding overlay view")
         }
         addedToWindow = true
     }
@@ -110,15 +132,18 @@ class OverlayView(context: Context) {
             windowManager.removeView(flutterView)
             addedToWindow = false
         } catch (e: Exception) {
-            Log.e("OverlayView","Error remove overlay view")
+            Log.e("OverlayView", "Error remove overlay view")
         }
     }
 
     private fun updateViewLayout(view: View?, params: WindowManager.LayoutParams?) {
         try {
-            if (view != null && params != null && view.windowToken != null) windowManager.updateViewLayout(view, params)
+            if (view != null && params != null && view.windowToken != null) windowManager.updateViewLayout(
+                view,
+                params
+            )
         } catch (e: Exception) {
-            Log.e("OverlayView","Error updating view layout")
+            Log.e("OverlayView", "Error updating view layout")
         }
     }
 
