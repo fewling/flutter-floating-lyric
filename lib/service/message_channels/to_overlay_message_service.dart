@@ -1,25 +1,19 @@
 import 'dart:convert';
+import 'dart:ui';
 
-import 'package:flutter_overlay_window/flutter_overlay_window.dart';
-
-import '../../models/overlay_settings_model.dart';
+import '../../configs/main_overlay/main_overlay_port.dart';
+import '../../models/to_overlay_msg_model.dart';
+import '../../utils/logger.dart';
 
 class ToOverlayMessageService {
-  void sendSettings(OverlaySettingsModel settings) {
-    final json = jsonDecode(jsonEncode(settings.toJson()));
-    FlutterOverlayWindow.shareData(json);
-  }
+  void sendMsg(ToOverlayMsgModel msg) {
+    final json = jsonDecode(jsonEncode(msg.toJson()));
 
-  Future<bool> isWindowActive() {
-    return FlutterOverlayWindow.isActive();
-  }
-
-  Future<void> toggle() async {
-    final isVisible = await FlutterOverlayWindow.isActive();
-    if (isVisible) {
-      await FlutterOverlayWindow.closeOverlay();
+    final overlayPort = IsolateNameServer.lookupPortByName(MainOverlayPort.overlayPortName.key);
+    if (overlayPort == null) {
+      logger.e('Overlay port is null');
     } else {
-      await FlutterOverlayWindow.showOverlay();
+      overlayPort.send(json);
     }
   }
 }

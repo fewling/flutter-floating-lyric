@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../models/overlay_settings_model.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../widgets/loading_widget.dart';
@@ -19,93 +20,148 @@ class OverlayApp extends StatefulWidget {
 }
 
 class _OverlayAppState extends State<OverlayApp> {
-  double width = 100;
-  double height = 100;
-
   @override
   Widget build(BuildContext rootContext) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => OverlayAppBloc(
-            toMainMessageService: ToMainMessageService(),
-            layoutChannelService: LayoutChannelService(),
-          )..add(const OverlayAppStarted()),
-        ),
-        BlocProvider(
-          create: (context) => MessageFromMainReceiverBloc()..add(const MessageFromMainReceiverStarted()),
-        ),
-      ],
-      child: Builder(builder: (context) {
-        final pxRatio = MediaQuery.devicePixelRatioOf(rootContext);
-        _updateSize(rootContext, context, pxRatio);
-
-        final windowSettings = context.select(
-          (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
-        );
-        final appColor = windowSettings?.appColorScheme;
-        // _updateSize(context, pxRatio);
-        // return Material(
-        //   child: Center(
-        //     child: GestureDetector(
-        //       child: Container(
-        //         width: width,
-        //         height: height,
-        //         color: Colors.red,
-        //       ),
-        //       onTap: () {
-        //         setState(() {
-        //           if (width == 100) {
-        //             width = 200;
-        //             height = 200;
-        //           } else {
-        //             width = 100;
-        //             height = 100;
-        //           }
-        //         });
-        //       },
-        //     ),
-        //   ),
-        // );
-
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
-            colorSchemeSeed: appColor == null ? null : Color(appColor),
-            brightness: (windowSettings?.isLight ?? true) ? Brightness.light : Brightness.dark,
+    return MaterialApp(
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            lazy: false,
+            create: (context) => OverlayAppBloc(
+              toMainMessageService: ToMainMessageService(),
+              layoutChannelService: LayoutChannelService(),
+            )..add(const OverlayAppStarted()),
           ),
-          home: Builder(builder: (context) {
-            if (windowSettings == null) {
-              return const LoadingWidget();
-            } else {
-              return Scaffold(
-                // backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(
-                      (windowSettings.opacity?.toInt() ?? 50) / 100,
-                    ),
-                body: InkWell(
-                  onTap: () => context.read<OverlayAppBloc>().add(const WindowTouched()),
-                  child: OverlayWindow(
-                    settings: windowSettings,
-                    onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
-                    // debugText: 'AppColor: $appColor',
-                    debugText:
-                        windowSettings.showLyricOnly != null ? 'LyricOnly: ${windowSettings.showLyricOnly}' : 'null',
-                  ),
+          BlocProvider(
+            lazy: false,
+            create: (context) => MessageFromMainReceiverBloc()..add(const MessageFromMainReceiverStarted()),
+          ),
+        ],
+        child: Builder(builder: (context) {
+          _updateSize(rootContext, context);
+
+          final windowSettings = context.select(
+            (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
+          );
+
+          final mockSettings = OverlaySettingsModel(
+            appColorScheme: Colors.purple.value,
+            color: Colors.black.value,
+            fontSize: 16,
+            isLight: true,
+            line1: 'Line 1',
+            line2: 'Line 2',
+            opacity: 50,
+            showMillis: true,
+            position: 0,
+            positionLeftLabel: '00:00',
+            positionRightLabel: '00:00',
+            showProgressBar: true,
+            title: 'Title',
+            showLyricOnly: false,
+          );
+          return Material(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Builder(
+                builder: (context) => SizedBox(
+                  width: windowSettings?.width ?? 200,
+                  height: double.infinity,
+                  child: windowSettings == null ? const LoadingWidget() : OverlayWindow(settings: windowSettings),
                 ),
-              );
-            }
-          }),
-        );
-      }),
+              ),
+            ),
+          );
+
+          final appColor = windowSettings?.appColorScheme;
+
+          return GestureDetector(
+            onTap: () {
+              // setState(() {
+              //   if (width == 100) {
+              //     width = 200;
+              //     height = 200;
+              //   } else {
+              //     width = 100;
+              //     height = 100;
+              //   }
+              // });
+            },
+            child: Container(
+              color: Colors.red,
+              width: windowSettings?.width ?? 200,
+              height: 200,
+              child: Material(
+                child: OverlayWindow(
+                  settings: mockSettings,
+                ),
+              ),
+            ),
+          );
+          // return Material(
+          //   child: Center(
+          //     child: GestureDetector(
+          //       child: Container(
+          //         width: width,
+          //         height: height,
+          //         color: Colors.red,
+          //       ),
+          //       onTap: () {
+          //         setState(() {
+          //           if (width == 100) {
+          //             width = 200;
+          //             height = 200;
+          //           } else {
+          //             width = 100;
+          //             height = 100;
+          //           }
+          //         });
+          //       },
+          //     ),
+          //   ),
+          // );
+
+          // return MaterialApp(
+          //   debugShowCheckedModeBanner: false,
+          //   theme: ThemeData(
+          //     useMaterial3: true,
+          //     colorSchemeSeed: appColor == null ? null : Color(appColor),
+          //     brightness: (windowSettings.isLight ?? true) ? Brightness.light : Brightness.dark,
+          //   ),
+          //   home: Builder(builder: (context) {
+          //     return Scaffold(
+          //       // backgroundColor: Colors.black.withOpacity((windowSettings.opacity?.toInt() ?? 50) / 100),
+          //       backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(
+          //             (windowSettings.opacity?.toInt() ?? 50) / 100,
+          //           ),
+          //       body: InkWell(
+          //         onTap: () => context.read<OverlayAppBloc>().add(const WindowTouched()),
+          //         child: OverlayWindow(
+          //           settings: windowSettings,
+          //           onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
+          //           // debugText: 'AppColor: $appColor',
+          //           debugText:
+          //               windowSettings.showLyricOnly != null ? 'LyricOnly: ${windowSettings.showLyricOnly}' : 'null',
+          //         ),
+          //       ),
+          //     );
+          //   }),
+          // );
+        }),
+      ),
     );
   }
 
-  void _updateSize(BuildContext rootContext, BuildContext blocContext, double pxRatio) {
+  void _updateSize(BuildContext rootContext, BuildContext blocContext) {
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = rootKey.currentContext?.findRenderObject() as RenderBox?;
       if (box == null) return;
+
+      final view = View.of(rootContext);
+      final pxRatio = view.devicePixelRatio;
 
       final width = box.getMaxIntrinsicWidth(double.infinity);
       final height = box.getMaxIntrinsicHeight(width);

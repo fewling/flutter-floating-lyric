@@ -45,9 +45,15 @@ class _OverlayContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = settings.color == null ? null : Color(settings.color!);
+    // final foregroundColor = settings.color == null ? null : Color(settings.color!);
+    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
 
     final showLyricOnly = settings.showLyricOnly ?? false;
+
+    final pos = settings.position ?? 0;
+    final max = settings.duration ?? 0;
+
+    final progress = max == 0 ? 0 : pos / max;
 
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -107,7 +113,7 @@ class _OverlayContent extends StatelessWidget {
                 ),
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: settings.position ?? 0,
+                    value: progress.toDouble(),
                     color: foregroundColor,
                   ),
                 ),

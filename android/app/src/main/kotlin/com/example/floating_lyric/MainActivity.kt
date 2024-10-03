@@ -1,13 +1,8 @@
 package com.example.floating_lyric
 
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
 import android.util.Log
 import com.example.floating_lyric.features.media_tracker.MediaStateEventStreamHandler
 import com.example.floating_lyric.features.overlay_window.OverlayView
-import com.example.floating_lyric.features.overlay_window.OverlayWindowMethodHandler
 import com.example.floating_lyric.features.permissions.PermissionMethodCallHandler
 import io.flutter.FlutterInjector
 import io.flutter.embedding.android.FlutterActivity
@@ -25,6 +20,7 @@ class MainActivity : FlutterActivity() {
     }
 
     private lateinit var mediaStateEventChannel: EventChannel
+    private lateinit var overlayStateEventChannel: EventChannel
 
     private var overlayView: OverlayView? = null
 

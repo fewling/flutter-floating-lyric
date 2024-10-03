@@ -8,10 +8,12 @@ final class OverlayWindowSettingsLoaded extends OverlayWindowSettingsEvent {
   const OverlayWindowSettingsLoaded({
     required this.preferenceState,
     required this.lyricStateListenerState,
+    required this.screenWidth,
   });
 
   final PreferenceState preferenceState;
   final LyricStateListenerState lyricStateListenerState;
+  final double screenWidth;
 }
 
 final class PreferenceUpdated extends OverlayWindowSettingsEvent {
@@ -31,9 +33,9 @@ final class LyricStateListenerUpdated extends OverlayWindowSettingsEvent {
 }
 
 final class OverlayWindowVisibilityToggled extends OverlayWindowSettingsEvent {
-  const OverlayWindowVisibilityToggled(this.isVisible);
+  const OverlayWindowVisibilityToggled(this.shouldVisible);
 
-  final bool isVisible;
+  final bool shouldVisible;
 }
 
 final class LyricOnlyModeToggled extends OverlayWindowSettingsEvent {
