@@ -4,8 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../models/overlay_settings_model.dart';
 import '../../../service/message_channels/to_overlay_message_service.dart';
 import '../../../service/overlay_window/overlay_window_service.dart';
+import '../../../service/platform_methods/window_channel_service.dart';
 import '../../../utils/extensions/custom_extensions.dart';
-import '../../home/home_screen.dart';
 import '../../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../../preference/bloc/preference_bloc.dart';
 
@@ -18,8 +18,10 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
   OverlayWindowSettingsBloc({
     required ToOverlayMessageService toOverlayMessageService,
     required OverlayWindowService overlayWindowService,
+    required WindowChannelService windowChannelService,
   })  : _toOverlayMessageService = toOverlayMessageService,
         _overlayWindowService = overlayWindowService,
+        _windowChannelService = windowChannelService,
         super(const OverlayWindowSettingsState()) {
     on<OverlayWindowSettingsEvent>(
       (event, emit) => switch (event) {
@@ -34,6 +36,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
   final OverlayWindowService _overlayWindowService;
   final ToOverlayMessageService _toOverlayMessageService;
+  final WindowChannelService _windowChannelService;
 
   Future<void> _onLoaded(OverlayWindowSettingsLoaded event, Emitter<OverlayWindowSettingsState> emit) async {
     final pref = event.preferenceState;
@@ -122,10 +125,15 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     OverlayWindowVisibilityToggled event,
     Emitter<OverlayWindowSettingsState> emit,
   ) async {
-    final renderObj = homeScreenOverlayWindowMeasureKey.currentContext?.findRenderObject();
-    final height = renderObj?.semanticBounds.size.height.toInt() ?? 0;
+    if (event.isVisible) {
+      _windowChannelService.show();
+    } else {
+      _windowChannelService.hide();
+    }
+    // final renderObj = homeScreenOverlayWindowMeasureKey.currentContext?.findRenderObject();
+    // final height = renderObj?.semanticBounds.size.height.toInt() ?? 0;
 
-    await _overlayWindowService.toggle(height: height);
+    // await _overlayWindowService.toggle(height: height);
   }
 
   void _onLyricOnlyModeToggled(LyricOnlyModeToggled event, Emitter<OverlayWindowSettingsState> emit) {

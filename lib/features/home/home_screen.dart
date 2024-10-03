@@ -36,7 +36,7 @@ class HomeScreen extends StatelessWidget {
       },
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled()),
+          onPressed: () => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(true)),
           child: const Icon(Icons.bug_report_outlined),
         ),
         body: Stack(
@@ -202,7 +202,7 @@ class WindowSettingContent extends StatelessWidget {
         SwitchListTile(
           title: const Text('Enable'),
           value: visibleFloatingWindow,
-          onChanged: (_) => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled()),
+          onChanged: (_) => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(false)),
         ),
         Builder(
           builder: (context) {

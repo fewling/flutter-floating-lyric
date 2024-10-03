@@ -31,7 +31,9 @@ final class LyricStateListenerUpdated extends OverlayWindowSettingsEvent {
 }
 
 final class OverlayWindowVisibilityToggled extends OverlayWindowSettingsEvent {
-  const OverlayWindowVisibilityToggled();
+  const OverlayWindowVisibilityToggled(this.isVisible);
+
+  final bool isVisible;
 }
 
 final class LyricOnlyModeToggled extends OverlayWindowSettingsEvent {
