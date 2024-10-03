@@ -4,6 +4,7 @@ package com.example.floating_lyric.features.overlay_window
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -19,10 +20,13 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
+import java.util.Timer
+import java.util.TimerTask
 import java.util.concurrent.Executor
+import kotlin.math.abs
 
 
-class OverlayView(context: Context) {
+class OverlayView(context: Context) : View.OnTouchListener {
     private var flutterView: FlutterView?
     private val flutterEngine: FlutterEngine?
     private var windowManager: WindowManager =
@@ -33,6 +37,14 @@ class OverlayView(context: Context) {
     private var serviceContext: Context = context
     private var layoutParams: WindowManager.LayoutParams
     private var showing = false
+
+//    private var lastX = 0f
+//    private var lastY = 0f
+//    private var dragging = false
+//    private var lastYPosition = 0
+//    private val szWindow = Point()
+//    private var mTrayAnimationTimer: Timer? = null
+//    private var mTrayTimerTask: TrayAnimationTimerTask? = null
 
     companion object {
         const val OVERLAY_ENGINE: String = "OVERLAY_ENGINE"
@@ -51,10 +63,11 @@ class OverlayView(context: Context) {
             WindowManager.LayoutParams.WRAP_CONTENT,
             layoutFlag,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or (WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-                    or WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                    or WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
-                    or WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED),
+                    or (
+//                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+                            WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
+                            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED),
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
@@ -89,15 +102,6 @@ class OverlayView(context: Context) {
                     updateViewWithLayoutParams()
                     result.success(true)
                 }
-
-                "moveWindow" -> {
-                    val dy = call.argument<Double>("dy")
-
-                    if (dy != null) {
-                        layoutParams.y += dy.toInt()
-                        windowManager.updateViewLayout(flutterView, layoutParams)
-                    }
-                }
             }
         }
     }
@@ -114,6 +118,7 @@ class OverlayView(context: Context) {
             flutterView = FlutterView(serviceContext, flutterSurfaceView)
             flutterView!!.attachToFlutterEngine(flutterEngine)
             flutterEngine.lifecycleChannel.appIsResumed()
+            flutterView!!.setOnTouchListener(this);
             windowManager.addView(flutterView, layoutParams)
         } catch (e: Exception) {
             Log.e("OverlayView", "Error adding overlay view")
@@ -173,5 +178,37 @@ class OverlayView(context: Context) {
             flutterView?.visibility = View.GONE
             showing = false
         }
+    }
+
+    private var x = 0.0
+    private var y = 0.0
+    private var px = 0.0
+    private var py = 0.0
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(v: View?, e: MotionEvent?): Boolean {
+        if (e == null) return false
+
+        when (e.action) {
+            MotionEvent.ACTION_DOWN -> {
+                x = layoutParams.x.toDouble()
+                y = layoutParams.y.toDouble()
+
+                // returns the original raw X & Y coordinates of this event
+                px = e.rawX.toDouble()
+                py = e.rawY.toDouble()
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                layoutParams.x = (x + e.rawX - px).toInt()
+                layoutParams.y = (y + e.rawY - py).toInt()
+                windowManager.updateViewLayout(flutterView, layoutParams)
+            }
+
+            MotionEvent.ACTION_UP -> {
+                return true
+            }
+        }
+        return false
     }
 }

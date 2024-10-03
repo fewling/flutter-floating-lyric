@@ -45,25 +45,19 @@ class _OverlayAppState extends State<OverlayApp> {
 
           return Material(
             color: Colors.transparent,
-            child: GestureDetector(
-              onVerticalDragUpdate: (details) {
-                final pxRatio = View.of(context).devicePixelRatio;
-                context.read<OverlayAppBloc>().add(WindowMoved(dy: details.delta.dy * pxRatio));
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity((windowSettings?.opacity?.toInt() ?? 50) / 100),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Builder(
-                  builder: (context) => SizedBox(
-                    width: windowSettings?.width ?? 200,
-                    height: double.infinity,
-                    child: windowSettings == null ? const LoadingWidget() : OverlayWindow(settings: windowSettings),
-                  ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primaryContainer
+                    .withOpacity((windowSettings?.opacity?.toInt() ?? 50) / 100),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Builder(
+                builder: (context) => SizedBox(
+                  width: windowSettings?.width ?? 200,
+                  height: double.infinity,
+                  child: windowSettings == null ? const LoadingWidget() : OverlayWindow(settings: windowSettings),
                 ),
               ),
             ),
