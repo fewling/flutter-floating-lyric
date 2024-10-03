@@ -3,20 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../models/from_overlay_msg_model.dart';
 import '../../repos/local/local_db_repo.dart';
 import '../../repos/local/preference_repo.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/message_channels/to_overlay_message_service.dart';
-import '../../service/overlay_window/overlay_window_service.dart';
 import '../../service/platform_methods/window_channel_service.dart';
 import '../../service/preference/preference_service.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
+import '../../utils/logger.dart';
 import '../app_info/bloc/app_info_bloc.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
-import '../lyric_state_listener/lyric_state_listener.dart';
 import '../message_channels/message_from_overlay_receiver/bloc/message_from_overlay_receiver_bloc.dart';
 import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
-import '../overlay_window_settings/overlay_window_settings.dart';
 import '../permissions/bloc/permission_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 
@@ -36,7 +35,7 @@ class GlobalDependencyInjector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pxRatio = MediaQuery.of(context).devicePixelRatio;
+    final screenWidth = MediaQuery.sizeOf(context).width;
 
     return MultiRepositoryProvider(
       providers: [
@@ -49,18 +48,13 @@ class GlobalDependencyInjector extends StatelessWidget {
         RepositoryProvider(
           create: (context) => PreferenceRepo(sharedPreferences: pref),
         ),
-        RepositoryProvider(
-          create: (context) => OverlayWindowService(devicePixelRatio: pxRatio),
-        ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider.value(value: permissionBloc),
           BlocProvider(
             lazy: false,
-            create: (context) => MessageFromOverlayReceiverBloc(
-              overlayWindowService: context.read<OverlayWindowService>(),
-            )..add(const MessageFromOverlayReceiverStarted()),
+            create: (context) => MessageFromOverlayReceiverBloc()..add(const MessageFromOverlayReceiverStarted()),
           ),
           BlocProvider(
             create: (context) => PreferenceBloc(
@@ -82,23 +76,122 @@ class GlobalDependencyInjector extends StatelessWidget {
               )),
           ),
           BlocProvider(
-            lazy: false,
             create: (context) => OverlayWindowSettingsBloc(
-              overlayWindowService: context.read<OverlayWindowService>(),
               toOverlayMessageService: ToOverlayMessageService(),
               windowChannelService: WindowChannelService(),
             )..add(OverlayWindowSettingsLoaded(
                 lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
                 preferenceState: context.read<PreferenceBloc>().state,
+                screenWidth: screenWidth,
               )),
           ),
         ],
-        child: LyricStateListener(
-          child: OverlayWindowSettings(
-            child: child,
+        child: PreferenceStateListener(
+          child: LyricStateListener(
+            child: MsgFromOverlayListener(
+              child: OverlaySettingListener(
+                child: child,
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class PreferenceStateListener extends StatelessWidget {
+  const PreferenceStateListener({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<PreferenceBloc, PreferenceState>(
+          listenWhen: (previous, current) => previous.autoFetchOnline != current.autoFetchOnline,
+          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
+                AutoFetchUpdated(isAutoFetch: state.autoFetchOnline),
+              ),
+        ),
+        BlocListener<PreferenceBloc, PreferenceState>(
+          listener: (context, state) => context.read<OverlayWindowSettingsBloc>().add(
+                PreferenceUpdated(preferenceState: state),
+              ),
+        ),
+      ],
+      child: child,
+    );
+  }
+}
+
+class LyricStateListener extends StatelessWidget {
+  const LyricStateListener({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+          listener: (context, state) =>
+              context.read<OverlayWindowSettingsBloc>().add(LyricStateListenerUpdated(lyricStateListenerState: state)),
+        ),
+      ],
+      child: child,
+    );
+  }
+}
+
+class MsgFromOverlayListener extends StatelessWidget {
+  const MsgFromOverlayListener({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<MessageFromOverlayReceiverBloc, MessageFromOverlayReceiverState>(
+      listenWhen: (previous, current) => previous != current,
+      listener: (context, state) {
+        logger.d('MessageFromOverlayReceiverBloc: $state');
+
+        final isWindowTouched = state.msg?.action?.isWindowTouched ?? false;
+        if (isWindowTouched) {
+          context.read<OverlayWindowSettingsBloc>().add(const LyricOnlyModeToggled());
+        }
+      },
+      child: child,
+    );
+  }
+}
+
+class OverlaySettingListener extends StatelessWidget {
+  const OverlaySettingListener({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
+      listenWhen: (previous, current) => previous.isWindowVisible != current.isWindowVisible,
+      listener: (context, state) {
+        logger.w('isWindowVisible: ${state.isWindowVisible}');
+      },
+      child: child,
     );
   }
 }

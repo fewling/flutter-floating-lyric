@@ -6,7 +6,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../configs/main_overlay/main_overlay_port.dart';
 import '../../../../models/from_overlay_msg_model.dart';
-import '../../../../service/overlay_window/overlay_window_service.dart';
 import '../../../../utils/logger.dart';
 
 part 'message_from_overlay_receiver_bloc.freezed.dart';
@@ -15,18 +14,13 @@ part 'message_from_overlay_receiver_event.dart';
 part 'message_from_overlay_receiver_state.dart';
 
 class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEvent, MessageFromOverlayReceiverState> {
-  MessageFromOverlayReceiverBloc({
-    required OverlayWindowService overlayWindowService,
-  })  : _overlayWindowService = overlayWindowService,
-        super(const MessageFromOverlayReceiverState()) {
+  MessageFromOverlayReceiverBloc() : super(const MessageFromOverlayReceiverState()) {
     _receivePort = ReceivePort();
 
     on<MessageFromOverlayReceiverEvent>((event, emit) => switch (event) {
           MessageFromOverlayReceiverStarted() => _onStarted(event, emit),
         });
   }
-
-  final OverlayWindowService _overlayWindowService;
 
   late final ReceivePort _receivePort;
 
@@ -70,19 +64,6 @@ class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEven
       onData: (data) {
         logger.d('Received data from overlay: $data');
         final msg = FromOverlayMsgModel.fromJson(data as Map<String, dynamic>);
-
-        switch (msg.action) {
-          case OverlayAction.minimize:
-            break;
-          case OverlayAction.close:
-            _overlayWindowService.close();
-            break;
-          case null:
-            break;
-          case OverlayAction.windowTouched:
-            break;
-        }
-
         return state.copyWith(msg: msg);
       },
     );

@@ -9,6 +9,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     // Themes:
     @Default(false) bool isLight,
     @Default(0) int appColorScheme,
+    @Default(300) double width,
 
     // Data
     String? title,
@@ -17,6 +18,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     String? positionLeftLabel,
     String? positionRightLabel,
     double? position,
+    double? duration,
 
     // Styles
     double? opacity,

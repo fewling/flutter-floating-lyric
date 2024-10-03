@@ -202,7 +202,7 @@ class WindowSettingContent extends StatelessWidget {
         SwitchListTile(
           title: const Text('Enable'),
           value: visibleFloatingWindow,
-          onChanged: (_) => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(false)),
+          onChanged: (value) => context.read<OverlayWindowSettingsBloc>().add(OverlayWindowVisibilityToggled(value)),
         ),
         Builder(
           builder: (context) {

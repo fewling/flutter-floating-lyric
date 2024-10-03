@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/overlay_settings_model.dart';
+import '../../../models/to_overlay_msg_model.dart';
 import '../../../service/message_channels/to_overlay_message_service.dart';
-import '../../../service/overlay_window/overlay_window_service.dart';
 import '../../../service/platform_methods/window_channel_service.dart';
 import '../../../utils/extensions/custom_extensions.dart';
 import '../../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
@@ -17,10 +17,8 @@ part 'overlay_window_settings_state.dart';
 class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, OverlayWindowSettingsState> {
   OverlayWindowSettingsBloc({
     required ToOverlayMessageService toOverlayMessageService,
-    required OverlayWindowService overlayWindowService,
     required WindowChannelService windowChannelService,
   })  : _toOverlayMessageService = toOverlayMessageService,
-        _overlayWindowService = overlayWindowService,
         _windowChannelService = windowChannelService,
         super(const OverlayWindowSettingsState()) {
     on<OverlayWindowSettingsEvent>(
@@ -34,7 +32,6 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
   }
 
-  final OverlayWindowService _overlayWindowService;
   final ToOverlayMessageService _toOverlayMessageService;
   final WindowChannelService _windowChannelService;
 
@@ -50,6 +47,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
     final newState = state.copyWith(
       settings: state.settings.copyWith(
+        width: event.screenWidth,
+
         // pref:
         color: pref.color,
         fontSize: pref.fontSize.toDouble(),
@@ -63,6 +62,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         line1: lyric.line1,
         line2: lyric.line2,
         position: lyric.mediaState?.position,
+        duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,
         positionRightLabel: rightLabel,
         title: lyric.mediaState?.title,
@@ -70,12 +70,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendSettings(newState.settings);
-
-    await emit.forEach(
-      _overlayWindowService.isActive,
-      onData: (isActive) => state.copyWith(isWindowVisible: isActive),
-    );
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 
   void _onPreferenceUpdated(PreferenceUpdated event, Emitter<OverlayWindowSettingsState> emit) {
@@ -94,7 +89,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendSettings(newState.settings);
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 
   void _onLyricStateListenerUpdated(LyricStateListenerUpdated event, Emitter<OverlayWindowSettingsState> emit) {
@@ -111,6 +106,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         line1: lyric.line1,
         line2: lyric.line2,
         position: lyric.mediaState?.position,
+        duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,
         positionRightLabel: rightLabel,
         title: lyric.mediaState?.title,
@@ -118,22 +114,20 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendSettings(newState.settings);
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 
   Future<void> _onVisibilityToggled(
-    OverlayWindowVisibilityToggled event,
+    OverlayWindowVisibilityToggled ev,
     Emitter<OverlayWindowSettingsState> emit,
   ) async {
-    if (event.isVisible) {
-      _windowChannelService.show();
-    } else {
-      _windowChannelService.hide();
-    }
-    // final renderObj = homeScreenOverlayWindowMeasureKey.currentContext?.findRenderObject();
-    // final height = renderObj?.semanticBounds.size.height.toInt() ?? 0;
+    final isSuccess = ev.shouldVisible ? await _windowChannelService.show() : await _windowChannelService.hide();
 
-    // await _overlayWindowService.toggle(height: height);
+    if (isSuccess != null && isSuccess) {
+      emit(state.copyWith(
+        isWindowVisible: ev.shouldVisible,
+      ));
+    }
   }
 
   void _onLyricOnlyModeToggled(LyricOnlyModeToggled event, Emitter<OverlayWindowSettingsState> emit) {
@@ -150,6 +144,6 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     }
 
     emit(newState);
-    _toOverlayMessageService.sendSettings(newState.settings);
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 }
