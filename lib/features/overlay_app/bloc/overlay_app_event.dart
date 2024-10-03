@@ -25,11 +25,3 @@ final class WindowResized extends OverlayAppEvent {
   final double width;
   final double height;
 }
-
-final class WindowMoved extends OverlayAppEvent {
-  const WindowMoved({
-    required this.dy,
-  });
-
-  final double dy;
-}
