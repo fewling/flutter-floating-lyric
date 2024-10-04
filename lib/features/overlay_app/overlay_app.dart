@@ -25,7 +25,6 @@ class _OverlayAppState extends State<OverlayApp> {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            lazy: false,
             create: (context) => OverlayAppBloc(
               toMainMessageService: ToMainMessageService(),
               layoutChannelService: LayoutChannelService(),
@@ -67,7 +66,9 @@ class _OverlayAppState extends State<OverlayApp> {
                           ? const LoadingWidget()
                           : OverlayWindow(
                               settings: windowSettings,
+                              mode: context.select((OverlayAppBloc b) => b.state.mode),
                               onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
+                              onWindowTap: () => context.read<OverlayAppBloc>().add(const WindowTapped()),
                             ),
                     ),
                   ),
@@ -93,7 +94,7 @@ class _OverlayAppState extends State<OverlayApp> {
 
       blocContext.read<OverlayAppBloc>().add(WindowResized(
             width: (width + 0.3) * pxRatio,
-            height: (height + 10) * pxRatio,
+            height: (height + 2) * pxRatio,
           ));
     });
   }

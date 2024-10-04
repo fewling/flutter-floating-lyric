@@ -37,7 +37,3 @@ final class OverlayWindowVisibilityToggled extends OverlayWindowSettingsEvent {
 
   final bool shouldVisible;
 }
-
-final class LyricOnlyModeToggled extends OverlayWindowSettingsEvent {
-  const LyricOnlyModeToggled();
-}

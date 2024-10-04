@@ -22,6 +22,7 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
         OverlayAppStarted() => _onStarted(event, emit),
         CloseRequested() => _onCloseRequested(event, emit),
         WindowResized() => _onWindowResized(event, emit),
+        WindowTapped() => _onWindowTapped(event, emit),
       },
     );
   }
@@ -39,5 +40,14 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
 
   void _onWindowResized(WindowResized event, Emitter<OverlayAppState> emit) {
     _layoutChannelService.setLayout(event.width, event.height);
+  }
+
+  void _onWindowTapped(WindowTapped event, Emitter<OverlayAppState> emit) {
+    switch (state.mode) {
+      case OverlayMode.full:
+        emit(state.copyWith(mode: OverlayMode.lyricOnly));
+      case OverlayMode.lyricOnly:
+        emit(state.copyWith(mode: OverlayMode.full));
+    }
   }
 }
