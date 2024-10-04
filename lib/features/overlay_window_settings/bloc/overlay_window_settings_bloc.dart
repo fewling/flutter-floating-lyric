@@ -45,7 +45,10 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     final leftLabel = pos.mmss();
     final rightLabel = max.mmss();
 
+    final isWindowVisible = await _windowChannelService.isActive();
+
     final newState = state.copyWith(
+      isWindowVisible: isWindowVisible ?? false,
       settings: state.settings.copyWith(
         width: event.screenWidth,
 

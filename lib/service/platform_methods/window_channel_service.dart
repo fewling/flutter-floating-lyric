@@ -10,4 +10,8 @@ class WindowChannelService {
   Future<bool?> hide() {
     return _channel.invokeMethod<bool>('hide');
   }
+
+  Future<bool?> isActive() {
+    return _channel.invokeMethod<bool>('isActive');
+  }
 }
