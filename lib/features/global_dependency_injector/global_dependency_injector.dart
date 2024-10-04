@@ -162,14 +162,15 @@ class MsgFromOverlayListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<MessageFromOverlayReceiverBloc, MessageFromOverlayReceiverState>(
-      listenWhen: (previous, current) => previous != current,
       listener: (context, state) {
         logger.d('MessageFromOverlayReceiverBloc: $state');
+        if (state.msg == null) return;
 
-        final isWindowTouched = state.msg?.action?.isWindowTouched ?? false;
-        if (isWindowTouched) {
-          context.read<OverlayWindowSettingsBloc>().add(const LyricOnlyModeToggled());
+        if (state.msg?.action?.isClose ?? false) {
+          context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(false));
         }
+
+        context.read<MessageFromOverlayReceiverBloc>().add(const MsgOverlayHandled());
       },
       child: child,
     );

@@ -5,7 +5,6 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/overlay_window.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
@@ -40,47 +39,33 @@ class HomeScreen extends StatelessWidget {
           onPressed: () => context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(true)),
           child: const Icon(Icons.bug_report_outlined),
         ),
-        body: Stack(
-          children: [
-            Opacity(
-              opacity: 0,
-              child: Builder(
-                builder: (context) => OverlayWindow(
-                  key: homeScreenOverlayWindowMeasureKey,
-                  settings: context.select((OverlayWindowSettingsBloc bloc) => bloc.state.settings),
-                  // debugText: 'AppColor: ${context.watch<OverlayWindowSettingsBloc>().state.settings.appColorScheme}',
-                ),
-              ),
+        body: Stepper(
+          currentStep: currentIndex,
+          onStepTapped: (value) => context.read<HomeBloc>().add(StepTapped(value)),
+          controlsBuilder: (context, details) => const SizedBox(),
+          steps: [
+            Step(
+              isActive: currentIndex == 0,
+              state: isPlaying ? StepState.complete : StepState.indexed,
+              title: const MediaSettingTitle(),
+              content: const MediaSettingContent(),
             ),
-            Stepper(
-              currentStep: currentIndex,
-              onStepTapped: (value) => context.read<HomeBloc>().add(StepTapped(value)),
-              controlsBuilder: (context, details) => const SizedBox(),
-              steps: [
-                Step(
-                  isActive: currentIndex == 0,
-                  state: isPlaying ? StepState.complete : StepState.indexed,
-                  title: const MediaSettingTitle(),
-                  content: const MediaSettingContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 1,
-                  state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
-                  title: const Text('Floating Window Settings'),
-                  content: const WindowSettingContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 2,
-                  title: const Text('Import Local .lrc Files'),
-                  content: const LrcFormatContent(),
-                ),
-                Step(
-                  isActive: currentIndex == 3,
-                  title: const Text('Fetch Lyrics Online'),
-                  content: const OnlineLyricContent(),
-                  subtitle: const Text('Powered by lrclib (Experimental)'),
-                ),
-              ],
+            Step(
+              isActive: currentIndex == 1,
+              state: visibleFloatingWindow ? StepState.complete : StepState.indexed,
+              title: const Text('Floating Window Settings'),
+              content: const WindowSettingContent(),
+            ),
+            Step(
+              isActive: currentIndex == 2,
+              title: const Text('Import Local .lrc Files'),
+              content: const LrcFormatContent(),
+            ),
+            Step(
+              isActive: currentIndex == 3,
+              title: const Text('Fetch Lyrics Online'),
+              content: const OnlineLyricContent(),
+              subtitle: const Text('Powered by lrclib (Experimental)'),
             ),
           ],
         ),

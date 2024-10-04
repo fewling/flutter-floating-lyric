@@ -17,9 +17,12 @@ class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEven
   MessageFromOverlayReceiverBloc() : super(const MessageFromOverlayReceiverState()) {
     _receivePort = ReceivePort();
 
-    on<MessageFromOverlayReceiverEvent>((event, emit) => switch (event) {
-          MessageFromOverlayReceiverStarted() => _onStarted(event, emit),
-        });
+    on<MessageFromOverlayReceiverEvent>(
+      (event, emit) => switch (event) {
+        MessageFromOverlayReceiverStarted() => _onStarted(event, emit),
+        MsgOverlayHandled() => _onMsgHandled(event, emit),
+      },
+    );
   }
 
   late final ReceivePort _receivePort;
@@ -67,5 +70,9 @@ class MessageFromOverlayReceiverBloc extends Bloc<MessageFromOverlayReceiverEven
         return state.copyWith(msg: msg);
       },
     );
+  }
+
+  void _onMsgHandled(MsgOverlayHandled event, Emitter<MessageFromOverlayReceiverState> emit) {
+    emit(state.copyWith(msg: null));
   }
 }
