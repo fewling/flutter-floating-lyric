@@ -62,6 +62,10 @@ class MainActivity : FlutterActivity() {
                             overlayView?.removeView()
                             result.success(true)
                         }
+
+                        "isActive" -> {
+                            result.success(overlayView?.isActive() ?: false)
+                        }
                     }
                 }
             }

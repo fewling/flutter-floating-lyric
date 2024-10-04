@@ -211,4 +211,8 @@ class OverlayView(context: Context) : View.OnTouchListener {
         }
         return false
     }
+
+    fun isActive(): Boolean? {
+        return showing
+    }
 }
