@@ -118,7 +118,7 @@ class OverlayView(context: Context) : View.OnTouchListener {
             flutterView = FlutterView(serviceContext, flutterSurfaceView)
             flutterView!!.attachToFlutterEngine(flutterEngine)
             flutterEngine.lifecycleChannel.appIsResumed()
-            flutterView!!.setOnTouchListener(this);
+            flutterView!!.setOnTouchListener(this)
             windowManager.addView(flutterView, layoutParams)
         } catch (e: Exception) {
             Log.e("OverlayView", "Error adding overlay view")
@@ -197,22 +197,24 @@ class OverlayView(context: Context) : View.OnTouchListener {
                 // returns the original raw X & Y coordinates of this event
                 px = e.rawX.toDouble()
                 py = e.rawY.toDouble()
+                return false
             }
 
             MotionEvent.ACTION_MOVE -> {
                 layoutParams.x = (x + e.rawX - px).toInt()
                 layoutParams.y = (y + e.rawY - py).toInt()
                 windowManager.updateViewLayout(flutterView, layoutParams)
+                return false
             }
 
             MotionEvent.ACTION_UP -> {
-                return true
+                return false
             }
         }
         return false
     }
 
-    fun isActive(): Boolean? {
+    fun isActive(): Boolean {
         return showing
     }
 }
