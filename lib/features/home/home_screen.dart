@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
 import '../../widgets/overlay_window.dart';
@@ -537,149 +538,181 @@ class OnlineLyricContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Builder(
-          builder: (context) {
-            final autoFetchOnline = context.select<PreferenceBloc, bool>(
-              (bloc) => bloc.state.autoFetchOnline,
-            );
-            return SwitchListTile(
-              title: const Text('Auto Fetch'),
-              value: autoFetchOnline,
-              onChanged: (value) => context.read<PreferenceBloc>().add(const AutoFetchOnlineToggled()),
-            );
-          },
-        ),
-        Builder(
-          builder: (context) {
-            final isEditingTitle = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.isEditingTitle,
-            );
-            final title = context.select<HomeBloc, String?>(
-              (bloc) => bloc.state.titleAlt,
-            );
+    return BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+      listenWhen: (previous, current) {
+        final isPlaying = current.mediaState?.isPlaying ?? false;
+        final homeMediaState = context.read<HomeBloc>().state.mediaState;
+        if (isPlaying && homeMediaState == null) return true;
 
-            return isEditingTitle
-                ? TitleAltField(title: title)
-                : ListTile(
-                    title: const Text('Title'),
-                    subtitle: Text(title ?? ''),
-                    onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isTitle: true)),
-                    trailing: const Icon(Icons.edit_outlined),
-                  );
-          },
-        ),
-        Builder(
-          builder: (context) {
-            final isEditingArtist = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.isEditingArtist,
-            );
-
-            final artist = context.select<HomeBloc, String?>(
-              (bloc) => bloc.state.artistAlt,
-            );
-
-            return isEditingArtist
-                ? ArtistAltField(artist: artist)
-                : ListTile(
-                    title: const Text('Artist'),
-                    subtitle: Text(artist ?? ''),
-                    onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isArtist: true)),
-                    trailing: const Icon(Icons.edit_outlined),
-                  );
-          },
-        ),
-        Builder(
-          builder: (context) {
-            final isEditingAlbum = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.isEditingAlbum,
-            );
-
-            final album = context.select<HomeBloc, String?>(
-              (bloc) => bloc.state.albumAlt,
-            );
-
-            return isEditingAlbum
-                ? AlbumAltField(album: album)
-                : ListTile(
-                    title: const Text('Album'),
-                    subtitle: Text(album ?? ''),
-                    onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isAlbum: true)),
-                    trailing: const Icon(Icons.edit_outlined),
-                  );
-          },
-        ),
-        ListTile(
-          title: const Text('Duration'),
-          subtitle: Builder(
+        final mediaState = current.mediaState;
+        final isNewSong = previous.mediaState?.title != mediaState?.title ||
+            previous.mediaState?.artist != mediaState?.artist ||
+            previous.mediaState?.album != mediaState?.album;
+        return isNewSong;
+      },
+      listener: (context, state) => context.read<HomeBloc>().add(NewSongPlayed(state.mediaState)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Builder(
             builder: (context) {
-              final duration = context.select<HomeBloc, int>(
-                (bloc) => bloc.state.mediaState?.duration.toInt() ?? 0,
+              final autoFetchOnline = context.select<PreferenceBloc, bool>(
+                (bloc) => bloc.state.autoFetchOnline,
               );
-
-              return Text('${duration / 1000} seconds');
+              return SwitchListTile(
+                title: const Text('Auto Fetch'),
+                value: autoFetchOnline,
+                onChanged: (value) => context.read<PreferenceBloc>().add(const AutoFetchOnlineToggled()),
+              );
             },
           ),
-        ),
-        Builder(
-          builder: (context) {
-            final isSearching = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.isSearchingOnline,
-            );
+          BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+            listenWhen: (previous, current) => previous.mediaState?.title != current.mediaState?.title,
+            listener: (context, state) => context.read<HomeBloc>().add(MediaStateChanged(state.mediaState)),
+            child: Builder(
+              builder: (context) {
+                final isEditingTitle = context.select<HomeBloc, bool>(
+                  (bloc) => bloc.state.isEditingTitle,
+                );
+                final title = context.select<HomeBloc, String?>(
+                  (bloc) => bloc.state.titleAlt,
+                );
 
-            final isAutoSearching = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.isSearchingOnline,
-            );
-
-            final noMediaState = context.select<HomeBloc, bool>(
-              (bloc) => bloc.state.mediaState == null,
-            );
-
-            return BlocListener<HomeBloc, HomeState>(
-              listener: (context, state) {
-                final resp = state.lrcLibResponse;
-                if (resp != null) {
-                  final content = resp.syncedLyrics ?? resp.plainLyrics ?? 'No lyric found for this song.';
-                  showDialog(
-                    context: context,
-                    builder: (dialogCtx) => BlocProvider.value(
-                      value: context.read<HomeBloc>(),
-                      child: AlertDialog(
-                        icon: const Icon(Icons.info_outline),
-                        title: const Text('Lyric Fetch Result'),
-                        content: SelectableText(content),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(dialogCtx).pop(),
-                            child: const Text('Close'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              context.read<HomeBloc>().add(SaveLyricResponseRequested(resp));
-                              Navigator.of(dialogCtx).pop();
-                            },
-                            child: const Text('Save'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                  context.read<HomeBloc>().add(const SearchResponseReceived());
-                }
+                return isEditingTitle
+                    ? TitleAltField(title: title)
+                    : ListTile(
+                        title: const Text('Title'),
+                        subtitle: Text(title ?? ''),
+                        onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isTitle: true)),
+                        trailing: const Icon(Icons.edit_outlined),
+                      );
               },
-              child: ElevatedButton.icon(
-                onPressed: isSearching || isAutoSearching || noMediaState
-                    ? null
-                    : () => context.read<HomeBloc>().add(const SearchOnlineRequested()),
-                label: const Text('Search'),
-                icon: isSearching ? const LoadingWidget() : const Icon(Icons.search),
+            ),
+          ),
+          BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+            listenWhen: (previous, current) => previous.mediaState?.artist != current.mediaState?.artist,
+            listener: (context, state) => context.read<HomeBloc>().add(MediaStateChanged(state.mediaState)),
+            child: Builder(
+              builder: (context) {
+                final isEditingArtist = context.select<HomeBloc, bool>(
+                  (bloc) => bloc.state.isEditingArtist,
+                );
+
+                final artist = context.select<HomeBloc, String?>(
+                  (bloc) => bloc.state.artistAlt,
+                );
+
+                return isEditingArtist
+                    ? ArtistAltField(artist: artist)
+                    : ListTile(
+                        title: const Text('Artist'),
+                        subtitle: Text(artist ?? ''),
+                        onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isArtist: true)),
+                        trailing: const Icon(Icons.edit_outlined),
+                      );
+              },
+            ),
+          ),
+          BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+            listenWhen: (previous, current) => previous.mediaState?.album != current.mediaState?.album,
+            listener: (context, state) => context.read<HomeBloc>().add(MediaStateChanged(state.mediaState)),
+            child: Builder(
+              builder: (context) {
+                final isEditingAlbum = context.select<HomeBloc, bool>(
+                  (bloc) => bloc.state.isEditingAlbum,
+                );
+
+                final album = context.select<HomeBloc, String?>(
+                  (bloc) => bloc.state.albumAlt,
+                );
+
+                return isEditingAlbum
+                    ? AlbumAltField(album: album)
+                    : ListTile(
+                        title: const Text('Album'),
+                        subtitle: Text(album ?? ''),
+                        onTap: () => context.read<HomeBloc>().add(const EditFieldRequested(isAlbum: true)),
+                        trailing: const Icon(Icons.edit_outlined),
+                      );
+              },
+            ),
+          ),
+          BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
+            listenWhen: (previous, current) => previous.mediaState?.duration != current.mediaState?.duration,
+            listener: (context, state) => context.read<HomeBloc>().add(MediaStateChanged(state.mediaState)),
+            child: ListTile(
+              title: const Text('Duration'),
+              subtitle: Builder(
+                builder: (context) {
+                  final millis = context.select<HomeBloc, int>(
+                    (bloc) => bloc.state.mediaState?.duration.toInt() ?? 0,
+                  );
+
+                  final duration = Duration(milliseconds: millis);
+
+                  return Text(duration.mmss());
+                },
               ),
-            );
-          },
-        ),
-      ],
+            ),
+          ),
+          Builder(
+            builder: (context) {
+              final isSearching = context.select<HomeBloc, bool>(
+                (bloc) => bloc.state.isSearchingOnline,
+              );
+
+              final isAutoSearching = context.select<HomeBloc, bool>(
+                (bloc) => bloc.state.isSearchingOnline,
+              );
+
+              final noMediaState = context.select<HomeBloc, bool>(
+                (bloc) => bloc.state.mediaState == null,
+              );
+
+              return BlocListener<HomeBloc, HomeState>(
+                listener: (context, state) {
+                  final resp = state.lrcLibResponse;
+                  if (resp != null) {
+                    final content = resp.syncedLyrics ?? resp.plainLyrics ?? 'No lyric found for this song.';
+                    showDialog(
+                      context: context,
+                      builder: (dialogCtx) => BlocProvider.value(
+                        value: context.read<HomeBloc>(),
+                        child: AlertDialog(
+                          icon: const Icon(Icons.info_outline),
+                          title: const Text('Lyric Fetch Result'),
+                          content: SelectableText(content),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(dialogCtx).pop(),
+                              child: const Text('Close'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context.read<HomeBloc>().add(SaveLyricResponseRequested(resp));
+                                Navigator.of(dialogCtx).pop();
+                              },
+                              child: const Text('Save'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                    context.read<HomeBloc>().add(const SearchResponseReceived());
+                  }
+                },
+                child: ElevatedButton.icon(
+                  onPressed: isSearching || isAutoSearching || noMediaState
+                      ? null
+                      : () => context.read<HomeBloc>().add(const SearchOnlineRequested()),
+                  label: const Text('Search'),
+                  icon: isSearching ? const LoadingWidget() : const Icon(Icons.search),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

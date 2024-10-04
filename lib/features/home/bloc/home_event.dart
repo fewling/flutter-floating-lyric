@@ -82,3 +82,9 @@ final class SaveAlbumAltRequested extends HomeEvent {
 
   final String album;
 }
+
+final class NewSongPlayed extends HomeEvent {
+  const NewSongPlayed(this.mediaState);
+
+  final MediaState? mediaState;
+}
