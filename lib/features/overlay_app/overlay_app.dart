@@ -63,7 +63,12 @@ class _OverlayAppState extends State<OverlayApp> {
                     builder: (context) => SizedBox(
                       width: windowSettings?.width ?? 200,
                       height: double.infinity,
-                      child: windowSettings == null ? const LoadingWidget() : OverlayWindow(settings: windowSettings),
+                      child: windowSettings == null
+                          ? const LoadingWidget()
+                          : OverlayWindow(
+                              settings: windowSettings,
+                              onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
+                            ),
                     ),
                   ),
                 ),

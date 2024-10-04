@@ -20,7 +20,7 @@ class FromOverlayMsgModel with _$FromOverlayMsgModel {
 enum OverlayAction {
   minimize('MINIMIZE'),
   close('CLOSE'),
-  windowTouched('WINDOW_TOUCHED');
+  ;
 
   const OverlayAction(this.key);
 
@@ -36,5 +36,4 @@ String? _overlayActionToJson(OverlayAction? action) => action?.key;
 extension OverlayActionX on OverlayAction {
   bool get isMinimize => this == OverlayAction.minimize;
   bool get isClose => this == OverlayAction.close;
-  bool get isWindowTouched => this == OverlayAction.windowTouched;
 }

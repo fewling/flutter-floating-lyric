@@ -12,10 +12,6 @@ final class CloseRequested extends OverlayAppEvent {
   const CloseRequested();
 }
 
-final class WindowTouched extends OverlayAppEvent {
-  const WindowTouched();
-}
-
 final class WindowResized extends OverlayAppEvent {
   const WindowResized({
     required this.width,
