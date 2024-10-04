@@ -21,3 +21,7 @@ final class WindowResized extends OverlayAppEvent {
   final double width;
   final double height;
 }
+
+final class WindowTapped extends OverlayAppEvent {
+  const WindowTapped();
+}

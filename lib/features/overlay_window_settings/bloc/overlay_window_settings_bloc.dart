@@ -27,7 +27,6 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         PreferenceUpdated() => _onPreferenceUpdated(event, emit),
         LyricStateListenerUpdated() => _onLyricStateListenerUpdated(event, emit),
         OverlayWindowVisibilityToggled() => _onVisibilityToggled(event, emit),
-        LyricOnlyModeToggled() => _onLyricOnlyModeToggled(event, emit),
       },
     );
   }
@@ -131,22 +130,5 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         isWindowVisible: ev.shouldVisible,
       ));
     }
-  }
-
-  void _onLyricOnlyModeToggled(LyricOnlyModeToggled event, Emitter<OverlayWindowSettingsState> emit) {
-    OverlayWindowSettingsState newState;
-    if (state.settings.showLyricOnly == null) {
-      newState = state.copyWith(
-        settings: state.settings.copyWith(showLyricOnly: true),
-      );
-    } else {
-      final showLyricOnly = !state.settings.showLyricOnly!;
-      newState = state.copyWith(
-        settings: state.settings.copyWith(showLyricOnly: showLyricOnly),
-      );
-    }
-
-    emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 }

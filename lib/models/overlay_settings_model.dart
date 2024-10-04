@@ -28,9 +28,6 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
-
-    // Modes
-    bool? showLyricOnly,
   }) = _OverlaySettingsModel;
 
   factory OverlaySettingsModel.fromJson(Map<String, dynamic> json) => _$OverlaySettingsModelFromJson(json);
