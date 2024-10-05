@@ -110,12 +110,12 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
                 line1 = currentLrc.lines.first;
                 line2 = currentLrc.lines.elementAtOrNull(1);
               } else {
-                if (line1 == null) break;
-                if (line2 == null) break;
-
                 for (var i = 0; i < currentLrc.lines.length; i++) {
-                  final line1Index = currentLrc.lines.indexOf(line1!);
-                  final line2Index = currentLrc.lines.indexOf(line2!);
+                  if (line1 == null) break;
+                  if (line2 == null) break;
+
+                  final line1Index = currentLrc.lines.indexOf(line1);
+                  final line2Index = currentLrc.lines.indexOf(line2);
                   if (line1Index < 0 || line2Index < 0) break;
 
                   final lineAfterLine1 = currentLrc.lines.elementAtOrNull(line1Index + 1);

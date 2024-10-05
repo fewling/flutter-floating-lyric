@@ -30,6 +30,10 @@ class OverlayWindow extends StatelessWidget {
 
     // final foregroundColor = settings.color == null ? null : Color(settings.color!);
     final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final line1Pos = settings.line1?.time;
+    final line2Pos = settings.line2?.time;
+
+    final line1IsFarther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
     return InkWell(
       onTap: onWindowTap,
@@ -86,12 +90,13 @@ class OverlayWindow extends StatelessWidget {
                 ].separatedBy(const SizedBox(width: 16)).toList(),
               ),
             Align(
-              alignment: Alignment.centerLeft,
+              alignment: (settings.showLine2 ?? false) ? Alignment.centerLeft : Alignment.center,
               child: Text(
-                settings.line1 ?? ' ',
+                settings.line1?.content ?? ' ',
                 style: TextStyle(
                   color: foregroundColor,
                   fontSize: settings.fontSize,
+                  fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),
@@ -99,10 +104,11 @@ class OverlayWindow extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Text(
-                  settings.line2 ?? ' ',
+                  settings.line2?.content ?? ' ',
                   style: TextStyle(
                     color: foregroundColor,
                     fontSize: settings.fontSize,
+                    fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
                   ),
                 ),
               ),
