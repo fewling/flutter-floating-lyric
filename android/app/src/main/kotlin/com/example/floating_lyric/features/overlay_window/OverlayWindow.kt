@@ -4,7 +4,6 @@ package com.example.floating_lyric.features.overlay_window
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.PixelFormat
-import android.graphics.Point
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -20,10 +19,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.util.Timer
-import java.util.TimerTask
 import java.util.concurrent.Executor
-import kotlin.math.abs
 
 
 class OverlayView(context: Context) : View.OnTouchListener {
@@ -47,6 +43,14 @@ class OverlayView(context: Context) : View.OnTouchListener {
 //    private var mTrayAnimationTimer: Timer? = null
 //    private var mTrayTimerTask: TrayAnimationTimerTask? = null
 
+    private val defaultFlags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
+            WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
+            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+
+    private val touchThruFlags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or
+            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
+
     companion object {
         const val OVERLAY_ENGINE: String = "OVERLAY_ENGINE"
     }
@@ -63,12 +67,7 @@ class OverlayView(context: Context) : View.OnTouchListener {
             WindowManager.LayoutParams.MATCH_PARENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
             layoutFlag,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                    or (
-//                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN or
-                            WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR or
-                            WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED),
+            defaultFlags,
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.CENTER or Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
@@ -230,5 +229,14 @@ class OverlayView(context: Context) : View.OnTouchListener {
 
     fun isActive(): Boolean {
         return showing
+    }
+
+    fun updateWindowTouchThrough(isTouchThru: Boolean) {
+        layoutParams.flags = if (isTouchThru) {
+            touchThruFlags
+        } else {
+            defaultFlags
+        }
+        windowManager.updateViewLayout(flutterView, layoutParams)
     }
 }

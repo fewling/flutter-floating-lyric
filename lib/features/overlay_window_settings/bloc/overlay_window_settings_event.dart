@@ -44,6 +44,8 @@ final class WindowIgnoreTouchToggled extends OverlayWindowSettingsEvent {
   final bool isIgnored;
 }
 
-final class WindowTouchThroughToggled extends OverlayWindowSettingsEvent {
-  const WindowTouchThroughToggled();
+final class WindowTouchThruToggled extends OverlayWindowSettingsEvent {
+  const WindowTouchThruToggled(this.isTouchThru);
+
+  final bool isTouchThru;
 }

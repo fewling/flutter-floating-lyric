@@ -34,6 +34,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
 
     // Settings
     bool? ignoreTouch,
+    bool? touchThru,
   }) = _OverlaySettingsModel;
 
   factory OverlaySettingsModel.fromJson(Map<String, dynamic> json) => _$OverlaySettingsModelFromJson(json);

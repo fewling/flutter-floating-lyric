@@ -66,6 +66,12 @@ class MainActivity : FlutterActivity() {
                         "isActive" -> {
                             result.success(overlayView?.isActive() ?: false)
                         }
+
+                        "setTouchThru" -> {
+                            val isTouchThru = call.argument<Boolean>("isTouchThru")
+                            overlayView?.updateWindowTouchThrough(isTouchThru ?: false)
+                            result.success(true)
+                        }
                     }
                 }
             }
