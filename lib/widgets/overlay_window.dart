@@ -80,6 +80,7 @@ class OverlayWindow extends StatelessWidget {
                   ],
                 ),
               Align(
+                alignment: Alignment.centerLeft,
                 child: Text(
                   settings.line1 ?? '',
                   style: TextStyle(
@@ -90,6 +91,7 @@ class OverlayWindow extends StatelessWidget {
               ),
               if (settings.line2 != null && settings.line2!.isNotEmpty)
                 Align(
+                  alignment: Alignment.centerRight,
                   child: Text(
                     settings.line2 ?? '',
                     style: TextStyle(
