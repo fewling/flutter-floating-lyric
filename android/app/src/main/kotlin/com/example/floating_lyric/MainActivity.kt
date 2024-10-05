@@ -81,4 +81,9 @@ class MainActivity : FlutterActivity() {
             EventChannel(flutterEngine.dartExecutor.binaryMessenger, MEDIA_STATE_EVENT_CHANNEL)
         mediaStateEventChannel.setStreamHandler(MediaStateEventStreamHandler(context))
     }
+
+    override fun onDestroy() {
+        overlayView?.removeView()
+        super.onDestroy()
+    }
 }
