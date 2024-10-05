@@ -26,11 +26,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         super(const HomeState()) {
     on<HomeEvent>(
       (event, emit) => switch (event) {
-        StepTapped() => _onStepTapped(event, emit),
+        HomeStarted() => _onStarted(event, emit),
         StartMusicPlayerRequested() => _onStartMusicPlayerRequested(event, emit),
-        WindowLockToggled() => _onWindowLockToggled(event, emit),
-        WindowIgnoreTouchToggled() => _onWindowIgnoreTouchToggled(event, emit),
-        WindowTouchThroughToggled() => _onWindowTouchThroughToggled(event, emit),
         ImportLRCsRequested() => _onImportLRCsRequested(event, emit),
         SearchOnlineRequested() => _onSearchOnlineRequested(event, emit),
         SearchResponseReceived() => _onSearchResponseReceived(event, emit),
@@ -50,27 +47,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final LrcLibService _lrcLibService;
   final LocalDbService _localDbService;
 
-  void _onStepTapped(StepTapped event, Emitter<HomeState> emit) {
-    emit(state.copyWith(currentIndex: event.index));
+  void _onStarted(HomeStarted event, Emitter<HomeState> emit) {
+    emit(state.copyWith(
+      mediaState: event.mediaState,
+      albumAlt: event.mediaState?.album,
+      artistAlt: event.mediaState?.artist,
+      titleAlt: event.mediaState?.title,
+    ));
   }
 
   void _onStartMusicPlayerRequested(StartMusicPlayerRequested event, Emitter<HomeState> emit) {
     _permissionService.start3rdMusicPlayer();
-  }
-
-  void _onWindowLockToggled(WindowLockToggled event, Emitter<HomeState> emit) {
-    emit(state.copyWith(isWindowLocked: event.isLocked));
-    // TODO(@fewling): use overlay service to lock window
-  }
-
-  void _onWindowIgnoreTouchToggled(WindowIgnoreTouchToggled event, Emitter<HomeState> emit) {
-    emit(state.copyWith(isWIndowIgnoreTouch: event.isIgnored));
-    // TODO(@fewling): use overlay service to ignore touch
-  }
-
-  void _onWindowTouchThroughToggled(WindowTouchThroughToggled event, Emitter<HomeState> emit) {
-    emit(state.copyWith(isWindowTouchThrough: !state.isWindowTouchThrough));
-    // TODO(@fewling): use overlay service to set touch through
   }
 
   Future<void> _onImportLRCsRequested(ImportLRCsRequested event, Emitter<HomeState> emit) async {

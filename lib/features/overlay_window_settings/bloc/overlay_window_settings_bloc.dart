@@ -27,6 +27,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         PreferenceUpdated() => _onPreferenceUpdated(event, emit),
         LyricStateListenerUpdated() => _onLyricStateListenerUpdated(event, emit),
         OverlayWindowVisibilityToggled() => _onVisibilityToggled(event, emit),
+        WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
+        WindowTouchThroughToggled() => _onTouchThroughToggled(event, emit),
       },
     );
   }
@@ -134,5 +136,15 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         isWindowVisible: ev.shouldVisible,
       ));
     }
+  }
+
+  void _onIgnoreTouchToggled(WindowIgnoreTouchToggled event, Emitter<OverlayWindowSettingsState> emit) {
+    emit(state.copyWith(isIgnoreTouch: event.isIgnored));
+    // TODO(@fewling): use overlay service to ignore touch
+  }
+
+  void _onTouchThroughToggled(WindowTouchThroughToggled event, Emitter<OverlayWindowSettingsState> emit) {
+    emit(state.copyWith(isTouchThru: !state.isTouchThru));
+    // TODO(@fewling): use overlay service to set touch through
   }
 }

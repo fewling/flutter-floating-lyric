@@ -3,7 +3,6 @@ part of 'home_bloc.dart';
 @freezed
 class HomeState with _$HomeState {
   const factory HomeState({
-    @Default(0) int currentIndex,
     @Default(null) MediaState? mediaState,
     @Default(false) bool isWindowVisible,
     @Default(false) bool isWindowLocked,
