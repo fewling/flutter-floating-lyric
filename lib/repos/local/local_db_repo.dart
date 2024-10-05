@@ -38,10 +38,15 @@ class LocalDbRepo {
   Future<List<LrcDB>> search(String searchTerm) async {
     final foundLyrics = <LrcDB>{};
 
-    final titleF = _isar.lrcDBs.where().filter().titleContains(searchTerm, caseSensitive: false).findAll();
-    final artistF = _isar.lrcDBs.where().filter().artistContains(searchTerm, caseSensitive: false).findAll();
+    // final titleF = _isar.lrcDBs.where().filter().titleContains(searchTerm, caseSensitive: false).findAll();
+    // final artistF = _isar.lrcDBs.where().filter().artistContains(searchTerm, caseSensitive: false).findAll();
+    final filesF = _isar.lrcDBs.where().filter().fileNameContains(searchTerm, caseSensitive: false).findAll();
 
-    final results = await Future.wait([titleF, artistF]);
+    final results = await Future.wait([
+      // titleF,
+      // artistF,
+      filesF,
+    ]);
 
     for (final result in results) {
       foundLyrics.addAll(result);

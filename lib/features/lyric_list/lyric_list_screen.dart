@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../configs/routes/app_router.dart';
 import '../../models/lyric_model.dart';
 import '../../widgets/fail_import_dialog.dart';
+import '../../widgets/loading_widget.dart';
 import 'bloc/lyric_list_bloc.dart';
 
 class LyricListScreen extends StatelessWidget {
@@ -24,24 +25,25 @@ class LyricListScreen extends StatelessWidget {
           switch (state.importStatus) {
             case LyricListImportStatus.initial:
             case LyricListImportStatus.importing:
-            case LyricListImportStatus.imported:
               break;
             case LyricListImportStatus.error:
-              if (state.failedImportFiles.isNotEmpty) {
-                showDialog(
-                  context: context,
-                  builder: (context) => FailedImportDialog(state.failedImportFiles),
-                );
-              }
+              showDialog(
+                context: context,
+                builder: (context) => FailedImportDialog(state.failedImportFiles),
+              );
               break;
           }
         },
-        child: FloatingActionButton(
-          hoverElevation: 16,
-          tooltip: 'Import',
-          child: const Icon(Icons.add),
-          onPressed: () => context.read<LyricListBloc>().add(const ImportLRCsRequested()),
-        ),
+        child: Builder(builder: (context) {
+          final importing = context.select((LyricListBloc bloc) => bloc.state.importStatus.isImporting);
+
+          return FloatingActionButton(
+            hoverElevation: 16,
+            tooltip: 'Import',
+            onPressed: importing ? null : () => context.read<LyricListBloc>().add(const ImportLRCsRequested()),
+            child: importing ? const LoadingWidget() : const Icon(Icons.add),
+          );
+        }),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );

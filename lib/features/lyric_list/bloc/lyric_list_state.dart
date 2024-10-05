@@ -12,7 +12,7 @@ class LyricListState with _$LyricListState {
 
 enum LyricListDeleteStatus { initial, deleted, error }
 
-enum LyricListImportStatus { initial, importing, imported, error }
+enum LyricListImportStatus { initial, importing, error }
 
 extension LyricListDeleteStatusX on LyricListDeleteStatus {
   bool get isInitial => this == LyricListDeleteStatus.initial;
@@ -23,6 +23,5 @@ extension LyricListDeleteStatusX on LyricListDeleteStatus {
 extension LyricListImportStatusX on LyricListImportStatus {
   bool get isInitial => this == LyricListImportStatus.initial;
   bool get isImporting => this == LyricListImportStatus.importing;
-  bool get isImported => this == LyricListImportStatus.imported;
   bool get isError => this == LyricListImportStatus.error;
 }
