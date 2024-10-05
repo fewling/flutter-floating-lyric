@@ -1,9 +1,7 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../service/db/local/local_db_service.dart';
-import '../../../service/lrc/lrc_process_service.dart';
 import '../../../service/lrc_lib/lrc_lib_service.dart';
 import '../../../service/permissions/permission_service.dart';
 import '../../../services/event_channels/media_states/media_state.dart';
@@ -16,11 +14,9 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc({
     required PermissionService permissionService,
-    required LrcProcessorService lrcProcessorService,
     required LrcLibService lrcLibService,
     required LocalDbService localDbService,
   })  : _permissionService = permissionService,
-        _lrcProcessorService = lrcProcessorService,
         _lrcLibService = lrcLibService,
         _localDbService = localDbService,
         super(const HomeState()) {
@@ -28,7 +24,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       (event, emit) => switch (event) {
         HomeStarted() => _onStarted(event, emit),
         StartMusicPlayerRequested() => _onStartMusicPlayerRequested(event, emit),
-        ImportLRCsRequested() => _onImportLRCsRequested(event, emit),
         SearchOnlineRequested() => _onSearchOnlineRequested(event, emit),
         SearchResponseReceived() => _onSearchResponseReceived(event, emit),
         EditFieldRequested() => _onEditFieldRequested(event, emit),
@@ -43,7 +38,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   final PermissionService _permissionService;
-  final LrcProcessorService _lrcProcessorService;
   final LrcLibService _lrcLibService;
   final LocalDbService _localDbService;
 
@@ -58,17 +52,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   void _onStartMusicPlayerRequested(StartMusicPlayerRequested event, Emitter<HomeState> emit) {
     _permissionService.start3rdMusicPlayer();
-  }
-
-  Future<void> _onImportLRCsRequested(ImportLRCsRequested event, Emitter<HomeState> emit) async {
-    emit(state.copyWith(isProcessingFiles: true));
-
-    final failed = await _lrcProcessorService.pickLrcFiles();
-
-    emit(state.copyWith(
-      isProcessingFiles: false,
-      failedFiles: failed,
-    ));
   }
 
   Future<void> _onSearchOnlineRequested(SearchOnlineRequested event, Emitter<HomeState> emit) async {

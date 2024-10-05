@@ -14,10 +14,6 @@ final class StartMusicPlayerRequested extends HomeEvent {
   const StartMusicPlayerRequested();
 }
 
-final class ImportLRCsRequested extends HomeEvent {
-  const ImportLRCsRequested();
-}
-
 final class SearchOnlineRequested extends HomeEvent {
   const SearchOnlineRequested();
 }

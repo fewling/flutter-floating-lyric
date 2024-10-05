@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
-import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
+import '../import_local_lrc/import_local_lrc.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../overlay_window_settings/overlay_window_settings.dart';
 import '../preference/bloc/preference_bloc.dart';
@@ -20,43 +20,41 @@ class HomeScreen extends StatelessWidget {
       listener: (context, state) {
         context.read<HomeBloc>().add(MediaStateChanged(state.mediaState));
       },
-      child: const Scaffold(
-        body: DefaultTabController(
-          length: 3,
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: MediaSettingTitle(),
+      child: const DefaultTabController(
+        length: 3,
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: MediaSettingTitle(),
+            ),
+            SliverToBoxAdapter(
+              child: TabBar(
+                tabs: [
+                  Tab(
+                    text: 'Window Configs',
+                    icon: Icon(Icons.window_outlined),
+                  ),
+                  Tab(
+                    text: 'Import Lyrics',
+                    icon: Icon(Icons.folder_copy_outlined),
+                  ),
+                  Tab(
+                    text: 'Online Lyrics',
+                    icon: Icon(Icons.cloud_outlined),
+                  ),
+                ],
               ),
-              SliverToBoxAdapter(
-                child: TabBar(
-                  tabs: [
-                    Tab(
-                      text: 'Window Settings',
-                      icon: Icon(Icons.window_outlined),
-                    ),
-                    Tab(
-                      text: 'Import Lyrics',
-                      icon: Icon(Icons.folder_copy_outlined),
-                    ),
-                    Tab(
-                      text: 'Online Lyrics',
-                      icon: Icon(Icons.cloud_outlined),
-                    ),
-                  ],
-                ),
+            ),
+            SliverFillRemaining(
+              child: TabBarView(
+                children: [
+                  OverlayWindowSetting(),
+                  ImportLocalLrc(),
+                  OnlineLyricContent(),
+                ],
               ),
-              SliverFillRemaining(
-                child: TabBarView(
-                  children: [
-                    OverlayWindowSetting(),
-                    LrcFormatContent(),
-                    OnlineLyricContent(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -169,90 +167,6 @@ class MediaSettingContent extends StatelessWidget {
               )
             ],
           );
-  }
-}
-
-class LrcFormatContent extends StatelessWidget {
-  const LrcFormatContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    final title = context.select<HomeBloc, String>(
-      (bloc) => bloc.state.mediaState?.title ?? '',
-    );
-
-    final artist = context.select<HomeBloc, String>(
-      (bloc) => bloc.state.mediaState?.artist ?? '',
-    );
-
-    final isProcessing = context.select<HomeBloc, bool>(
-      (bloc) => bloc.state.isProcessingFiles,
-    );
-
-    final txtTheme = Theme.of(context).textTheme;
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          ListTile(
-            titleTextStyle: txtTheme.titleSmall?.copyWith(
-              color: colorScheme.onPrimaryContainer,
-            ),
-            title: const Text(
-              'Your LRC file should match one of the following formats:',
-            ),
-          ),
-          ListTile(
-            title: const Text('1. File name should be:'),
-            subtitle: SelectableText(
-              '$title - $artist.lrc',
-              style: TextStyle(color: colorScheme.outline),
-            ),
-          ),
-          ListTile(
-            title: const Text('2. File name should be:'),
-            subtitle: SelectableText(
-              '$artist - $title.lrc',
-              style: TextStyle(color: colorScheme.outline),
-            ),
-          ),
-          ListTile(
-            title: const Text('3. File should contain:'),
-            subtitle: SelectableText(
-              '[ti:$title]\n'
-              '[ar:$artist]',
-              style: TextStyle(color: colorScheme.outline),
-            ),
-          ),
-          if (isProcessing)
-            ElevatedButton.icon(
-              onPressed: null,
-              icon: const Center(child: CircularProgressIndicator()),
-              label: const Text('Importing...'),
-            )
-          else
-            BlocListener<HomeBloc, HomeState>(
-              listenWhen: (previous, current) => previous.failedFiles != current.failedFiles,
-              listener: (context, state) {
-                if (state.failedFiles.isNotEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => FailedImportDialog(state.failedFiles),
-                  );
-                }
-              },
-              child: ElevatedButton.icon(
-                onPressed: () => context.read<HomeBloc>().add(const ImportLRCsRequested()),
-                icon: const Icon(Icons.drive_folder_upload_outlined),
-                label: const Text('Import'),
-              ),
-            ),
-        ],
-      ),
-    );
   }
 }
 
