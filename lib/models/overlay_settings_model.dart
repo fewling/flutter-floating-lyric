@@ -15,8 +15,8 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     String? title,
     String? line1,
     String? line2,
-    String? positionLeftLabel,
-    String? positionRightLabel,
+    // String? positionLeftLabel,
+    // String? positionRightLabel,
     double? position,
     double? duration,
 

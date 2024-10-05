@@ -26,15 +26,10 @@ class OverlayWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return _OverlayLoadingIndicator(debugText: debugText);
+    if (isLoading) return const OverlayLoadingIndicator();
 
     // final foregroundColor = settings.color == null ? null : Color(settings.color!);
     final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
-
-    final pos = settings.position ?? 0;
-    final max = settings.duration ?? 0;
-
-    final progress = max == 0 ? 0 : pos / max;
 
     return InkWell(
       onTap: onWindowTap,
@@ -53,7 +48,7 @@ class OverlayWindow extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      settings.title ?? '',
+                      settings.title ?? ' ',
                       style: TextStyle(color: foregroundColor),
                     ),
                   ),
@@ -93,43 +88,28 @@ class OverlayWindow extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                settings.line1 ?? '',
+                settings.line1 ?? ' ',
                 style: TextStyle(
                   color: foregroundColor,
                   fontSize: settings.fontSize,
                 ),
               ),
             ),
-            if (settings.line2 != null && settings.line2!.isNotEmpty)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  settings.line2 ?? '',
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: settings.fontSize,
-                  ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                settings.line2 ?? ' ',
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: settings.fontSize,
                 ),
               ),
+            ),
             if (!isLyricOnly)
-              Row(
-                children: [
-                  Text(
-                    settings.positionLeftLabel ?? '',
-                    style: TextStyle(color: foregroundColor),
-                  ),
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: progress.toDouble(),
-                      color: foregroundColor,
-                    ),
-                  ),
-                  Text(
-                    settings.positionRightLabel ?? '',
-                    style: TextStyle(color: foregroundColor),
-                  ),
-                ].separatedBy(const SizedBox(width: 8)).toList(),
-              )
+              OverlayProgressBar(
+                settings: settings,
+                foregroundColor: foregroundColor,
+              ),
           ].separatedBy(const SizedBox(height: 4)).toList(),
         ),
       ),
@@ -137,31 +117,57 @@ class OverlayWindow extends StatelessWidget {
   }
 }
 
-// TODO(@fewling): Replace with a better loading indicator
-class _OverlayLoadingIndicator extends StatelessWidget {
-  const _OverlayLoadingIndicator({
+class OverlayProgressBar extends StatelessWidget {
+  const OverlayProgressBar({
     super.key,
-    required this.debugText,
+    required this.settings,
+    required this.foregroundColor,
   });
 
-  final String? debugText;
+  final OverlaySettingsModel settings;
+  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: ColoredBox(
-        color: Colors.red.shade300,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (debugText != null)
-              Text(
-                debugText!,
-                style: const TextStyle(color: Colors.white),
-              ),
-          ].separatedBy(const SizedBox(height: 8)).toList(),
+    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
+
+    final pos = Duration(milliseconds: settings.position?.toInt() ?? 0);
+    final max = Duration(milliseconds: settings.duration?.toInt() ?? 0);
+
+    final progress = max.inMilliseconds == 0 ? 0 : pos.inMilliseconds / max.inMilliseconds;
+
+    final left = (settings.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
+    final right = (settings.showMillis ?? false) ? max.mmssmm() : max.mmss();
+
+    return Row(
+      children: [
+        Text(
+          left,
+          style: TextStyle(color: foregroundColor),
         ),
-      ),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: progress.toDouble(),
+            color: foregroundColor,
+          ),
+        ),
+        Text(
+          right,
+          style: TextStyle(color: foregroundColor),
+        ),
+      ].separatedBy(const SizedBox(width: 8)).toList(),
+    );
+  }
+}
+
+// TODO(@fewling): Replace with a better loading indicator
+class OverlayLoadingIndicator extends StatelessWidget {
+  const OverlayLoadingIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Material(
+      child: CircularProgressIndicator(),
     );
   }
 }
