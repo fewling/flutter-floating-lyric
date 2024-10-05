@@ -8,6 +8,7 @@ import '../../repos/local/local_db_repo.dart';
 import '../../repos/local/preference_repo.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/message_channels/to_overlay_message_service.dart';
+import '../../service/permissions/permission_service.dart';
 import '../../service/platform_methods/window_channel_service.dart';
 import '../../service/preference/preference_service.dart';
 import '../../services/lrclib/repo/lrclib_repository.dart';
@@ -70,6 +71,7 @@ class GlobalDependencyInjector extends StatelessWidget {
                 localDBRepo: context.read<LocalDbRepo>(),
               ),
               lyricRepository: context.read<LrcLibRepository>(),
+              permissionService: PermissionService(),
             )..add(LyricStateListenerLoaded(
                 isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
                 showLine2: context.read<PreferenceBloc>().state.showLine2,
