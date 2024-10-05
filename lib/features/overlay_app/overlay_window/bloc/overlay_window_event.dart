@@ -27,5 +27,7 @@ final class WindowTapped extends OverlayWindowEvent {
 }
 
 final class LockToggled extends OverlayWindowEvent {
-  const LockToggled();
+  const LockToggled(this.isLocked);
+
+  final bool isLocked;
 }

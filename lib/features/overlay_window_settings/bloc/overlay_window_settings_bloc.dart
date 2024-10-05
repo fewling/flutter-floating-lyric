@@ -125,9 +125,17 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     }
   }
 
-  void _onIgnoreTouchToggled(WindowIgnoreTouchToggled event, Emitter<OverlayWindowSettingsState> emit) {
-    emit(state.copyWith(isIgnoreTouch: event.isIgnored));
-    // TODO(@fewling): use overlay service to ignore touch
+  Future<void> _onIgnoreTouchToggled(WindowIgnoreTouchToggled event, Emitter<OverlayWindowSettingsState> emit) async {
+    final newState = state.copyWith(
+      settings: state.settings.copyWith(
+        ignoreTouch: event.isIgnored,
+      ),
+    );
+    emit(newState);
+
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(
+      settings: newState.settings,
+    ));
   }
 
   void _onTouchThroughToggled(WindowTouchThroughToggled event, Emitter<OverlayWindowSettingsState> emit) {

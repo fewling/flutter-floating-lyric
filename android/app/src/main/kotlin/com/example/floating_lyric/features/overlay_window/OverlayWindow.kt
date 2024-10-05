@@ -71,7 +71,7 @@ class OverlayView(context: Context) : View.OnTouchListener {
                             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED),
             PixelFormat.TRANSLUCENT
         ).apply {
-            gravity = Gravity.TOP or Gravity.START
+            gravity = Gravity.CENTER or Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
             x = 0
             y = 0
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
