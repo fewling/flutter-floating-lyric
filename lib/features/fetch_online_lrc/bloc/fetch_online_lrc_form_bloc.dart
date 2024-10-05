@@ -4,6 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../service/db/local/local_db_service.dart';
 import '../../../service/lrc_lib/lrc_lib_service.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
+import '../../../utils/logger.dart';
 
 part 'fetch_online_lrc_form_bloc.freezed.dart';
 part 'fetch_online_lrc_form_event.dart';
@@ -21,7 +22,7 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
         FetchOnlineLrcFormStarted() => _onStarted(event, emit),
         NewSongPlayed() => _onNewSongPlayed(event, emit),
         SearchOnlineRequested() => _onSearchRequested(event, emit),
-        SearchResponseReceived() => _onResponseReceived(event, emit),
+        ErrorResponseHandled() => _onErrorHandled(event, emit),
         EditFieldRequested() => _onEditFieldRequested(event, emit),
         SaveLyricResponseRequested() => _onSaveLyricRequested(event, emit),
         SaveTitleAltRequested() => _onSaveTitleAltRequested(event, emit),
@@ -61,7 +62,7 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
   Future<void> _onSearchRequested(SearchOnlineRequested event, Emitter<FetchOnlineLrcFormState> emit) async {
     try {
       emit(state.copyWith(
-        isSearchingOnline: true,
+        requestStatus: OnlineLrcRequestStatus.loading,
         lrcLibResponse: null,
       ));
 
@@ -73,19 +74,23 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
       );
 
       emit(state.copyWith(
-        isSearchingOnline: false,
+        requestStatus: OnlineLrcRequestStatus.success,
         lrcLibResponse: response,
       ));
     } catch (e) {
+      logger.e('FetchOnlineLrcFormBloc._onSearchRequested: $e');
       emit(state.copyWith(
-        isSearchingOnline: false,
+        requestStatus: OnlineLrcRequestStatus.failure,
         lrcLibResponse: null,
       ));
     }
   }
 
-  void _onResponseReceived(SearchResponseReceived event, Emitter<FetchOnlineLrcFormState> emit) {
-    emit(state.copyWith(lrcLibResponse: null));
+  void _onErrorHandled(ErrorResponseHandled event, Emitter<FetchOnlineLrcFormState> emit) {
+    emit(state.copyWith(
+      requestStatus: OnlineLrcRequestStatus.initial,
+      lrcLibResponse: null,
+    ));
   }
 
   void _onEditFieldRequested(EditFieldRequested event, Emitter<FetchOnlineLrcFormState> emit) {
