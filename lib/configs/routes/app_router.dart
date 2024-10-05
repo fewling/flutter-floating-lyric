@@ -20,9 +20,7 @@ import '../../features/settings/settings_screen.dart';
 import '../../repos/local/local_db_repo.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/lrc/lrc_process_service.dart';
-import '../../service/lrc_lib/lrc_lib_service.dart';
 import '../../service/permissions/permission_service.dart';
-import '../../services/lrclib/repo/lrclib_repository.dart';
 import 'app_routes_observer.dart';
 
 part 'app_routes.dart';
@@ -67,12 +65,6 @@ class AppRouter {
               builder: (context, state) => BlocProvider(
                 create: (context) => HomeBloc(
                   permissionService: PermissionService(),
-                  lrcLibService: LrcLibService(
-                    lrcLibRepository: context.read<LrcLibRepository>(),
-                  ),
-                  localDbService: LocalDbService(
-                    localDBRepo: context.read<LocalDbRepo>(),
-                  ),
                 )..add(HomeStarted(mediaState: context.read<LyricStateListenerBloc>().state.mediaState)),
                 child: const HomeScreen(),
               ),
