@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../models/overlay_settings_model.dart';
-import '../utils/extensions/custom_extensions.dart';
+import '../../../models/overlay_settings_model.dart';
+import '../../../utils/extensions/custom_extensions.dart';
+import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindow extends StatelessWidget {
   const OverlayWindow({
@@ -55,6 +57,18 @@ class OverlayWindow extends StatelessWidget {
                       child: Text(
                         settings.title ?? '',
                         style: TextStyle(color: foregroundColor),
+                      ),
+                    ),
+                    ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          onTap: () => context.read<OverlayWindowBloc>().add(const LockToggled()),
+                          child: context.select((OverlayWindowBloc b) => b.state.isLocked)
+                              ? Icon(Icons.lock, color: foregroundColor)
+                              : Icon(Icons.lock_open_outlined, color: foregroundColor),
+                        ),
                       ),
                     ),
                     ClipOval(

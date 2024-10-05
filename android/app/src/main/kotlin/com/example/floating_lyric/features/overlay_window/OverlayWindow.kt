@@ -37,6 +37,7 @@ class OverlayView(context: Context) : View.OnTouchListener {
     private var serviceContext: Context = context
     private var layoutParams: WindowManager.LayoutParams
     private var showing = false
+    private var isLocked = false
 
 //    private var lastX = 0f
 //    private var lastY = 0f
@@ -98,6 +99,15 @@ class OverlayView(context: Context) : View.OnTouchListener {
                     }
                     if (height != null) {
                         layoutParams.height = height.toInt()
+                    }
+                    updateViewWithLayoutParams()
+                    result.success(true)
+                }
+
+                "toggleLock" -> {
+                    val shouldLock = call.argument<Boolean>("isLocked")
+                    if (shouldLock != null) {
+                        isLocked = shouldLock
                     }
                     updateViewWithLayoutParams()
                     result.success(true)
@@ -191,6 +201,8 @@ class OverlayView(context: Context) : View.OnTouchListener {
 
         when (e.action) {
             MotionEvent.ACTION_DOWN -> {
+                if (isLocked) return false
+
                 x = layoutParams.x.toDouble()
                 y = layoutParams.y.toDouble()
 
@@ -201,6 +213,8 @@ class OverlayView(context: Context) : View.OnTouchListener {
             }
 
             MotionEvent.ACTION_MOVE -> {
+                if (isLocked) return false
+
                 layoutParams.x = (x + e.rawX - px).toInt()
                 layoutParams.y = (y + e.rawY - py).toInt()
                 windowManager.updateViewLayout(flutterView, layoutParams)

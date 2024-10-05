@@ -7,21 +7,3 @@ sealed class OverlayAppEvent {
 final class OverlayAppStarted extends OverlayAppEvent {
   const OverlayAppStarted();
 }
-
-final class CloseRequested extends OverlayAppEvent {
-  const CloseRequested();
-}
-
-final class WindowResized extends OverlayAppEvent {
-  const WindowResized({
-    required this.width,
-    required this.height,
-  });
-
-  final double width;
-  final double height;
-}
-
-final class WindowTapped extends OverlayAppEvent {
-  const WindowTapped();
-}
