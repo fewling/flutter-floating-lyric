@@ -67,9 +67,6 @@ class AppRouter {
               builder: (context, state) => BlocProvider(
                 create: (context) => HomeBloc(
                   permissionService: PermissionService(),
-                  lrcProcessorService: LrcProcessorService(
-                    localDB: context.read<LocalDbRepo>(),
-                  ),
                   lrcLibService: LrcLibService(
                     lrcLibRepository: context.read<LrcLibRepository>(),
                   ),
