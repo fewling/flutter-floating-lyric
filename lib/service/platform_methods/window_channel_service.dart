@@ -14,4 +14,10 @@ class WindowChannelService {
   Future<bool?> isActive() {
     return _channel.invokeMethod<bool>('isActive');
   }
+
+  Future<bool?> setTouchThru(bool isTouchThru) {
+    return _channel.invokeMethod<bool>('setTouchThru', {
+      'isTouchThru': isTouchThru,
+    });
+  }
 }

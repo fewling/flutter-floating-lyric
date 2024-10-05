@@ -199,10 +199,7 @@ class OverlayWindowSetting extends StatelessWidget {
                   'Enabling this will lock the window from moving too.\n'
                   'Disabling this will not unlock it.',
                 ),
-                secondary: const Icon(
-                  Icons.do_not_touch_outlined,
-                  color: Colors.orange,
-                ),
+                secondary: const Icon(Icons.warning, color: Colors.orange),
                 onChanged: !visibleFloatingWindow
                     ? null
                     : (value) => context.read<OverlayWindowSettingsBloc>().add(WindowIgnoreTouchToggled(value)),
@@ -211,19 +208,18 @@ class OverlayWindowSetting extends StatelessWidget {
             Builder(
               builder: (context) {
                 final isTouchThru = context.select<OverlayWindowSettingsBloc, bool>(
-                  (bloc) => bloc.state.isTouchThru,
+                  (bloc) => bloc.state.settings.touchThru ?? false,
                 );
                 return SwitchListTile(
                   value: isTouchThru,
-                  title: const Text('Touch Through ⚠️'),
-                  subtitle: isTouchThru
-                      ? const Text(
-                          'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
-                          "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
-                        )
-                      : null,
+                  secondary: const Icon(Icons.warning, color: Colors.red),
+                  title: const Text('Touch Through'),
+                  subtitle: const Text(
+                    'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
+                    "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
+                  ),
                   onChanged: visibleFloatingWindow
-                      ? (_) => context.read<OverlayWindowSettingsBloc>().add(const WindowTouchThroughToggled())
+                      ? (value) => context.read<OverlayWindowSettingsBloc>().add(WindowTouchThruToggled(value))
                       : null,
                 );
               },
