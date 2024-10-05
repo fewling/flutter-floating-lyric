@@ -63,8 +63,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         appColorScheme: pref.appColorScheme,
 
         // lyric:
-        line1: lyric.line1,
-        line2: lyric.line2,
+        line1: lyric.line1?.content,
+        line2: lyric.line2?.content,
         position: lyric.mediaState?.position,
         duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,
@@ -109,8 +109,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
     final newState = state.copyWith(
       settings: state.settings.copyWith(
-        line1: lyric.line1,
-        line2: lyric.line2,
+        line1: lyric.line1?.content,
+        line2: lyric.line2?.content,
         position: lyric.mediaState?.position,
         duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,

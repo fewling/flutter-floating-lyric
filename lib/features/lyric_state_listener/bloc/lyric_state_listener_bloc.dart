@@ -90,21 +90,79 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               if (success) break;
             }
           } else if (currentLrc != null) {
-            for (final line in currentLrc.lines.reversed) {
-              if (position > line.time.inMilliseconds || line == currentLrc.lines.first) {
-                emit(state.copyWith(
-                  line1: line.content,
-                  mediaState: state.mediaState?.copyWith(
-                    position: position,
-                    duration: duration,
-                  ),
-                ));
-                break;
+            if (currentLrc.lines.isEmpty) {
+              emit(state.copyWith(
+                line1: null,
+                line2: null,
+                mediaState: state.mediaState?.copyWith(
+                  position: position,
+                  duration: duration,
+                ),
+              ));
+              break;
+            }
+
+            if (state.showLine2) {
+              var line1 = state.line1;
+              var line2 = state.line2;
+
+              if (state.line1 == null && state.line2 == null) {
+                line1 = currentLrc.lines.first;
+                line2 = currentLrc.lines.elementAtOrNull(1);
+              } else {
+                if (line1 == null) break;
+                if (line2 == null) break;
+
+                final line1Index = currentLrc.lines.indexOf(line1);
+                final line2Index = currentLrc.lines.indexOf(line2);
+                if (line1Index < 0 || line2Index < 0) break;
+
+                final lineAfterLine1 = currentLrc.lines.elementAtOrNull(line1Index + 1);
+                if (lineAfterLine1 != null) {
+                  if (position > lineAfterLine1.time.inMilliseconds) {
+                    line1 = currentLrc.lines.elementAtOrNull(line1Index + 2);
+                  }
+                }
+
+                final lineAfterLine2 = currentLrc.lines.elementAtOrNull(line2Index + 1);
+                if (lineAfterLine2 != null) {
+                  if (position > lineAfterLine2.time.inMilliseconds) {
+                    line2 = currentLrc.lines.elementAtOrNull(line2Index + 2);
+                  }
+                }
+              }
+
+              emit(state.copyWith(
+                line1: line1,
+                line2: line2,
+                mediaState: state.mediaState?.copyWith(
+                  position: position,
+                  duration: duration,
+                ),
+              ));
+            } else {
+              final reversed = currentLrc.lines.reversed.toList();
+              for (final line in reversed) {
+                if (position > line.time.inMilliseconds || line == currentLrc.lines.first) {
+                  emit(state.copyWith(
+                    line1: line,
+                    mediaState: state.mediaState?.copyWith(
+                      position: position,
+                      duration: duration,
+                    ),
+                  ));
+                  break;
+                }
               }
             }
           } else if (currentLrc == null) {
             emit(state.copyWith(
-              line1: state.isSearchingOnline ? 'Searching Online...' : 'No lyric found',
+              // line1: LrcLine(
+              //   time: Duration.zero,
+              //   content: state.isSearchingOnline ? 'Searching Online...' : 'No lyric found',
+              // ),
+              line1: null,
+              line2: null,
               mediaState: state.mediaState?.copyWith(
                 position: position,
                 duration: duration,
@@ -140,7 +198,10 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     try {
       emit(state.copyWith(
         isSearchingOnline: true,
-        line1: 'Searching Online...',
+        line1: const LrcLine(
+          time: Duration.zero,
+          content: 'Searching Online...',
+        ),
       ));
 
       final response = await _lyricRepository.getLyric(

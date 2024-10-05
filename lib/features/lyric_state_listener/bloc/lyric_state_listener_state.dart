@@ -5,8 +5,8 @@ class LyricStateListenerState with _$LyricStateListenerState {
   const factory LyricStateListenerState({
     @Default(null) MediaState? mediaState,
     Lrc? currentLrc,
-    String? line1,
-    String? line2,
+    LrcLine? line1,
+    LrcLine? line2,
     @Default(false) bool isAutoFetch,
     @Default(false) bool shouldSearchOnline,
     @Default(false) bool isSearchingOnline,
