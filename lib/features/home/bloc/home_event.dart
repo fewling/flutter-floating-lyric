@@ -10,29 +10,8 @@ final class MediaStateChanged extends HomeEvent {
   final MediaState? mediaState;
 }
 
-final class StepTapped extends HomeEvent {
-  const StepTapped(this.index);
-  final int index;
-}
-
 final class StartMusicPlayerRequested extends HomeEvent {
   const StartMusicPlayerRequested();
-}
-
-final class WindowLockToggled extends HomeEvent {
-  const WindowLockToggled(this.isLocked);
-
-  final bool isLocked;
-}
-
-final class WindowIgnoreTouchToggled extends HomeEvent {
-  const WindowIgnoreTouchToggled(this.isIgnored);
-
-  final bool isIgnored;
-}
-
-final class WindowTouchThroughToggled extends HomeEvent {
-  const WindowTouchThroughToggled();
 }
 
 final class ImportLRCsRequested extends HomeEvent {
@@ -85,6 +64,12 @@ final class SaveAlbumAltRequested extends HomeEvent {
 
 final class NewSongPlayed extends HomeEvent {
   const NewSongPlayed(this.mediaState);
+
+  final MediaState? mediaState;
+}
+
+final class HomeStarted extends HomeEvent {
+  const HomeStarted({this.mediaState});
 
   final MediaState? mediaState;
 }

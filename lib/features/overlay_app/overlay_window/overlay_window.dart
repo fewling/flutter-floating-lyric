@@ -36,105 +36,101 @@ class OverlayWindow extends StatelessWidget {
 
     final progress = max == 0 ? 0 : pos / max;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onWindowTap,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (debugText != null)
-                Text(
-                  debugText!,
-                  style: TextStyle(color: foregroundColor),
+    return InkWell(
+      onTap: onWindowTap,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (debugText != null)
+              Text(
+                debugText!,
+                style: TextStyle(color: foregroundColor),
+              ),
+            if (!isLyricOnly)
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      settings.title ?? '',
+                      style: TextStyle(color: foregroundColor),
+                    ),
+                  ),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.transparent,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        onTap: () => context.read<OverlayWindowBloc>().add(const LockToggled()),
+                        child: context.select((OverlayWindowBloc b) => b.state.isLocked)
+                            ? Icon(Icons.lock, color: foregroundColor)
+                            : Icon(Icons.lock_open_outlined, color: foregroundColor),
+                      ),
+                    ),
+                  ),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.transparent,
+                      shape: const CircleBorder(),
+                      child: InkWell(
+                        onTap: () {},
+                        child: Icon(Icons.remove, color: foregroundColor),
+                      ),
+                    ),
+                  ),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: onCloseTap,
+                        child: Icon(Icons.close, color: foregroundColor),
+                      ),
+                    ),
+                  ),
+                ].separatedBy(const SizedBox(width: 16)).toList(),
+              ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                settings.line1 ?? '',
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: settings.fontSize,
                 ),
-              if (!isLyricOnly)
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        settings.title ?? '',
-                        style: TextStyle(color: foregroundColor),
-                      ),
-                    ),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        shape: const CircleBorder(),
-                        child: InkWell(
-                          onTap: () => context.read<OverlayWindowBloc>().add(const LockToggled()),
-                          child: context.select((OverlayWindowBloc b) => b.state.isLocked)
-                              ? Icon(Icons.lock, color: foregroundColor)
-                              : Icon(Icons.lock_open_outlined, color: foregroundColor),
-                        ),
-                      ),
-                    ),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        shape: const CircleBorder(),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Icon(Icons.remove, color: foregroundColor),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: onCloseTap,
-                          child: Icon(Icons.close, color: foregroundColor),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              ),
+            ),
+            if (settings.line2 != null && settings.line2!.isNotEmpty)
               Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.centerRight,
                 child: Text(
-                  settings.line1 ?? '',
+                  settings.line2 ?? '',
                   style: TextStyle(
                     color: foregroundColor,
                     fontSize: settings.fontSize,
                   ),
                 ),
               ),
-              if (settings.line2 != null && settings.line2!.isNotEmpty)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    settings.line2 ?? '',
-                    style: TextStyle(
+            if (!isLyricOnly)
+              Row(
+                children: [
+                  Text(
+                    settings.positionLeftLabel ?? '',
+                    style: TextStyle(color: foregroundColor),
+                  ),
+                  Expanded(
+                    child: LinearProgressIndicator(
+                      value: progress.toDouble(),
                       color: foregroundColor,
-                      fontSize: settings.fontSize,
                     ),
                   ),
-                ),
-              if (!isLyricOnly)
-                Row(
-                  children: [
-                    Text(
-                      settings.positionLeftLabel ?? '',
-                      style: TextStyle(color: foregroundColor),
-                    ),
-                    Expanded(
-                      child: LinearProgressIndicator(
-                        value: progress.toDouble(),
-                        color: foregroundColor,
-                      ),
-                    ),
-                    Text(
-                      settings.positionRightLabel ?? '',
-                      style: TextStyle(color: foregroundColor),
-                    ),
-                  ].separatedBy(const SizedBox(width: 8)).toList(),
-                )
-            ].separatedBy(const SizedBox(height: 4)).toList(),
-          ),
+                  Text(
+                    settings.positionRightLabel ?? '',
+                    style: TextStyle(color: foregroundColor),
+                  ),
+                ].separatedBy(const SizedBox(width: 8)).toList(),
+              )
+          ].separatedBy(const SizedBox(height: 4)).toList(),
         ),
       ),
     );

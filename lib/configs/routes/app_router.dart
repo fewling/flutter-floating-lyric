@@ -13,6 +13,7 @@ import '../../features/lyric_list/bloc/lyric_list_bloc.dart';
 import '../../features/lyric_list/lyric_detail/bloc/lyric_detail_bloc.dart';
 import '../../features/lyric_list/lyric_detail/lyric_detail_screen.dart';
 import '../../features/lyric_list/lyric_list_screen.dart';
+import '../../features/lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../../features/permissions/bloc/permission_bloc.dart';
 import '../../features/permissions/permission_screen.dart';
 import '../../features/settings/settings_screen.dart';
@@ -75,7 +76,7 @@ class AppRouter {
                   localDbService: LocalDbService(
                     localDBRepo: context.read<LocalDbRepo>(),
                   ),
-                ),
+                )..add(HomeStarted(mediaState: context.read<LyricStateListenerBloc>().state.mediaState)),
                 child: const HomeScreen(),
               ),
             ),
