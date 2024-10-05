@@ -25,6 +25,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     int? color,
     bool? showProgressBar,
     bool? showMillis,
+    bool? showLine2,
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,

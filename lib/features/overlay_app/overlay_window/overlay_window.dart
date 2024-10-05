@@ -95,16 +95,17 @@ class OverlayWindow extends StatelessWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                settings.line2 ?? ' ',
-                style: TextStyle(
-                  color: foregroundColor,
-                  fontSize: settings.fontSize,
+            if (settings.showLine2 ?? false)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  settings.line2 ?? ' ',
+                  style: TextStyle(
+                    color: foregroundColor,
+                    fontSize: settings.fontSize,
+                  ),
                 ),
               ),
-            ),
             if (!isLyricOnly)
               OverlayProgressBar(
                 settings: settings,

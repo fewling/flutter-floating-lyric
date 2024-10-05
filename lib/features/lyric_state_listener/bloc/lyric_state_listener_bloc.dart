@@ -113,21 +113,23 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
                 if (line1 == null) break;
                 if (line2 == null) break;
 
-                final line1Index = currentLrc.lines.indexOf(line1);
-                final line2Index = currentLrc.lines.indexOf(line2);
-                if (line1Index < 0 || line2Index < 0) break;
+                for (var i = 0; i < currentLrc.lines.length; i++) {
+                  final line1Index = currentLrc.lines.indexOf(line1!);
+                  final line2Index = currentLrc.lines.indexOf(line2!);
+                  if (line1Index < 0 || line2Index < 0) break;
 
-                final lineAfterLine1 = currentLrc.lines.elementAtOrNull(line1Index + 1);
-                if (lineAfterLine1 != null) {
-                  if (position > lineAfterLine1.time.inMilliseconds) {
-                    line1 = currentLrc.lines.elementAtOrNull(line1Index + 2);
+                  final lineAfterLine1 = currentLrc.lines.elementAtOrNull(line1Index + 1);
+                  if (lineAfterLine1 != null) {
+                    if (position > lineAfterLine1.time.inMilliseconds) {
+                      line1 = currentLrc.lines.elementAtOrNull(line1Index + 2);
+                    }
                   }
-                }
 
-                final lineAfterLine2 = currentLrc.lines.elementAtOrNull(line2Index + 1);
-                if (lineAfterLine2 != null) {
-                  if (position > lineAfterLine2.time.inMilliseconds) {
-                    line2 = currentLrc.lines.elementAtOrNull(line2Index + 2);
+                  final lineAfterLine2 = currentLrc.lines.elementAtOrNull(line2Index + 1);
+                  if (lineAfterLine2 != null) {
+                    if (position > lineAfterLine2.time.inMilliseconds) {
+                      line2 = currentLrc.lines.elementAtOrNull(line2Index + 2);
+                    }
                   }
                 }
               }
@@ -157,10 +159,6 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
             }
           } else if (currentLrc == null) {
             emit(state.copyWith(
-              // line1: LrcLine(
-              //   time: Duration.zero,
-              //   content: state.isSearchingOnline ? 'Searching Online...' : 'No lyric found',
-              // ),
               line1: null,
               line2: null,
               mediaState: state.mediaState?.copyWith(
@@ -183,6 +181,8 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   void _onShowLine2Updated(ShowLine2Updated event, Emitter<LyricStateListenerState> emit) {
     emit(state.copyWith(
       showLine2: event.showLine2,
+      line1: null,
+      line2: null,
     ));
   }
 

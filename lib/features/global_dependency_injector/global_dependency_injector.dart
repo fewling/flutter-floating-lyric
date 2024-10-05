@@ -119,6 +119,12 @@ class PreferenceStateListener extends StatelessWidget {
               ),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
+          listenWhen: (previous, current) => previous.showLine2 != current.showLine2,
+          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
+                ShowLine2Updated(showLine2: state.showLine2),
+              ),
+        ),
+        BlocListener<PreferenceBloc, PreferenceState>(
           listener: (context, state) => context.read<OverlayWindowSettingsBloc>().add(
                 PreferenceUpdated(preferenceState: state),
               ),
