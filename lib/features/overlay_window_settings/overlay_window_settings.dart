@@ -188,59 +188,45 @@ class OverlayWindowSetting extends StatelessWidget {
                 );
               },
             ),
-            ListTile(
-              title: const Text('Window Interactions'),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Builder(
-                    builder: (context) {
-                      final isIgnoreTouch = context.select<OverlayWindowSettingsBloc, bool>(
-                        (bloc) => bloc.state.isIgnoreTouch,
-                      );
-                      return SegmentedButton(
-                        selected: {isIgnoreTouch},
-                        onSelectionChanged: (v) =>
-                            context.read<OverlayWindowSettingsBloc>().add(WindowIgnoreTouchToggled(v.first)),
-                        segments: [
-                          ButtonSegment(
-                            value: false,
-                            label: const Text('Handle Touch'),
-                            icon: const Icon(Icons.touch_app_outlined),
-                            enabled: visibleFloatingWindow,
-                          ),
-                          ButtonSegment(
-                            value: true,
-                            label: const Text('Ignore Touch'),
-                            icon: const Icon(Icons.do_not_touch_outlined),
-                            enabled: visibleFloatingWindow,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                  Builder(
-                    builder: (context) {
-                      final isTouchThru = context.select<OverlayWindowSettingsBloc, bool>(
-                        (bloc) => bloc.state.isTouchThru,
-                      );
-                      return SwitchListTile(
-                        value: isTouchThru,
-                        title: const Text('Touch Through ⚠️'),
-                        subtitle: isTouchThru
-                            ? const Text(
-                                'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
-                                "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
-                              )
-                            : null,
-                        onChanged: visibleFloatingWindow
-                            ? (_) => context.read<OverlayWindowSettingsBloc>().add(const WindowTouchThroughToggled())
-                            : null,
-                      );
-                    },
-                  ),
-                ],
-              ),
+            Builder(builder: (context) {
+              final isIgnoreTouch = context.select<OverlayWindowSettingsBloc, bool>(
+                (bloc) => bloc.state.settings.ignoreTouch ?? false,
+              );
+              return SwitchListTile(
+                value: isIgnoreTouch,
+                title: const Text('Ignore Touch'),
+                subtitle: const Text(
+                  'Enabling this will lock the window from moving too.\n'
+                  'Disabling this will not unlock it.',
+                ),
+                secondary: const Icon(
+                  Icons.do_not_touch_outlined,
+                  color: Colors.orange,
+                ),
+                onChanged: !visibleFloatingWindow
+                    ? null
+                    : (value) => context.read<OverlayWindowSettingsBloc>().add(WindowIgnoreTouchToggled(value)),
+              );
+            }),
+            Builder(
+              builder: (context) {
+                final isTouchThru = context.select<OverlayWindowSettingsBloc, bool>(
+                  (bloc) => bloc.state.isTouchThru,
+                );
+                return SwitchListTile(
+                  value: isTouchThru,
+                  title: const Text('Touch Through ⚠️'),
+                  subtitle: isTouchThru
+                      ? const Text(
+                          'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
+                          "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
+                        )
+                      : null,
+                  onChanged: visibleFloatingWindow
+                      ? (_) => context.read<OverlayWindowSettingsBloc>().add(const WindowTouchThroughToggled())
+                      : null,
+                );
+              },
             ),
           ],
         ),

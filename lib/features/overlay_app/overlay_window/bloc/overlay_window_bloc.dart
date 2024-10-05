@@ -47,9 +47,10 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   }
 
   Future<void> _onLockToggled(LockToggled event, Emitter<OverlayWindowState> emit) async {
-    final isSuccess = await _layoutChannelService.toggleLock(!state.isLocked);
+    final isSuccess = await _layoutChannelService.toggleLock(event.isLocked);
+
     if (isSuccess != null && isSuccess) {
-      emit(state.copyWith(isLocked: !state.isLocked));
+      emit(state.copyWith(isLocked: event.isLocked));
     }
   }
 }
