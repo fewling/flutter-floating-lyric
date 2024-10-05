@@ -12,7 +12,7 @@ class LayoutChannelService {
     );
   }
 
-  Future<void> moveWindow(double dy) {
-    return _channel.invokeMethod('moveWindow', {'dy': dy});
+  Future<bool?> toggleLock(bool isLocked) {
+    return _channel.invokeMethod<bool>('toggleLock', {'isLocked': isLocked});
   }
 }

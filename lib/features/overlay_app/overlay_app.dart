@@ -5,9 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/overlay_window.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
+import 'overlay_window/bloc/overlay_window_bloc.dart';
+import 'overlay_window/overlay_window.dart';
 
 final rootKey = GlobalKey();
 
@@ -26,10 +27,13 @@ class _OverlayAppState extends State<OverlayApp> {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => OverlayAppBloc(
+            create: (context) => OverlayAppBloc()..add(const OverlayAppStarted()),
+          ),
+          BlocProvider(
+            create: (context) => OverlayWindowBloc(
               toMainMessageService: ToMainMessageService(),
               layoutChannelService: LayoutChannelService(),
-            )..add(const OverlayAppStarted()),
+            )..add(const OverlayWindowStarted()),
           ),
           BlocProvider(
             lazy: false,
@@ -67,9 +71,9 @@ class _OverlayAppState extends State<OverlayApp> {
                           ? const LoadingWidget()
                           : OverlayWindow(
                               settings: windowSettings,
-                              isLyricOnly: context.select((OverlayAppBloc b) => b.state.isLyricOnly),
-                              onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
-                              onWindowTap: () => context.read<OverlayAppBloc>().add(const WindowTapped()),
+                              isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
+                              onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                              onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
                             ),
                     ),
                   ),
@@ -93,7 +97,7 @@ class _OverlayAppState extends State<OverlayApp> {
       final width = box.getMaxIntrinsicWidth(double.infinity);
       final height = box.getMaxIntrinsicHeight(width);
 
-      blocContext.read<OverlayAppBloc>().add(WindowResized(
+      blocContext.read<OverlayWindowBloc>().add(WindowResized(
             width: (width + 0.3) * pxRatio,
             height: (height + 2) * pxRatio,
           ));
