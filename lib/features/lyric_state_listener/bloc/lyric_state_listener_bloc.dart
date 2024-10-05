@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 
 import '../../../models/lrc.dart';
 import '../../../service/db/local/local_db_service.dart';
+import '../../../service/permissions/permission_service.dart';
 import '../../../services/event_channels/media_states/media_state.dart';
 import '../../../services/event_channels/media_states/media_state_event_channel.dart';
 import '../../../services/lrclib/data/lrclib_response.dart';
@@ -20,19 +21,23 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   LyricStateListenerBloc({
     required LocalDbService localDbService,
     required LrcLibRepository lyricRepository,
+    required PermissionService permissionService,
   })  : _localDbService = localDbService,
         _lyricRepository = lyricRepository,
+        _permissionService = permissionService,
         super(const LyricStateListenerState()) {
     on<LyricStateListenerEvent>(
       (event, emit) => switch (event) {
         LyricStateListenerLoaded() => _onLoaded(event, emit),
         AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
         ShowLine2Updated() => _onShowLine2Updated(event, emit),
+        StartMusicPlayerRequested() => _onMusicPlayerRequested(event, emit),
       },
     );
   }
 
   final LocalDbService _localDbService;
+  final PermissionService _permissionService;
 
   // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
@@ -245,5 +250,9 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       content: content,
     );
     return id;
+  }
+
+  void _onMusicPlayerRequested(StartMusicPlayerRequested event, Emitter<LyricStateListenerState> emit) {
+    _permissionService.start3rdMusicPlayer();
   }
 }
