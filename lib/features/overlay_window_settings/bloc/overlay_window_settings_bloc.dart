@@ -56,6 +56,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         showProgressBar: pref.showProgressBar,
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
+        showLine2: pref.showLine2,
 
         // lyric:
         line1: lyric.line1?.content,
@@ -84,6 +85,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         showProgressBar: pref.showProgressBar,
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
+        showLine2: pref.showLine2,
       ),
     );
 
