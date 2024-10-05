@@ -38,9 +38,16 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
   Future<void> _onSaveRequested(SaveRequested event, Emitter<LyricDetailState> emit) async {
     if (state.lrcDB == null) return;
 
-    await _localDbService.updateLrc(state.lrcDB!);
+    try {
+      await _localDbService.updateLrc(state.lrcDB!);
 
-    emit(state.copyWith(originalContent: state.lrcDB!.content ?? ''));
+      emit(state.copyWith(
+        originalContent: state.lrcDB!.content ?? '',
+        saveStatus: LyricSaveStatus.saved,
+      ));
+    } catch (e) {
+      emit(state.copyWith(saveStatus: LyricSaveStatus.error));
+    }
   }
 
   void _onContentUpdated(ContentUpdated event, Emitter<LyricDetailState> emit) {
