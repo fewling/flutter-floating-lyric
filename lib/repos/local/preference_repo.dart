@@ -26,7 +26,7 @@ class PreferenceRepo {
 
   int get appColorScheme => _sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value;
 
-  bool get showMilliseconds => _sp.getBool(showMillisecondsKey) ?? true;
+  bool get showMilliseconds => _sp.getBool(showMillisecondsKey) ?? false;
 
   bool get showProgressBar => _sp.getBool(showProgressBarKey) ?? true;
 
