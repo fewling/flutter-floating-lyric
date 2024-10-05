@@ -59,8 +59,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         showLine2: pref.showLine2,
 
         // lyric:
-        line1: lyric.line1?.content,
-        line2: lyric.line2?.content,
+        line1: lyric.line1,
+        line2: lyric.line2,
         position: lyric.mediaState?.position,
         duration: lyric.mediaState?.duration,
         // positionLeftLabel: leftLabel,
@@ -100,8 +100,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
     final newState = state.copyWith(
       settings: state.settings.copyWith(
-        line1: lyric.line1?.content,
-        line2: lyric.line2?.content,
+        line1: lyric.line1,
+        line2: lyric.line2,
         position: lyric.mediaState?.position,
         duration: lyric.mediaState?.duration,
         title: title,

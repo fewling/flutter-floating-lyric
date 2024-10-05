@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'lrc.dart';
+
 part 'overlay_settings_model.freezed.dart';
 part 'overlay_settings_model.g.dart';
 
@@ -13,8 +15,8 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
 
     // Data
     String? title,
-    String? line1,
-    String? line2,
+    LrcLine? line1,
+    LrcLine? line2,
     // String? positionLeftLabel,
     // String? positionRightLabel,
     double? position,
