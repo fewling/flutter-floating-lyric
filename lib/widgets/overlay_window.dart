@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../features/overlay_app/bloc/overlay_app_bloc.dart';
 import '../models/overlay_settings_model.dart';
 import '../utils/extensions/custom_extensions.dart';
 
@@ -12,13 +11,13 @@ class OverlayWindow extends StatelessWidget {
     this.debugText,
     this.isLoading = false,
     required this.settings,
-    required this.mode,
+    required this.isLyricOnly,
   });
 
   final OverlaySettingsModel settings;
 
   final String? debugText;
-  final OverlayMode mode;
+  final bool isLyricOnly;
   final bool isLoading;
   final void Function()? onWindowTap;
   final void Function()? onCloseTap;
@@ -35,78 +34,91 @@ class OverlayWindow extends StatelessWidget {
 
     final progress = max == 0 ? 0 : pos / max;
 
-    return InkWell(
-      onTap: onWindowTap,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (debugText != null)
-              Text(
-                debugText!,
-                style: TextStyle(color: foregroundColor),
-              ),
-            if (mode.isFull)
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      settings.title ?? '',
-                      style: TextStyle(color: foregroundColor),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.remove, color: foregroundColor),
-                  ),
-                  IconButton(
-                    onPressed: onCloseTap,
-                    icon: Icon(Icons.close, color: foregroundColor),
-                  ),
-                ],
-              ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                settings.line1 ?? '',
-                style: TextStyle(
-                  color: foregroundColor,
-                  fontSize: settings.fontSize,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onWindowTap,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (debugText != null)
+                Text(
+                  debugText!,
+                  style: TextStyle(color: foregroundColor),
                 ),
-              ),
-            ),
-            if (settings.line2 != null && settings.line2!.isNotEmpty)
+              if (!isLyricOnly)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        settings.title ?? '',
+                        style: TextStyle(color: foregroundColor),
+                      ),
+                    ),
+                    ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        shape: const CircleBorder(),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Icon(Icons.remove, color: foregroundColor),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    ClipOval(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: onCloseTap,
+                          child: Icon(Icons.close, color: foregroundColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               Align(
-                alignment: Alignment.centerRight,
                 child: Text(
-                  settings.line2 ?? '',
+                  settings.line1 ?? '',
                   style: TextStyle(
                     color: foregroundColor,
                     fontSize: settings.fontSize,
                   ),
                 ),
               ),
-            if (mode.isFull)
-              Row(
-                children: [
-                  Text(
-                    settings.positionLeftLabel ?? '',
-                    style: TextStyle(color: foregroundColor),
-                  ),
-                  Expanded(
-                    child: LinearProgressIndicator(
-                      value: progress.toDouble(),
+              if (settings.line2 != null && settings.line2!.isNotEmpty)
+                Align(
+                  child: Text(
+                    settings.line2 ?? '',
+                    style: TextStyle(
                       color: foregroundColor,
+                      fontSize: settings.fontSize,
                     ),
                   ),
-                  Text(
-                    settings.positionRightLabel ?? '',
-                    style: TextStyle(color: foregroundColor),
-                  ),
-                ].separatedBy(const SizedBox(width: 8)).toList(),
-              )
-          ].separatedBy(const SizedBox(height: 4)).toList(),
+                ),
+              if (!isLyricOnly)
+                Row(
+                  children: [
+                    Text(
+                      settings.positionLeftLabel ?? '',
+                      style: TextStyle(color: foregroundColor),
+                    ),
+                    Expanded(
+                      child: LinearProgressIndicator(
+                        value: progress.toDouble(),
+                        color: foregroundColor,
+                      ),
+                    ),
+                    Text(
+                      settings.positionRightLabel ?? '',
+                      style: TextStyle(color: foregroundColor),
+                    ),
+                  ].separatedBy(const SizedBox(width: 8)).toList(),
+                )
+            ].separatedBy(const SizedBox(height: 4)).toList(),
+          ),
         ),
       ),
     );

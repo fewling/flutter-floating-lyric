@@ -22,6 +22,7 @@ class _OverlayAppState extends State<OverlayApp> {
   @override
   Widget build(BuildContext rootContext) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -66,7 +67,7 @@ class _OverlayAppState extends State<OverlayApp> {
                           ? const LoadingWidget()
                           : OverlayWindow(
                               settings: windowSettings,
-                              mode: context.select((OverlayAppBloc b) => b.state.mode),
+                              isLyricOnly: context.select((OverlayAppBloc b) => b.state.isLyricOnly),
                               onCloseTap: () => context.read<OverlayAppBloc>().add(const CloseRequested()),
                               onWindowTap: () => context.read<OverlayAppBloc>().add(const WindowTapped()),
                             ),

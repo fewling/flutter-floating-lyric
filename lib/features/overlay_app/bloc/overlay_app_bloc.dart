@@ -43,11 +43,6 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
   }
 
   void _onWindowTapped(WindowTapped event, Emitter<OverlayAppState> emit) {
-    switch (state.mode) {
-      case OverlayMode.full:
-        emit(state.copyWith(mode: OverlayMode.lyricOnly));
-      case OverlayMode.lyricOnly:
-        emit(state.copyWith(mode: OverlayMode.full));
-    }
+    emit(state.copyWith(isLyricOnly: !state.isLyricOnly));
   }
 }

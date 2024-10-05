@@ -46,6 +46,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
     final isWindowVisible = await _windowChannelService.isActive();
 
+    final title = '${lyric.mediaState?.title} - ${lyric.mediaState?.artist}';
+
     final newState = state.copyWith(
       isWindowVisible: isWindowVisible ?? false,
       settings: state.settings.copyWith(
@@ -67,7 +69,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,
         positionRightLabel: rightLabel,
-        title: lyric.mediaState?.title,
+        title: title,
       ),
     );
 
@@ -103,6 +105,8 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     final leftLabel = pos.mmss();
     final rightLabel = max.mmss();
 
+    final title = '${lyric.mediaState?.title} - ${lyric.mediaState?.artist}';
+
     final newState = state.copyWith(
       settings: state.settings.copyWith(
         line1: lyric.line1,
@@ -111,7 +115,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         duration: lyric.mediaState?.duration,
         positionLeftLabel: leftLabel,
         positionRightLabel: rightLabel,
-        title: lyric.mediaState?.title,
+        title: title,
       ),
     );
 
