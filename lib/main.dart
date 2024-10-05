@@ -69,6 +69,7 @@ class FloatingLyricApp extends StatelessWidget {
     );
 
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),

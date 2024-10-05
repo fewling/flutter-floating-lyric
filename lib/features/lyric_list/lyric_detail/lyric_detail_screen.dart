@@ -8,25 +8,14 @@ class LyricDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initialContent = context.select<LyricDetailBloc, String>(
-      (bloc) => bloc.state.originalContent,
-    );
-
-    final currentContent = context.select<LyricDetailBloc, String?>(
-      (bloc) => bloc.state.lrcDB?.content,
-    );
-
-    final canPop = initialContent == currentContent;
-
     return Scaffold(
       appBar: AppBar(
         title: const LyricFileNameLabel(),
         actions: [
-          if (!canPop)
-            IconButton(
-              onPressed: () => context.read<LyricDetailBloc>().add(const SaveRequested()),
-              icon: const Icon(Icons.save_outlined),
-            ),
+          IconButton(
+            onPressed: () => context.read<LyricDetailBloc>().add(const SaveRequested()),
+            icon: const Icon(Icons.save_outlined),
+          ),
         ],
       ),
       body: BlocListener<LyricDetailBloc, LyricDetailState>(
