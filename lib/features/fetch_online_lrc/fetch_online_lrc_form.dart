@@ -77,9 +77,9 @@ class FetchOnlineLrcForm extends StatelessWidget {
                       ),
                     ),
                   );
+                  context.read<FetchOnlineLrcFormBloc>().add(const ErrorResponseHandled());
+                  break;
               }
-
-              context.read<FetchOnlineLrcFormBloc>().add(const ErrorResponseHandled());
             },
           ),
           BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
