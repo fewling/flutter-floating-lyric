@@ -29,12 +29,13 @@ class OverlayWindowSetting extends StatelessWidget {
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
           initialOpenPanelValue: 0,
+          expandedHeaderPadding: const EdgeInsets.all(16),
           children: [
             ExpansionPanelRadio(
               canTapOnHeader: true,
               value: 0,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Styling'),
+                title: const Text('Styling', style: TextStyle(fontWeight: FontWeight.bold)),
                 leading: const Icon(Icons.style_outlined),
                 selected: isExpanded,
               ),
@@ -219,7 +220,7 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 1,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Element Visibilities'),
+                title: const Text('Element Visibilities', style: TextStyle(fontWeight: FontWeight.bold)),
                 leading: const Icon(Icons.visibility_outlined),
                 selected: isExpanded,
               ),
@@ -292,7 +293,7 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 2,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Special Settings'),
+                title: const Text('Special Settings', style: TextStyle(fontWeight: FontWeight.bold)),
                 leading: const Icon(Icons.settings_suggest_outlined),
                 selected: isExpanded,
               ),
