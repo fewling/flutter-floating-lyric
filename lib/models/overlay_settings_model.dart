@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../configs/main_overlay/search_lyric_status.dart';
 import 'lrc.dart';
 
 part 'overlay_settings_model.freezed.dart';
@@ -35,6 +36,9 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     // Settings
     bool? ignoreTouch,
     bool? touchThru,
+    @JsonKey(fromJson: searchLyricStatusFromJson, toJson: searchLyricStatusToJson)
+    @Default(SearchLyricStatus.initial)
+    SearchLyricStatus searchLyricStatus,
   }) = _OverlaySettingsModel;
 
   factory OverlaySettingsModel.fromJson(Map<String, dynamic> json) => _$OverlaySettingsModelFromJson(json);

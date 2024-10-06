@@ -105,6 +105,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         position: lyric.mediaState?.position,
         duration: lyric.mediaState?.duration,
         title: title,
+        searchLyricStatus: lyric.searchLyricStatus,
       ),
     );
 

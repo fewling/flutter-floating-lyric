@@ -75,3 +75,7 @@ final class SaveAlbumAltRequested extends FetchOnlineLrcFormEvent {
 final class ErrorResponseHandled extends FetchOnlineLrcFormEvent {
   const ErrorResponseHandled();
 }
+
+final class SaveResponseHandled extends FetchOnlineLrcFormEvent {
+  const SaveResponseHandled();
+}

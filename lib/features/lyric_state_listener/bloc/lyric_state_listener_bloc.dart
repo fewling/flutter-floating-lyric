@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
+import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/lrc.dart';
 import '../../../service/db/local/local_db_service.dart';
 import '../../../service/permissions/permission_service.dart';
@@ -32,6 +33,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
         AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
         ShowLine2Updated() => _onShowLine2Updated(event, emit),
         StartMusicPlayerRequested() => _onMusicPlayerRequested(event, emit),
+        NewLyricSaved() => _onNewLyricSaved(event, emit),
       },
     );
   }
@@ -70,6 +72,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               currentLrc: null,
               line1: null,
               line2: null,
+              searchLyricStatus: SearchLyricStatus.initial,
             ));
 
             final lrcDB = await _localDbService.getLyricBySongInfo(title, artist);
@@ -78,6 +81,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               logger.t('Lyric found in db: ${lrcDB.fileName}');
               emit(state.copyWith(
                 currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
+                searchLyricStatus: SearchLyricStatus.found,
               ));
 
               break;
@@ -92,13 +96,27 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               );
 
               logger.t('Lyric fetch success: $success');
-              if (success) break;
+              if (success) {
+                emit(state.copyWith(
+                  searchLyricStatus: SearchLyricStatus.found,
+                ));
+                break;
+              } else {
+                emit(state.copyWith(
+                  searchLyricStatus: SearchLyricStatus.notFound,
+                ));
+              }
+            } else {
+              emit(state.copyWith(
+                searchLyricStatus: SearchLyricStatus.notFound,
+              ));
             }
           } else if (currentLrc != null) {
             if (currentLrc.lines.isEmpty) {
               emit(state.copyWith(
                 line1: null,
                 line2: null,
+                searchLyricStatus: SearchLyricStatus.empty,
                 mediaState: state.mediaState?.copyWith(
                   position: position,
                   duration: duration,
@@ -229,12 +247,14 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       final lrcDB = await _localDbService.getLyricById(id.toString());
       emit(state.copyWith(
         currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
+        searchLyricStatus: SearchLyricStatus.found,
       ));
 
       return true;
     } catch (e) {
       emit(state.copyWith(
         isSearchingOnline: false,
+        searchLyricStatus: SearchLyricStatus.notFound,
       ));
       return false;
     }
@@ -254,5 +274,9 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
 
   void _onMusicPlayerRequested(StartMusicPlayerRequested event, Emitter<LyricStateListenerState> emit) {
     _permissionService.start3rdMusicPlayer();
+  }
+
+  void _onNewLyricSaved(NewLyricSaved event, Emitter<LyricStateListenerState> emit) {
+    emit(const LyricStateListenerState());
   }
 }

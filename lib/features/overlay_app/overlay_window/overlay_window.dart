@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/overlay_settings_model.dart';
 import '../../../utils/extensions/custom_extensions.dart';
 import 'bloc/overlay_window_bloc.dart';
@@ -30,10 +31,6 @@ class OverlayWindow extends StatelessWidget {
 
     // final foregroundColor = settings.color == null ? null : Color(settings.color!);
     final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
-    final line1Pos = settings.line1?.time;
-    final line2Pos = settings.line2?.time;
-
-    final line1IsFarther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
     return Material(
       child: IgnorePointer(
@@ -54,59 +51,16 @@ class OverlayWindow extends StatelessWidget {
                       style: TextStyle(color: foregroundColor),
                     ),
                   if (!isLyricOnly)
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            settings.title ?? ' ',
-                            style: TextStyle(color: foregroundColor),
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => context
-                              .read<OverlayWindowBloc>()
-                              .add(LockToggled(!context.read<OverlayWindowBloc>().state.isLocked)),
-                          icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
-                              ? Icon(Icons.lock, color: foregroundColor)
-                              : Icon(Icons.lock_open_outlined, color: foregroundColor),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.remove, color: foregroundColor),
-                        ),
-                        IconButton(
-                          onPressed: onCloseTap,
-                          icon: Icon(Icons.close, color: foregroundColor),
-                        ),
-                      ],
+                    OverlayHeader(
+                      settings: settings,
+                      onCloseTap: onCloseTap,
                     ),
-                  Align(
-                    alignment: (settings.showLine2 ?? false) ? Alignment.centerLeft : Alignment.center,
-                    child: Text(
-                      settings.line1?.content ?? ' ',
-                      style: TextStyle(
-                        color: foregroundColor,
-                        fontSize: settings.fontSize,
-                        fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
-                      ),
-                    ),
+                  OverlayContent(
+                    settings: settings,
                   ),
-                  if (settings.showLine2 ?? false)
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        settings.line2?.content ?? ' ',
-                        style: TextStyle(
-                          color: foregroundColor,
-                          fontSize: settings.fontSize,
-                          fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                    ),
                   if (!isLyricOnly || (settings.showProgressBar ?? false))
                     OverlayProgressBar(
                       settings: settings,
-                      foregroundColor: foregroundColor,
                     ),
                 ].separatedBy(const SizedBox(height: 4)).toList(),
               ),
@@ -118,15 +72,130 @@ class OverlayWindow extends StatelessWidget {
   }
 }
 
+class OverlayContent extends StatelessWidget {
+  const OverlayContent({
+    super.key,
+    required this.settings,
+  });
+
+  final OverlaySettingsModel settings;
+
+  @override
+  Widget build(BuildContext context) {
+    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
+
+    final line1Pos = settings.line1?.time;
+    final line2Pos = settings.line2?.time;
+
+    final line1IsFarther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
+
+    final status = settings.searchLyricStatus;
+    final showLine2 = settings.showLine2 ?? false;
+
+    switch (status) {
+      case SearchLyricStatus.empty:
+        return Center(
+          child: Text(
+            'No lyric',
+            style: TextStyle(color: foregroundColor),
+          ),
+        );
+      case SearchLyricStatus.searching:
+        return Center(
+          child: Text(
+            'Searching lyric...',
+            style: TextStyle(color: foregroundColor),
+          ),
+        );
+      case SearchLyricStatus.notFound:
+        return Center(
+          child: Text(
+            'Lyric not found',
+            style: TextStyle(color: foregroundColor),
+          ),
+        );
+      case SearchLyricStatus.initial:
+      case SearchLyricStatus.found:
+        return Column(
+          children: [
+            Align(
+              alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
+              child: Text(
+                settings.line1?.content ?? ' ',
+                style: TextStyle(
+                  color: foregroundColor,
+                  fontSize: settings.fontSize,
+                  fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ),
+            if (showLine2)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  settings.line2?.content ?? ' ',
+                  style: TextStyle(
+                    color: foregroundColor,
+                    fontSize: settings.fontSize,
+                    fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
+              ),
+          ],
+        );
+    }
+  }
+}
+
+class OverlayHeader extends StatelessWidget {
+  const OverlayHeader({
+    super.key,
+    required this.settings,
+    required this.onCloseTap,
+  });
+
+  final OverlaySettingsModel settings;
+  final void Function()? onCloseTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
+
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            settings.title ?? ' ',
+            style: TextStyle(color: foregroundColor),
+          ),
+        ),
+        IconButton(
+          onPressed: () =>
+              context.read<OverlayWindowBloc>().add(LockToggled(!context.read<OverlayWindowBloc>().state.isLocked)),
+          icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
+              ? Icon(Icons.lock, color: foregroundColor)
+              : Icon(Icons.lock_open_outlined, color: foregroundColor),
+        ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.remove, color: foregroundColor),
+        ),
+        IconButton(
+          onPressed: onCloseTap,
+          icon: Icon(Icons.close, color: foregroundColor),
+        ),
+      ],
+    );
+  }
+}
+
 class OverlayProgressBar extends StatelessWidget {
   const OverlayProgressBar({
     super.key,
     required this.settings,
-    required this.foregroundColor,
   });
 
   final OverlaySettingsModel settings;
-  final Color foregroundColor;
 
   @override
   Widget build(BuildContext context) {
