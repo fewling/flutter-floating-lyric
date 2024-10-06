@@ -28,7 +28,6 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         OverlayWindowVisibilityToggled() => _onVisibilityToggled(event, emit),
         WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
         WindowTouchThruToggled() => _onTouchThruToggled(event, emit),
-        WindowThemeToggled() => _onThemeToggled(event, emit),
       },
     );
   }
@@ -58,6 +57,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
         showLine2: pref.showLine2,
+        useAppColor: pref.useAppColor,
 
         // lyric:
         line1: lyric.line1,
@@ -87,6 +87,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
         showLine2: pref.showLine2,
+        useAppColor: pref.useAppColor,
       ),
     );
 
@@ -151,16 +152,5 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     if (isSuccessful != null && isSuccessful) {
       emit(newState);
     }
-  }
-
-  void _onThemeToggled(WindowThemeToggled event, Emitter<OverlayWindowSettingsState> emit) {
-    final newState = state.copyWith(
-      settings: state.settings.copyWith(
-        useAppColor: event.useAppColor,
-      ),
-    );
-
-    emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 }

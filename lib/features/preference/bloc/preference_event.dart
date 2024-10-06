@@ -51,3 +51,9 @@ final class FontSizeUpdated extends PreferenceEvent {
 final class AutoFetchOnlineToggled extends PreferenceEvent {
   const AutoFetchOnlineToggled();
 }
+
+final class WindowColorThemeToggled extends PreferenceEvent {
+  const WindowColorThemeToggled(this.useAppColor);
+
+  final bool useAppColor;
+}
