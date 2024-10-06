@@ -24,6 +24,7 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
         DeleteRequested() => _onDeleteRequested(event, emit),
         DeleteAllRequested() => _onDeleteAllRequested(event, emit),
         ImportLRCsRequested() => _onImportLRCsRequested(event, emit),
+        DeleteStatusHandled() => _onDeleteStatusHandled(event, emit),
       },
     );
   }
@@ -47,10 +48,19 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
   }
 
   Future<void> _onDeleteRequested(DeleteRequested event, Emitter<LyricListState> emit) async {
-    await _localDbService.deleteLrc(event.lyric);
+    try {
+      await _localDbService.deleteLrc(event.lyric);
 
-    final lyrics = state.lyrics.where((l) => l.id != event.lyric.id).toList();
-    emit(state.copyWith(lyrics: lyrics));
+      final lyrics = state.lyrics.where((l) => l.id != event.lyric.id).toList();
+      emit(state.copyWith(
+        lyrics: lyrics,
+        deleteStatus: LyricListDeleteStatus.deleted,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        deleteStatus: LyricListDeleteStatus.error,
+      ));
+    }
   }
 
   Future<void> _onDeleteAllRequested(DeleteAllRequested event, Emitter<LyricListState> emit) async {
@@ -87,5 +97,9 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     } finally {
       add(const LyricListLoaded());
     }
+  }
+
+  void _onDeleteStatusHandled(DeleteStatusHandled event, Emitter<LyricListState> emit) {
+    emit(state.copyWith(deleteStatus: LyricListDeleteStatus.initial));
   }
 }

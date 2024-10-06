@@ -57,10 +57,14 @@ class _OverlayAppState extends State<OverlayApp> {
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
             final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
+
+            // Mark these here to trigger window resize
             context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showLine2);
             context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showProgressBar);
             context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showMillis);
             context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line1);
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line2);
 
             return Theme(
               data: ThemeData(
