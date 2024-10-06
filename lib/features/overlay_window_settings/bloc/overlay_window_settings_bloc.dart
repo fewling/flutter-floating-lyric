@@ -50,6 +50,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
 
         // pref:
         color: pref.color,
+        backgroundColor: pref.backgroundColor,
         fontSize: pref.fontSize.toDouble(),
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,
@@ -80,6 +81,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     final newState = state.copyWith(
       settings: state.settings.copyWith(
         color: pref.color,
+        backgroundColor: pref.backgroundColor,
         fontSize: pref.fontSize.toDouble(),
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,

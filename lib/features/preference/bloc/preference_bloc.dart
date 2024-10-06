@@ -17,6 +17,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
         super(PreferenceState(
           opacity: spService.opacity,
           color: spService.color,
+          backgroundColor: spService.backgroundColor,
           isLight: spService.isLight,
           appColorScheme: spService.appColorScheme,
           showMilliseconds: spService.showMilliseconds,
@@ -30,6 +31,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           PreferenceEventLoad() => _onLoaded(emit),
           OpacityUpdated() => _onOpacityUpdated(event, emit),
           ColorUpdated() => _onColorUpdated(event, emit),
+          BackgroundColorUpdated() => _onBackgroundColorUpdated(event, emit),
           BrightnessToggled() => _onBrightnessToggled(event, emit),
           AppColorSchemeUpdated() => _onAppColorSchemeUpdated(event, emit),
           ShowMillisecondsToggled() => _onShowMillisecondsToggled(event, emit),
@@ -56,6 +58,13 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.updateColor(event.color);
     if (isSuccess) {
       emit(state.copyWith(color: event.color.value));
+    }
+  }
+
+  Future<void> _onBackgroundColorUpdated(BackgroundColorUpdated event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.updateBackgroundColor(event.color);
+    if (isSuccess) {
+      emit(state.copyWith(backgroundColor: event.color.value));
     }
   }
 

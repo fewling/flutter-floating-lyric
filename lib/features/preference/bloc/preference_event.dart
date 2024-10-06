@@ -20,6 +20,12 @@ final class ColorUpdated extends PreferenceEvent {
   final Color color;
 }
 
+final class BackgroundColorUpdated extends PreferenceEvent {
+  const BackgroundColorUpdated(this.color);
+
+  final Color color;
+}
+
 final class BrightnessToggled extends PreferenceEvent {
   const BrightnessToggled();
 }

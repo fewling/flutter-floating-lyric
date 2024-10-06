@@ -13,6 +13,8 @@ class PreferenceService {
 
   int get color => _spRepo.color;
 
+  int get backgroundColor => _spRepo.backgroundColor;
+
   bool get isLight => _spRepo.isLight;
 
   int get appColorScheme => _spRepo.appColorScheme;
@@ -32,6 +34,8 @@ class PreferenceService {
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) => _spRepo.updateColor(color.value);
+
+  Future<bool> updateBackgroundColor(Color color) => _spRepo.updateBackgroundColor(color.value);
 
   Future<bool> toggleBrightness(bool isLight) => _spRepo.toggleBrightness(isLight);
 

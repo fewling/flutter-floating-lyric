@@ -50,7 +50,54 @@ class OverlayWindowSetting extends StatelessWidget {
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,
-                      title: const Text('Text Color'),
+                      title: const Text('Custom Backgound Color'),
+                      leading: const Icon(Icons.color_lens_outlined),
+                      trailing: Builder(builder: (context) {
+                        final color = context.select<PreferenceBloc, int>(
+                          (bloc) => bloc.state.backgroundColor,
+                        );
+
+                        return ColoredBox(
+                          color: Color(color).withOpacity(useCustomColor ? 1 : 0.5),
+                          child: const SizedBox(width: 24, height: 24),
+                        );
+                      }),
+                      onTap: () => showDialog(
+                        builder: (dialogCtx) => BlocProvider.value(
+                          value: context.read<PreferenceBloc>(),
+                          child: AlertDialog(
+                            title: const Text('Pick a color!'),
+                            content: SingleChildScrollView(
+                              child: Builder(
+                                builder: (context) {
+                                  final color = context.select<PreferenceBloc, int>(
+                                    (bloc) => bloc.state.backgroundColor,
+                                  );
+
+                                  return ColorPicker(
+                                    pickerColor: Color(color),
+                                    onColorChanged: (value) =>
+                                        context.read<PreferenceBloc>().add(BackgroundColorUpdated(value)),
+                                    paletteType: PaletteType.hueWheel,
+                                    hexInputBar: true,
+                                  );
+                                },
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () => Navigator.of(dialogCtx).pop(),
+                                child: const Text('Got it'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        context: context,
+                      ),
+                    ),
+                    ListTile(
+                      enabled: visibleFloatingWindow && useCustomColor,
+                      title: const Text('Custom Text Color'),
                       leading: const Icon(Icons.color_lens_outlined),
                       trailing: Builder(builder: (context) {
                         final color = context.select<PreferenceBloc, int>(

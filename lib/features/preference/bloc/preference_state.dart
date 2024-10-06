@@ -5,6 +5,7 @@ class PreferenceState with _$PreferenceState {
   const factory PreferenceState({
     required double opacity,
     required int color,
+    required int backgroundColor,
     required bool isLight,
     required int appColorScheme,
     required bool showMilliseconds,
