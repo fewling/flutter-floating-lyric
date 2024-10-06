@@ -103,8 +103,8 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
 
   Future<void> _onSaveLyricRequested(SaveLyricResponseRequested event, Emitter<FetchOnlineLrcFormState> emit) async {
     await _localDbService.saveLrc(
-      title: state.titleAlt ?? state.title ?? 'unknown',
-      artist: state.artistAlt ?? state.artist ?? 'unknown',
+      title: state.title ?? state.titleAlt ?? 'unknown',
+      artist: state.artist ?? state.artistAlt ?? 'unknown',
       content: event.response.syncedLyrics,
     );
   }
