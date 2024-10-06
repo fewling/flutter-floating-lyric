@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../services/event_channels/media_states/media_state.dart';
+import '../../../service/event_channels/media_states/media_state.dart';
 
 part 'home_bloc.freezed.dart';
 part 'home_event.dart';

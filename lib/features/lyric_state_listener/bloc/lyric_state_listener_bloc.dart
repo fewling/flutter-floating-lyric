@@ -4,12 +4,11 @@ import 'package:isar/isar.dart';
 
 import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/lrc.dart';
+import '../../../repos/remote/lrclib/lrclib_repository.dart';
 import '../../../service/db/local/local_db_service.dart';
+import '../../../service/event_channels/media_states/media_state.dart';
+import '../../../service/event_channels/media_states/media_state_event_channel.dart';
 import '../../../service/permissions/permission_service.dart';
-import '../../../services/event_channels/media_states/media_state.dart';
-import '../../../services/event_channels/media_states/media_state_event_channel.dart';
-import '../../../services/lrclib/data/lrclib_response.dart';
-import '../../../services/lrclib/repo/lrclib_repository.dart';
 import '../../../utils/logger.dart';
 import '../../../utils/lrc_builder.dart';
 
@@ -67,7 +66,6 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
           final isNewSong = state.mediaState?.title != title || state.mediaState?.artist != artist;
 
           if (isNewSong) {
-            logger.t('New song: $title - $artist');
             emit(state.copyWith(
               mediaState: mediaState,
               currentLrc: null,
@@ -78,6 +76,10 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
 
             final lrcDB = await _localDbService.getLyricBySongInfo(title, artist);
             final isLyricFound = lrcDB != null;
+
+            logger.t('New song: $title - $artist - $album - $duration');
+            logger.t('Lyric found in db: $isLyricFound');
+
             if (isLyricFound) {
               logger.t('Lyric found in db: ${lrcDB.fileName}');
               emit(state.copyWith(

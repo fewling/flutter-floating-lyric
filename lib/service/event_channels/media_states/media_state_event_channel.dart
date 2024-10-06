@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'media_state.dart';
 
 const _channelName = 'Floating Lyric Media State Channel';
-const mediaStateChannel = EventChannel(_channelName);
-final mediaStateStream = mediaStateChannel.receiveBroadcastStream().map(
+const _mediaStateChannel = EventChannel(_channelName);
+final mediaStateStream = _mediaStateChannel.receiveBroadcastStream().map(
   (event) {
     return (event as List<dynamic>).map((e) {
       final mediaPlayerName = e['mediaPlayerName'] as String;
