@@ -14,7 +14,7 @@ class OverlayWindowSetting extends StatelessWidget {
       (bloc) => bloc.state.isWindowVisible,
     );
 
-    final useAppColor = context.select((OverlayWindowSettingsBloc b) => b.state.settings.useAppColor);
+    final useAppColor = context.select((PreferenceBloc b) => b.state.useAppColor);
     final useCustomColor = !useAppColor;
 
     return Scaffold(
@@ -46,7 +46,7 @@ class OverlayWindowSetting extends StatelessWidget {
                       secondary: const Icon(Icons.palette_outlined),
                       onChanged: !visibleFloatingWindow
                           ? null
-                          : (value) => context.read<OverlayWindowSettingsBloc>().add(WindowThemeToggled(value)),
+                          : (value) => context.read<PreferenceBloc>().add(WindowColorThemeToggled(value)),
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,

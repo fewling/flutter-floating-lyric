@@ -17,6 +17,7 @@ class PreferenceRepo {
   static const fontSizeKey = 'font size';
   static const autoFetchOnlineKey = 'auto fetch online';
   static const showLine2Key = 'show line 2';
+  static const useAppColorKey = 'use app color';
 
   double get opacity => _sp.getDouble(windowOpacityKey) ?? 50;
 
@@ -36,6 +37,8 @@ class PreferenceRepo {
 
   bool get showLine2 => _sp.getBool(showLine2Key) ?? true;
 
+  bool get useAppColor => _sp.getBool(useAppColorKey) ?? true;
+
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
   Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
@@ -53,4 +56,6 @@ class PreferenceRepo {
   Future<bool> toggleAutoFetchOnline(bool value) => _sp.setBool(autoFetchOnlineKey, value);
 
   Future<bool> toggleShowLine2(bool value) => _sp.setBool(showLine2Key, value);
+
+  Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
 }
