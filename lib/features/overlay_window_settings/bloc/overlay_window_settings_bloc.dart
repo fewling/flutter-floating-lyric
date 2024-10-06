@@ -156,7 +156,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
   void _onThemeToggled(WindowThemeToggled event, Emitter<OverlayWindowSettingsState> emit) {
     final newState = state.copyWith(
       settings: state.settings.copyWith(
-        useAppTheme: event.useAppTheme,
+        useAppColor: event.useAppColor,
       ),
     );
 

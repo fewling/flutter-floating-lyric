@@ -24,7 +24,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? duration,
 
     // Styles
-    @Default(true) bool useAppTheme,
+    @Default(true) bool useAppColor,
     double? opacity,
     int? color,
     int? backgroundColor,
