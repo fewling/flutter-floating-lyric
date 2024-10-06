@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../configs/routes/app_router.dart';
 import '../device_info/device_info_listener.dart';
-import '../preference/bloc/preference_bloc.dart';
 
 part 'base_drawer_routes.dart';
 
@@ -22,34 +19,27 @@ class BaseShell extends StatelessWidget {
     final fullPath = GoRouterState.of(context).fullPath;
 
     final index = BaseDrawerRoutes.values.indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
-    final title = index > -1 ? BaseDrawerRoutes.values[index].label : 'Home';
+    final title = index > -1 ? BaseDrawerRoutes.values[index].label : null;
 
-    final fontFamily = context.select((PreferenceBloc bloc) => bloc.state.fontFamily);
-
-    return DefaultTextStyle(
-      style: GoogleFonts.getFont(fontFamily),
-      child: Scaffold(
-        appBar: AppBar(title: Text(title)),
-        drawer: Builder(
-          builder: (context) => NavigationDrawer(
-            selectedIndex: index > -1 ? index : null,
-            children: [
-              for (final route in BaseDrawerRoutes.values)
-                NavigationDrawerDestination(
-                  icon: Icon(route.icon),
-                  label: Text(route.label),
-                ),
-            ],
-            onDestinationSelected: (index) {
-              final route = BaseDrawerRoutes.values[index];
-              context.goNamed(route.name);
-              Scaffold.of(context).closeDrawer();
-            },
-          ),
-        ),
-        body: DeviceInfoListener(
-          child: child,
-        ),
+    return Scaffold(
+      appBar: title == null ? null : AppBar(title: Text(title)),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: index > -1 ? index : 0,
+        onDestinationSelected: (index) {
+          final route = BaseDrawerRoutes.values[index];
+          context.goNamed(route.route.name);
+        },
+        destinations: [
+          for (final route in BaseDrawerRoutes.values)
+            NavigationDestination(
+              label: route.label,
+              icon: Icon(route.icon),
+              selectedIcon: Icon(route.selectedIcon),
+            ),
+        ],
+      ),
+      body: DeviceInfoListener(
+        child: child,
       ),
     );
   }
