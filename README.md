@@ -1,5 +1,80 @@
 # Workflow Diagrams for Floating Lyrics App
 
+## Project Structure (v4.0.0+20)
+
+### High Level Overview
+
+```mermaid
+flowchart RL
+    data["Data Sources"]
+    repo["Repository"]
+    service["Service"]
+    bloc["Bloc"]
+    ui["UI"]
+
+    data --> | Data | repo
+    repo --> | DTO | service
+    service --> | Data Model | bloc
+    bloc --> | State | ui
+
+    ui --> | event | bloc
+    bloc --> | params | service
+    service --> | data | repo
+    repo --> | request | data
+```
+
+### A Slightly More Complex Situation
+
+```mermaid
+flowchart TD
+    data1["Data Source 1"]
+    data2["Data Source 2"]
+    data3["Data Source 3"]
+    data4["Data Source 4"]
+    data5["Data Source 5"]
+
+    repo1["Repository 1"]
+    repo2["Repository 2"]
+    repo3["Repository 3"]
+    repo4["Repository 4"]
+
+    service1["Service 1"]
+    service2["Service 2"]
+    service3["Service 3"]
+
+    bloc1["Bloc 1"]
+    bloc2["Bloc 2"]
+    bloc3["Bloc 3"]
+
+    ui1["UI 1"]
+    ui2["UI 2"]
+
+    data1 --> repo1
+    data2 --> repo2
+    data3 --> repo2
+    data3 --> repo3
+    data4 --> repo4
+    data5 --> repo4
+
+    repo1 --> service1
+    repo2 --> service2
+    repo3 --> service3
+    repo4 --> service3
+
+    service1 --> bloc1
+    service2 --> bloc2
+    service3 --> bloc3
+    
+    bloc1 --> ui1
+    bloc2 --> ui2
+    bloc3 --> ui2
+```
+
+---
+> ⚠️⚠️⚠️
+> **Deprecation Notice:**
+> **Below may need to be updated according to the latest breaking changes (v4.0.0).**
+
 ## 1. Onboarding + Permissions
 
 ```mermaid
