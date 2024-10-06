@@ -10,6 +10,7 @@ class PreferenceRepo {
 
   static const windowOpacityKey = 'window opacity';
   static const windowColorKey = 'window color';
+  static const windowBackgroundColorKey = 'window background color';
   static const brightnessKey = 'brightness';
   static const appColorSchemeKey = 'app color scheme';
   static const showMillisecondsKey = 'show milliseconds';
@@ -22,6 +23,8 @@ class PreferenceRepo {
   double get opacity => _sp.getDouble(windowOpacityKey) ?? 50;
 
   int get color => _sp.getInt(windowColorKey) ?? Colors.deepPurple.value;
+
+  int get backgroundColor => _sp.getInt(windowBackgroundColorKey) ?? Colors.black.value;
 
   bool get isLight => _sp.getBool(brightnessKey) ?? true;
 
@@ -42,6 +45,8 @@ class PreferenceRepo {
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
   Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
+
+  Future<bool> updateBackgroundColor(int colorVal) => _sp.setInt(windowBackgroundColorKey, colorVal);
 
   Future<bool> toggleBrightness(bool isLight) => _sp.setBool(brightnessKey, isLight);
 
