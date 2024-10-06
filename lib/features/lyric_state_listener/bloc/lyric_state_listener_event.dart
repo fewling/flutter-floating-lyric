@@ -33,3 +33,7 @@ final class ShowLine2Updated extends LyricStateListenerEvent {
 final class StartMusicPlayerRequested extends LyricStateListenerEvent {
   const StartMusicPlayerRequested();
 }
+
+final class NewLyricSaved extends LyricStateListenerEvent {
+  const NewLyricSaved();
+}

@@ -28,6 +28,7 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
         SaveTitleAltRequested() => _onSaveTitleAltRequested(event, emit),
         SaveArtistAltRequested() => _onSaveArtistAltRequested(event, emit),
         SaveAlbumAltRequested() => _onSaveAlbumAltRequested(event, emit),
+        SaveResponseHandled() => _onSaveResponseHandled(event, emit),
       },
     );
   }
@@ -102,11 +103,25 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
   }
 
   Future<void> _onSaveLyricRequested(SaveLyricResponseRequested event, Emitter<FetchOnlineLrcFormState> emit) async {
-    await _localDbService.saveLrc(
-      title: state.title ?? state.titleAlt ?? 'unknown',
-      artist: state.artist ?? state.artistAlt ?? 'unknown',
-      content: event.response.syncedLyrics,
-    );
+    emit(state.copyWith(
+      saveLrcStatus: SaveLrcStatus.saving,
+    ));
+    try {
+      await _localDbService.saveLrc(
+        title: state.title ?? state.titleAlt ?? 'unknown',
+        artist: state.artist ?? state.artistAlt ?? 'unknown',
+        content: event.response.syncedLyrics,
+      );
+      emit(state.copyWith(
+        saveLrcStatus: SaveLrcStatus.success,
+      ));
+    } catch (e) {
+      logger.e('FetchOnlineLrcFormBloc._onSaveLyricRequested: $e');
+      emit(state.copyWith(
+        saveLrcStatus: SaveLrcStatus.failure,
+      ));
+      return;
+    }
   }
 
   void _onSaveTitleAltRequested(SaveTitleAltRequested event, Emitter<FetchOnlineLrcFormState> emit) {
@@ -127,6 +142,12 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
     emit(state.copyWith(
       albumAlt: event.album,
       isEditingAlbum: false,
+    ));
+  }
+
+  void _onSaveResponseHandled(SaveResponseHandled event, Emitter<FetchOnlineLrcFormState> emit) {
+    emit(state.copyWith(
+      saveLrcStatus: SaveLrcStatus.initial,
     ));
   }
 }

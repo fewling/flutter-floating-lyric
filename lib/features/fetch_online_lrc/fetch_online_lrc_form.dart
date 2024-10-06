@@ -82,6 +82,25 @@ class FetchOnlineLrcForm extends StatelessWidget {
               context.read<FetchOnlineLrcFormBloc>().add(const ErrorResponseHandled());
             },
           ),
+          BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
+            listenWhen: (previous, current) => previous.saveLrcStatus != current.saveLrcStatus,
+            listener: (context, state) {
+              switch (state.saveLrcStatus) {
+                case SaveLrcStatus.initial:
+                case SaveLrcStatus.saving:
+                  break;
+                case SaveLrcStatus.success:
+                  context.read<LyricStateListenerBloc>().add(const NewLyricSaved());
+                case SaveLrcStatus.failure:
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.saveLrcStatus.isSuccess ? 'Lyric saved' : 'Failed to save lyric'),
+                    ),
+                  );
+                  context.read<FetchOnlineLrcFormBloc>().add(const SaveResponseHandled());
+              }
+            },
+          ),
         ],
         child: Scaffold(
           floatingActionButton: Builder(builder: (context) {

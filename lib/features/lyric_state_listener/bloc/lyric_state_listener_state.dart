@@ -11,6 +11,9 @@ class LyricStateListenerState with _$LyricStateListenerState {
     @Default(false) bool shouldSearchOnline,
     @Default(false) bool isSearchingOnline,
     @Default(false) bool showLine2,
+    @JsonKey(fromJson: searchLyricStatusFromJson, toJson: searchLyricStatusToJson)
+    @Default(SearchLyricStatus.initial)
+    SearchLyricStatus searchLyricStatus,
   }) = _LyricStateListenerState;
 
   factory LyricStateListenerState.fromJson(Map<String, dynamic> json) => _$LyricStateListenerStateFromJson(json);
