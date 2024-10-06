@@ -62,33 +62,17 @@ class _OverlayAppState extends State<OverlayApp> {
                 colorSchemeSeed: windowSettings?.appColorScheme == null ? null : Color(windowSettings!.appColorScheme),
                 brightness: windowSettings?.isLight ?? true ? Brightness.light : Brightness.dark,
               ),
-              child: Material(
-                color: Colors.transparent,
-                child: Builder(
-                  builder: (context) => Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primaryContainer
-                          .withOpacity((windowSettings?.opacity?.toInt() ?? 50) / 100),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Builder(
-                      builder: (context) => SizedBox(
-                        width: windowSettings?.width ?? 200,
-                        height: double.infinity,
-                        child: windowSettings == null
-                            ? const LoadingWidget()
-                            : OverlayWindow(
-                                settings: windowSettings,
-                                isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
-                                onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
-                                onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                              ),
+              child: SizedBox(
+                width: windowSettings?.width ?? 200,
+                height: double.infinity,
+                child: windowSettings == null
+                    ? const Material(child: LoadingWidget())
+                    : OverlayWindow(
+                        settings: windowSettings,
+                        isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
+                        onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                        onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
                       ),
-                    ),
-                  ),
-                ),
               ),
             );
           }),

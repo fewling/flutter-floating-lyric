@@ -35,93 +35,82 @@ class OverlayWindow extends StatelessWidget {
 
     final line1IsFarther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
-    return IgnorePointer(
-      ignoring: settings.ignoreTouch ?? false,
-      child: InkWell(
-        onTap: onWindowTap,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (debugText != null)
-                Text(
-                  debugText!,
-                  style: TextStyle(color: foregroundColor),
-                ),
-              if (!isLyricOnly)
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        settings.title ?? ' ',
-                        style: TextStyle(color: foregroundColor),
-                      ),
+    return Material(
+      child: IgnorePointer(
+        ignoring: settings.ignoreTouch ?? false,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          margin: EdgeInsets.zero,
+          child: InkWell(
+            onTap: onWindowTap,
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (debugText != null)
+                    Text(
+                      debugText!,
+                      style: TextStyle(color: foregroundColor),
                     ),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        shape: const CircleBorder(),
-                        child: InkWell(
-                          onTap: () => context
+                  if (!isLyricOnly)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            settings.title ?? ' ',
+                            style: TextStyle(color: foregroundColor),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => context
                               .read<OverlayWindowBloc>()
                               .add(LockToggled(!context.read<OverlayWindowBloc>().state.isLocked)),
-                          child: context.select((OverlayWindowBloc b) => b.state.isLocked)
+                          icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
                               ? Icon(Icons.lock, color: foregroundColor)
                               : Icon(Icons.lock_open_outlined, color: foregroundColor),
                         ),
-                      ),
-                    ),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        shape: const CircleBorder(),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Icon(Icons.remove, color: foregroundColor),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(Icons.remove, color: foregroundColor),
                         ),
-                      ),
-                    ),
-                    ClipOval(
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: onCloseTap,
-                          child: Icon(Icons.close, color: foregroundColor),
+                        IconButton(
+                          onPressed: onCloseTap,
+                          icon: Icon(Icons.close, color: foregroundColor),
                         ),
+                      ],
+                    ),
+                  Align(
+                    alignment: (settings.showLine2 ?? false) ? Alignment.centerLeft : Alignment.center,
+                    child: Text(
+                      settings.line1?.content ?? ' ',
+                      style: TextStyle(
+                        color: foregroundColor,
+                        fontSize: settings.fontSize,
+                        fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
-                  ].separatedBy(const SizedBox(width: 16)).toList(),
-                ),
-              Align(
-                alignment: (settings.showLine2 ?? false) ? Alignment.centerLeft : Alignment.center,
-                child: Text(
-                  settings.line1?.content ?? ' ',
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: settings.fontSize,
-                    fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
                   ),
-                ),
+                  if (settings.showLine2 ?? false)
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        settings.line2?.content ?? ' ',
+                        style: TextStyle(
+                          color: foregroundColor,
+                          fontSize: settings.fontSize,
+                          fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  if (!isLyricOnly || (settings.showProgressBar ?? false))
+                    OverlayProgressBar(
+                      settings: settings,
+                      foregroundColor: foregroundColor,
+                    ),
+                ].separatedBy(const SizedBox(height: 4)).toList(),
               ),
-              if (settings.showLine2 ?? false)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    settings.line2?.content ?? ' ',
-                    style: TextStyle(
-                      color: foregroundColor,
-                      fontSize: settings.fontSize,
-                      fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ),
-              if (!isLyricOnly || (settings.showProgressBar ?? false))
-                OverlayProgressBar(
-                  settings: settings,
-                  foregroundColor: foregroundColor,
-                ),
-            ].separatedBy(const SizedBox(height: 4)).toList(),
+            ),
           ),
         ),
       ),
