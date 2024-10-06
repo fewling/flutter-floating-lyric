@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../configs/routes/app_router.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/overlay_window_settings_bloc.dart';
 
@@ -170,6 +172,21 @@ class OverlayWindowSetting extends StatelessWidget {
                               : null,
                         );
                       },
+                    ),
+                    ListTile(
+                      enabled: visibleFloatingWindow,
+                      leading: const Icon(Icons.font_download_outlined),
+                      trailing: Builder(
+                        builder: (context) {
+                          final fontSize = context.select<PreferenceBloc, int>(
+                            (bloc) => bloc.state.fontSize,
+                          );
+
+                          return Text('$fontSize');
+                        },
+                      ),
+                      title: const Text('Font Family'),
+                      onTap: () => context.goNamed(AppRoute.fonts.name),
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow,

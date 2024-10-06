@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/base/base_shell.dart';
+import '../../features/font_select/bloc/font_select_bloc.dart';
+import '../../features/font_select/font_select.dart';
 import '../../features/home/bloc/home_bloc.dart';
 import '../../features/home/home_screen.dart';
 import '../../features/lyric_list/bloc/lyric_list_bloc.dart';
@@ -66,6 +68,16 @@ class AppRouter {
                     HomeBloc()..add(HomeStarted(mediaState: context.read<LyricStateListenerBloc>().state.mediaState)),
                 child: const HomeScreen(),
               ),
+              routes: [
+                GoRoute(
+                  path: AppRoute.fonts.path,
+                  name: AppRoute.fonts.name,
+                  builder: (context, state) => BlocProvider(
+                    create: (context) => FontSelectBloc()..add(const FontSelectStarted()),
+                    child: const FontSelect(),
+                  ),
+                ),
+              ],
             ),
             GoRoute(
               parentNavigatorKey: _shellKey,

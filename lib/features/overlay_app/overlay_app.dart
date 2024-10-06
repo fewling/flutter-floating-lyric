@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
-import '../../widgets/loading_widget.dart';
+import '../../utils/logger.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
@@ -53,26 +54,27 @@ class _OverlayAppState extends State<OverlayApp> {
           child: Builder(builder: (context) {
             _updateSize(rootContext, context);
 
-            final windowSettings = context.select(
-              (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
-            );
+            final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
+            final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
+            final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
+            final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
+
+            logger.w('fontFamily: $fontFamily');
 
             return Theme(
               data: ThemeData(
-                colorSchemeSeed: windowSettings?.appColorScheme == null ? null : Color(windowSettings!.appColorScheme),
-                brightness: windowSettings?.isLight ?? true ? Brightness.light : Brightness.dark,
+                textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
+                colorSchemeSeed: appColor == null ? null : Color(appColor),
+                brightness: isLight ?? true ? Brightness.light : Brightness.dark,
               ),
               child: SizedBox(
-                width: windowSettings?.width ?? 200,
+                width: width ?? 200,
                 height: double.infinity,
-                child: windowSettings == null
-                    ? const Material(child: LoadingWidget())
-                    : OverlayWindow(
-                        settings: windowSettings,
-                        isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
-                        onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
-                        onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                      ),
+                child: OverlayWindow(
+                  isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
+                  onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                  onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
+                ),
               ),
             );
           }),

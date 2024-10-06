@@ -51,6 +51,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         // pref:
         color: pref.color,
         backgroundColor: pref.backgroundColor,
+        fontFamily: pref.fontFamily,
         fontSize: pref.fontSize.toDouble(),
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,
@@ -82,6 +83,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
       settings: state.settings.copyWith(
         color: pref.color,
         backgroundColor: pref.backgroundColor,
+        fontFamily: pref.fontFamily,
         fontSize: pref.fontSize.toDouble(),
         opacity: pref.opacity,
         showMillis: pref.showMilliseconds,

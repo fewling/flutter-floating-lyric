@@ -10,6 +10,7 @@ class PreferenceState with _$PreferenceState {
     required int appColorScheme,
     required bool showMilliseconds,
     required bool showProgressBar,
+    required String fontFamily,
     required int fontSize,
     required bool autoFetchOnline,
     required bool showLine2,

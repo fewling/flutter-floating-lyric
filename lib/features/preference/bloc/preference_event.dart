@@ -63,3 +63,9 @@ final class WindowColorThemeToggled extends PreferenceEvent {
 
   final bool useAppColor;
 }
+
+final class FontFamilyUpdated extends PreferenceEvent {
+  const FontFamilyUpdated(this.fontFamily);
+
+  final String fontFamily;
+}

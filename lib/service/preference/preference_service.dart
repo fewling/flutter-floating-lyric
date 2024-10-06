@@ -23,6 +23,8 @@ class PreferenceService {
 
   bool get showProgressBar => _spRepo.showProgressBar;
 
+  String get fontFamily => _spRepo.fontFamily;
+
   int get fontSize => _spRepo.fontSize;
 
   bool get autoFetchOnline => _spRepo.autoFetchOnline;
@@ -44,6 +46,8 @@ class PreferenceService {
   Future<bool> toggleShowMilliseconds(bool showMillis) => _spRepo.toggleShowMilliseconds(showMillis);
 
   Future<bool> toggleShowProgressBar(bool showProgressBar) => _spRepo.toggleShowProgressBar(showProgressBar);
+
+  Future<bool> updateFontFamily(String fontFamily) => _spRepo.updateFontFamily(fontFamily);
 
   Future<bool> updateFontSize(int fontSize) => _spRepo.updateFontSize(fontSize);
 
