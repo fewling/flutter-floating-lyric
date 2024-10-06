@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../repos/remote/lrclib/lrclib_repository.dart';
 import '../../../service/db/local/local_db_service.dart';
 import '../../../service/lrc_lib/lrc_lib_service.dart';
-import '../../../services/lrclib/data/lrclib_response.dart';
 import '../../../utils/logger.dart';
 
 part 'fetch_online_lrc_form_bloc.freezed.dart';

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../repos/local/local_db_repo.dart';
+import '../../repos/remote/lrclib/lrclib_repository.dart';
 import '../../service/db/local/local_db_service.dart';
 import '../../service/lrc_lib/lrc_lib_service.dart';
-import '../../services/lrclib/repo/lrclib_repository.dart';
 import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/loading_widget.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';

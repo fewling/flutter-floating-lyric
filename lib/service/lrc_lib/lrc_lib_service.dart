@@ -1,5 +1,4 @@
-import '../../services/lrclib/data/lrclib_response.dart';
-import '../../services/lrclib/repo/lrclib_repository.dart';
+import '../../repos/remote/lrclib/lrclib_repository.dart';
 
 class LrcLibService {
   LrcLibService({

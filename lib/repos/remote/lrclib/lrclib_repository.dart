@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../utils/logger.dart';
-import '../data/lrclib_response.dart';
+
+part 'lrclib_repository.freezed.dart';
+part 'lrclib_repository.g.dart';
+part 'lrclib_response.dart';
 
 class LrcLibRepository {
   static const _baseUrl = 'https://lrclib.net/api';

@@ -1,7 +1,4 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'lrclib_response.freezed.dart';
-part 'lrclib_response.g.dart';
+part of 'lrclib_repository.dart';
 
 @freezed
 class LrcLibResponse with _$LrcLibResponse {
@@ -21,6 +18,5 @@ class LrcLibResponse with _$LrcLibResponse {
     @Default('') String? syncedLyrics,
   }) = _LrcLibResponse;
 
-  factory LrcLibResponse.fromJson(Map<String, dynamic> json) =>
-      _$LrcLibResponseFromJson(json);
+  factory LrcLibResponse.fromJson(Map<String, dynamic> json) => _$LrcLibResponseFromJson(json);
 }
