@@ -25,3 +25,7 @@ final class DeleteAllRequested extends LyricListEvent {
 final class ImportLRCsRequested extends LyricListEvent {
   const ImportLRCsRequested();
 }
+
+final class DeleteStatusHandled extends LyricListEvent {
+  const DeleteStatusHandled();
+}
