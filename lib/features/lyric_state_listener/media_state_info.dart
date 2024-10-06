@@ -44,7 +44,6 @@ class MediaStateInfo extends StatelessWidget {
           title: isPlaying
               ? Text.rich(
                   TextSpan(
-                    style: Theme.of(context).textTheme.bodyMedium,
                     children: [
                       TextSpan(
                         text: '$mediaAppName: ',

@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
-import '../../utils/logger.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
@@ -58,8 +57,10 @@ class _OverlayAppState extends State<OverlayApp> {
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
             final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
-
-            logger.w('fontFamily: $fontFamily');
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showLine2);
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showProgressBar);
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showMillis);
+            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
 
             return Theme(
               data: ThemeData(
