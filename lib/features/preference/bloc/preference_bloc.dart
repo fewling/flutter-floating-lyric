@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../repos/local/preference_repo.dart';
 import '../../../service/preference/preference_service.dart';
 
 part 'preference_bloc.freezed.dart';
@@ -137,7 +138,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
   Future<void> _onFontFamilyReset(FontFamilyReset event, Emitter<PreferenceState> emit) async {
     final isSuccess = await _spService.resetFontFamily();
     if (isSuccess) {
-      emit(state.copyWith(fontFamily: 'Roboto'));
+      emit(state.copyWith(fontFamily: PreferenceRepo.defaultFont));
     }
   }
 }

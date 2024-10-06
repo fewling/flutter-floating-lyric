@@ -52,10 +52,11 @@ class _OverlayAppState extends State<OverlayApp> {
             }
           },
           child: Builder(builder: (context) {
-            _updateSize(rootContext, context);
+            final isMinimized = context.select((OverlayAppBloc b) => b.state.isMinimized);
+
+            _updateSize(rootContext, context, isMinimized);
 
             final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
-            final isMinimized = context.select((OverlayAppBloc b) => b.state.isMinimized);
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
             final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
@@ -70,38 +71,36 @@ class _OverlayAppState extends State<OverlayApp> {
 
             return Theme(
               data: ThemeData(
+                textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
                 colorSchemeSeed: appColor == null ? null : Color(appColor),
                 brightness: isLight ?? true ? Brightness.light : Brightness.dark,
               ),
-              child: DefaultTextStyle(
-                style: GoogleFonts.getFont(fontFamily ?? 'Roboto'),
-                child: isMinimized
-                    ? SizedBox(
-                        height: 64,
-                        width: 64,
-                        child: Material(
-                          color: Color(appColor ?? Colors.purple.value),
-                          shape: const CircleBorder(),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(Assets.launcherIcon.appIcon.path),
-                            ),
+              child: isMinimized
+                  ? SizedBox(
+                      height: 64,
+                      width: 64,
+                      child: Material(
+                        color: Color(appColor ?? Colors.purple.value),
+                        shape: const CircleBorder(),
+                        clipBehavior: Clip.antiAlias,
+                        child: InkWell(
+                          onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.asset(Assets.launcherIcon.appIcon.path),
                           ),
                         ),
-                      )
-                    : SizedBox(
-                        width: width ?? 200,
-                        height: double.infinity,
-                        child: OverlayWindow(
-                          isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
-                          onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
-                          onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                        ),
                       ),
-              ),
+                    )
+                  : SizedBox(
+                      width: width ?? 200,
+                      height: double.infinity,
+                      child: OverlayWindow(
+                        isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
+                        onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                        onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
+                      ),
+                    ),
             );
           }),
         ),
@@ -109,7 +108,7 @@ class _OverlayAppState extends State<OverlayApp> {
     );
   }
 
-  void _updateSize(BuildContext rootContext, BuildContext blocContext) {
+  void _updateSize(BuildContext rootContext, BuildContext blocContext, bool isMinimized) {
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = rootKey.currentContext?.findRenderObject() as RenderBox?;
       if (box == null) return;
@@ -117,7 +116,7 @@ class _OverlayAppState extends State<OverlayApp> {
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;
 
-      final width = box.getMaxIntrinsicWidth(double.infinity);
+      final width = box.getMaxIntrinsicWidth(isMinimized ? 64 : double.infinity);
       final height = box.getMaxIntrinsicHeight(width);
 
       blocContext.read<OverlayWindowBloc>().add(WindowResized(
