@@ -14,8 +14,8 @@ class OverlayWindowSetting extends StatelessWidget {
       (bloc) => bloc.state.isWindowVisible,
     );
 
-    final useAppTheme = context.select((OverlayWindowSettingsBloc b) => b.state.settings.useAppTheme);
-    final useCustomTheme = !useAppTheme;
+    final useAppColor = context.select((OverlayWindowSettingsBloc b) => b.state.settings.useAppColor);
+    final useCustomColor = !useAppColor;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
@@ -41,15 +41,15 @@ class OverlayWindowSetting extends StatelessWidget {
                 child: Column(
                   children: [
                     SwitchListTile(
-                      value: useAppTheme,
-                      title: const Text('Use App Theme'),
+                      value: useAppColor,
+                      title: const Text('Use App Color'),
                       secondary: const Icon(Icons.palette_outlined),
                       onChanged: !visibleFloatingWindow
                           ? null
                           : (value) => context.read<OverlayWindowSettingsBloc>().add(WindowThemeToggled(value)),
                     ),
                     ListTile(
-                      enabled: visibleFloatingWindow && useCustomTheme,
+                      enabled: visibleFloatingWindow && useCustomColor,
                       title: const Text('Text Color'),
                       leading: const Icon(Icons.color_lens_outlined),
                       trailing: Builder(builder: (context) {
@@ -58,7 +58,7 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
 
                         return ColoredBox(
-                          color: Color(color).withOpacity(useCustomTheme ? 1 : 0.5),
+                          color: Color(color).withOpacity(useCustomColor ? 1 : 0.5),
                           child: const SizedBox(width: 24, height: 24),
                         );
                       }),

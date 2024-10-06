@@ -32,9 +32,9 @@ class OverlayWindow extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final foregroundColor = colorScheme.onPrimaryContainer;
 
-    final useAppTheme = settings.useAppTheme;
+    final useAppColor = settings.useAppColor;
     final opacity = (settings.opacity ?? 50) / 100;
-    final textColor = (useAppTheme ? foregroundColor : Color(settings.color ?? Colors.white.value));
+    final textColor = (useAppColor ? foregroundColor : Color(settings.color ?? Colors.white.value));
 
     return Material(
       color: Colors.transparent,
@@ -44,7 +44,7 @@ class OverlayWindow extends StatelessWidget {
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
-            color: useAppTheme
+            color: useAppColor
                 ? colorScheme.primaryContainer.withOpacity(opacity)
                 : Color(settings.backgroundColor ?? Colors.black.value).withOpacity(opacity),
           ),
