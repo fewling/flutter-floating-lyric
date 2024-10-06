@@ -67,6 +67,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
           final isNewSong = state.mediaState?.title != title || state.mediaState?.artist != artist;
 
           if (isNewSong) {
+            logger.t('New song: $title - $artist');
             emit(state.copyWith(
               mediaState: mediaState,
               currentLrc: null,
@@ -277,6 +278,12 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   }
 
   void _onNewLyricSaved(NewLyricSaved event, Emitter<LyricStateListenerState> emit) {
-    emit(const LyricStateListenerState());
+    emit(state.copyWith(
+      mediaState: null,
+      currentLrc: null,
+      line1: null,
+      line2: null,
+      searchLyricStatus: SearchLyricStatus.initial,
+    ));
   }
 }
