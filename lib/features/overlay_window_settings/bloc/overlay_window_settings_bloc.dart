@@ -28,6 +28,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         OverlayWindowVisibilityToggled() => _onVisibilityToggled(event, emit),
         WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
         WindowTouchThruToggled() => _onTouchThruToggled(event, emit),
+        WindowThemeToggled() => _onThemeToggled(event, emit),
       },
     );
   }
@@ -150,5 +151,16 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     if (isSuccessful != null && isSuccessful) {
       emit(newState);
     }
+  }
+
+  void _onThemeToggled(WindowThemeToggled event, Emitter<OverlayWindowSettingsState> emit) {
+    final newState = state.copyWith(
+      settings: state.settings.copyWith(
+        useAppTheme: event.useAppTheme,
+      ),
+    );
+
+    emit(newState);
+    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
   }
 }

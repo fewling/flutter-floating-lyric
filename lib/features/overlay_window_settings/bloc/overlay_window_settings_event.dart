@@ -49,3 +49,9 @@ final class WindowTouchThruToggled extends OverlayWindowSettingsEvent {
 
   final bool isTouchThru;
 }
+
+final class WindowThemeToggled extends OverlayWindowSettingsEvent {
+  const WindowThemeToggled(this.useAppTheme);
+
+  final bool useAppTheme;
+}
