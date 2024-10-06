@@ -22,6 +22,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           appColorScheme: spService.appColorScheme,
           showMilliseconds: spService.showMilliseconds,
           showProgressBar: spService.showProgressBar,
+          fontFamily: spService.fontFamily,
           fontSize: spService.fontSize,
           autoFetchOnline: spService.autoFetchOnline,
           showLine2: spService.showLine2,
@@ -40,6 +41,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           AutoFetchOnlineToggled() => _onAutoFetchOnlineToggled(event, emit),
           ShowLine2Toggled() => _onShowLine2Toggled(event, emit),
           WindowColorThemeToggled() => _onWindowColorThemeToggled(event, emit),
+          FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
         });
   }
 
@@ -121,6 +123,13 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.toggleUseAppColor(event.useAppColor);
     if (isSuccess) {
       emit(state.copyWith(useAppColor: event.useAppColor));
+    }
+  }
+
+  Future<void> _onFontFamilyUpdated(FontFamilyUpdated event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.updateFontFamily(event.fontFamily);
+    if (isSuccess) {
+      emit(state.copyWith(fontFamily: event.fontFamily));
     }
   }
 }

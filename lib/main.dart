@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,13 +61,9 @@ class FloatingLyricApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLight = context.select<PreferenceBloc, bool>(
-      (bloc) => bloc.state.isLight,
-    );
-
-    final colorSchemeSeed = context.select<PreferenceBloc, int>(
-      (bloc) => bloc.state.appColorScheme,
-    );
+    final isLight = context.select<PreferenceBloc, bool>((bloc) => bloc.state.isLight);
+    final colorSchemeSeed = context.select<PreferenceBloc, int>((bloc) => bloc.state.appColorScheme);
+    final fontFamily = context.select<PreferenceBloc, String>((bloc) => bloc.state.fontFamily);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -74,6 +71,7 @@ class FloatingLyricApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
         brightness: isLight ? Brightness.light : Brightness.dark,
+        textTheme: fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
       ),
       routerConfig: appRouter.router,
     );

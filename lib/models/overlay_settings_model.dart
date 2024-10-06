@@ -31,6 +31,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     bool? showProgressBar,
     bool? showMillis,
     bool? showLine2,
+    @Default('') String fontFamily,
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,

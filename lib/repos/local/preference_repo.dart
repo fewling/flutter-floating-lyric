@@ -15,6 +15,7 @@ class PreferenceRepo {
   static const appColorSchemeKey = 'app color scheme';
   static const showMillisecondsKey = 'show milliseconds';
   static const showProgressBarKey = 'show progress bar';
+  static const fontFamilyKey = 'font family';
   static const fontSizeKey = 'font size';
   static const autoFetchOnlineKey = 'auto fetch online';
   static const showLine2Key = 'show line 2';
@@ -33,6 +34,10 @@ class PreferenceRepo {
   bool get showMilliseconds => _sp.getBool(showMillisecondsKey) ?? false;
 
   bool get showProgressBar => _sp.getBool(showProgressBarKey) ?? true;
+
+  /// Empty string means default font family of Flutter
+  /// Else it will be the font family name from Google Fonts
+  String get fontFamily => _sp.getString(fontFamilyKey) ?? '';
 
   int get fontSize => _sp.getInt(fontSizeKey) ?? 24;
 
@@ -55,6 +60,8 @@ class PreferenceRepo {
   Future<bool> toggleShowMilliseconds(bool showMillis) => _sp.setBool(showMillisecondsKey, showMillis);
 
   Future<bool> toggleShowProgressBar(bool showProgressBar) => _sp.setBool(showProgressBarKey, showProgressBar);
+
+  Future<bool> updateFontFamily(String fontFamily) => _sp.setString(fontFamilyKey, fontFamily);
 
   Future<bool> updateFontSize(int fontSize) => _sp.setInt(fontSizeKey, fontSize);
 

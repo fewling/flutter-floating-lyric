@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/overlay_settings_model.dart';
 import '../../../utils/extensions/custom_extensions.dart';
+import '../../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindow extends StatelessWidget {
@@ -13,11 +14,8 @@ class OverlayWindow extends StatelessWidget {
     this.onCloseTap,
     this.debugText,
     this.isLoading = false,
-    required this.settings,
     required this.isLyricOnly,
   });
-
-  final OverlaySettingsModel settings;
 
   final String? debugText;
   final bool isLyricOnly;
@@ -27,7 +25,11 @@ class OverlayWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return const OverlayLoadingIndicator();
+    final settings = context.select(
+      (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
+    );
+
+    if (settings == null) return const OverlayLoadingIndicator();
 
     final colorScheme = Theme.of(context).colorScheme;
     final foregroundColor = colorScheme.onPrimaryContainer;
