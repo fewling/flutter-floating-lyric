@@ -70,9 +70,16 @@ class FloatingLyricApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
-        brightness: isLight ? Brightness.light : Brightness.dark,
-        textTheme: fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
+        brightness: Brightness.light,
+        textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Color(colorSchemeSeed),
+        brightness: Brightness.dark,
+        textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
+      ),
+      themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
       routerConfig: appRouter.router,
     );
   }

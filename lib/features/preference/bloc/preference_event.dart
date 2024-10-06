@@ -69,3 +69,7 @@ final class FontFamilyUpdated extends PreferenceEvent {
 
   final String fontFamily;
 }
+
+class FontFamilyReset extends PreferenceEvent {
+  const FontFamilyReset();
+}

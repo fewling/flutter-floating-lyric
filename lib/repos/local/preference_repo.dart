@@ -37,7 +37,7 @@ class PreferenceRepo {
 
   /// Empty string means default font family of Flutter
   /// Else it will be the font family name from Google Fonts
-  String get fontFamily => _sp.getString(fontFamilyKey) ?? '';
+  String get fontFamily => _sp.getString(fontFamilyKey) ?? 'Roboto';
 
   int get fontSize => _sp.getInt(fontSizeKey) ?? 24;
 
@@ -70,4 +70,8 @@ class PreferenceRepo {
   Future<bool> toggleShowLine2(bool value) => _sp.setBool(showLine2Key, value);
 
   Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
+
+  Future<bool> resetFontFamily() {
+    return _sp.remove(fontFamilyKey);
+  }
 }
