@@ -24,8 +24,10 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? duration,
 
     // Styles
+    @Default(true) bool useAppTheme,
     double? opacity,
     int? color,
+    int? backgroundColor,
     bool? showProgressBar,
     bool? showMillis,
     bool? showLine2,

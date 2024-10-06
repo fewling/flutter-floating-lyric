@@ -29,17 +29,29 @@ class OverlayWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isLoading) return const OverlayLoadingIndicator();
 
-    // final foregroundColor = settings.color == null ? null : Color(settings.color!);
-    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final colorScheme = Theme.of(context).colorScheme;
+    final foregroundColor = colorScheme.onPrimaryContainer;
+
+    final useAppTheme = settings.useAppTheme;
+    final opacity = (settings.opacity ?? 50) / 100;
+    final textColor = (useAppTheme ? foregroundColor : Color(settings.color ?? Colors.white.value));
 
     return Material(
+      color: Colors.transparent,
       child: IgnorePointer(
         ignoring: settings.ignoreTouch ?? false,
-        child: Card(
+        child: Container(
           clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: useAppTheme
+                ? colorScheme.primaryContainer.withOpacity(opacity)
+                : Color(settings.backgroundColor ?? Colors.black.value).withOpacity(opacity),
+          ),
           margin: EdgeInsets.zero,
           child: InkWell(
             onTap: onWindowTap,
+            borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: Column(
@@ -48,19 +60,22 @@ class OverlayWindow extends StatelessWidget {
                   if (debugText != null)
                     Text(
                       debugText!,
-                      style: TextStyle(color: foregroundColor),
+                      style: TextStyle(color: colorScheme.onPrimaryContainer),
                     ),
                   if (!isLyricOnly)
                     OverlayHeader(
                       settings: settings,
                       onCloseTap: onCloseTap,
+                      textColor: textColor,
                     ),
                   OverlayContent(
                     settings: settings,
+                    textColor: textColor,
                   ),
                   if (!isLyricOnly || (settings.showProgressBar ?? false))
                     OverlayProgressBar(
                       settings: settings,
+                      textColor: textColor,
                     ),
                 ].separatedBy(const SizedBox(height: 4)).toList(),
               ),
@@ -76,14 +91,14 @@ class OverlayContent extends StatelessWidget {
   const OverlayContent({
     super.key,
     required this.settings,
+    required this.textColor,
   });
 
   final OverlaySettingsModel settings;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
-
     final line1Pos = settings.line1?.time;
     final line2Pos = settings.line2?.time;
 
@@ -97,21 +112,21 @@ class OverlayContent extends StatelessWidget {
         return Center(
           child: Text(
             'No lyric',
-            style: TextStyle(color: foregroundColor),
+            style: TextStyle(color: textColor),
           ),
         );
       case SearchLyricStatus.searching:
         return Center(
           child: Text(
             'Searching lyric...',
-            style: TextStyle(color: foregroundColor),
+            style: TextStyle(color: textColor),
           ),
         );
       case SearchLyricStatus.notFound:
         return Center(
           child: Text(
             'Lyric not found',
-            style: TextStyle(color: foregroundColor),
+            style: TextStyle(color: textColor),
           ),
         );
       case SearchLyricStatus.initial:
@@ -123,7 +138,7 @@ class OverlayContent extends StatelessWidget {
               child: Text(
                 settings.line1?.content ?? ' ',
                 style: TextStyle(
-                  color: foregroundColor,
+                  color: textColor,
                   fontSize: settings.fontSize,
                   fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
                 ),
@@ -135,7 +150,7 @@ class OverlayContent extends StatelessWidget {
                 child: Text(
                   settings.line2?.content ?? ' ',
                   style: TextStyle(
-                    color: foregroundColor,
+                    color: textColor,
                     fontSize: settings.fontSize,
                     fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
                   ),
@@ -152,37 +167,37 @@ class OverlayHeader extends StatelessWidget {
     super.key,
     required this.settings,
     required this.onCloseTap,
+    required this.textColor,
   });
 
   final OverlaySettingsModel settings;
   final void Function()? onCloseTap;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
-
     return Row(
       children: [
         Expanded(
           child: Text(
             settings.title ?? ' ',
-            style: TextStyle(color: foregroundColor),
+            style: TextStyle(color: textColor),
           ),
         ),
         IconButton(
           onPressed: () =>
               context.read<OverlayWindowBloc>().add(LockToggled(!context.read<OverlayWindowBloc>().state.isLocked)),
           icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
-              ? Icon(Icons.lock, color: foregroundColor)
-              : Icon(Icons.lock_open_outlined, color: foregroundColor),
+              ? Icon(Icons.lock, color: textColor)
+              : Icon(Icons.lock_open_outlined, color: textColor),
         ),
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.remove, color: foregroundColor),
+          icon: Icon(Icons.remove, color: textColor),
         ),
         IconButton(
           onPressed: onCloseTap,
-          icon: Icon(Icons.close, color: foregroundColor),
+          icon: Icon(Icons.close, color: textColor),
         ),
       ],
     );
@@ -193,14 +208,14 @@ class OverlayProgressBar extends StatelessWidget {
   const OverlayProgressBar({
     super.key,
     required this.settings,
+    required this.textColor,
   });
 
   final OverlaySettingsModel settings;
+  final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    final foregroundColor = Theme.of(context).colorScheme.onPrimaryContainer;
-
     final pos = Duration(milliseconds: settings.position?.toInt() ?? 0);
     final max = Duration(milliseconds: settings.duration?.toInt() ?? 0);
 
@@ -213,17 +228,17 @@ class OverlayProgressBar extends StatelessWidget {
       children: [
         Text(
           left,
-          style: TextStyle(color: foregroundColor),
+          style: TextStyle(color: textColor),
         ),
         Expanded(
           child: LinearProgressIndicator(
             value: progress.toDouble(),
-            color: foregroundColor,
+            color: textColor,
           ),
         ),
         Text(
           right,
-          style: TextStyle(color: foregroundColor),
+          style: TextStyle(color: textColor),
         ),
       ].separatedBy(const SizedBox(width: 8)).toList(),
     );
