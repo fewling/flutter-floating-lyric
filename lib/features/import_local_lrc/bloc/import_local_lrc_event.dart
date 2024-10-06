@@ -11,3 +11,7 @@ final class ImportLocalLrcStarted extends ImportLocalLrcEvent {
 final class ImportLRCsRequested extends ImportLocalLrcEvent {
   const ImportLRCsRequested();
 }
+
+final class ImportStatusHandled extends ImportLocalLrcEvent {
+  const ImportStatusHandled();
+}

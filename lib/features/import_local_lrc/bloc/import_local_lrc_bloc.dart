@@ -17,6 +17,7 @@ class ImportLocalLrcBloc extends Bloc<ImportLocalLrcEvent, ImportLocalLrcState> 
       (event, emit) => switch (event) {
         ImportLocalLrcStarted() => _onStarted(event, emit),
         ImportLRCsRequested() => _onImportLRCsRequested(event, emit),
+        ImportStatusHandled() => _onImportStatusHandled(event, emit),
       },
     );
   }
@@ -26,13 +27,28 @@ class ImportLocalLrcBloc extends Bloc<ImportLocalLrcEvent, ImportLocalLrcState> 
   void _onStarted(ImportLocalLrcStarted event, Emitter<ImportLocalLrcState> emit) {}
 
   Future<void> _onImportLRCsRequested(ImportLRCsRequested event, Emitter<ImportLocalLrcState> emit) async {
-    emit(state.copyWith(isProcessingFiles: true));
-
-    final failed = await _lrcProcessorService.pickLrcFiles();
-
     emit(state.copyWith(
-      isProcessingFiles: false,
-      failedFiles: failed,
+      status: ImportLocalLrcStatus.processingFiles,
+    ));
+    try {
+      final failed = await _lrcProcessorService.pickLrcFiles();
+
+      emit(state.copyWith(
+        status: failed.isEmpty ? ImportLocalLrcStatus.success : ImportLocalLrcStatus.failed,
+        failedFiles: failed,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: ImportLocalLrcStatus.failed,
+        failedFiles: [],
+      ));
+    }
+  }
+
+  void _onImportStatusHandled(ImportStatusHandled event, Emitter<ImportLocalLrcState> emit) {
+    emit(state.copyWith(
+      status: ImportLocalLrcStatus.initial,
+      failedFiles: [],
     ));
   }
 }
