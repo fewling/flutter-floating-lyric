@@ -5,6 +5,7 @@ import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/overlay_settings_model.dart';
 import '../../../utils/extensions/custom_extensions.dart';
 import '../../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
+import '../bloc/overlay_app_bloc.dart';
 import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindow extends StatelessWidget {
@@ -194,7 +195,7 @@ class OverlayHeader extends StatelessWidget {
               : Icon(Icons.lock_open_outlined, color: textColor),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => context.read<OverlayAppBloc>().add(const MinimizeRequested()),
           icon: Icon(Icons.remove, color: textColor),
         ),
         IconButton(
