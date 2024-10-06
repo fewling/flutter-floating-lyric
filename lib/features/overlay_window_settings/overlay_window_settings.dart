@@ -98,6 +98,74 @@ class OverlayWindowSetting extends StatelessWidget {
                       ),
                     ),
                     ListTile(
+                      enabled: visibleFloatingWindow,
+                      leading: const Icon(Icons.opacity_outlined),
+                      trailing: Builder(
+                        builder: (context) {
+                          final opacity = context.select<PreferenceBloc, double>(
+                            (bloc) => bloc.state.opacity,
+                          );
+
+                          return Text('${opacity.toInt()}%');
+                        },
+                      ),
+                      title: const Text('Window Opacity'),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final opacity = context.select<PreferenceBloc, double>(
+                          (bloc) => bloc.state.opacity,
+                        );
+                        return Slider(
+                          max: 100,
+                          divisions: 20,
+                          value: opacity,
+                          label: '${opacity.toInt()}%',
+                          onChanged: visibleFloatingWindow
+                              ? (o) => context.read<PreferenceBloc>().add(OpacityUpdated(o))
+                              : null,
+                        );
+                      },
+                    ),
+                    ListTile(
+                      enabled: visibleFloatingWindow,
+                      leading: const Icon(Icons.font_download_outlined),
+                      trailing: Text(DefaultTextStyle.of(context).style.fontFamily ?? ''),
+                      title: const Text('Font Family'),
+                      onTap: () => context.goNamed(AppRoute.fonts.name),
+                    ),
+                    ListTile(
+                      enabled: visibleFloatingWindow,
+                      leading: const Icon(Icons.format_size_outlined),
+                      trailing: Builder(
+                        builder: (context) {
+                          final fontSize = context.select<PreferenceBloc, int>(
+                            (bloc) => bloc.state.fontSize,
+                          );
+
+                          return Text('$fontSize');
+                        },
+                      ),
+                      title: const Text('Lyrics Font Size'),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final fontSize = context.select<PreferenceBloc, int>(
+                          (bloc) => bloc.state.fontSize,
+                        );
+
+                        return Slider(
+                          min: 4,
+                          max: 72,
+                          value: fontSize.toDouble(),
+                          label: '$fontSize%',
+                          onChanged: visibleFloatingWindow
+                              ? (value) => context.read<PreferenceBloc>().add(FontSizeUpdated(value.toInt()))
+                              : null,
+                        );
+                      },
+                    ),
+                    ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,
                       title: const Text('Custom Text Color'),
                       leading: const Icon(Icons.color_lens_outlined),
@@ -142,82 +210,6 @@ class OverlayWindowSetting extends StatelessWidget {
                         ),
                         context: context,
                       ),
-                    ),
-                    ListTile(
-                      enabled: visibleFloatingWindow,
-                      leading: const Icon(Icons.opacity_outlined),
-                      trailing: Builder(
-                        builder: (context) {
-                          final opacity = context.select<PreferenceBloc, double>(
-                            (bloc) => bloc.state.opacity,
-                          );
-
-                          return Text('${opacity.toInt()}%');
-                        },
-                      ),
-                      title: const Text('Window Opacity'),
-                    ),
-                    Builder(
-                      builder: (context) {
-                        final opacity = context.select<PreferenceBloc, double>(
-                          (bloc) => bloc.state.opacity,
-                        );
-                        return Slider(
-                          max: 100,
-                          divisions: 20,
-                          value: opacity,
-                          label: '${opacity.toInt()}%',
-                          onChanged: visibleFloatingWindow
-                              ? (o) => context.read<PreferenceBloc>().add(OpacityUpdated(o))
-                              : null,
-                        );
-                      },
-                    ),
-                    ListTile(
-                      enabled: visibleFloatingWindow,
-                      leading: const Icon(Icons.font_download_outlined),
-                      trailing: Builder(
-                        builder: (context) {
-                          final fontSize = context.select<PreferenceBloc, int>(
-                            (bloc) => bloc.state.fontSize,
-                          );
-
-                          return Text('$fontSize');
-                        },
-                      ),
-                      title: const Text('Font Family'),
-                      onTap: () => context.goNamed(AppRoute.fonts.name),
-                    ),
-                    ListTile(
-                      enabled: visibleFloatingWindow,
-                      leading: const Icon(Icons.format_size_outlined),
-                      trailing: Builder(
-                        builder: (context) {
-                          final fontSize = context.select<PreferenceBloc, int>(
-                            (bloc) => bloc.state.fontSize,
-                          );
-
-                          return Text('$fontSize');
-                        },
-                      ),
-                      title: const Text('Lyrics Font Size'),
-                    ),
-                    Builder(
-                      builder: (context) {
-                        final fontSize = context.select<PreferenceBloc, int>(
-                          (bloc) => bloc.state.fontSize,
-                        );
-
-                        return Slider(
-                          min: 4,
-                          max: 72,
-                          value: fontSize.toDouble(),
-                          label: '$fontSize%',
-                          onChanged: visibleFloatingWindow
-                              ? (value) => context.read<PreferenceBloc>().add(FontSizeUpdated(value.toInt()))
-                              : null,
-                        );
-                      },
                     ),
                   ],
                 ),
