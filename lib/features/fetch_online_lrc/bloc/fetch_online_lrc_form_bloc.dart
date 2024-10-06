@@ -37,6 +37,7 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
   final LocalDbService _localDbService;
 
   void _onStarted(FetchOnlineLrcFormStarted event, Emitter<FetchOnlineLrcFormState> emit) {
+    logger.w('FetchOnlineLrcFormBloc._onStarted');
     emit(state.copyWith(
       album: event.album,
       artist: event.artist,
@@ -49,6 +50,7 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
   }
 
   void _onNewSongPlayed(NewSongPlayed event, Emitter<FetchOnlineLrcFormState> emit) {
+    logger.w('FetchOnlineLrcFormBloc._onNewSongPlayed');
     emit(state.copyWith(
       album: event.album,
       artist: event.artist,
@@ -61,11 +63,14 @@ class FetchOnlineLrcFormBloc extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLr
   }
 
   Future<void> _onSearchRequested(SearchOnlineRequested event, Emitter<FetchOnlineLrcFormState> emit) async {
+    logger.w('FetchOnlineLrcFormBloc._onSearchRequested');
     try {
+      logger.d('FetchOnlineLrcFormBloc._onSearchRequested1: requestStatus: ${state.requestStatus}');
       emit(state.copyWith(
         requestStatus: OnlineLrcRequestStatus.loading,
         lrcLibResponse: null,
       ));
+      logger.d('FetchOnlineLrcFormBloc._onSearchRequested2: requestStatus: ${state.requestStatus}');
 
       final response = await _lrcLibService.fetch(
         trackName: state.titleAlt ?? 'unknown',
