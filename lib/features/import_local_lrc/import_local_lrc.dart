@@ -87,19 +87,32 @@ class _ImportFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isProcessing = context.select<ImportLocalLrcBloc, bool>(
-      (bloc) => bloc.state.isProcessingFiles,
+      (bloc) => bloc.state.status.isProcessingFiles,
     );
 
-    return BlocListener<ImportLocalLrcBloc, ImportLocalLrcState>(
-      listenWhen: (previous, current) => previous.failedFiles != current.failedFiles,
-      listener: (context, state) {
-        if (state.failedFiles.isNotEmpty) {
-          showDialog(
-            context: context,
-            builder: (_) => FailedImportDialog(state.failedFiles),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ImportLocalLrcBloc, ImportLocalLrcState>(
+          listenWhen: (previous, current) => previous.status != current.status,
+          listener: (context, state) {
+            switch (state.status) {
+              case ImportLocalLrcStatus.initial:
+              case ImportLocalLrcStatus.processingFiles:
+                break;
+              case ImportLocalLrcStatus.success:
+              case ImportLocalLrcStatus.failed:
+                if (state.failedFiles.isNotEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => FailedImportDialog(state.failedFiles),
+                  );
+                }
+                context.read<LyricStateListenerBloc>().add(const NewLyricSaved());
+                context.read<ImportLocalLrcBloc>().add(const ImportStatusHandled());
+            }
+          },
+        ),
+      ],
       child: FloatingActionButton.extended(
         onPressed: isProcessing ? null : () => context.read<ImportLocalLrcBloc>().add(const ImportLRCsRequested()),
         label: Text(isProcessing ? 'Importing...' : 'Import'),
