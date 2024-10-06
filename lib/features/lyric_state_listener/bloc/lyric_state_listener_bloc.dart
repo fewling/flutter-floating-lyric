@@ -199,9 +199,21 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   }
 
   void _onAutoFetchUpdated(AutoFetchUpdated event, Emitter<LyricStateListenerState> emit) {
-    emit(state.copyWith(
-      isAutoFetch: event.isAutoFetch,
-    ));
+    // if no current lrc and auto fetch is enabled, fetch lyric
+    if (state.currentLrc == null && event.isAutoFetch) {
+      emit(state.copyWith(
+        isAutoFetch: event.isAutoFetch,
+        mediaState: null,
+        currentLrc: null,
+        line1: null,
+        line2: null,
+        searchLyricStatus: SearchLyricStatus.initial,
+      ));
+    } else {
+      emit(state.copyWith(
+        isAutoFetch: event.isAutoFetch,
+      ));
+    }
   }
 
   void _onShowLine2Updated(ShowLine2Updated event, Emitter<LyricStateListenerState> emit) {
