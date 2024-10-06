@@ -21,6 +21,8 @@ class PreferenceRepo {
   static const showLine2Key = 'show line 2';
   static const useAppColorKey = 'use app color';
 
+  static const defaultFont = 'Roboto';
+
   double get opacity => _sp.getDouble(windowOpacityKey) ?? 50;
 
   int get color => _sp.getInt(windowColorKey) ?? Colors.deepPurple.value;
@@ -37,7 +39,7 @@ class PreferenceRepo {
 
   /// Empty string means default font family of Flutter
   /// Else it will be the font family name from Google Fonts
-  String get fontFamily => _sp.getString(fontFamilyKey) ?? 'Roboto';
+  String get fontFamily => _sp.getString(fontFamilyKey) ?? defaultFont;
 
   int get fontSize => _sp.getInt(fontSizeKey) ?? 24;
 
@@ -71,7 +73,5 @@ class PreferenceRepo {
 
   Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
 
-  Future<bool> resetFontFamily() {
-    return _sp.remove(fontFamilyKey);
-  }
+  Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
 }

@@ -62,7 +62,6 @@ class FloatingLyricApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final isLight = context.select<PreferenceBloc, bool>((bloc) => bloc.state.isLight);
     final colorSchemeSeed = context.select<PreferenceBloc, int>((bloc) => bloc.state.appColorScheme);
-    final fontFamily = context.select<PreferenceBloc, String>((bloc) => bloc.state.fontFamily);
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -70,13 +69,11 @@ class FloatingLyricApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
         brightness: Brightness.light,
-        // textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
         brightness: Brightness.dark,
-        // textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
       ),
       themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
       routerConfig: appRouter.router,

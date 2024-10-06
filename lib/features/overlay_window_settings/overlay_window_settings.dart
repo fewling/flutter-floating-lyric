@@ -130,7 +130,7 @@ class OverlayWindowSetting extends StatelessWidget {
                     ListTile(
                       enabled: visibleFloatingWindow,
                       leading: const Icon(Icons.font_download_outlined),
-                      trailing: Text(DefaultTextStyle.of(context).style.fontFamily ?? ''),
+                      trailing: Builder(builder: (ctx) => Text(ctx.select((PreferenceBloc b) => b.state.fontFamily))),
                       title: const Text('Font Family'),
                       onTap: () => context.goNamed(AppRoute.fonts.name),
                     ),
