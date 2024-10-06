@@ -56,24 +56,27 @@ class FetchOnlineLrcForm extends StatelessWidget {
                     context: context,
                     builder: (dialogCtx) => BlocProvider.value(
                       value: context.read<FetchOnlineLrcFormBloc>(),
-                      child: AlertDialog(
-                        icon: const Icon(Icons.info_outline),
-                        title: const Text('Lyric Fetch Result'),
-                        content: SelectableText(content),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(dialogCtx).pop(),
-                            child: const Text('Close'),
-                          ),
-                          if (resp != null)
+                      child: Theme(
+                        data: Theme.of(context),
+                        child: AlertDialog(
+                          icon: const Icon(Icons.info_outline),
+                          title: const Text('Lyric Fetch Result'),
+                          content: SelectableText(content),
+                          actions: [
                             TextButton(
-                              onPressed: () {
-                                context.read<FetchOnlineLrcFormBloc>().add(SaveLyricResponseRequested(resp));
-                                Navigator.of(dialogCtx).pop();
-                              },
-                              child: const Text('Save'),
+                              onPressed: () => Navigator.of(dialogCtx).pop(),
+                              child: const Text('Close'),
                             ),
-                        ],
+                            if (resp != null)
+                              TextButton(
+                                onPressed: () {
+                                  context.read<FetchOnlineLrcFormBloc>().add(SaveLyricResponseRequested(resp));
+                                  Navigator.of(dialogCtx).pop();
+                                },
+                                child: const Text('Save'),
+                              ),
+                          ],
+                        ),
                       ),
                     ),
                   );

@@ -35,7 +35,7 @@ class AppRouter {
       refreshListenable: StreamToListenable([
         permissionBloc.stream,
       ]),
-      initialLocation: AppRoute.home.path,
+      initialLocation: AppRoute.permission.path,
       observers: [AppRouteObserver()],
       redirect: (context, state) {
         final permissionState = permissionBloc.state;

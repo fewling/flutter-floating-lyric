@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,13 +70,13 @@ class FloatingLyricApp extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
         brightness: Brightness.light,
-        textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
+        // textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Color(colorSchemeSeed),
         brightness: Brightness.dark,
-        textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
+        // textTheme: GoogleFonts.getTextTheme(fontFamily, Theme.of(context).textTheme),
       ),
       themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
       routerConfig: appRouter.router,

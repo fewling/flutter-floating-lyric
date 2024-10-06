@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../utils/logger.dart';
+import '../preference/bloc/preference_bloc.dart';
 import 'bloc/permission_bloc.dart';
 
 class PermissionScreen extends StatefulWidget {
@@ -40,107 +42,102 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
 
   @override
   Widget build(BuildContext context) {
-    const bodyStyle = TextStyle(fontSize: 19.0);
-
     const pageDecoration = PageDecoration(
-      titleTextStyle: TextStyle(fontSize: 28.0, fontWeight: FontWeight.w700),
-      bodyTextStyle: bodyStyle,
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-      pageColor: Colors.white,
       imagePadding: EdgeInsets.zero,
     );
 
-    return IntroductionScreen(
-      pages: [
-        PageViewModel(
-          title: 'Notification Listener Permission',
-          bodyWidget: Column(
-            children: [
-              const Text(
-                '''
-This app needs to access the music player in the notification bar to work.
+    final fontFamily = context.select((PreferenceBloc bloc) => bloc.state.fontFamily);
+    return DefaultTextStyle(
+      style: GoogleFonts.getFont(fontFamily),
+      child: IntroductionScreen(
+        pages: [
+          PageViewModel(
+            title: 'Notification Listener Permission',
+            bodyWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('This app needs to access the music player in the notification bar to work.\n'),
+                const Text('1. Grant Access button'),
+                const Text('2. This app'),
+                const Text('3. Turn on "Allow notification access"'),
+                const SizedBox(height: 8),
+                Center(
+                  child: SizedBox(
+                    width: 150,
+                    child: Builder(builder: (context) {
+                      final isNotificationListenerGranted = context.select<PermissionBloc, bool>(
+                        (bloc) => bloc.state.isNotificationListenerGranted,
+                      );
 
-Grant Access button -> this app -> Turn on Allow notification access
-''',
-                style: bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: 150,
-                child: Builder(builder: (context) {
-                  final isNotificationListenerGranted = context.select<PermissionBloc, bool>(
-                    (bloc) => bloc.state.isNotificationListenerGranted,
-                  );
+                      return ElevatedButton(
+                        onPressed: isNotificationListenerGranted
+                            ? null
+                            : () => context.read<PermissionBloc>().add(const NotificationListenerRequested()),
+                        child: const Text('Grant Access'),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+            image: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Lottie.asset('assets/images/music-player-pop-up.json'),
+            ),
+            decoration: pageDecoration,
+          ),
+          PageViewModel(
+            title: 'Overlay Window Permission',
+            bodyWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('This permission is required to display floating window on top of other apps.\n'),
+                const Text('1. Grant Access button'),
+                const Text('2. This app'),
+                const Text('3. Turn on "Allow display over other apps"'),
+                const SizedBox(height: 8),
+                Center(
+                  child: SizedBox(
+                    width: 150,
+                    child: Builder(builder: (context) {
+                      final isSystemAlertWindowGranted = context.select<PermissionBloc, bool>(
+                        (bloc) => bloc.state.isSystemAlertWindowGranted,
+                      );
 
-                  return ElevatedButton(
-                    onPressed: isNotificationListenerGranted
-                        ? null
-                        : () => context.read<PermissionBloc>().add(const NotificationListenerRequested()),
-                    child: const Text('Grant Access'),
-                  );
-                }),
-              ),
-            ],
+                      return ElevatedButton(
+                        onPressed: isSystemAlertWindowGranted
+                            ? null
+                            : () => context.read<PermissionBloc>().add(const SystemAlertWindowRequested()),
+                        child: const Text('Grant Access'),
+                      );
+                    }),
+                  ),
+                ),
+              ],
+            ),
+            image: Lottie.asset('assets/images/stack.json'),
+            decoration: pageDecoration,
           ),
-          image: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Lottie.asset('assets/images/music-player-pop-up.json'),
-          ),
-          decoration: pageDecoration,
+        ],
+        onDone: () => _onIntroEnd(context),
+        skipOrBackFlex: 0,
+        nextFlex: 0,
+        showBackButton: true,
+        back: const Icon(Icons.arrow_back),
+        next: const Icon(Icons.arrow_forward),
+        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+        curve: Curves.fastLinearToSlowEaseIn,
+        controlsPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        dotsDecorator: DotsDecorator(
+          size: const Size(10.0, 10.0),
+          color: const Color(0xFFBDBDBD),
+          activeSize: const Size(22.0, 10.0),
+          activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
         ),
-        PageViewModel(
-          title: 'Overlay Window Permission',
-          bodyWidget: Column(
-            children: [
-              const Text(
-                '''
-This permission is required to display floating window on top of other apps.
-
-Grant Access button -> this app >> Turn on `Allow display over other apps`
-''',
-                style: bodyStyle,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                width: 150,
-                child: Builder(builder: (context) {
-                  final isSystemAlertWindowGranted = context.select<PermissionBloc, bool>(
-                    (bloc) => bloc.state.isSystemAlertWindowGranted,
-                  );
-
-                  return ElevatedButton(
-                    onPressed: isSystemAlertWindowGranted
-                        ? null
-                        : () => context.read<PermissionBloc>().add(const SystemAlertWindowRequested()),
-                    child: const Text('Grant Access'),
-                  );
-                }),
-              ),
-            ],
-          ),
-          image: Lottie.asset('assets/images/stack.json'),
-          decoration: pageDecoration,
+        dotsContainerDecorator: ShapeDecoration(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         ),
-      ],
-      onDone: () => _onIntroEnd(context),
-      skipOrBackFlex: 0,
-      nextFlex: 0,
-      showBackButton: true,
-      back: const Icon(Icons.arrow_back),
-      next: const Icon(Icons.arrow_forward),
-      done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
-      curve: Curves.fastLinearToSlowEaseIn,
-      controlsPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      dotsDecorator: DotsDecorator(
-        size: const Size(10.0, 10.0),
-        color: const Color(0xFFBDBDBD),
-        activeSize: const Size(22.0, 10.0),
-        activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
-      ),
-      dotsContainerDecorator: ShapeDecoration(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       ),
     );
   }
