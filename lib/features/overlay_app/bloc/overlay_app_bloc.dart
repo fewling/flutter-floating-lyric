@@ -11,9 +11,19 @@ class OverlayAppBloc extends Bloc<OverlayAppEvent, OverlayAppState> {
     on<OverlayAppEvent>(
       (event, emit) => switch (event) {
         OverlayAppStarted() => _onStarted(event, emit),
+        MinimizeRequested() => _onMinimizeRequested(event, emit),
+        MaximizeRequested() => _onMaximizeRequested(event, emit),
       },
     );
   }
 
   void _onStarted(OverlayAppStarted event, Emitter<OverlayAppState> emit) {}
+
+  void _onMinimizeRequested(MinimizeRequested event, Emitter<OverlayAppState> emit) {
+    emit(state.copyWith(isMinimized: true));
+  }
+
+  void _onMaximizeRequested(MaximizeRequested event, Emitter<OverlayAppState> emit) {
+    emit(state.copyWith(isMinimized: false));
+  }
 }

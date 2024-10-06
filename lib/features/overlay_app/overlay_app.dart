@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../gen/assets.gen.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
@@ -54,6 +55,7 @@ class _OverlayAppState extends State<OverlayApp> {
             _updateSize(rootContext, context);
 
             final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
+            final isMinimized = context.select((OverlayAppBloc b) => b.state.isMinimized);
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
             final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
@@ -68,18 +70,37 @@ class _OverlayAppState extends State<OverlayApp> {
 
             return Theme(
               data: ThemeData(
-                textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
                 colorSchemeSeed: appColor == null ? null : Color(appColor),
                 brightness: isLight ?? true ? Brightness.light : Brightness.dark,
               ),
-              child: SizedBox(
-                width: width ?? 200,
-                height: double.infinity,
-                child: OverlayWindow(
-                  isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
-                  onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
-                  onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                ),
+              child: DefaultTextStyle(
+                style: GoogleFonts.getFont(fontFamily ?? 'Roboto'),
+                child: isMinimized
+                    ? SizedBox(
+                        height: 64,
+                        width: 64,
+                        child: Material(
+                          color: Color(appColor ?? Colors.purple.value),
+                          shape: const CircleBorder(),
+                          clipBehavior: Clip.antiAlias,
+                          child: InkWell(
+                            onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(Assets.launcherIcon.appIcon.path),
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox(
+                        width: width ?? 200,
+                        height: double.infinity,
+                        child: OverlayWindow(
+                          isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
+                          onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                          onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
+                        ),
+                      ),
               ),
             );
           }),
