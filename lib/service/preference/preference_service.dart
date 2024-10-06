@@ -56,4 +56,6 @@ class PreferenceService {
   Future<bool> toggleShowLine2(bool value) => _spRepo.toggleShowLine2(value);
 
   Future<bool> toggleUseAppColor(bool value) => _spRepo.toggleUseAppColor(value);
+
+  Future<bool> resetFontFamily() => _spRepo.resetFontFamily();
 }

@@ -13,3 +13,7 @@ final class FontSelectSearchChanged extends FontSelectEvent {
 
   final String searchTerm;
 }
+
+final class FontSelectLoadMore extends FontSelectEvent {
+  const FontSelectLoadMore();
+}

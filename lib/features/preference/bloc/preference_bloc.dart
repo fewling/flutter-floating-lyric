@@ -42,6 +42,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           ShowLine2Toggled() => _onShowLine2Toggled(event, emit),
           WindowColorThemeToggled() => _onWindowColorThemeToggled(event, emit),
           FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
+          FontFamilyReset() => _onFontFamilyReset(event, emit),
         });
   }
 
@@ -130,6 +131,13 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.updateFontFamily(event.fontFamily);
     if (isSuccess) {
       emit(state.copyWith(fontFamily: event.fontFamily));
+    }
+  }
+
+  Future<void> _onFontFamilyReset(FontFamilyReset event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.resetFontFamily();
+    if (isSuccess) {
+      emit(state.copyWith(fontFamily: 'Roboto'));
     }
   }
 }
