@@ -50,8 +50,6 @@ class LyricListScreen extends StatelessWidget {
   }
 
   void _promptDeleteAllDialog(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     showDialog(
       context: context,
       builder: (dialogCtx) => BlocProvider.value(
@@ -70,25 +68,16 @@ class LyricListScreen extends StatelessWidget {
                 context.read<LyricListBloc>().add(const DeleteStatusHandled());
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    content: Text(
-                      'Error deleting lyrics.',
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
+                  builder: (context) => const AlertDialog(
+                    content: Text('Error deleting lyrics.'),
                   ),
                 );
                 break;
             }
           },
           child: AlertDialog(
-            title: Text(
-              'Delete All Lyric',
-              style: TextStyle(color: colorScheme.onSurface),
-            ),
-            content: Text(
-              'Are you sure you want to delete All lyrics?',
-              style: TextStyle(color: colorScheme.onSurface),
-            ),
+            title: const Text('Delete All Lyric'),
+            content: const Text('Are you sure you want to delete All lyrics?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogCtx).pop(),
@@ -132,8 +121,6 @@ class LyricListView extends StatelessWidget {
   }
 
   void _promptDeleteDialog(BuildContext context, LrcDB lrcDB) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     showDialog(
       context: context,
       builder: (dialogCtx) => BlocProvider.value(
@@ -153,25 +140,16 @@ class LyricListView extends StatelessWidget {
                 context.read<LyricListBloc>().add(const DeleteStatusHandled());
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    content: Text(
-                      'Error deleting lyric.',
-                      style: TextStyle(color: colorScheme.onSurface),
-                    ),
+                  builder: (context) => const AlertDialog(
+                    content: Text('Error deleting lyric.'),
                   ),
                 );
                 break;
             }
           },
           child: AlertDialog(
-            title: Text(
-              'Delete Lyric',
-              style: TextStyle(color: colorScheme.onSurface),
-            ),
-            content: Text(
-              'Are you sure you want to delete this lyric?',
-              style: TextStyle(color: colorScheme.onSurface),
-            ),
+            title: const Text('Delete Lyric'),
+            content: const Text('Are you sure you want to delete this lyric?'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogCtx).pop(),
