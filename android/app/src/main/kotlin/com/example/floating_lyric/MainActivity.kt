@@ -21,6 +21,7 @@ class MainActivity : FlutterActivity() {
 
     private lateinit var mediaStateEventChannel: EventChannel
     private lateinit var overlayStateEventChannel: EventChannel
+    private lateinit var mediaStateEventStreamHandler: MediaStateEventStreamHandler
 
     private var overlayView: OverlayView? = null
 
@@ -79,11 +80,16 @@ class MainActivity : FlutterActivity() {
 
         mediaStateEventChannel =
             EventChannel(flutterEngine.dartExecutor.binaryMessenger, MEDIA_STATE_EVENT_CHANNEL)
-        mediaStateEventChannel.setStreamHandler(MediaStateEventStreamHandler(context))
+
+        mediaStateEventStreamHandler = MediaStateEventStreamHandler(this)
+        mediaStateEventChannel.setStreamHandler(mediaStateEventStreamHandler)
     }
 
     override fun onDestroy() {
-        overlayView?.removeView()
+        overlayView?.destroy()
+        overlayView = null
+
+        mediaStateEventStreamHandler.unregisterReceiver()
         super.onDestroy()
     }
 }

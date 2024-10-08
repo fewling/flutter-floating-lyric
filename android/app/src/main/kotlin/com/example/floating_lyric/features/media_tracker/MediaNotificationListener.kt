@@ -16,8 +16,6 @@ import android.media.session.MediaController
 import android.media.session.PlaybackState
 import android.os.Handler
 import android.os.Looper
-import com.example.floating_lyric.features.floating_window.WindowState
-import com.example.floating_lyric.features.floating_window.WindowStateBroadcastReceiver
 import java.util.*
 
 

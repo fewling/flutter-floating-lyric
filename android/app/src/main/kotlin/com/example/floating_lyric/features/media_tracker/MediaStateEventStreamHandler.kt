@@ -39,4 +39,8 @@ class MediaStateEventStreamHandler(private val context: Context) : StreamHandler
     override fun onCancel(arguments: Any?) {
         context.unregisterReceiver(mediaStateReceiver)
     }
+
+    fun unregisterReceiver() {
+        context.unregisterReceiver(mediaStateReceiver)
+    }
 }
