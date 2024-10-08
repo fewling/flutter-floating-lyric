@@ -11,18 +11,12 @@ import 'bloc/overlay_window_bloc.dart';
 class OverlayWindow extends StatelessWidget {
   const OverlayWindow({
     super.key,
-    this.onWindowTap,
-    this.onCloseTap,
     this.debugText,
     this.isLoading = false,
-    required this.isLyricOnly,
   });
 
   final String? debugText;
-  final bool isLyricOnly;
   final bool isLoading;
-  final void Function()? onWindowTap;
-  final void Function()? onCloseTap;
 
   @override
   Widget build(BuildContext context) {
@@ -38,49 +32,54 @@ class OverlayWindow extends StatelessWidget {
     final useAppColor = settings.useAppColor;
     final opacity = (settings.opacity ?? 50) / 100;
     final textColor = (useAppColor ? foregroundColor : Color(settings.color ?? Colors.white.value));
+    final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
+    final isLyricOnly = context.select((OverlayWindowBloc b) => b.state.isLyricOnly);
 
-    return Material(
-      color: Colors.transparent,
-      child: IgnorePointer(
-        ignoring: settings.ignoreTouch ?? false,
-        child: Container(
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: useAppColor
-                ? colorScheme.primaryContainer.withOpacity(opacity)
-                : Color(settings.backgroundColor ?? Colors.black.value).withOpacity(opacity),
-          ),
-          margin: EdgeInsets.zero,
-          child: InkWell(
-            onTap: onWindowTap,
-            borderRadius: BorderRadius.circular(8),
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (debugText != null)
-                    Text(
-                      debugText!,
-                      style: TextStyle(color: colorScheme.onPrimaryContainer),
-                    ),
-                  if (!isLyricOnly)
-                    OverlayHeader(
-                      settings: settings,
-                      onCloseTap: onCloseTap,
-                      textColor: textColor,
-                    ),
-                  OverlayContent(
-                    settings: settings,
-                    textColor: textColor,
-                  ),
-                  if (!isLyricOnly || (settings.showProgressBar ?? false))
-                    OverlayProgressBar(
+    return SizedBox(
+      width: width,
+      height: double.infinity,
+      child: Material(
+        color: Colors.transparent,
+        child: IgnorePointer(
+          ignoring: settings.ignoreTouch ?? false,
+          child: Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: useAppColor
+                  ? colorScheme.primaryContainer.withOpacity(opacity)
+                  : Color(settings.backgroundColor ?? Colors.black.value).withOpacity(opacity),
+            ),
+            margin: EdgeInsets.zero,
+            child: InkWell(
+              onTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (debugText != null)
+                      Text(
+                        debugText!,
+                        style: TextStyle(color: colorScheme.onPrimaryContainer),
+                      ),
+                    if (!isLyricOnly)
+                      OverlayHeader(
+                        settings: settings,
+                        textColor: textColor,
+                      ),
+                    OverlayContent(
                       settings: settings,
                       textColor: textColor,
                     ),
-                ].separatedBy(const SizedBox(height: 4)).toList(),
+                    if (!isLyricOnly || (settings.showProgressBar ?? false))
+                      OverlayProgressBar(
+                        settings: settings,
+                        textColor: textColor,
+                      ),
+                  ].separatedBy(const SizedBox(height: 4)).toList(),
+                ),
               ),
             ),
           ),
@@ -169,12 +168,10 @@ class OverlayHeader extends StatelessWidget {
   const OverlayHeader({
     super.key,
     required this.settings,
-    required this.onCloseTap,
     required this.textColor,
   });
 
   final OverlaySettingsModel settings;
-  final void Function()? onCloseTap;
   final Color textColor;
 
   @override
@@ -199,7 +196,7 @@ class OverlayHeader extends StatelessWidget {
           icon: Icon(Icons.remove, color: textColor),
         ),
         IconButton(
-          onPressed: onCloseTap,
+          onPressed: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
           icon: Icon(Icons.close, color: textColor),
         ),
       ],
@@ -254,8 +251,38 @@ class OverlayLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Material(
-      child: CircularProgressIndicator(),
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        height: 200,
+        width: 200,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: colorScheme.primaryContainer,
+        ),
+        margin: EdgeInsets.zero,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                onPressed: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                icon: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
+              ),
+            ),
+            Align(
+              child: Text(
+                'Waiting for music player',
+                style: TextStyle(color: colorScheme.onPrimaryContainer),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

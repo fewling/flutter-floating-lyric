@@ -123,6 +123,8 @@ class OverlayView(context: Context) : View.OnTouchListener {
         if (addedToWindow) return
         if (flutterEngine == null) return
         try {
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+            layoutParams.height = 200
             val flutterSurfaceView = FlutterTextureView(serviceContext)
             flutterView = FlutterView(serviceContext, flutterSurfaceView)
             flutterView!!.attachToFlutterEngine(flutterEngine)
@@ -238,5 +240,11 @@ class OverlayView(context: Context) : View.OnTouchListener {
             defaultFlags
         }
         windowManager.updateViewLayout(flutterView, layoutParams)
+    }
+
+    fun destroy() {
+        removeView()
+        flutterView?.detachFromFlutterEngine()
+        flutterEngine?.destroy()
     }
 }

@@ -6,12 +6,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../gen/assets.gen.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
+import '../../utils/logger.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
 import 'overlay_window/overlay_window.dart';
-
-final rootKey = GlobalKey();
 
 class OverlayApp extends StatefulWidget {
   const OverlayApp({super.key});
@@ -59,15 +58,7 @@ class _OverlayAppState extends State<OverlayApp> {
             final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
-            final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
-
-            // Mark these here to trigger window resize
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showLine2);
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showProgressBar);
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showMillis);
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line1);
-            context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line2);
+            context.watch<MessageFromMainReceiverBloc>().state.settings;
 
             return Theme(
               data: ThemeData(
@@ -92,15 +83,7 @@ class _OverlayAppState extends State<OverlayApp> {
                         ),
                       ),
                     )
-                  : SizedBox(
-                      width: width ?? 200,
-                      height: double.infinity,
-                      child: OverlayWindow(
-                        isLyricOnly: context.select((OverlayWindowBloc b) => b.state.isLyricOnly),
-                        onCloseTap: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
-                        onWindowTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                      ),
-                    ),
+                  : const OverlayWindow(),
             );
           }),
         ),
@@ -110,8 +93,12 @@ class _OverlayAppState extends State<OverlayApp> {
 
   void _updateSize(BuildContext rootContext, BuildContext blocContext, bool isMinimized) {
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
-      final box = rootKey.currentContext?.findRenderObject() as RenderBox?;
-      if (box == null) return;
+      final box = rootContext.findRenderObject() as RenderBox?;
+      if (box == null) {
+        logger.e('Root box is null. Cannot update size.');
+        blocContext.read<OverlayWindowBloc>().add(const WindowResized(width: 50, height: 50));
+        return;
+      }
 
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;

@@ -12,6 +12,8 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     // Themes:
     @Default(false) bool isLight,
     @Default(0) int appColorScheme,
+
+    /// Screen width
     @Default(300) double width,
 
     // Data
