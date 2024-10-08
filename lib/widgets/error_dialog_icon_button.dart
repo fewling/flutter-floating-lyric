@@ -23,10 +23,8 @@ class ErrorDialogIconButton extends StatelessWidget {
         builder: (context) => AlertDialog(
           backgroundColor: colorScheme.error,
           iconColor: colorScheme.onError,
-          titleTextStyle:
-              txtTheme.titleLarge?.copyWith(color: colorScheme.onError),
-          contentTextStyle:
-              txtTheme.bodyLarge?.copyWith(color: colorScheme.onError),
+          titleTextStyle: txtTheme.titleLarge?.copyWith(color: colorScheme.onError),
+          contentTextStyle: txtTheme.bodyLarge?.copyWith(color: colorScheme.onError),
           icon: const Icon(Icons.error_outline),
           title: const Text('Something went wrong'),
           content: SingleChildScrollView(

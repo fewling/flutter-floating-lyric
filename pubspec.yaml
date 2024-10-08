@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 3.6.0+19
+version: 4.0.2+25
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -12,44 +12,48 @@ dependencies:
   flutter:
     sdk: flutter
 
-  file_picker: ^6.1.1
-  flutter_colorpicker: ^1.0.3
-  shared_preferences: ^2.2.2
-  introduction_screen: ^3.1.12
-  lottie: ^3.0.0
-  feature_discovery: ^0.14.1
-  flutter_riverpod: ^2.4.9
-  freezed_annotation: ^2.4.1
-  flutter_easylogger: ^2.3.3
+  file_picker: ^8.1.2
+  flutter_colorpicker: ^1.1.0
+  shared_preferences: ^2.3.2
+  introduction_screen: ^3.1.14
+  lottie: ^3.1.2
+  freezed_annotation: ^2.4.4
+  logger: ^2.4.0
   isar: ^3.1.0+1
   isar_flutter_libs: ^3.1.0+1
-  url_launcher: ^6.2.4
-  auto_size_text: ^3.0.0
-  path_provider: ^2.1.2
-  in_app_review: ^2.0.8
-  riverpod_annotation: ^2.3.3
-  go_router: ^13.0.1
-  http: ^1.2.0
-  package_info_plus: ^5.0.1
+  url_launcher: ^6.3.0
+  path_provider: ^2.1.4
+  in_app_review: ^2.0.9
+  go_router: ^14.2.7
+  http: ^1.2.2
+  package_info_plus: ^8.0.2
+  flutter_bloc: ^8.1.6
+  collection: ^1.18.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   build_runner:
-  hive_generator: ^2.0.0
   freezed: ^2.3.2
   custom_lint: ^0.5.8
-  riverpod_lint: ^2.1.1
   json_serializable: ^6.6.1
   isar_generator: ^3.0.5
-  riverpod_generator:
+  analyzer: 5.13.0
+  flutter_gen_runner: ^5.7.0
+
 flutter_icons:
   android: "launcher_icon"
-  image_path: "assets/launcher_icon/icons8-songs-and-lyrics-on-the-music-application-72.png"
+  image_path: "assets/launcher_icon/app_icon.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
+
+flutter_gen:
+  output: lib/gen/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/launcher_icon/

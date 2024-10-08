@@ -1,65 +1,30 @@
-class Lrc {
-  Lrc(String content) {
-    final metadataExp = RegExp(r'\[(\w+):([^\]]+)\]');
-    final timeExp = RegExp(r'\[(\d+):(\d+\.\d+)\]');
-    lines = [];
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-    for (final String line in content.split('\n')) {
-      if (line.trim().isEmpty) {
-        continue;
-      }
+part 'lrc.freezed.dart';
+part 'lrc.g.dart';
 
-      if (timeExp.hasMatch(line)) {
-        final match = timeExp.firstMatch(line)!;
-        final minutes = int.tryParse(match.group(1)!) ?? 0;
-        final seconds = double.tryParse(match.group(2)!) ?? 0;
-        final time =
-            Duration(minutes: minutes, milliseconds: (seconds * 1000).toInt());
-        final text = line.replaceAll(timeExp, '').trim();
-        lines.add(LrcLine(time, text));
-      } else if (metadataExp.hasMatch(line)) {
-        final match = metadataExp.firstMatch(line)!;
-        final key = match.group(1)!;
-        final value = match.group(2)!;
+@freezed
+class Lrc with _$Lrc {
+  const factory Lrc({
+    String? artist,
+    String? title,
+    String? album,
+    String? creator,
+    String? author,
+    String? program,
+    String? version,
+    @Default(<LrcLine>[]) List<LrcLine> lines,
+  }) = _Lrc;
 
-        switch (key) {
-          case 'ar':
-            artist = value;
-            break;
-          case 'ti':
-            title = value;
-            break;
-          case 'al':
-            album = value;
-            break;
-          case 'by':
-            author = value;
-            break;
-          case 're':
-            creator = value;
-            break;
-          case 've':
-            version = value;
-            break;
-          case 'pr':
-            program = value;
-            break;
-        }
-      }
-    }
-  }
-  String? artist;
-  String? title;
-  String? album;
-  String? creator;
-  String? author;
-  String? program;
-  String? version;
-  late List<LrcLine> lines;
+  factory Lrc.fromJson(Map<String, dynamic> json) => _$LrcFromJson(json);
 }
 
-class LrcLine {
-  LrcLine(this.time, this.line);
-  Duration time;
-  String line;
+@freezed
+class LrcLine with _$LrcLine {
+  const factory LrcLine({
+    required Duration time,
+    required String content,
+  }) = _LrcLine;
+
+  factory LrcLine.fromJson(Map<String, dynamic> json) => _$LrcLineFromJson(json);
 }

@@ -6,11 +6,29 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
+// ! For building release mode locally to resolve isar lib issue
+// subprojects {
+//     //  fix for verifyReleaseResources
+//     // ============
+//     afterEvaluate { project ->
+//         if (project.plugins.hasPlugin("com.android.application") ||
+//                 project.plugins.hasPlugin("com.android.library")) {
+//             project.android {
+//                 compileSdkVersion 34
+//                 buildToolsVersion "34.0.0"
+//             }
+//         }
+//     }
+//     // ============
+//     project.buildDir = "${rootProject.buildDir}/${project.name}"
+// }
+
 subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
+   project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+   project.evaluationDependsOn(':app')
 }
 
 tasks.register("clean", Delete) {
