@@ -18,6 +18,7 @@ class OverlayWindow extends StatelessWidget {
   final String? debugText;
   final bool isLoading;
 
+
   @override
   Widget build(BuildContext context) {
     final settings = context.select(

@@ -125,6 +125,7 @@ class OverlayView(context: Context) : View.OnTouchListener {
         try {
             layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
             layoutParams.height = 200
+
             val flutterSurfaceView = FlutterTextureView(serviceContext)
             flutterView = FlutterView(serviceContext, flutterSurfaceView)
             flutterView!!.attachToFlutterEngine(flutterEngine)

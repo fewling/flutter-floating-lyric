@@ -23,6 +23,7 @@ class MainActivity : FlutterActivity() {
     private lateinit var overlayStateEventChannel: EventChannel
     private lateinit var mediaStateEventStreamHandler: MediaStateEventStreamHandler
 
+
     private var overlayView: OverlayView? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -90,6 +91,7 @@ class MainActivity : FlutterActivity() {
         overlayView = null
 
         mediaStateEventStreamHandler.unregisterReceiver()
+
         super.onDestroy()
     }
 }

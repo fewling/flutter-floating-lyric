@@ -7,10 +7,12 @@ import '../../gen/assets.gen.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../utils/logger.dart';
+
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
 import 'overlay_window/overlay_window.dart';
+
 
 class OverlayApp extends StatefulWidget {
   const OverlayApp({super.key});
@@ -99,6 +101,7 @@ class _OverlayAppState extends State<OverlayApp> {
         blocContext.read<OverlayWindowBloc>().add(const WindowResized(width: 50, height: 50));
         return;
       }
+
 
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;
