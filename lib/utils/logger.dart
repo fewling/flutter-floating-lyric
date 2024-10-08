@@ -8,4 +8,5 @@ final logger = Logger(
     excludeBox: {Level.all: true},
     noBoxingByDefault: true,
   ),
+  // filter: ProductionFilter(),
 );
