@@ -44,9 +44,7 @@ Future<void> main() async {
 void overlayView() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(LayoutBuilder(builder: (context, constraints) {
-    return OverlayApp(
-      key: rootKey,
-    );
+    return const OverlayApp();
   }));
 }
 
