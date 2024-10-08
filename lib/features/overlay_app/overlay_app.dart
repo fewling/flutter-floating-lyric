@@ -7,12 +7,10 @@ import '../../gen/assets.gen.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../utils/logger.dart';
-
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
 import 'overlay_window/overlay_window.dart';
-
 
 class OverlayApp extends StatefulWidget {
   const OverlayApp({super.key});
@@ -60,7 +58,15 @@ class _OverlayAppState extends State<OverlayApp> {
             final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
             final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
-            context.watch<MessageFromMainReceiverBloc>().state.settings;
+
+            // Mark the following to trigger rebuild when these values change
+            final isLyricOnly = context.select((OverlayWindowBloc b) => b.state.isLyricOnly);
+            final line1 = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line1);
+            final line2 = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line2);
+            final position = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.position);
+            final showBar = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showProgressBar);
+            final fontSize = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
+            final title = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.title);
 
             return Theme(
               data: ThemeData(
@@ -101,7 +107,6 @@ class _OverlayAppState extends State<OverlayApp> {
         blocContext.read<OverlayWindowBloc>().add(const WindowResized(width: 50, height: 50));
         return;
       }
-
 
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;
