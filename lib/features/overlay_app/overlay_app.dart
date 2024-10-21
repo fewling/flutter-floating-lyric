@@ -52,8 +52,9 @@ class _OverlayAppState extends State<OverlayApp> {
           },
           child: Builder(builder: (context) {
             final isMinimized = context.select((OverlayAppBloc b) => b.state.isMinimized);
+            final screenWidth = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width ?? 300.0);
 
-            _updateSize(rootContext, context, isMinimized);
+            _updateSize(rootContext, context, isMinimized, screenWidth);
 
             final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
             final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
@@ -68,30 +69,34 @@ class _OverlayAppState extends State<OverlayApp> {
             final fontSize = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
             final title = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.title);
 
-            return Theme(
-              data: ThemeData(
-                textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
-                colorSchemeSeed: appColor == null ? null : Color(appColor),
-                brightness: isLight ?? true ? Brightness.light : Brightness.dark,
-              ),
-              child: isMinimized
-                  ? SizedBox(
-                      height: 64,
-                      width: 64,
-                      child: Material(
-                        color: Color(appColor ?? Colors.purple.value),
-                        shape: const CircleBorder(),
-                        clipBehavior: Clip.antiAlias,
-                        child: InkWell(
-                          onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset(Assets.launcherIcon.appIcon.path),
+            return BlocListener<MessageFromMainReceiverBloc, MessageFromMainReceiverState>(
+              listenWhen: (previous, current) => current.settings?.width == 0,
+              listener: (context, state) => context.read<OverlayWindowBloc>().add(const ScreenWidthRequested()),
+              child: Theme(
+                data: ThemeData(
+                  textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
+                  colorSchemeSeed: appColor == null ? null : Color(appColor),
+                  brightness: isLight ?? true ? Brightness.light : Brightness.dark,
+                ),
+                child: isMinimized
+                    ? SizedBox(
+                        height: 64,
+                        width: 64,
+                        child: Material(
+                          color: Color(appColor ?? Colors.purple.value),
+                          shape: const CircleBorder(),
+                          clipBehavior: Clip.antiAlias,
+                          child: InkWell(
+                            onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.asset(Assets.launcherIcon.appIcon.path),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  : const OverlayWindow(),
+                      )
+                    : const OverlayWindow(),
+              ),
             );
           }),
         ),
@@ -99,7 +104,7 @@ class _OverlayAppState extends State<OverlayApp> {
     );
   }
 
-  void _updateSize(BuildContext rootContext, BuildContext blocContext, bool isMinimized) {
+  void _updateSize(BuildContext rootContext, BuildContext blocContext, bool isMinimized, double screenWidth) {
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = rootContext.findRenderObject() as RenderBox?;
       if (box == null) {
@@ -111,7 +116,7 @@ class _OverlayAppState extends State<OverlayApp> {
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;
 
-      final width = box.getMaxIntrinsicWidth(isMinimized ? 64 : double.infinity);
+      final width = isMinimized ? 64.0 : (screenWidth > 0 ? screenWidth : 300.0);
       final height = box.getMaxIntrinsicHeight(width);
 
       blocContext.read<OverlayWindowBloc>().add(WindowResized(

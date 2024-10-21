@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -176,6 +176,16 @@ class MsgFromOverlayListener extends StatelessWidget {
 
         if (state.msg?.action?.isClose ?? false) {
           context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(false));
+        }
+
+        if (state.msg?.action?.isMeasureScreenWidth ?? false) {
+          context.read<OverlayWindowSettingsBloc>().add(
+                OverlayWindowSettingsLoaded(
+                  lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
+                  preferenceState: context.read<PreferenceBloc>().state,
+                  screenWidth: MediaQuery.sizeOf(context).width,
+                ),
+              );
         }
 
         context.read<MessageFromOverlayReceiverBloc>().add(const MsgOverlayHandled());

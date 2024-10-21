@@ -44,11 +44,11 @@ class MediaNotificationListener : NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification?, rankingMap: RankingMap?) {
         super.onNotificationPosted(sbn, rankingMap)
-        Log.d(TAG, "onNotificationPosted: $sbn")
-        Log.d(TAG, "onNotificationPosted: ${sbn?.notification?.extras.toString()}")
+//        Log.d(TAG, "onNotificationPosted: $sbn")
+//        Log.d(TAG, "onNotificationPosted: ${sbn?.notification?.extras.toString()}")
 
         if (sbn != null) {
-            Log.d(TAG, "onNotificationPosted: ${sbn.packageName}")
+//            Log.d(TAG, "onNotificationPosted: ${sbn.packageName}")
             extractNotificationInfo(sbn)
         }
     }
@@ -59,7 +59,7 @@ class MediaNotificationListener : NotificationListenerService() {
         reason: Int
     ) {
         super.onNotificationRemoved(sbn, rankingMap, reason)
-        Log.d(TAG, "onNotificationRemoved: ${sbn?.packageName}")
+//        Log.d(TAG, "onNotificationRemoved: ${sbn?.packageName}")
     }
 
     override fun onListenerConnected() {
@@ -90,17 +90,17 @@ class MediaNotificationListener : NotificationListenerService() {
         modificationType: Int
     ) {
         super.onNotificationChannelModified(pkg, user, channel, modificationType)
-        Log.d(TAG, "onNotificationChannelModified: $pkg")
-        Log.d(TAG, "onNotificationChannelModified: $user")
-        Log.d(TAG, "onNotificationChannelModified: $channel")
-        Log.d(TAG, "onNotificationChannelModified: $modificationType")
+//        Log.d(TAG, "onNotificationChannelModified: $pkg")
+//        Log.d(TAG, "onNotificationChannelModified: $user")
+//        Log.d(TAG, "onNotificationChannelModified: $channel")
+//        Log.d(TAG, "onNotificationChannelModified: $modificationType")
     }
 
     private fun extractNotificationInfo(sbn: StatusBarNotification) {
         val isThisApp = sbn.packageName == applicationContext.packageName
         if (isThisApp) return
 
-        Log.i(TAG, "extractNotificationInfo: ${sbn.packageName}")
+//        Log.i(TAG, "extractNotificationInfo: ${sbn.packageName}")
 
         val extras = sbn.notification.extras
 
@@ -129,15 +129,15 @@ class MediaNotificationListener : NotificationListenerService() {
         val artist = metadata?.getString((MediaMetadata.METADATA_KEY_ARTIST))
         val title = metadata?.getString((MediaMetadata.METADATA_KEY_TITLE))
 
-        Log.d(
-            TAG, """
-            extractNotificationInfo: 
-            title: $title
-            album: $album
-            artist: $artist
-            duration: $duration
-        """.trimIndent()
-        )
+//        Log.d(
+//            TAG, """
+//            extractNotificationInfo:
+//            title: $title
+//            album: $album
+//            artist: $artist
+//            duration: $duration
+//        """.trimIndent()
+//        )
     }
 
     private fun startPeriodicHandler() {

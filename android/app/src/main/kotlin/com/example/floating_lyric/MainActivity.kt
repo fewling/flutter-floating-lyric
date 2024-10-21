@@ -89,7 +89,7 @@ class MainActivity : FlutterActivity() {
     override fun onDestroy() {
         overlayView?.destroy()
         overlayView = null
-
+        FlutterEngineCache.getInstance().remove("OVERLAY_ENGINE")
         mediaStateEventStreamHandler.unregisterReceiver()
 
         super.onDestroy()

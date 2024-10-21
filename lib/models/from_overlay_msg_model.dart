@@ -20,6 +20,7 @@ class FromOverlayMsgModel with _$FromOverlayMsgModel {
 enum OverlayAction {
   minimize('MINIMIZE'),
   close('CLOSE'),
+  measureScreenWidth('MEASURE_SCREEN_WIDTH'),
   ;
 
   const OverlayAction(this.key);
@@ -36,4 +37,5 @@ String? _overlayActionToJson(OverlayAction? action) => action?.key;
 extension OverlayActionX on OverlayAction {
   bool get isMinimize => this == OverlayAction.minimize;
   bool get isClose => this == OverlayAction.close;
+  bool get isMeasureScreenWidth => this == OverlayAction.measureScreenWidth;
 }
