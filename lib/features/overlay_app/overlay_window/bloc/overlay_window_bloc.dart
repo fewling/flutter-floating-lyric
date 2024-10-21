@@ -23,6 +23,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
         WindowTapped() => _onWindowTapped(event, emit),
         WindowResized() => _onWindowResized(event, emit),
         LockToggled() => _onLockToggled(event, emit),
+        ScreenWidthRequested() => _onScreenWidthRequested(event, emit),
       },
     );
   }
@@ -52,5 +53,11 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     if (isSuccess != null && isSuccess) {
       emit(state.copyWith(isLocked: event.isLocked));
     }
+  }
+
+  void _onScreenWidthRequested(ScreenWidthRequested event, Emitter<OverlayWindowState> emit) {
+    _toMainMessageService.sendMsg(const FromOverlayMsgModel(
+      action: OverlayAction.measureScreenWidth,
+    ));
   }
 }

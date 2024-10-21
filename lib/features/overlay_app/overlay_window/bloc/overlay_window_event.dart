@@ -31,3 +31,7 @@ final class LockToggled extends OverlayWindowEvent {
 
   final bool isLocked;
 }
+
+final class ScreenWidthRequested extends OverlayWindowEvent {
+  const ScreenWidthRequested();
+}
