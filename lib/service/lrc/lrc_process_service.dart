@@ -20,9 +20,9 @@ class LrcProcessorService {
   /// Returns a list of failed files if any
   Future<List<PlatformFile>> pickLrcFiles() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
+      // type: FileType.custom,
       allowMultiple: true,
-      allowedExtensions: ['lrc'],
+      // allowedExtensions: ['lrc'],
       withData: true,
     );
 
@@ -35,6 +35,8 @@ class LrcProcessorService {
     final failed = <PlatformFile>[];
 
     for (final item in result.files) {
+      if (!item.name.endsWith('.lrc')) continue;
+
       batch.add(item);
       if (batch.length == batchSize || item == result.files.last) {
         final result = await compute(processLrcFiles, batch);
