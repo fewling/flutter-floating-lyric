@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,6 @@ class OverlayWindow extends StatelessWidget {
 
   final String? debugText;
   final bool isLoading;
-
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class OverlayContent extends StatelessWidget {
     final line1Pos = settings.line1?.time;
     final line2Pos = settings.line2?.time;
 
-    final line1IsFarther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
+    final line1IsFurther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
     final status = settings.searchLyricStatus;
     final showLine2 = settings.showLine2 ?? false;
@@ -138,30 +138,100 @@ class OverlayContent extends StatelessWidget {
           children: [
             Align(
               alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
-              child: Text(
-                settings.line1?.content ?? ' ',
-                style: TextStyle(
-                  color: textColor,
-                  fontSize: settings.fontSize,
-                  fontWeight: !line1IsFarther ? FontWeight.bold : FontWeight.normal,
-                ),
+              child: AnimatedLyricLine(
+                textColor: textColor,
+                id: 'line1:${settings.line1?.content}',
+                content: settings.line1?.content,
+                fontSize: settings.fontSize,
+                isBold: line1IsFurther,
               ),
             ),
             if (showLine2)
               Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  settings.line2?.content ?? ' ',
-                  style: TextStyle(
-                    color: textColor,
-                    fontSize: settings.fontSize,
-                    fontWeight: line1IsFarther ? FontWeight.bold : FontWeight.normal,
-                  ),
+                child: AnimatedLyricLine(
+                  textColor: textColor,
+                  id: 'line2:${settings.line2?.content}',
+                  content: settings.line2?.content,
+                  fontSize: settings.fontSize,
+                  isBold: !line1IsFurther,
                 ),
               ),
           ],
         );
     }
+  }
+}
+
+class AnimatedLyricLine extends StatelessWidget {
+  const AnimatedLyricLine({
+    super.key,
+    required this.textColor,
+    required this.id,
+    this.content,
+    this.fontSize,
+    required this.isBold,
+  });
+
+  final String id;
+  final String? content;
+  final Color textColor;
+  final double? fontSize;
+  final bool isBold;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isBold) {
+      return AnimatedTextKit(
+        isRepeatingAnimation: false,
+        key: ValueKey(id),
+        animatedTexts: [
+          TypewriterAnimatedText(
+            content ?? '',
+            textStyle: TextStyle(
+              color: textColor,
+              fontSize: fontSize,
+              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            ),
+            speed: const Duration(milliseconds: 100),
+          ),
+        ],
+      );
+    }
+
+    return Text(
+      content ?? '',
+      key: ValueKey(id),
+      style: TextStyle(
+        color: textColor,
+        fontSize: fontSize,
+        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      transitionBuilder: (child, animation) => SlideTransition(
+        position: Tween(
+          begin: const Offset(1.0, 0),
+          end: Offset.zero,
+        ).animate(animation),
+        child: AnimatedOpacity(
+          opacity: animation.value,
+          duration: const Duration(milliseconds: 300),
+          child: child,
+        ),
+      ),
+      child: Text(
+        content ?? '',
+        key: ValueKey(id),
+        style: TextStyle(
+          color: textColor,
+          fontSize: fontSize,
+          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+        ),
+      ),
+    );
   }
 }
 
@@ -246,7 +316,6 @@ class OverlayProgressBar extends StatelessWidget {
   }
 }
 
-// TODO(@fewling): Replace with a better loading indicator
 class OverlayLoadingIndicator extends StatelessWidget {
   const OverlayLoadingIndicator({super.key});
 
