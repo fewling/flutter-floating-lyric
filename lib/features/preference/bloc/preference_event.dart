@@ -77,3 +77,9 @@ final class FontFamilyReset extends PreferenceEvent {
 final class EnableAnimationToggled extends PreferenceEvent {
   const EnableAnimationToggled();
 }
+
+final class ToleranceUpdated extends PreferenceEvent {
+  const ToleranceUpdated(this.tolerance);
+
+  final int tolerance;
+}

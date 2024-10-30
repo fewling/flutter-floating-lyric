@@ -35,6 +35,8 @@ class PreferenceService {
 
   bool get enableAnimation => _spRepo.enableAnimation;
 
+  int get tolerance => _spRepo.tolerance;
+
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) => _spRepo.updateColor(color.value);
@@ -62,4 +64,6 @@ class PreferenceService {
   Future<bool> resetFontFamily() => _spRepo.resetFontFamily();
 
   Future<bool> toggleEnableAnimation(bool value) => _spRepo.toggleEnableAnimation(value);
+
+  Future<bool> updateTolerance(int value) => _spRepo.updateTolerance(value);
 }

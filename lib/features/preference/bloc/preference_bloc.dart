@@ -29,6 +29,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           showLine2: spService.showLine2,
           useAppColor: spService.useAppColor,
           enableAnimation: spService.enableAnimation,
+          tolerance: spService.tolerance,
         )) {
     on<PreferenceEvent>((event, emit) => switch (event) {
           PreferenceEventLoad() => _onLoaded(emit),
@@ -46,6 +47,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
           FontFamilyReset() => _onFontFamilyReset(event, emit),
           EnableAnimationToggled() => _onEnableAnimationToggled(event, emit),
+          ToleranceUpdated() => _onToleranceUpdated(event, emit),
         });
   }
 
@@ -148,6 +150,13 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.toggleEnableAnimation(!state.enableAnimation);
     if (isSuccess) {
       emit(state.copyWith(enableAnimation: !state.enableAnimation));
+    }
+  }
+
+  Future<void> _onToleranceUpdated(ToleranceUpdated event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.updateTolerance(event.tolerance);
+    if (isSuccess) {
+      emit(state.copyWith(tolerance: event.tolerance));
     }
   }
 }

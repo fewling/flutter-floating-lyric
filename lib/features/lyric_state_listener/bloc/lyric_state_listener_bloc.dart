@@ -34,12 +34,15 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
         ShowLine2Updated() => _onShowLine2Updated(event, emit),
         StartMusicPlayerRequested() => _onMusicPlayerRequested(event, emit),
         NewLyricSaved() => _onNewLyricSaved(event, emit),
+        TolerancePrefUpdated() => _onTolerancePrefUpdated(event, emit),
       },
     );
   }
 
   final LocalDbService _localDbService;
   final PermissionService _permissionService;
+
+  int _tolerance = 0;
 
   // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
@@ -49,6 +52,8 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       isAutoFetch: event.isAutoFetch,
       showLine2: event.showLine2,
     ));
+
+    _tolerance = event.tolerance;
 
     await emit.onEach(
       mediaStateStream,
@@ -136,17 +141,15 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               var line1 = state.line1;
               var line2 = state.line2;
 
-              const tolerance = 100;
-
               for (final line in oddLines.reversed) {
-                if (position > (line.time.inMilliseconds - tolerance) || line == currentLrc.lines.first) {
+                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
                   line2 = line;
                   break;
                 }
               }
 
               for (final line in evenLines.reversed) {
-                if (position > (line.time.inMilliseconds - tolerance) || line == currentLrc.lines.first) {
+                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
                   line1 = line;
                   break;
                 }
@@ -291,5 +294,9 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       line2: null,
       searchLyricStatus: SearchLyricStatus.initial,
     ));
+  }
+
+  void _onTolerancePrefUpdated(TolerancePrefUpdated event, Emitter<LyricStateListenerState> emit) {
+    _tolerance = event.tolerance;
   }
 }

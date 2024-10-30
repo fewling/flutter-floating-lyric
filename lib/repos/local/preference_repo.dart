@@ -21,6 +21,7 @@ class PreferenceRepo {
   static const showLine2Key = 'show line 2';
   static const useAppColorKey = 'use app color';
   static const enableAnimationKey = 'enable animation';
+  static const toleranceKey = 'tolerance';
 
   static const defaultFont = 'Roboto';
 
@@ -52,6 +53,8 @@ class PreferenceRepo {
 
   bool get enableAnimation => _sp.getBool(enableAnimationKey) ?? true;
 
+  int get tolerance => _sp.getInt(toleranceKey) ?? 0;
+
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
   Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
@@ -79,4 +82,6 @@ class PreferenceRepo {
   Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
 
   Future<bool> toggleEnableAnimation(bool value) => _sp.setBool(enableAnimationKey, value);
+
+  Future<bool> updateTolerance(int value) => _sp.setInt(toleranceKey, value);
 }

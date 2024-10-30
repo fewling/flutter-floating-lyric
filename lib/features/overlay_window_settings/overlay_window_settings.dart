@@ -300,6 +300,38 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
                       },
                     ),
+                    ListTile(
+                      enabled: visibleFloatingWindow,
+                      leading: const Icon(Icons.hourglass_top_outlined),
+                      trailing: Builder(
+                        builder: (context) {
+                          final tolerance = context.select<PreferenceBloc, int>(
+                            (bloc) => bloc.state.tolerance,
+                          );
+
+                          return Text('$tolerance ms');
+                        },
+                      ),
+                      title: const Text('Tolerance'),
+                      subtitle: const Text('Increase this to make the lyrics ahead of the song, vice versa.'),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final tolerance = context.select<PreferenceBloc, int>(
+                          (bloc) => bloc.state.tolerance,
+                        );
+                        return Slider(
+                          min: -1000,
+                          max: 1000,
+                          divisions: 200,
+                          value: tolerance.toDouble(),
+                          label: '$tolerance',
+                          onChanged: visibleFloatingWindow
+                              ? (o) => context.read<PreferenceBloc>().add(ToleranceUpdated(o.toInt()))
+                              : null,
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
