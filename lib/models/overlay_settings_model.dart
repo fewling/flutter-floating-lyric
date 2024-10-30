@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../configs/animation_modes.dart';
 import '../configs/main_overlay/search_lyric_status.dart';
 import 'lrc.dart';
 
@@ -37,6 +38,12 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
+    @Default(false) bool enableAnimation,
+
+    //
+    @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)
+    @Default(AnimationMode.fadeIn)
+    AnimationMode animationMode,
 
     // Settings
     bool? ignoreTouch,

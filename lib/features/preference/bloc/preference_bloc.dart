@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../configs/animation_modes.dart';
 import '../../../repos/local/preference_repo.dart';
 import '../../../service/preference/preference_service.dart';
 
@@ -28,6 +29,9 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           autoFetchOnline: spService.autoFetchOnline,
           showLine2: spService.showLine2,
           useAppColor: spService.useAppColor,
+          enableAnimation: spService.enableAnimation,
+          tolerance: spService.tolerance,
+          animationMode: spService.animationMode,
         )) {
     on<PreferenceEvent>((event, emit) => switch (event) {
           PreferenceEventLoad() => _onLoaded(emit),
@@ -44,6 +48,9 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           WindowColorThemeToggled() => _onWindowColorThemeToggled(event, emit),
           FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
           FontFamilyReset() => _onFontFamilyReset(event, emit),
+          EnableAnimationToggled() => _onEnableAnimationToggled(event, emit),
+          ToleranceUpdated() => _onToleranceUpdated(event, emit),
+          AnimationModeUpdated() => _onAnimationModeUpdated(event, emit),
         });
   }
 
@@ -139,6 +146,27 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.resetFontFamily();
     if (isSuccess) {
       emit(state.copyWith(fontFamily: PreferenceRepo.defaultFont));
+    }
+  }
+
+  Future<void> _onEnableAnimationToggled(EnableAnimationToggled event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.toggleEnableAnimation(!state.enableAnimation);
+    if (isSuccess) {
+      emit(state.copyWith(enableAnimation: !state.enableAnimation));
+    }
+  }
+
+  Future<void> _onToleranceUpdated(ToleranceUpdated event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.updateTolerance(event.tolerance);
+    if (isSuccess) {
+      emit(state.copyWith(tolerance: event.tolerance));
+    }
+  }
+
+  Future<void> _onAnimationModeUpdated(AnimationModeUpdated event, Emitter<PreferenceState> emit) async {
+    final isSuccess = await _spService.updateAnimationMode(event.mode);
+    if (isSuccess) {
+      emit(state.copyWith(animationMode: event.mode));
     }
   }
 }

@@ -121,7 +121,7 @@ class _OverlayAppState extends State<OverlayApp> {
 
       blocContext.read<OverlayWindowBloc>().add(WindowResized(
             width: (width + 0.3) * pxRatio,
-            height: (height + 2) * pxRatio,
+            height: (height + 6) * pxRatio,
           ));
     });
   }

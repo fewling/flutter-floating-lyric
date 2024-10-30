@@ -1,5 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../configs/animation_modes.dart';
 
 class PreferenceRepo {
   PreferenceRepo({
@@ -20,6 +23,9 @@ class PreferenceRepo {
   static const autoFetchOnlineKey = 'auto fetch online';
   static const showLine2Key = 'show line 2';
   static const useAppColorKey = 'use app color';
+  static const enableAnimationKey = 'enable animation';
+  static const toleranceKey = 'tolerance';
+  static const animationModeKey = 'animation mode';
 
   static const defaultFont = 'Roboto';
 
@@ -49,6 +55,17 @@ class PreferenceRepo {
 
   bool get useAppColor => _sp.getBool(useAppColorKey) ?? true;
 
+  bool get enableAnimation => _sp.getBool(enableAnimationKey) ?? true;
+
+  int get tolerance => _sp.getInt(toleranceKey) ?? 0;
+
+  AnimationMode get animationMode {
+    final mode = _sp.getString(animationModeKey);
+    return mode == null
+        ? AnimationMode.fadeIn
+        : AnimationMode.values.firstWhereOrNull((e) => e.name == mode) ?? AnimationMode.fadeIn;
+  }
+
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
   Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
@@ -74,4 +91,10 @@ class PreferenceRepo {
   Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
 
   Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
+
+  Future<bool> toggleEnableAnimation(bool value) => _sp.setBool(enableAnimationKey, value);
+
+  Future<bool> updateTolerance(int value) => _sp.setInt(toleranceKey, value);
+
+  Future<bool> updateAnimationMode(AnimationMode mode) => _sp.setString(animationModeKey, mode.name);
 }

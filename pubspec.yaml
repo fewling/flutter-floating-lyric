@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 4.0.4+27
+version: 4.1.0+28
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -30,6 +30,8 @@ dependencies:
   flutter_bloc: ^8.1.6
   collection: ^1.18.0
   google_fonts: ^6.2.1
+  animated_text_kit: ^4.2.2
+  device_info_plus: ^11.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -33,12 +34,15 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
         ShowLine2Updated() => _onShowLine2Updated(event, emit),
         StartMusicPlayerRequested() => _onMusicPlayerRequested(event, emit),
         NewLyricSaved() => _onNewLyricSaved(event, emit),
+        TolerancePrefUpdated() => _onTolerancePrefUpdated(event, emit),
       },
     );
   }
 
   final LocalDbService _localDbService;
   final PermissionService _permissionService;
+
+  int _tolerance = 0;
 
   // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
@@ -48,6 +52,8 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       isAutoFetch: event.isAutoFetch,
       showLine2: event.showLine2,
     ));
+
+    _tolerance = event.tolerance;
 
     await emit.onEach(
       mediaStateStream,
@@ -129,34 +135,23 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
             }
 
             if (state.showLine2) {
+              final oddLines = currentLrc.lines.whereIndexed((index, _) => index.isOdd).toList();
+              final evenLines = currentLrc.lines.whereIndexed((index, _) => index.isEven).toList();
+
               var line1 = state.line1;
               var line2 = state.line2;
 
-              if (state.line1 == null && state.line2 == null) {
-                line1 = currentLrc.lines.first;
-                line2 = currentLrc.lines.elementAtOrNull(1);
-              } else {
-                for (var i = 0; i < currentLrc.lines.length; i++) {
-                  if (line1 == null) break;
-                  if (line2 == null) break;
+              for (final line in oddLines.reversed) {
+                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
+                  line2 = line;
+                  break;
+                }
+              }
 
-                  final line1Index = currentLrc.lines.indexOf(line1);
-                  final line2Index = currentLrc.lines.indexOf(line2);
-                  if (line1Index < 0 || line2Index < 0) break;
-
-                  final lineAfterLine1 = currentLrc.lines.elementAtOrNull(line1Index + 1);
-                  if (lineAfterLine1 != null) {
-                    if (position > lineAfterLine1.time.inMilliseconds) {
-                      line1 = currentLrc.lines.elementAtOrNull(line1Index + 2);
-                    }
-                  }
-
-                  final lineAfterLine2 = currentLrc.lines.elementAtOrNull(line2Index + 1);
-                  if (lineAfterLine2 != null) {
-                    if (position > lineAfterLine2.time.inMilliseconds) {
-                      line2 = currentLrc.lines.elementAtOrNull(line2Index + 2);
-                    }
-                  }
+              for (final line in evenLines.reversed) {
+                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
+                  line1 = line;
+                  break;
                 }
               }
 
@@ -299,5 +294,9 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       line2: null,
       searchLyricStatus: SearchLyricStatus.initial,
     ));
+  }
+
+  void _onTolerancePrefUpdated(TolerancePrefUpdated event, Emitter<LyricStateListenerState> emit) {
+    _tolerance = event.tolerance;
   }
 }

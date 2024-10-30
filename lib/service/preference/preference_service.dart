@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import '../../configs/animation_modes.dart';
 import '../../repos/local/preference_repo.dart';
 
 class PreferenceService {
@@ -33,6 +34,12 @@ class PreferenceService {
 
   bool get useAppColor => _spRepo.useAppColor;
 
+  bool get enableAnimation => _spRepo.enableAnimation;
+
+  int get tolerance => _spRepo.tolerance;
+
+  AnimationMode get animationMode => _spRepo.animationMode;
+
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) => _spRepo.updateColor(color.value);
@@ -58,4 +65,10 @@ class PreferenceService {
   Future<bool> toggleUseAppColor(bool value) => _spRepo.toggleUseAppColor(value);
 
   Future<bool> resetFontFamily() => _spRepo.resetFontFamily();
+
+  Future<bool> toggleEnableAnimation(bool value) => _spRepo.toggleEnableAnimation(value);
+
+  Future<bool> updateTolerance(int value) => _spRepo.updateTolerance(value);
+
+  Future<bool> updateAnimationMode(AnimationMode mode) => _spRepo.updateAnimationMode(mode);
 }

@@ -18,6 +18,7 @@ import '../../features/lyric_list/lyric_list_screen.dart';
 import '../../features/lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../../features/permissions/bloc/permission_bloc.dart';
 import '../../features/permissions/permission_screen.dart';
+import '../../features/settings/bloc/settings_bloc.dart';
 import '../../features/settings/settings_screen.dart';
 import '../../repos/local/local_db_repo.dart';
 import '../../service/db/local/local_db_service.dart';
@@ -120,7 +121,10 @@ class AppRouter {
               parentNavigatorKey: _shellKey,
               path: AppRoute.settings.path,
               name: AppRoute.settings.name,
-              builder: (context, state) => const SettingsScreen(),
+              builder: (context, state) => BlocProvider(
+                create: (context) => SettingsBloc(),
+                child: const SettingsScreen(),
+              ),
             ),
           ],
         ),

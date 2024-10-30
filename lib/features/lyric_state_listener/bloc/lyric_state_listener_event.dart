@@ -8,10 +8,12 @@ final class LyricStateListenerLoaded extends LyricStateListenerEvent {
   const LyricStateListenerLoaded({
     required this.isAutoFetch,
     required this.showLine2,
+    required this.tolerance,
   });
 
   final bool isAutoFetch;
   final bool showLine2;
+  final int tolerance;
 }
 
 final class AutoFetchUpdated extends LyricStateListenerEvent {
@@ -36,4 +38,12 @@ final class StartMusicPlayerRequested extends LyricStateListenerEvent {
 
 final class NewLyricSaved extends LyricStateListenerEvent {
   const NewLyricSaved();
+}
+
+final class TolerancePrefUpdated extends LyricStateListenerEvent {
+  const TolerancePrefUpdated({
+    required this.tolerance,
+  });
+
+  final int tolerance;
 }

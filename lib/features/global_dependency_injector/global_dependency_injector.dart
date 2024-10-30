@@ -75,6 +75,7 @@ class GlobalDependencyInjector extends StatelessWidget {
             )..add(LyricStateListenerLoaded(
                 isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
                 showLine2: context.read<PreferenceBloc>().state.showLine2,
+                tolerance: context.read<PreferenceBloc>().state.tolerance,
               )),
           ),
           BlocProvider(
@@ -124,6 +125,12 @@ class PreferenceStateListener extends StatelessWidget {
           listenWhen: (previous, current) => previous.showLine2 != current.showLine2,
           listener: (context, state) => context.read<LyricStateListenerBloc>().add(
                 ShowLine2Updated(showLine2: state.showLine2),
+              ),
+        ),
+        BlocListener<PreferenceBloc, PreferenceState>(
+          listenWhen: (previous, current) => previous.tolerance != current.tolerance,
+          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
+                TolerancePrefUpdated(tolerance: state.tolerance),
               ),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
