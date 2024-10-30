@@ -17,6 +17,11 @@ class PreferenceState with _$PreferenceState {
     required bool useAppColor,
     required bool enableAnimation,
     required int tolerance,
+    @JsonKey(
+      fromJson: animationModeFromJson,
+      toJson: animationModeToJson,
+    )
+    required AnimationMode animationMode,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) => _$PreferenceStateFromJson(json);

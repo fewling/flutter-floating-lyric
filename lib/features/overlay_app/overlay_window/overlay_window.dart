@@ -2,6 +2,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../configs/animation_modes.dart';
 import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/overlay_settings_model.dart';
 import '../../../utils/extensions/custom_extensions.dart';
@@ -110,6 +111,7 @@ class OverlayContent extends StatelessWidget {
     final status = settings.searchLyricStatus;
     final showLine2 = settings.showLine2 ?? false;
     final shouldAnimate = settings.enableAnimation;
+    final animationMode = settings.animationMode;
 
     switch (status) {
       case SearchLyricStatus.empty:
@@ -141,11 +143,13 @@ class OverlayContent extends StatelessWidget {
               alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
               child: shouldAnimate
                   ? AnimatedLyricLine(
+                      key: ValueKey('line1:${settings.line1?.content}'),
                       textColor: textColor,
                       id: 'line1:${settings.line1?.content}',
                       content: settings.line1?.content,
                       fontSize: settings.fontSize,
                       isBold: line1IsFurther,
+                      animationMode: animationMode,
                     )
                   : Text(
                       settings.line1?.content ?? '',
@@ -161,11 +165,13 @@ class OverlayContent extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: shouldAnimate
                     ? AnimatedLyricLine(
+                        key: ValueKey('line2:${settings.line2?.content}'),
                         textColor: textColor,
                         id: 'line2:${settings.line2?.content}',
                         content: settings.line2?.content,
                         fontSize: settings.fontSize,
                         isBold: !line1IsFurther,
+                        animationMode: animationMode,
                       )
                     : Text(
                         settings.line2?.content ?? '',
@@ -182,14 +188,15 @@ class OverlayContent extends StatelessWidget {
   }
 }
 
-class AnimatedLyricLine extends StatelessWidget {
+class AnimatedLyricLine extends StatefulWidget {
   const AnimatedLyricLine({
     super.key,
     required this.textColor,
     required this.id,
+    required this.isBold,
+    required this.animationMode,
     this.content,
     this.fontSize,
-    required this.isBold,
   });
 
   final String id;
@@ -197,36 +204,89 @@ class AnimatedLyricLine extends StatelessWidget {
   final Color textColor;
   final double? fontSize;
   final bool isBold;
+  final AnimationMode animationMode;
+
+  @override
+  State<AnimatedLyricLine> createState() => _AnimatedLyricLineState();
+}
+
+class _AnimatedLyricLineState extends State<AnimatedLyricLine> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (isBold) {
-      return AnimatedTextKit(
-        isRepeatingAnimation: false,
-        key: ValueKey(id),
-        animatedTexts: [
-          TypewriterAnimatedText(
-            content ?? '',
-            textStyle: TextStyle(
-              color: textColor,
-              fontSize: fontSize,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            ),
-            speed: const Duration(milliseconds: 100),
-          ),
-        ],
-      );
-    }
-
-    return Text(
-      content ?? '',
-      key: ValueKey(id),
-      style: TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-      ),
+    final txtStyle = TextStyle(
+      color: widget.textColor,
+      fontSize: widget.fontSize,
+      fontWeight: widget.isBold ? FontWeight.bold : FontWeight.normal,
     );
+
+    final plainLine = Text(
+      widget.content ?? '',
+      key: ValueKey(widget.id),
+      style: txtStyle,
+    );
+
+    switch (widget.animationMode) {
+      case AnimationMode.fadeIn:
+        return AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) => SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0, -0.5),
+              end: Offset.zero,
+            ).animate(_controller),
+            child: Opacity(
+              opacity: _controller.value,
+              child: plainLine,
+            ),
+          ),
+        );
+      case AnimationMode.typer:
+        return widget.isBold
+            ? AnimatedTextKit(
+                isRepeatingAnimation: false,
+                key: ValueKey(widget.id),
+                animatedTexts: [
+                  TyperAnimatedText(
+                    widget.content ?? '',
+                    textStyle: txtStyle,
+                    speed: const Duration(milliseconds: 80),
+                  ),
+                ],
+              )
+            : plainLine;
+
+      case AnimationMode.typeWriter:
+        return widget.isBold
+            ? AnimatedTextKit(
+                isRepeatingAnimation: false,
+                key: ValueKey(widget.id),
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    widget.content ?? '',
+                    textStyle: txtStyle,
+                    speed: const Duration(milliseconds: 80),
+                  ),
+                ],
+              )
+            : plainLine;
+    }
   }
 }
 

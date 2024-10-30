@@ -83,3 +83,9 @@ final class ToleranceUpdated extends PreferenceEvent {
 
   final int tolerance;
 }
+
+final class AnimationModeUpdated extends PreferenceEvent {
+  const AnimationModeUpdated(this.mode);
+
+  final AnimationMode mode;
+}

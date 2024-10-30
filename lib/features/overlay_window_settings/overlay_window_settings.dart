@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../configs/animation_modes.dart';
 import '../../configs/routes/app_router.dart';
+import '../../utils/extensions/custom_extensions.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/overlay_window_settings_bloc.dart';
 
@@ -297,6 +299,33 @@ class OverlayWindowSetting extends StatelessWidget {
                           title: title,
                           secondary: secondary,
                           onChanged: (value) => context.read<PreferenceBloc>().add(const EnableAnimationToggled()),
+                        );
+                      },
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final animationMode = context.select<PreferenceBloc, AnimationMode>(
+                          (bloc) => bloc.state.animationMode,
+                        );
+
+                        final enableAnimation = context.select<PreferenceBloc, bool>(
+                          (bloc) => bloc.state.enableAnimation,
+                        );
+
+                        return SegmentedButton(
+                          selected: {animationMode},
+                          segments: [
+                            for (final mode in AnimationMode.values)
+                              ButtonSegment(
+                                value: mode,
+                                label: Text(mode.name.capitalize()),
+                              ),
+                          ],
+                          showSelectedIcon: false,
+                          onSelectionChanged: !visibleFloatingWindow || !enableAnimation
+                              ? null
+                              : (Set<AnimationMode> selections) =>
+                                  context.read<PreferenceBloc>().add(AnimationModeUpdated(selections.first)),
                         );
                       },
                     ),

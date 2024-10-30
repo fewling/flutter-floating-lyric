@@ -61,6 +61,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         showLine2: pref.showLine2,
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
+        animationMode: pref.animationMode,
 
         // lyric:
         line1: lyric.line1,
@@ -94,6 +95,7 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
         showLine2: pref.showLine2,
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
+        animationMode: pref.animationMode,
       ),
     );
 
