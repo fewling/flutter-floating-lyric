@@ -136,16 +136,18 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
               var line1 = state.line1;
               var line2 = state.line2;
 
+              const tolerance = 100;
+
               for (final line in oddLines.reversed) {
-                if (position > line.time.inMilliseconds || line == currentLrc.lines.first) {
-                  line1 = line;
+                if (position > (line.time.inMilliseconds - tolerance) || line == currentLrc.lines.first) {
+                  line2 = line;
                   break;
                 }
               }
 
               for (final line in evenLines.reversed) {
-                if (position > line.time.inMilliseconds || line == currentLrc.lines.first) {
-                  line2 = line;
+                if (position > (line.time.inMilliseconds - tolerance) || line == currentLrc.lines.first) {
+                  line1 = line;
                   break;
                 }
               }
