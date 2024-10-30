@@ -37,6 +37,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? fontSize,
     double? lineHeight,
     double? letterSpacing,
+    @Default(false) bool enableAnimation,
 
     // Settings
     bool? ignoreTouch,

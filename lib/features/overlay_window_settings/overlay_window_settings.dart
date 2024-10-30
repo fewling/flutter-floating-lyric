@@ -234,16 +234,15 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showMilliseconds,
                         );
 
-                        return ListTile(
+                        final title = Text(showMillis ? 'Show Milliseconds' : 'Hide Milliseconds');
+                        const secondary = Icon(Icons.timelapse_outlined);
+
+                        return ToggleableSwitchListTile(
                           enabled: visibleFloatingWindow,
-                          leading: const Icon(Icons.timelapse_outlined),
-                          title: showMillis ? const Text('Show Milliseconds') : const Text('Hide Milliseconds'),
-                          trailing: Switch(
-                            value: showMillis,
-                            onChanged: !visibleFloatingWindow
-                                ? null
-                                : (value) => context.read<PreferenceBloc>().add(const ShowMillisecondsToggled()),
-                          ),
+                          value: showMillis,
+                          title: title,
+                          secondary: secondary,
+                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowMillisecondsToggled()),
                         );
                       },
                     ),
@@ -253,16 +252,15 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showProgressBar,
                         );
 
-                        return ListTile(
+                        final title = Text(showBar ? 'Show Progress Bar' : 'Hide Progress Bar');
+                        const secondary = Icon(Icons.linear_scale_outlined);
+
+                        return ToggleableSwitchListTile(
                           enabled: visibleFloatingWindow,
-                          leading: const Icon(Icons.linear_scale_outlined),
-                          title: showBar ? const Text('Show Progress Bar') : const Text('Hide Progress Bar'),
-                          trailing: Switch(
-                            value: showBar,
-                            onChanged: !visibleFloatingWindow
-                                ? null
-                                : (value) => context.read<PreferenceBloc>().add(const ShowProgressBarToggled()),
-                          ),
+                          value: showBar,
+                          title: title,
+                          secondary: secondary,
+                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowProgressBarToggled()),
                         );
                       },
                     ),
@@ -272,16 +270,33 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showLine2,
                         );
 
-                        return ListTile(
+                        final title = Text(showLine2 ? 'Show Line 2' : 'Hide Line 2');
+                        const secondary = Icon(Icons.linear_scale_outlined);
+
+                        return ToggleableSwitchListTile(
                           enabled: visibleFloatingWindow,
-                          leading: const Icon(Icons.linear_scale_outlined),
-                          title: showLine2 ? const Text('Show Line 2') : const Text('Hide Line 2'),
-                          trailing: Switch(
-                            value: showLine2,
-                            onChanged: !visibleFloatingWindow
-                                ? null
-                                : (value) => context.read<PreferenceBloc>().add(const ShowLine2Toggled()),
-                          ),
+                          value: showLine2,
+                          title: title,
+                          secondary: secondary,
+                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowLine2Toggled()),
+                        );
+                      },
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final enableAnimation = context.select<PreferenceBloc, bool>(
+                          (bloc) => bloc.state.enableAnimation,
+                        );
+
+                        final title = Text(enableAnimation ? 'Enable Animation' : 'Disable Animation');
+                        const secondary = Icon(Icons.animation_outlined);
+
+                        return ToggleableSwitchListTile(
+                          enabled: visibleFloatingWindow,
+                          value: enableAnimation,
+                          title: title,
+                          secondary: secondary,
+                          onChanged: (value) => context.read<PreferenceBloc>().add(const EnableAnimationToggled()),
                         );
                       },
                     ),
@@ -345,5 +360,39 @@ class OverlayWindowSetting extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ToggleableSwitchListTile extends StatelessWidget {
+  const ToggleableSwitchListTile({
+    super.key,
+    required this.enabled,
+    required this.value,
+    required this.title,
+    required this.secondary,
+    required this.onChanged,
+  });
+
+  final bool enabled;
+  final bool value;
+  final Widget title;
+  final Widget secondary;
+  final void Function(bool) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return enabled
+        ? SwitchListTile(
+            value: value,
+            title: title,
+            secondary: secondary,
+            onChanged: onChanged,
+          )
+        : ListTile(
+            enabled: false,
+            leading: secondary,
+            title: title,
+            trailing: Switch(value: value, onChanged: null),
+          );
   }
 }

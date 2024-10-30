@@ -15,6 +15,7 @@ class PreferenceState with _$PreferenceState {
     required bool autoFetchOnline,
     required bool showLine2,
     required bool useAppColor,
+    required bool enableAnimation,
   }) = _PreferenceState;
 
   factory PreferenceState.fromJson(Map<String, dynamic> json) => _$PreferenceStateFromJson(json);

@@ -70,6 +70,10 @@ final class FontFamilyUpdated extends PreferenceEvent {
   final String fontFamily;
 }
 
-class FontFamilyReset extends PreferenceEvent {
+final class FontFamilyReset extends PreferenceEvent {
   const FontFamilyReset();
+}
+
+final class EnableAnimationToggled extends PreferenceEvent {
+  const EnableAnimationToggled();
 }

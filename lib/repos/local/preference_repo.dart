@@ -20,6 +20,7 @@ class PreferenceRepo {
   static const autoFetchOnlineKey = 'auto fetch online';
   static const showLine2Key = 'show line 2';
   static const useAppColorKey = 'use app color';
+  static const enableAnimationKey = 'enable animation';
 
   static const defaultFont = 'Roboto';
 
@@ -49,6 +50,8 @@ class PreferenceRepo {
 
   bool get useAppColor => _sp.getBool(useAppColorKey) ?? true;
 
+  bool get enableAnimation => _sp.getBool(enableAnimationKey) ?? true;
+
   Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
 
   Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
@@ -74,4 +77,6 @@ class PreferenceRepo {
   Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
 
   Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
+
+  Future<bool> toggleEnableAnimation(bool value) => _sp.setBool(enableAnimationKey, value);
 }

@@ -109,6 +109,7 @@ class OverlayContent extends StatelessWidget {
 
     final status = settings.searchLyricStatus;
     final showLine2 = settings.showLine2 ?? false;
+    final shouldAnimate = settings.enableAnimation;
 
     switch (status) {
       case SearchLyricStatus.empty:
@@ -138,24 +139,42 @@ class OverlayContent extends StatelessWidget {
           children: [
             Align(
               alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
-              child: AnimatedLyricLine(
-                textColor: textColor,
-                id: 'line1:${settings.line1?.content}',
-                content: settings.line1?.content,
-                fontSize: settings.fontSize,
-                isBold: line1IsFurther,
-              ),
+              child: shouldAnimate
+                  ? AnimatedLyricLine(
+                      textColor: textColor,
+                      id: 'line1:${settings.line1?.content}',
+                      content: settings.line1?.content,
+                      fontSize: settings.fontSize,
+                      isBold: line1IsFurther,
+                    )
+                  : Text(
+                      settings.line1?.content ?? '',
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: settings.fontSize,
+                        fontWeight: line1IsFurther ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
             ),
             if (showLine2)
               Align(
                 alignment: Alignment.centerRight,
-                child: AnimatedLyricLine(
-                  textColor: textColor,
-                  id: 'line2:${settings.line2?.content}',
-                  content: settings.line2?.content,
-                  fontSize: settings.fontSize,
-                  isBold: !line1IsFurther,
-                ),
+                child: shouldAnimate
+                    ? AnimatedLyricLine(
+                        textColor: textColor,
+                        id: 'line2:${settings.line2?.content}',
+                        content: settings.line2?.content,
+                        fontSize: settings.fontSize,
+                        isBold: !line1IsFurther,
+                      )
+                    : Text(
+                        settings.line2?.content ?? '',
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: settings.fontSize,
+                          fontWeight: !line1IsFurther ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
               ),
           ],
         );
@@ -206,30 +225,6 @@ class AnimatedLyricLine extends StatelessWidget {
         color: textColor,
         fontSize: fontSize,
         fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-      ),
-    );
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
-      transitionBuilder: (child, animation) => SlideTransition(
-        position: Tween(
-          begin: const Offset(1.0, 0),
-          end: Offset.zero,
-        ).animate(animation),
-        child: AnimatedOpacity(
-          opacity: animation.value,
-          duration: const Duration(milliseconds: 300),
-          child: child,
-        ),
-      ),
-      child: Text(
-        content ?? '',
-        key: ValueKey(id),
-        style: TextStyle(
-          color: textColor,
-          fontSize: fontSize,
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-        ),
       ),
     );
   }
