@@ -19,10 +19,8 @@ class BaseShell extends StatelessWidget {
     final fullPath = GoRouterState.of(context).fullPath;
 
     final index = BaseDrawerRoutes.values.indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
-    final title = index > -1 ? BaseDrawerRoutes.values[index].label : null;
 
     return Scaffold(
-      appBar: title == null ? null : AppBar(title: Text(title)),
       bottomNavigationBar: NavigationBar(
         selectedIndex: index > -1 ? index : 0,
         onDestinationSelected: (index) {
