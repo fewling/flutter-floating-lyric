@@ -121,7 +121,7 @@ class FetchOnlineLrcForm extends StatelessWidget {
               onPressed: shouldDisable
                   ? null
                   : () => context.read<FetchOnlineLrcFormBloc>().add(const SearchOnlineRequested()),
-              icon: shouldDisable ? const LoadingWidget() : const Icon(Icons.search),
+              icon: isSearching ? const LoadingWidget() : const Icon(Icons.search),
               label: const Text('Search'),
             );
           }),
