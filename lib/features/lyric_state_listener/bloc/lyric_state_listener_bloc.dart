@@ -166,7 +166,7 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
             } else {
               final reversed = currentLrc.lines.reversed.toList();
               for (final line in reversed) {
-                if (position > line.time.inMilliseconds || line == currentLrc.lines.first) {
+                if (position > line.time.inMilliseconds - _tolerance || line == currentLrc.lines.first) {
                   emit(state.copyWith(
                     line1: line,
                     mediaState: state.mediaState?.copyWith(
