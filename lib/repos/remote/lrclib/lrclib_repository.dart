@@ -31,8 +31,9 @@ class LrcLibRepository {
     final response = await http.get(url);
 
     if (response.statusCode != 200) {
-      if (kDebugMode)
+      if (kDebugMode) {
         logger.e('Failed to get lyric from LrcLib, response: ${response.body}');
+      }
       throw Exception('Could not find lyric');
     } else {
       // https://stackoverflow.com/a/71596683/13921129

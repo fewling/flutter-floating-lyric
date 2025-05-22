@@ -40,10 +40,11 @@ class PreferenceService {
 
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
-  Future<bool> updateColor(Color color) => _spRepo.updateColor(color.value);
+  Future<bool> updateColor(Color color) =>
+      _spRepo.updateColor(color.toARGB32());
 
   Future<bool> updateBackgroundColor(Color color) =>
-      _spRepo.updateBackgroundColor(color.value);
+      _spRepo.updateBackgroundColor(color.toARGB32());
 
   Future<bool> toggleBrightness(bool isLight) =>
       _spRepo.toggleBrightness(isLight);

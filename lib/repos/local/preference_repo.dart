@@ -30,15 +30,15 @@ class PreferenceRepo {
 
   double get opacity => _sp.getDouble(windowOpacityKey) ?? 50;
 
-  int get color => _sp.getInt(windowColorKey) ?? Colors.deepPurple.value;
+  int get color => _sp.getInt(windowColorKey) ?? Colors.deepPurple.toARGB32();
 
   int get backgroundColor =>
-      _sp.getInt(windowBackgroundColorKey) ?? Colors.black.value;
+      _sp.getInt(windowBackgroundColorKey) ?? Colors.black.toARGB32();
 
   bool get isLight => _sp.getBool(brightnessKey) ?? true;
 
   int get appColorScheme =>
-      _sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value;
+      _sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.toARGB32();
 
   bool get showMilliseconds => _sp.getBool(showMillisecondsKey) ?? false;
 

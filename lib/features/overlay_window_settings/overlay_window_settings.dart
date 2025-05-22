@@ -77,7 +77,7 @@ class OverlayWindowSetting extends StatelessWidget {
                           return ColoredBox(
                             color: Color(
                               color,
-                            ).withOpacity(useCustomColor ? 1 : 0.5),
+                            ).withTransparency(useCustomColor ? 1 : 0.5),
                             child: const SizedBox(width: 24, height: 24),
                           );
                         },
@@ -207,7 +207,7 @@ class OverlayWindowSetting extends StatelessWidget {
                           return ColoredBox(
                             color: Color(
                               color,
-                            ).withOpacity(useCustomColor ? 1 : 0.5),
+                            ).withTransparency(useCustomColor ? 1 : 0.5),
                             child: const SizedBox(width: 24, height: 24),
                           );
                         },

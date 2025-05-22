@@ -53,7 +53,7 @@ class ColorPickerSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    if (colorValue == c.value)
+                    if (colorValue == c.toARGB32())
                       const Positioned.fill(child: Icon(Icons.check)),
                   ],
                 ),

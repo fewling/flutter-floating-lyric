@@ -31,7 +31,7 @@ class OverlayWindow extends StatelessWidget {
     final opacity = (settings.opacity ?? 50) / 100;
     final textColor = (useAppColor
         ? foregroundColor
-        : Color(settings.color ?? Colors.white.value));
+        : Color(settings.color ?? Colors.white.toARGB32()));
     final width = context.select(
       (MessageFromMainReceiverBloc b) => b.state.settings?.width,
     );
@@ -51,10 +51,10 @@ class OverlayWindow extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               color: useAppColor
-                  ? colorScheme.primaryContainer.withOpacity(opacity)
+                  ? colorScheme.primaryContainer.withTransparency(opacity)
                   : Color(
-                      settings.backgroundColor ?? Colors.black.value,
-                    ).withOpacity(opacity),
+                      settings.backgroundColor ?? Colors.black.toARGB32(),
+                    ).withTransparency(opacity),
             ),
             margin: EdgeInsets.zero,
             child: InkWell(
@@ -65,6 +65,7 @@ class OverlayWindow extends StatelessWidget {
                 padding: const EdgeInsets.all(4.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+                  spacing: 4,
                   children: [
                     if (debugText != null)
                       Text(
@@ -79,7 +80,7 @@ class OverlayWindow extends StatelessWidget {
                         settings: settings,
                         textColor: textColor,
                       ),
-                  ].separatedBy(const SizedBox(height: 4)).toList(),
+                  ],
                 ),
               ),
             ),
