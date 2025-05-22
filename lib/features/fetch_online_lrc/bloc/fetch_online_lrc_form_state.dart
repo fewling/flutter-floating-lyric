@@ -14,7 +14,8 @@ class FetchOnlineLrcFormState with _$FetchOnlineLrcFormState {
     @Default(false) bool isEditingArtist,
     @Default(false) bool isEditingAlbum,
     @Default(null) LrcLibResponse? lrcLibResponse,
-    @Default(OnlineLrcRequestStatus.initial) OnlineLrcRequestStatus requestStatus,
+    @Default(OnlineLrcRequestStatus.initial)
+    OnlineLrcRequestStatus requestStatus,
     @Default(SaveLrcStatus.initial) SaveLrcStatus saveLrcStatus,
   }) = _FetchOnlineLrcFormState;
 }

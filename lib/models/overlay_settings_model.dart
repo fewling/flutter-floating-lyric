@@ -48,10 +48,14 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     // Settings
     bool? ignoreTouch,
     bool? touchThru,
-    @JsonKey(fromJson: searchLyricStatusFromJson, toJson: searchLyricStatusToJson)
+    @JsonKey(
+      fromJson: searchLyricStatusFromJson,
+      toJson: searchLyricStatusToJson,
+    )
     @Default(SearchLyricStatus.initial)
     SearchLyricStatus searchLyricStatus,
   }) = _OverlaySettingsModel;
 
-  factory OverlaySettingsModel.fromJson(Map<String, dynamic> json) => _$OverlaySettingsModelFromJson(json);
+  factory OverlaySettingsModel.fromJson(Map<String, dynamic> json) =>
+      _$OverlaySettingsModelFromJson(json);
 }

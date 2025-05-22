@@ -7,9 +7,9 @@ part 'to_overlay_msg_model.g.dart';
 
 @freezed
 class ToOverlayMsgModel with _$ToOverlayMsgModel {
-  const factory ToOverlayMsgModel({
-    OverlaySettingsModel? settings,
-  }) = _ToOverlayMsgModel;
+  const factory ToOverlayMsgModel({OverlaySettingsModel? settings}) =
+      _ToOverlayMsgModel;
 
-  factory ToOverlayMsgModel.fromJson(Map<String, dynamic> json) => _$ToOverlayMsgModelFromJson(json);
+  factory ToOverlayMsgModel.fromJson(Map<String, dynamic> json) =>
+      _$ToOverlayMsgModelFromJson(json);
 }

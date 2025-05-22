@@ -13,13 +13,15 @@ class LyricDetailScreen extends StatelessWidget {
         title: const LyricFileNameLabel(),
         actions: [
           IconButton(
-            onPressed: () => context.read<LyricDetailBloc>().add(const SaveRequested()),
+            onPressed: () =>
+                context.read<LyricDetailBloc>().add(const SaveRequested()),
             icon: const Icon(Icons.save_outlined),
           ),
         ],
       ),
       body: BlocListener<LyricDetailBloc, LyricDetailState>(
-        listenWhen: (previous, current) => previous.saveStatus != current.saveStatus,
+        listenWhen: (previous, current) =>
+            previous.saveStatus != current.saveStatus,
         listener: (context, state) {
           if (state.saveStatus.isInitial) return;
 
@@ -42,10 +44,7 @@ class LyricDetailScreen extends StatelessWidget {
       SnackBar(
         content: Row(
           children: [
-            Icon(
-              Icons.error_outline,
-              color: colorScheme.onErrorContainer,
-            ),
+            Icon(Icons.error_outline, color: colorScheme.onErrorContainer),
             const SizedBox(width: 8),
             Text(
               'Error saving lyric',
@@ -117,11 +116,14 @@ class _LyricContentFieldState extends State<LyricContentField> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<LyricDetailBloc, LyricDetailState>(
-      listenWhen: (previous, current) => current.lrcDB?.content != _controller.text,
-      listener: (context, state) => _controller.text = state.lrcDB?.content ?? '',
+      listenWhen: (previous, current) =>
+          current.lrcDB?.content != _controller.text,
+      listener: (context, state) =>
+          _controller.text = state.lrcDB?.content ?? '',
       child: TextField(
         controller: _controller,
-        onChanged: (value) => context.read<LyricDetailBloc>().add(ContentUpdated(value)),
+        onChanged: (value) =>
+            context.read<LyricDetailBloc>().add(ContentUpdated(value)),
         expands: true,
         maxLines: null,
       ),

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../configs/routes/app_router.dart';
 import '../device_info/device_info_listener.dart';
+import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 
 part 'base_drawer_routes.dart';
 
 class BaseShell extends StatelessWidget {
-  const BaseShell({
-    super.key,
-    required this.child,
-  });
+  const BaseShell({super.key, required this.child});
 
   final Widget child;
 
@@ -18,7 +17,9 @@ class BaseShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final fullPath = GoRouterState.of(context).fullPath;
 
-    final index = BaseDrawerRoutes.values.indexWhere((drawerRoute) => drawerRoute.route.path == fullPath);
+    final index = BaseDrawerRoutes.values.indexWhere(
+      (drawerRoute) => drawerRoute.route.path == fullPath,
+    );
 
     return Scaffold(
       // appBar: title == null ? null : AppBar(title: Text(title)),
@@ -37,9 +38,10 @@ class BaseShell extends StatelessWidget {
             ),
         ],
       ),
-      body: SafeArea(
-        child: DeviceInfoListener(
-          child: child,
+      body: SafeArea(child: DeviceInfoListener(child: child)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
+          const ToggleNotiListenerSettings(),
         ),
       ),
     );

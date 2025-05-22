@@ -7,5 +7,6 @@ class OverlayWindowSettingsState with _$OverlayWindowSettingsState {
     @Default(OverlaySettingsModel()) OverlaySettingsModel settings,
   }) = _OverlayWindowSettingsState;
 
-  factory OverlayWindowSettingsState.fromJson(Map<String, dynamic> json) => _$OverlayWindowSettingsStateFromJson(json);
+  factory OverlayWindowSettingsState.fromJson(Map<String, dynamic> json) =>
+      _$OverlayWindowSettingsStateFromJson(json);
 }

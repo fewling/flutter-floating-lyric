@@ -10,10 +10,10 @@ class LayoutChannelService {
   late final MethodChannel _channel;
 
   Future<void> setLayout(double width, double height) async {
-    return _channel.invokeMethod(
-      'reportSize',
-      {'width': width, 'height': height},
-    );
+    return _channel.invokeMethod('reportSize', {
+      'width': width,
+      'height': height,
+    });
   }
 
   Future<bool?> toggleLock(bool isLocked) {

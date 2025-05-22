@@ -21,10 +21,9 @@ class Lrc with _$Lrc {
 
 @freezed
 class LrcLine with _$LrcLine {
-  const factory LrcLine({
-    required Duration time,
-    required String content,
-  }) = _LrcLine;
+  const factory LrcLine({required Duration time, required String content}) =
+      _LrcLine;
 
-  factory LrcLine.fromJson(Map<String, dynamic> json) => _$LrcLineFromJson(json);
+  factory LrcLine.fromJson(Map<String, dynamic> json) =>
+      _$LrcLineFromJson(json);
 }

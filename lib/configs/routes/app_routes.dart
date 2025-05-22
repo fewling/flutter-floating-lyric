@@ -9,12 +9,9 @@ enum AppRoute {
 
   settings(path: '/settings'),
 
-  permission(path: '/permission'),
-  ;
+  permission(path: '/permission');
 
-  const AppRoute({
-    required this.path,
-  });
+  const AppRoute({required this.path});
 
   final String path;
 }

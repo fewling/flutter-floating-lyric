@@ -15,5 +15,6 @@ class MediaState with _$MediaState {
     required bool isPlaying,
   }) = _MediaState;
 
-  factory MediaState.fromJson(Map<String, dynamic> json) => _$MediaStateFromJson(json);
+  factory MediaState.fromJson(Map<String, dynamic> json) =>
+      _$MediaStateFromJson(json);
 }

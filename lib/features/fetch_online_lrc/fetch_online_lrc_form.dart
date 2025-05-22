@@ -17,32 +17,55 @@ class FetchOnlineLrcForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FetchOnlineLrcFormBloc(
-        lrcLibService: LrcLibService(
-          lrcLibRepository: context.read<LrcLibRepository>(),
-        ),
-        localDbService: LocalDbService(
-          localDBRepo: context.read<LocalDbRepo>(),
-        ),
-      )..add(FetchOnlineLrcFormStarted(
-          album: context.read<LyricStateListenerBloc>().state.mediaState?.album,
-          artist: context.read<LyricStateListenerBloc>().state.mediaState?.artist,
-          title: context.read<LyricStateListenerBloc>().state.mediaState?.title,
-          duration: context.read<LyricStateListenerBloc>().state.mediaState?.duration,
-        )),
+      create: (context) =>
+          FetchOnlineLrcFormBloc(
+            lrcLibService: LrcLibService(
+              lrcLibRepository: context.read<LrcLibRepository>(),
+            ),
+            localDbService: LocalDbService(
+              localDBRepo: context.read<LocalDbRepo>(),
+            ),
+          )..add(
+            FetchOnlineLrcFormStarted(
+              album: context
+                  .read<LyricStateListenerBloc>()
+                  .state
+                  .mediaState
+                  ?.album,
+              artist: context
+                  .read<LyricStateListenerBloc>()
+                  .state
+                  .mediaState
+                  ?.artist,
+              title: context
+                  .read<LyricStateListenerBloc>()
+                  .state
+                  .mediaState
+                  ?.title,
+              duration: context
+                  .read<LyricStateListenerBloc>()
+                  .state
+                  .mediaState
+                  ?.duration,
+            ),
+          ),
       child: MultiBlocListener(
         listeners: [
           BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
             listenWhen: _coreLyricStateUpdated,
-            listener: (context, state) => context.read<FetchOnlineLrcFormBloc>().add(NewSongPlayed(
-                  title: state.mediaState?.title,
-                  artist: state.mediaState?.artist,
-                  album: state.mediaState?.album,
-                  duration: state.mediaState?.duration,
-                )),
+            listener: (context, state) =>
+                context.read<FetchOnlineLrcFormBloc>().add(
+                  NewSongPlayed(
+                    title: state.mediaState?.title,
+                    artist: state.mediaState?.artist,
+                    album: state.mediaState?.album,
+                    duration: state.mediaState?.duration,
+                  ),
+                ),
           ),
           BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
-            listenWhen: (previous, current) => previous.requestStatus != current.requestStatus,
+            listenWhen: (previous, current) =>
+                previous.requestStatus != current.requestStatus,
             listener: (context, state) {
               switch (state.requestStatus) {
                 case OnlineLrcRequestStatus.initial:
@@ -51,7 +74,10 @@ class FetchOnlineLrcForm extends StatelessWidget {
                 case OnlineLrcRequestStatus.success:
                 case OnlineLrcRequestStatus.failure:
                   final resp = state.lrcLibResponse;
-                  final content = resp?.syncedLyrics ?? resp?.plainLyrics ?? 'No lyric found for this song.';
+                  final content =
+                      resp?.syncedLyrics ??
+                      resp?.plainLyrics ??
+                      'No lyric found for this song.';
                   showDialog(
                     context: context,
                     builder: (dialogCtx) => BlocProvider.value(
@@ -70,7 +96,9 @@ class FetchOnlineLrcForm extends StatelessWidget {
                             if (resp != null)
                               TextButton(
                                 onPressed: () {
-                                  context.read<FetchOnlineLrcFormBloc>().add(SaveLyricResponseRequested(resp));
+                                  context.read<FetchOnlineLrcFormBloc>().add(
+                                    SaveLyricResponseRequested(resp),
+                                  );
                                   Navigator.of(dialogCtx).pop();
                                 },
                                 child: const Text('Save'),
@@ -80,125 +108,154 @@ class FetchOnlineLrcForm extends StatelessWidget {
                       ),
                     ),
                   );
-                  context.read<FetchOnlineLrcFormBloc>().add(const ErrorResponseHandled());
+                  context.read<FetchOnlineLrcFormBloc>().add(
+                    const ErrorResponseHandled(),
+                  );
                   break;
               }
             },
           ),
           BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
-            listenWhen: (previous, current) => previous.saveLrcStatus != current.saveLrcStatus,
+            listenWhen: (previous, current) =>
+                previous.saveLrcStatus != current.saveLrcStatus,
             listener: (context, state) {
               switch (state.saveLrcStatus) {
                 case SaveLrcStatus.initial:
                 case SaveLrcStatus.saving:
                   break;
                 case SaveLrcStatus.success:
-                  context.read<LyricStateListenerBloc>().add(const NewLyricSaved());
+                  context.read<LyricStateListenerBloc>().add(
+                    const NewLyricSaved(),
+                  );
                 case SaveLrcStatus.failure:
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text(state.saveLrcStatus.isSuccess ? 'Lyric saved' : 'Failed to save lyric'),
+                      content: Text(
+                        state.saveLrcStatus.isSuccess
+                            ? 'Lyric saved'
+                            : 'Failed to save lyric',
+                      ),
                     ),
                   );
-                  context.read<FetchOnlineLrcFormBloc>().add(const SaveResponseHandled());
+                  context.read<FetchOnlineLrcFormBloc>().add(
+                    const SaveResponseHandled(),
+                  );
               }
             },
           ),
         ],
         child: Scaffold(
-          floatingActionButton: Builder(builder: (context) {
-            final isSearching = context.select<FetchOnlineLrcFormBloc, bool>(
-              (bloc) => bloc.state.requestStatus.isLoading,
-            );
+          floatingActionButton: Builder(
+            builder: (context) {
+              final isSearching = context.select<FetchOnlineLrcFormBloc, bool>(
+                (bloc) => bloc.state.requestStatus.isLoading,
+              );
 
-            final noMediaState = context.select<LyricStateListenerBloc, bool>(
-              (bloc) => bloc.state.mediaState == null,
-            );
+              final noMediaState = context.select<LyricStateListenerBloc, bool>(
+                (bloc) => bloc.state.mediaState == null,
+              );
 
-            final shouldDisable = isSearching || noMediaState;
+              final shouldDisable = isSearching || noMediaState;
 
-            return FloatingActionButton.extended(
-              onPressed: shouldDisable
-                  ? null
-                  : () => context.read<FetchOnlineLrcFormBloc>().add(const SearchOnlineRequested()),
-              icon: isSearching ? const LoadingWidget() : const Icon(Icons.search),
-              label: const Text('Search'),
-            );
-          }),
+              return FloatingActionButton.extended(
+                onPressed: shouldDisable
+                    ? null
+                    : () => context.read<FetchOnlineLrcFormBloc>().add(
+                        const SearchOnlineRequested(),
+                      ),
+                icon: isSearching
+                    ? const LoadingWidget()
+                    : const Icon(Icons.search),
+                label: const Text('Search'),
+              );
+            },
+          ),
           body: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Builder(
                   builder: (context) {
-                    final autoFetchOnline = context.select<PreferenceBloc, bool>(
-                      (bloc) => bloc.state.autoFetchOnline,
-                    );
+                    final autoFetchOnline = context
+                        .select<PreferenceBloc, bool>(
+                          (bloc) => bloc.state.autoFetchOnline,
+                        );
                     return SwitchListTile(
                       title: const Text('Auto Fetch'),
                       value: autoFetchOnline,
-                      onChanged: (value) => context.read<PreferenceBloc>().add(const AutoFetchOnlineToggled()),
+                      onChanged: (value) => context.read<PreferenceBloc>().add(
+                        const AutoFetchOnlineToggled(),
+                      ),
                     );
                   },
                 ),
                 Builder(
                   builder: (context) {
-                    final isEditingTitle = context.select<FetchOnlineLrcFormBloc, bool>(
-                      (bloc) => bloc.state.isEditingTitle,
-                    );
-                    final title = context.select<FetchOnlineLrcFormBloc, String?>(
-                      (bloc) => bloc.state.titleAlt,
-                    );
+                    final isEditingTitle = context
+                        .select<FetchOnlineLrcFormBloc, bool>(
+                          (bloc) => bloc.state.isEditingTitle,
+                        );
+                    final title = context
+                        .select<FetchOnlineLrcFormBloc, String?>(
+                          (bloc) => bloc.state.titleAlt,
+                        );
 
                     return isEditingTitle
                         ? TitleAltField(title: title)
                         : ListTile(
                             title: const Text('Title'),
                             subtitle: Text(title ?? 'Unknown'),
-                            onTap: () =>
-                                context.read<FetchOnlineLrcFormBloc>().add(const EditFieldRequested(isTitle: true)),
+                            onTap: () => context
+                                .read<FetchOnlineLrcFormBloc>()
+                                .add(const EditFieldRequested(isTitle: true)),
                             trailing: const Icon(Icons.edit_outlined),
                           );
                   },
                 ),
                 Builder(
                   builder: (context) {
-                    final isEditingArtist = context.select<FetchOnlineLrcFormBloc, bool>(
-                      (bloc) => bloc.state.isEditingArtist,
-                    );
+                    final isEditingArtist = context
+                        .select<FetchOnlineLrcFormBloc, bool>(
+                          (bloc) => bloc.state.isEditingArtist,
+                        );
 
-                    final artist = context.select<FetchOnlineLrcFormBloc, String?>(
-                      (bloc) => bloc.state.artistAlt,
-                    );
+                    final artist = context
+                        .select<FetchOnlineLrcFormBloc, String?>(
+                          (bloc) => bloc.state.artistAlt,
+                        );
 
                     return isEditingArtist
                         ? ArtistAltField(artist: artist)
                         : ListTile(
                             title: const Text('Artist'),
                             subtitle: Text(artist ?? 'Unknown'),
-                            onTap: () =>
-                                context.read<FetchOnlineLrcFormBloc>().add(const EditFieldRequested(isArtist: true)),
+                            onTap: () => context
+                                .read<FetchOnlineLrcFormBloc>()
+                                .add(const EditFieldRequested(isArtist: true)),
                             trailing: const Icon(Icons.edit_outlined),
                           );
                   },
                 ),
                 Builder(
                   builder: (context) {
-                    final isEditingAlbum = context.select<FetchOnlineLrcFormBloc, bool>(
-                      (bloc) => bloc.state.isEditingAlbum,
-                    );
+                    final isEditingAlbum = context
+                        .select<FetchOnlineLrcFormBloc, bool>(
+                          (bloc) => bloc.state.isEditingAlbum,
+                        );
 
-                    final album = context.select<FetchOnlineLrcFormBloc, String?>(
-                      (bloc) => bloc.state.albumAlt,
-                    );
+                    final album = context
+                        .select<FetchOnlineLrcFormBloc, String?>(
+                          (bloc) => bloc.state.albumAlt,
+                        );
 
                     return isEditingAlbum
                         ? AlbumAltField(album: album)
                         : ListTile(
                             title: const Text('Album'),
                             subtitle: Text(album ?? 'Unknown'),
-                            onTap: () =>
-                                context.read<FetchOnlineLrcFormBloc>().add(const EditFieldRequested(isAlbum: true)),
+                            onTap: () => context
+                                .read<FetchOnlineLrcFormBloc>()
+                                .add(const EditFieldRequested(isAlbum: true)),
                             trailing: const Icon(Icons.edit_outlined),
                           );
                   },
@@ -207,9 +264,11 @@ class FetchOnlineLrcForm extends StatelessWidget {
                   title: const Text('Duration'),
                   subtitle: Builder(
                     builder: (context) {
-                      final millis = context.select<LyricStateListenerBloc, int>(
-                        (bloc) => bloc.state.mediaState?.duration.toInt() ?? 0,
-                      );
+                      final millis = context
+                          .select<LyricStateListenerBloc, int>(
+                            (bloc) =>
+                                bloc.state.mediaState?.duration.toInt() ?? 0,
+                          );
 
                       final duration = Duration(milliseconds: millis);
 
@@ -225,9 +284,13 @@ class FetchOnlineLrcForm extends StatelessWidget {
     );
   }
 
-  bool _coreLyricStateUpdated(LyricStateListenerState previous, LyricStateListenerState current) {
+  bool _coreLyricStateUpdated(
+    LyricStateListenerState previous,
+    LyricStateListenerState current,
+  ) {
     final mediaState = current.mediaState;
-    final isNewSong = previous.mediaState?.title != mediaState?.title ||
+    final isNewSong =
+        previous.mediaState?.title != mediaState?.title ||
         previous.mediaState?.artist != mediaState?.artist ||
         previous.mediaState?.album != mediaState?.album ||
         previous.mediaState?.duration != mediaState?.duration;
@@ -236,10 +299,7 @@ class FetchOnlineLrcForm extends StatelessWidget {
 }
 
 class TitleAltField extends StatefulWidget {
-  const TitleAltField({
-    super.key,
-    this.title,
-  });
+  const TitleAltField({super.key, this.title});
 
   final String? title;
 
@@ -276,12 +336,16 @@ class _TitleAltFieldState extends State<TitleAltField> {
       child: TextFormField(
         controller: _controller,
         autofocus: true,
-        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(SaveTitleAltRequested(value)),
+        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(
+          SaveTitleAltRequested(value),
+        ),
         decoration: InputDecoration(
           labelText: 'Title',
           hintText: 'Title of the song',
           suffixIcon: IconButton(
-            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(SaveTitleAltRequested(_controller.text)),
+            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(
+              SaveTitleAltRequested(_controller.text),
+            ),
             icon: const Icon(Icons.done),
           ),
         ),
@@ -291,10 +355,7 @@ class _TitleAltFieldState extends State<TitleAltField> {
 }
 
 class ArtistAltField extends StatefulWidget {
-  const ArtistAltField({
-    super.key,
-    this.artist,
-  });
+  const ArtistAltField({super.key, this.artist});
 
   final String? artist;
 
@@ -320,7 +381,8 @@ class _ArtistAltFieldState extends State<ArtistAltField> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
-      listenWhen: (previous, current) => previous.artistAlt != current.artistAlt,
+      listenWhen: (previous, current) =>
+          previous.artistAlt != current.artistAlt,
       listener: (context, state) {
         if (state.artistAlt == null) {
           _controller.clear();
@@ -333,12 +395,16 @@ class _ArtistAltFieldState extends State<ArtistAltField> {
       child: TextFormField(
         controller: _controller,
         autofocus: true,
-        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(SaveArtistAltRequested(value)),
+        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(
+          SaveArtistAltRequested(value),
+        ),
         decoration: InputDecoration(
           labelText: 'Artist',
           hintText: 'Artist of the song',
           suffixIcon: IconButton(
-            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(SaveArtistAltRequested(_controller.text)),
+            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(
+              SaveArtistAltRequested(_controller.text),
+            ),
             icon: const Icon(Icons.done),
           ),
         ),
@@ -348,10 +414,7 @@ class _ArtistAltFieldState extends State<ArtistAltField> {
 }
 
 class AlbumAltField extends StatefulWidget {
-  const AlbumAltField({
-    super.key,
-    this.album,
-  });
+  const AlbumAltField({super.key, this.album});
 
   final String? album;
 
@@ -388,12 +451,16 @@ class _AlbumAltFieldState extends State<AlbumAltField> {
       child: TextFormField(
         controller: _controller,
         autofocus: true,
-        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(SaveAlbumAltRequested(value)),
+        onFieldSubmitted: (value) => context.read<FetchOnlineLrcFormBloc>().add(
+          SaveAlbumAltRequested(value),
+        ),
         decoration: InputDecoration(
           labelText: 'Album',
           hintText: 'Album of the song',
           suffixIcon: IconButton(
-            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(SaveAlbumAltRequested(_controller.text)),
+            onPressed: () => context.read<FetchOnlineLrcFormBloc>().add(
+              SaveAlbumAltRequested(_controller.text),
+            ),
             icon: const Icon(Icons.done),
           ),
         ),

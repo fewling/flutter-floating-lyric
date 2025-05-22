@@ -17,17 +17,13 @@ final class LyricStateListenerLoaded extends LyricStateListenerEvent {
 }
 
 final class AutoFetchUpdated extends LyricStateListenerEvent {
-  const AutoFetchUpdated({
-    required this.isAutoFetch,
-  });
+  const AutoFetchUpdated({required this.isAutoFetch});
 
   final bool isAutoFetch;
 }
 
 final class ShowLine2Updated extends LyricStateListenerEvent {
-  const ShowLine2Updated({
-    required this.showLine2,
-  });
+  const ShowLine2Updated({required this.showLine2});
 
   final bool showLine2;
 }
@@ -41,9 +37,7 @@ final class NewLyricSaved extends LyricStateListenerEvent {
 }
 
 final class TolerancePrefUpdated extends LyricStateListenerEvent {
-  const TolerancePrefUpdated({
-    required this.tolerance,
-  });
+  const TolerancePrefUpdated({required this.tolerance});
 
   final int tolerance;
 }

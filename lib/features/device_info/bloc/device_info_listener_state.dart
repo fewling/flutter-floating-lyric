@@ -6,5 +6,6 @@ class DeviceInfoListenerState with _$DeviceInfoListenerState {
     @Default(1.0) double devicePixelRatio,
   }) = _DeviceInfoListenerState;
 
-  factory DeviceInfoListenerState.fromJson(Map<String, dynamic> json) => _$DeviceInfoListenerStateFromJson(json);
+  factory DeviceInfoListenerState.fromJson(Map<String, dynamic> json) =>
+      _$DeviceInfoListenerStateFromJson(json);
 }

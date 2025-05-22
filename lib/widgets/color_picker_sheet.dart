@@ -35,7 +35,9 @@ class ColorPickerSheet extends StatelessWidget {
         Expanded(
           child: GridView.builder(
             itemCount: Colors.primaries.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 100),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 100,
+            ),
             itemBuilder: (_, index) {
               final c = Colors.primaries[index % Colors.primaries.length];
 
@@ -51,7 +53,8 @@ class ColorPickerSheet extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    if (colorValue == c.value) const Positioned.fill(child: Icon(Icons.check))
+                    if (colorValue == c.value)
+                      const Positioned.fill(child: Icon(Icons.check)),
                   ],
                 ),
               );

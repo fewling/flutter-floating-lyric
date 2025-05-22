@@ -19,9 +19,7 @@ class ImportLocalLrc extends StatelessWidget {
         ),
       )..add(const ImportLocalLrcStarted()),
       child: const Scaffold(
-        body: SingleChildScrollView(
-          child: _LrcFormatInstruction(),
-        ),
+        body: SingleChildScrollView(child: _LrcFormatInstruction()),
         floatingActionButton: _ImportFab(),
       ),
     );
@@ -107,16 +105,26 @@ class _ImportFab extends StatelessWidget {
                     builder: (_) => FailedImportDialog(state.failedFiles),
                   );
                 }
-                context.read<LyricStateListenerBloc>().add(const NewLyricSaved());
-                context.read<ImportLocalLrcBloc>().add(const ImportStatusHandled());
+                context.read<LyricStateListenerBloc>().add(
+                  const NewLyricSaved(),
+                );
+                context.read<ImportLocalLrcBloc>().add(
+                  const ImportStatusHandled(),
+                );
             }
           },
         ),
       ],
       child: FloatingActionButton.extended(
-        onPressed: isProcessing ? null : () => context.read<ImportLocalLrcBloc>().add(const ImportLRCsRequested()),
+        onPressed: isProcessing
+            ? null
+            : () => context.read<ImportLocalLrcBloc>().add(
+                const ImportLRCsRequested(),
+              ),
         label: Text(isProcessing ? 'Importing...' : 'Import'),
-        icon: isProcessing ? const CircularProgressIndicator() : const Icon(Icons.drive_folder_upload_outlined),
+        icon: isProcessing
+            ? const CircularProgressIndicator()
+            : const Icon(Icons.drive_folder_upload_outlined),
       ),
     );
   }

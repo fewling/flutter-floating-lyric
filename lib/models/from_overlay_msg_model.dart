@@ -7,21 +7,18 @@ part 'from_overlay_msg_model.g.dart';
 @freezed
 class FromOverlayMsgModel with _$FromOverlayMsgModel {
   const factory FromOverlayMsgModel({
-    @JsonKey(
-      fromJson: _overlayActionFromJson,
-      toJson: _overlayActionToJson,
-    )
+    @JsonKey(fromJson: _overlayActionFromJson, toJson: _overlayActionToJson)
     OverlayAction? action,
   }) = _FromOverlayMsgModel;
 
-  factory FromOverlayMsgModel.fromJson(Map<String, dynamic> json) => _$FromOverlayMsgModelFromJson(json);
+  factory FromOverlayMsgModel.fromJson(Map<String, dynamic> json) =>
+      _$FromOverlayMsgModelFromJson(json);
 }
 
 enum OverlayAction {
   minimize('MINIMIZE'),
   close('CLOSE'),
-  measureScreenWidth('MEASURE_SCREEN_WIDTH'),
-  ;
+  measureScreenWidth('MEASURE_SCREEN_WIDTH');
 
   const OverlayAction(this.key);
 
@@ -29,7 +26,8 @@ enum OverlayAction {
 }
 
 OverlayAction _overlayActionFromJson(String? value) {
-  return OverlayAction.values.firstWhereOrNull((e) => e.key == value) ?? OverlayAction.close;
+  return OverlayAction.values.firstWhereOrNull((e) => e.key == value) ??
+      OverlayAction.close;
 }
 
 String? _overlayActionToJson(OverlayAction? action) => action?.key;

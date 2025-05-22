@@ -20,7 +20,8 @@ class LyricListScreen extends StatelessWidget {
         onSearch: (v) => context.read<LyricListBloc>().add(SearchUpdated(v)),
       ),
       floatingActionButton: BlocListener<LyricListBloc, LyricListState>(
-        listenWhen: (previous, current) => previous.importStatus != current.importStatus,
+        listenWhen: (previous, current) =>
+            previous.importStatus != current.importStatus,
         listener: (context, state) {
           switch (state.importStatus) {
             case LyricListImportStatus.initial:
@@ -29,21 +30,30 @@ class LyricListScreen extends StatelessWidget {
             case LyricListImportStatus.error:
               showDialog(
                 context: context,
-                builder: (context) => FailedImportDialog(state.failedImportFiles),
+                builder: (context) =>
+                    FailedImportDialog(state.failedImportFiles),
               );
               break;
           }
         },
-        child: Builder(builder: (context) {
-          final importing = context.select((LyricListBloc bloc) => bloc.state.importStatus.isImporting);
+        child: Builder(
+          builder: (context) {
+            final importing = context.select(
+              (LyricListBloc bloc) => bloc.state.importStatus.isImporting,
+            );
 
-          return FloatingActionButton(
-            hoverElevation: 16,
-            tooltip: 'Import',
-            onPressed: importing ? null : () => context.read<LyricListBloc>().add(const ImportLRCsRequested()),
-            child: importing ? const LoadingWidget() : const Icon(Icons.add),
-          );
-        }),
+            return FloatingActionButton(
+              hoverElevation: 16,
+              tooltip: 'Import',
+              onPressed: importing
+                  ? null
+                  : () => context.read<LyricListBloc>().add(
+                      const ImportLRCsRequested(),
+                    ),
+              child: importing ? const LoadingWidget() : const Icon(Icons.add),
+            );
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );
@@ -84,7 +94,9 @@ class LyricListScreen extends StatelessWidget {
                 child: const Text('Cancel'),
               ),
               TextButton(
-                onPressed: () => context.read<LyricListBloc>().add(const DeleteAllRequested()),
+                onPressed: () => context.read<LyricListBloc>().add(
+                  const DeleteAllRequested(),
+                ),
                 child: const Text('Delete'),
               ),
             ],
@@ -100,7 +112,9 @@ class LyricListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lyrics = context.select<LyricListBloc, List<LrcDB>>((bloc) => bloc.state.lyrics);
+    final lyrics = context.select<LyricListBloc, List<LrcDB>>(
+      (bloc) => bloc.state.lyrics,
+    );
 
     return lyrics.isEmpty
         ? const Center(child: Text('No lyrics found.'))
@@ -112,10 +126,7 @@ class LyricListView extends StatelessWidget {
                 AppRoute.localLyricDetail.name,
                 pathParameters: {'id': lyrics[index].id.toString()},
               ),
-              onDelete: () => _promptDeleteDialog(
-                context,
-                lyrics[index],
-              ),
+              onDelete: () => _promptDeleteDialog(context, lyrics[index]),
             ),
           );
   }
@@ -126,7 +137,8 @@ class LyricListView extends StatelessWidget {
       builder: (dialogCtx) => BlocProvider.value(
         value: context.read<LyricListBloc>(),
         child: BlocListener<LyricListBloc, LyricListState>(
-          listenWhen: (previous, current) => previous.deleteStatus != current.deleteStatus,
+          listenWhen: (previous, current) =>
+              previous.deleteStatus != current.deleteStatus,
           listener: (context, state) {
             switch (state.deleteStatus) {
               case LyricListDeleteStatus.initial:
@@ -140,9 +152,8 @@ class LyricListView extends StatelessWidget {
                 context.read<LyricListBloc>().add(const DeleteStatusHandled());
                 showDialog(
                   context: context,
-                  builder: (context) => const AlertDialog(
-                    content: Text('Error deleting lyric.'),
-                  ),
+                  builder: (context) =>
+                      const AlertDialog(content: Text('Error deleting lyric.')),
                 );
                 break;
             }
@@ -156,7 +167,8 @@ class LyricListView extends StatelessWidget {
                 child: const Text('Cancel'),
               ),
               TextButton(
-                onPressed: () => context.read<LyricListBloc>().add(DeleteRequested(lrcDB)),
+                onPressed: () =>
+                    context.read<LyricListBloc>().add(DeleteRequested(lrcDB)),
                 child: const Text('Delete'),
               ),
             ],
@@ -168,11 +180,7 @@ class LyricListView extends StatelessWidget {
 }
 
 class _LyricTile extends StatelessWidget {
-  const _LyricTile({
-    this.title,
-    this.onTap,
-    this.onDelete,
-  });
+  const _LyricTile({this.title, this.onTap, this.onDelete});
 
   final String? title;
   final VoidCallback? onTap;
@@ -232,7 +240,9 @@ class _BottomBarState extends State<_BottomBar> {
                     border: InputBorder.none,
                   ),
                 ),
-                crossFadeState: _isSearching ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                crossFadeState: _isSearching
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
                 duration: const Duration(milliseconds: 300),
               ),
             ),

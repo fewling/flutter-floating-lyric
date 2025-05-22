@@ -5,9 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../configs/animation_modes.dart';
 
 class PreferenceRepo {
-  PreferenceRepo({
-    required SharedPreferences sharedPreferences,
-  }) : _sp = sharedPreferences;
+  PreferenceRepo({required SharedPreferences sharedPreferences})
+    : _sp = sharedPreferences;
 
   final SharedPreferences _sp;
 
@@ -33,11 +32,13 @@ class PreferenceRepo {
 
   int get color => _sp.getInt(windowColorKey) ?? Colors.deepPurple.value;
 
-  int get backgroundColor => _sp.getInt(windowBackgroundColorKey) ?? Colors.black.value;
+  int get backgroundColor =>
+      _sp.getInt(windowBackgroundColorKey) ?? Colors.black.value;
 
   bool get isLight => _sp.getBool(brightnessKey) ?? true;
 
-  int get appColorScheme => _sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value;
+  int get appColorScheme =>
+      _sp.getInt(appColorSchemeKey) ?? Colors.deepPurple.value;
 
   bool get showMilliseconds => _sp.getBool(showMillisecondsKey) ?? false;
 
@@ -63,38 +64,52 @@ class PreferenceRepo {
     final mode = _sp.getString(animationModeKey);
     return mode == null
         ? AnimationMode.fadeIn
-        : AnimationMode.values.firstWhereOrNull((e) => e.name == mode) ?? AnimationMode.fadeIn;
+        : AnimationMode.values.firstWhereOrNull((e) => e.name == mode) ??
+              AnimationMode.fadeIn;
   }
 
-  Future<bool> updateOpacity(double value) => _sp.setDouble(windowOpacityKey, value);
+  Future<bool> updateOpacity(double value) =>
+      _sp.setDouble(windowOpacityKey, value);
 
-  Future<bool> updateColor(int colorVal) => _sp.setInt(windowColorKey, colorVal);
+  Future<bool> updateColor(int colorVal) =>
+      _sp.setInt(windowColorKey, colorVal);
 
-  Future<bool> updateBackgroundColor(int colorVal) => _sp.setInt(windowBackgroundColorKey, colorVal);
+  Future<bool> updateBackgroundColor(int colorVal) =>
+      _sp.setInt(windowBackgroundColorKey, colorVal);
 
-  Future<bool> toggleBrightness(bool isLight) => _sp.setBool(brightnessKey, isLight);
+  Future<bool> toggleBrightness(bool isLight) =>
+      _sp.setBool(brightnessKey, isLight);
 
-  Future<bool> updateAppColorScheme(int colorValue) => _sp.setInt(appColorSchemeKey, colorValue);
+  Future<bool> updateAppColorScheme(int colorValue) =>
+      _sp.setInt(appColorSchemeKey, colorValue);
 
-  Future<bool> toggleShowMilliseconds(bool showMillis) => _sp.setBool(showMillisecondsKey, showMillis);
+  Future<bool> toggleShowMilliseconds(bool showMillis) =>
+      _sp.setBool(showMillisecondsKey, showMillis);
 
-  Future<bool> toggleShowProgressBar(bool showProgressBar) => _sp.setBool(showProgressBarKey, showProgressBar);
+  Future<bool> toggleShowProgressBar(bool showProgressBar) =>
+      _sp.setBool(showProgressBarKey, showProgressBar);
 
-  Future<bool> updateFontFamily(String fontFamily) => _sp.setString(fontFamilyKey, fontFamily);
+  Future<bool> updateFontFamily(String fontFamily) =>
+      _sp.setString(fontFamilyKey, fontFamily);
 
-  Future<bool> updateFontSize(int fontSize) => _sp.setInt(fontSizeKey, fontSize);
+  Future<bool> updateFontSize(int fontSize) =>
+      _sp.setInt(fontSizeKey, fontSize);
 
-  Future<bool> toggleAutoFetchOnline(bool value) => _sp.setBool(autoFetchOnlineKey, value);
+  Future<bool> toggleAutoFetchOnline(bool value) =>
+      _sp.setBool(autoFetchOnlineKey, value);
 
   Future<bool> toggleShowLine2(bool value) => _sp.setBool(showLine2Key, value);
 
-  Future<bool> toggleUseAppColor(bool value) => _sp.setBool(useAppColorKey, value);
+  Future<bool> toggleUseAppColor(bool value) =>
+      _sp.setBool(useAppColorKey, value);
 
   Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
 
-  Future<bool> toggleEnableAnimation(bool value) => _sp.setBool(enableAnimationKey, value);
+  Future<bool> toggleEnableAnimation(bool value) =>
+      _sp.setBool(enableAnimationKey, value);
 
   Future<bool> updateTolerance(int value) => _sp.setInt(toleranceKey, value);
 
-  Future<bool> updateAnimationMode(AnimationMode mode) => _sp.setString(animationModeKey, mode.name);
+  Future<bool> updateAnimationMode(AnimationMode mode) =>
+      _sp.setString(animationModeKey, mode.name);
 }

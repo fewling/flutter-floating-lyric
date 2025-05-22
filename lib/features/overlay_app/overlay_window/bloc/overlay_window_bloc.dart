@@ -13,9 +13,9 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   OverlayWindowBloc({
     required ToMainMessageService toMainMessageService,
     required LayoutChannelService layoutChannelService,
-  })  : _toMainMessageService = toMainMessageService,
-        _layoutChannelService = layoutChannelService,
-        super(const OverlayWindowState()) {
+  }) : _toMainMessageService = toMainMessageService,
+       _layoutChannelService = layoutChannelService,
+       super(const OverlayWindowState()) {
     on<OverlayWindowEvent>(
       (event, emit) => switch (event) {
         OverlayWindowStarted() => _onStarted(event, emit),
@@ -31,12 +31,18 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   final ToMainMessageService _toMainMessageService;
   final LayoutChannelService _layoutChannelService;
 
-  void _onStarted(OverlayWindowStarted event, Emitter<OverlayWindowState> emit) {}
+  void _onStarted(
+    OverlayWindowStarted event,
+    Emitter<OverlayWindowState> emit,
+  ) {}
 
-  void _onCloseRequested(CloseRequested event, Emitter<OverlayWindowState> emit) {
-    _toMainMessageService.sendMsg(const FromOverlayMsgModel(
-      action: OverlayAction.close,
-    ));
+  void _onCloseRequested(
+    CloseRequested event,
+    Emitter<OverlayWindowState> emit,
+  ) {
+    _toMainMessageService.sendMsg(
+      const FromOverlayMsgModel(action: OverlayAction.close),
+    );
   }
 
   void _onWindowTapped(WindowTapped event, Emitter<OverlayWindowState> emit) {
@@ -47,7 +53,10 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     _layoutChannelService.setLayout(event.width, event.height);
   }
 
-  Future<void> _onLockToggled(LockToggled event, Emitter<OverlayWindowState> emit) async {
+  Future<void> _onLockToggled(
+    LockToggled event,
+    Emitter<OverlayWindowState> emit,
+  ) async {
     final isSuccess = await _layoutChannelService.toggleLock(event.isLocked);
 
     if (isSuccess != null && isSuccess) {
@@ -55,9 +64,12 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     }
   }
 
-  void _onScreenWidthRequested(ScreenWidthRequested event, Emitter<OverlayWindowState> emit) {
-    _toMainMessageService.sendMsg(const FromOverlayMsgModel(
-      action: OverlayAction.measureScreenWidth,
-    ));
+  void _onScreenWidthRequested(
+    ScreenWidthRequested event,
+    Emitter<OverlayWindowState> emit,
+  ) {
+    _toMainMessageService.sendMsg(
+      const FromOverlayMsgModel(action: OverlayAction.measureScreenWidth),
+    );
   }
 }

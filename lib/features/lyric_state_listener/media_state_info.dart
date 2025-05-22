@@ -39,8 +39,14 @@ class MediaStateInfo extends StatelessWidget {
       children: [
         ListTile(
           leading: const Icon(Icons.radio_outlined),
-          onTap: isPlaying ? null : () => context.read<LyricStateListenerBloc>().add(const StartMusicPlayerRequested()),
-          trailing: isPlaying ? null : const Icon(Icons.arrow_forward_ios_outlined),
+          onTap: isPlaying
+              ? null
+              : () => context.read<LyricStateListenerBloc>().add(
+                  const StartMusicPlayerRequested(),
+                ),
+          trailing: isPlaying
+              ? null
+              : const Icon(Icons.arrow_forward_ios_outlined),
           title: isPlaying
               ? Text.rich(
                   TextSpan(

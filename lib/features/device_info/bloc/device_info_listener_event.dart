@@ -5,9 +5,7 @@ sealed class DeviceInfoListenerEvent {
 }
 
 final class DeviceInfoListenerLoaded extends DeviceInfoListenerEvent {
-  const DeviceInfoListenerLoaded({
-    required this.devicePixelRatio,
-  });
+  const DeviceInfoListenerLoaded({required this.devicePixelRatio});
 
   final double devicePixelRatio;
 }

@@ -27,7 +27,8 @@ class _OverlayAppState extends State<OverlayApp> {
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => OverlayAppBloc()..add(const OverlayAppStarted()),
+            create: (context) =>
+                OverlayAppBloc()..add(const OverlayAppStarted()),
           ),
           BlocProvider(
             create: (context) => OverlayWindowBloc(
@@ -37,11 +38,14 @@ class _OverlayAppState extends State<OverlayApp> {
           ),
           BlocProvider(
             lazy: false,
-            create: (context) => MessageFromMainReceiverBloc()..add(const MessageFromMainReceiverStarted()),
+            create: (context) =>
+                MessageFromMainReceiverBloc()
+                  ..add(const MessageFromMainReceiverStarted()),
           ),
         ],
         child: BlocListener<MessageFromMainReceiverBloc, MessageFromMainReceiverState>(
-          listenWhen: (previous, current) => previous.settings?.ignoreTouch != current.settings?.ignoreTouch,
+          listenWhen: (previous, current) =>
+              previous.settings?.ignoreTouch != current.settings?.ignoreTouch,
           listener: (context, state) {
             final ignore = state.settings?.ignoreTouch;
             if (ignore == null || !ignore) {
@@ -50,79 +54,132 @@ class _OverlayAppState extends State<OverlayApp> {
               context.read<OverlayWindowBloc>().add(const LockToggled(true));
             }
           },
-          child: Builder(builder: (context) {
-            final isMinimized = context.select((OverlayAppBloc b) => b.state.isMinimized);
-            final screenWidth = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width ?? 300.0);
+          child: Builder(
+            builder: (context) {
+              final isMinimized = context.select(
+                (OverlayAppBloc b) => b.state.isMinimized,
+              );
+              final screenWidth = context.select(
+                (MessageFromMainReceiverBloc b) =>
+                    b.state.settings?.width ?? 300.0,
+              );
 
-            _updateSize(rootContext, context, isMinimized, screenWidth);
+              _updateSize(rootContext, context, isMinimized, screenWidth);
 
-            final appColor = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.appColorScheme);
-            final fontFamily = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily);
-            final isLight = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.isLight);
+              final appColor = context.select(
+                (MessageFromMainReceiverBloc b) =>
+                    b.state.settings?.appColorScheme,
+              );
+              final fontFamily = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.fontFamily,
+              );
+              final isLight = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.isLight,
+              );
 
-            // Mark the following to trigger rebuild when these values change
-            final isLyricOnly = context.select((OverlayWindowBloc b) => b.state.isLyricOnly);
-            final line1 = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line1);
-            final line2 = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.line2);
-            final position = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.position);
-            final showBar = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.showProgressBar);
-            final fontSize = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.fontSize);
-            final title = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.title);
+              // Mark the following to trigger rebuild when these values change
+              final isLyricOnly = context.select(
+                (OverlayWindowBloc b) => b.state.isLyricOnly,
+              );
+              final line1 = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.line1,
+              );
+              final line2 = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.line2,
+              );
+              final position = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.position,
+              );
+              final showBar = context.select(
+                (MessageFromMainReceiverBloc b) =>
+                    b.state.settings?.showProgressBar,
+              );
+              final fontSize = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.fontSize,
+              );
+              final title = context.select(
+                (MessageFromMainReceiverBloc b) => b.state.settings?.title,
+              );
 
-            return BlocListener<MessageFromMainReceiverBloc, MessageFromMainReceiverState>(
-              listenWhen: (previous, current) => current.settings?.width == 0,
-              listener: (context, state) => context.read<OverlayWindowBloc>().add(const ScreenWidthRequested()),
-              child: Theme(
-                data: ThemeData(
-                  textTheme: fontFamily == null || fontFamily.isEmpty ? null : GoogleFonts.getTextTheme(fontFamily),
-                  colorSchemeSeed: appColor == null ? null : Color(appColor),
-                  brightness: isLight ?? true ? Brightness.light : Brightness.dark,
-                ),
-                child: isMinimized
-                    ? SizedBox(
-                        height: 64,
-                        width: 64,
-                        child: Material(
-                          color: Color(appColor ?? Colors.purple.value),
-                          shape: const CircleBorder(),
-                          clipBehavior: Clip.antiAlias,
-                          child: InkWell(
-                            onTap: () => context.read<OverlayAppBloc>().add(const MaximizeRequested()),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Image.asset(Assets.launcherIcon.appIcon.path),
+              return BlocListener<
+                MessageFromMainReceiverBloc,
+                MessageFromMainReceiverState
+              >(
+                listenWhen: (previous, current) => current.settings?.width == 0,
+                listener: (context, state) => context
+                    .read<OverlayWindowBloc>()
+                    .add(const ScreenWidthRequested()),
+                child: Theme(
+                  data: ThemeData(
+                    textTheme: fontFamily == null || fontFamily.isEmpty
+                        ? null
+                        : GoogleFonts.getTextTheme(fontFamily),
+                    colorSchemeSeed: appColor == null ? null : Color(appColor),
+                    brightness: isLight ?? true
+                        ? Brightness.light
+                        : Brightness.dark,
+                  ),
+                  child: isMinimized
+                      ? SizedBox(
+                          height: 64,
+                          width: 64,
+                          child: Material(
+                            color: Color(appColor ?? Colors.purple.value),
+                            shape: const CircleBorder(),
+                            clipBehavior: Clip.antiAlias,
+                            child: InkWell(
+                              onTap: () => context.read<OverlayAppBloc>().add(
+                                const MaximizeRequested(),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.asset(
+                                  Assets.launcherIcon.appIcon.path,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : const OverlayWindow(),
-              ),
-            );
-          }),
+                        )
+                      : const OverlayWindow(),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  void _updateSize(BuildContext rootContext, BuildContext blocContext, bool isMinimized, double screenWidth) {
+  void _updateSize(
+    BuildContext rootContext,
+    BuildContext blocContext,
+    bool isMinimized,
+    double screenWidth,
+  ) {
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = rootContext.findRenderObject() as RenderBox?;
       if (box == null) {
         logger.e('Root box is null. Cannot update size.');
-        blocContext.read<OverlayWindowBloc>().add(const WindowResized(width: 50, height: 50));
+        blocContext.read<OverlayWindowBloc>().add(
+          const WindowResized(width: 50, height: 50),
+        );
         return;
       }
 
       final view = View.of(rootContext);
       final pxRatio = view.devicePixelRatio;
 
-      final width = isMinimized ? 64.0 : (screenWidth > 0 ? screenWidth : 300.0);
+      final width = isMinimized
+          ? 64.0
+          : (screenWidth > 0 ? screenWidth : 300.0);
       final height = box.getMaxIntrinsicHeight(width);
 
-      blocContext.read<OverlayWindowBloc>().add(WindowResized(
-            width: (width + 0.3) * pxRatio,
-            height: (height + 6) * pxRatio,
-          ));
+      blocContext.read<OverlayWindowBloc>().add(
+        WindowResized(
+          width: (width + 0.3) * pxRatio,
+          height: (height + 6) * pxRatio,
+        ),
+      );
     });
   }
 }

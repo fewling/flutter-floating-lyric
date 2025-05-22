@@ -30,12 +30,12 @@ class LrcBuilder {
         final match = timeExp.firstMatch(line)!;
         final minutes = int.tryParse(match.group(1)!) ?? 0;
         final seconds = double.tryParse(match.group(2)!) ?? 0;
-        final time = Duration(minutes: minutes, milliseconds: (seconds * 1000).toInt());
+        final time = Duration(
+          minutes: minutes,
+          milliseconds: (seconds * 1000).toInt(),
+        );
         final text = line.replaceAll(timeExp, '').trim();
-        lines.add(LrcLine(
-          time: time,
-          content: text,
-        ));
+        lines.add(LrcLine(time: time, content: text));
       } else if (metadataExp.hasMatch(line)) {
         final match = metadataExp.firstMatch(line)!;
         final key = match.group(1)!;

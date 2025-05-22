@@ -1,8 +1,4 @@
-enum AnimationMode {
-  fadeIn,
-  typer,
-  typeWriter,
-}
+enum AnimationMode { fadeIn, typer, typeWriter }
 
 AnimationMode animationModeFromJson(String str) {
   switch (str) {

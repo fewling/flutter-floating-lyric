@@ -4,6 +4,7 @@ sealed class MessageFromMainReceiverEvent {
   const MessageFromMainReceiverEvent();
 }
 
-final class MessageFromMainReceiverStarted extends MessageFromMainReceiverEvent {
+final class MessageFromMainReceiverStarted
+    extends MessageFromMainReceiverEvent {
   const MessageFromMainReceiverStarted();
 }

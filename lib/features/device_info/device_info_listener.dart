@@ -4,10 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/device_info_listener_bloc.dart';
 
 class DeviceInfoListener extends StatelessWidget {
-  const DeviceInfoListener({
-    super.key,
-    required this.child,
-  });
+  const DeviceInfoListener({super.key, required this.child});
 
   final Widget child;
 
@@ -16,10 +13,9 @@ class DeviceInfoListener extends StatelessWidget {
     final pixelRatio = MediaQuery.of(context).devicePixelRatio;
 
     return BlocProvider(
-      create: (context) => DeviceInfoListenerBloc()
-        ..add(DeviceInfoListenerLoaded(
-          devicePixelRatio: pixelRatio,
-        )),
+      create: (context) =>
+          DeviceInfoListenerBloc()
+            ..add(DeviceInfoListenerLoaded(devicePixelRatio: pixelRatio)),
       child: child,
     );
   }

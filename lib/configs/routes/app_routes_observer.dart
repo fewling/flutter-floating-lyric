@@ -15,11 +15,15 @@ class AppRouteObserver extends NavigatorObserver {
 
   @override
   void didRemove(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    logger.t('❌ AppRouteObserver.didRemove, route.name: ${route.settings.name}');
+    logger.t(
+      '❌ AppRouteObserver.didRemove, route.name: ${route.settings.name}',
+    );
   }
 
   @override
   void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
-    logger.t('🔃 AppRouteObserver.didReplace, route.name: ${oldRoute?.settings.name} ==> ${newRoute?.settings.name}');
+    logger.t(
+      '🔃 AppRouteObserver.didReplace, route.name: ${oldRoute?.settings.name} ==> ${newRoute?.settings.name}',
+    );
   }
 }

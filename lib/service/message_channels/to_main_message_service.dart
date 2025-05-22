@@ -9,7 +9,9 @@ class ToMainMessageService {
   void sendMsg(FromOverlayMsgModel msg) {
     final json = jsonDecode(jsonEncode(msg.toJson()));
 
-    final mainPort = IsolateNameServer.lookupPortByName(MainOverlayPort.mainPortName.key);
+    final mainPort = IsolateNameServer.lookupPortByName(
+      MainOverlayPort.mainPortName.key,
+    );
     if (mainPort == null) {
       logger.e('Main port is null');
     } else {

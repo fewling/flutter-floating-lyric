@@ -27,9 +27,12 @@ class SettingsScreen extends StatelessWidget {
             builder: (context) => ListTile(
               leading: Icon(Icons.brightness_2_outlined, color: primary),
               title: const Text('Use Dark Mode'),
-              onTap: () => context.read<PreferenceBloc>().add(const BrightnessToggled()),
+              onTap: () =>
+                  context.read<PreferenceBloc>().add(const BrightnessToggled()),
               trailing: Switch(
-                onChanged: (_) => context.read<PreferenceBloc>().add(const BrightnessToggled()),
+                onChanged: (_) => context.read<PreferenceBloc>().add(
+                  const BrightnessToggled(),
+                ),
                 value: colorScheme.brightness == Brightness.dark,
               ),
             ),
@@ -43,8 +46,13 @@ class SettingsScreen extends StatelessWidget {
               builder: (modalCtx) => BlocProvider.value(
                 value: context.read<PreferenceBloc>(),
                 child: ColorPickerSheet(
-                  colorValue: context.watch<PreferenceBloc>().state.appColorScheme,
-                  onColorChanged: (color) => context.read<PreferenceBloc>().add(AppColorSchemeUpdated(color)),
+                  colorValue: context
+                      .watch<PreferenceBloc>()
+                      .state
+                      .appColorScheme,
+                  onColorChanged: (color) => context.read<PreferenceBloc>().add(
+                    AppColorSchemeUpdated(color),
+                  ),
                 ),
               ),
             ),
@@ -55,7 +63,9 @@ class SettingsScreen extends StatelessWidget {
               title: const Text('Bug Report/Feature Request'),
               subtitle: const Text('Send us your feedback'),
               trailing: const Icon(Icons.arrow_forward_ios_outlined),
-              onTap: () => context.read<SettingsBloc>().add(const FeedbackEmailClicked()),
+              onTap: () => context.read<SettingsBloc>().add(
+                const FeedbackEmailClicked(),
+              ),
             ),
           ),
           Builder(
@@ -70,9 +80,7 @@ class SettingsScreen extends StatelessWidget {
 
               return Align(
                 alignment: Alignment.centerRight,
-                child: Chip(
-                  label: Text('$version ($buildNumber)'),
-                ),
+                child: Chip(label: Text('$version ($buildNumber)')),
               );
             },
           ),
@@ -89,7 +97,9 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('In some heavy customized Android OS like MIUI, ColorOS, HuaWei: '),
+                  Text(
+                    'In some heavy customized Android OS like MIUI, ColorOS, HuaWei: ',
+                  ),
                   Text('1. Could not retrieve necessary permissions.'),
                   Text('2. Not detecting music app from notification bar.'),
                 ],

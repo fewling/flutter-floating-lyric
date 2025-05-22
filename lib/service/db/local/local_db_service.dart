@@ -4,9 +4,7 @@ import '../../../models/lyric_model.dart';
 import '../../../repos/local/local_db_repo.dart';
 
 class LocalDbService {
-  LocalDbService({
-    required LocalDbRepo localDBRepo,
-  }) : _localDB = localDBRepo;
+  LocalDbService({required LocalDbRepo localDBRepo}) : _localDB = localDBRepo;
 
   final LocalDbRepo _localDB;
 

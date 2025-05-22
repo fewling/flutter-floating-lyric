@@ -15,7 +15,8 @@ class PermissionScreen extends StatefulWidget {
   State<PermissionScreen> createState() => _PermissionScreenState();
 }
 
-class _PermissionScreenState extends State<PermissionScreen> with WidgetsBindingObserver {
+class _PermissionScreenState extends State<PermissionScreen>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -47,7 +48,9 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
       imagePadding: EdgeInsets.zero,
     );
 
-    final fontFamily = context.select((PreferenceBloc bloc) => bloc.state.fontFamily);
+    final fontFamily = context.select(
+      (PreferenceBloc bloc) => bloc.state.fontFamily,
+    );
     return DefaultTextStyle(
       style: GoogleFonts.getFont(fontFamily),
       child: IntroductionScreen(
@@ -57,7 +60,9 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('This app needs to access the music player in the notification bar to work.\n'),
+                const Text(
+                  'This app needs to access the music player in the notification bar to work.\n',
+                ),
                 const Text('1. Grant Access button'),
                 const Text('2. This app'),
                 const Text('3. Turn on "Allow notification access"'),
@@ -65,18 +70,24 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
                 Center(
                   child: SizedBox(
                     width: 150,
-                    child: Builder(builder: (context) {
-                      final isNotificationListenerGranted = context.select<PermissionBloc, bool>(
-                        (bloc) => bloc.state.isNotificationListenerGranted,
-                      );
+                    child: Builder(
+                      builder: (context) {
+                        final isNotificationListenerGranted = context
+                            .select<PermissionBloc, bool>(
+                              (bloc) =>
+                                  bloc.state.isNotificationListenerGranted,
+                            );
 
-                      return ElevatedButton(
-                        onPressed: isNotificationListenerGranted
-                            ? null
-                            : () => context.read<PermissionBloc>().add(const NotificationListenerRequested()),
-                        child: const Text('Grant Access'),
-                      );
-                    }),
+                        return ElevatedButton(
+                          onPressed: isNotificationListenerGranted
+                              ? null
+                              : () => context.read<PermissionBloc>().add(
+                                  const NotificationListenerRequested(),
+                                ),
+                          child: const Text('Grant Access'),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -92,7 +103,9 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('This permission is required to display floating window on top of other apps.\n'),
+                const Text(
+                  'This permission is required to display floating window on top of other apps.\n',
+                ),
                 const Text('1. Grant Access button'),
                 const Text('2. This app'),
                 const Text('3. Turn on "Allow display over other apps"'),
@@ -100,18 +113,23 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
                 Center(
                   child: SizedBox(
                     width: 150,
-                    child: Builder(builder: (context) {
-                      final isSystemAlertWindowGranted = context.select<PermissionBloc, bool>(
-                        (bloc) => bloc.state.isSystemAlertWindowGranted,
-                      );
+                    child: Builder(
+                      builder: (context) {
+                        final isSystemAlertWindowGranted = context
+                            .select<PermissionBloc, bool>(
+                              (bloc) => bloc.state.isSystemAlertWindowGranted,
+                            );
 
-                      return ElevatedButton(
-                        onPressed: isSystemAlertWindowGranted
-                            ? null
-                            : () => context.read<PermissionBloc>().add(const SystemAlertWindowRequested()),
-                        child: const Text('Grant Access'),
-                      );
-                    }),
+                        return ElevatedButton(
+                          onPressed: isSystemAlertWindowGranted
+                              ? null
+                              : () => context.read<PermissionBloc>().add(
+                                  const SystemAlertWindowRequested(),
+                                ),
+                          child: const Text('Grant Access'),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -128,15 +146,22 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
         next: const Icon(Icons.arrow_forward),
         done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
         curve: Curves.fastLinearToSlowEaseIn,
-        controlsPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+        controlsPadding: const EdgeInsets.symmetric(
+          horizontal: 8.0,
+          vertical: 4.0,
+        ),
         dotsDecorator: DotsDecorator(
           size: const Size(10.0, 10.0),
           color: const Color(0xFFBDBDBD),
           activeSize: const Size(22.0, 10.0),
-          activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25.0)),
+          activeShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25.0),
+          ),
         ),
         dotsContainerDecorator: ShapeDecoration(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
         ),
       ),
     );
@@ -156,31 +181,41 @@ class _PermissionScreenState extends State<PermissionScreen> with WidgetsBinding
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Builder(builder: (context) {
-                  final isNotificationListenerGranted = context.select<PermissionBloc, bool>(
-                    (bloc) => bloc.state.isNotificationListenerGranted,
-                  );
-                  return ElevatedButton(
-                    onPressed: isNotificationListenerGranted
-                        ? null
-                        : () => permissionBloc.add(const NotificationListenerRequested()),
-                    child: const Text('Notification Access'),
-                  );
-                }),
-                Builder(builder: (context) {
-                  final isSystemAlertWindowGranted = context.select<PermissionBloc, bool>(
-                    (bloc) => bloc.state.isSystemAlertWindowGranted,
-                  );
+                Builder(
+                  builder: (context) {
+                    final isNotificationListenerGranted = context
+                        .select<PermissionBloc, bool>(
+                          (bloc) => bloc.state.isNotificationListenerGranted,
+                        );
+                    return ElevatedButton(
+                      onPressed: isNotificationListenerGranted
+                          ? null
+                          : () => permissionBloc.add(
+                              const NotificationListenerRequested(),
+                            ),
+                      child: const Text('Notification Access'),
+                    );
+                  },
+                ),
+                Builder(
+                  builder: (context) {
+                    final isSystemAlertWindowGranted = context
+                        .select<PermissionBloc, bool>(
+                          (bloc) => bloc.state.isSystemAlertWindowGranted,
+                        );
 
-                  return ElevatedButton(
-                    onPressed: isSystemAlertWindowGranted
-                        ? null
-                        : () => permissionBloc.add(const SystemAlertWindowRequested()),
-                    child: const Text('Display Window Over Apps'),
-                  );
-                }),
+                    return ElevatedButton(
+                      onPressed: isSystemAlertWindowGranted
+                          ? null
+                          : () => permissionBloc.add(
+                              const SystemAlertWindowRequested(),
+                            ),
+                      child: const Text('Display Window Over Apps'),
+                    );
+                  },
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

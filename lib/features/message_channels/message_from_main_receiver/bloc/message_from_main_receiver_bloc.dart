@@ -14,7 +14,8 @@ part 'message_from_main_receiver_bloc.g.dart';
 part 'message_from_main_receiver_event.dart';
 part 'message_from_main_receiver_state.dart';
 
-class MessageFromMainReceiverBloc extends Bloc<MessageFromMainReceiverEvent, MessageFromMainReceiverState> {
+class MessageFromMainReceiverBloc
+    extends Bloc<MessageFromMainReceiverEvent, MessageFromMainReceiverState> {
   MessageFromMainReceiverBloc() : super(const MessageFromMainReceiverState()) {
     _receivePort = ReceivePort();
 

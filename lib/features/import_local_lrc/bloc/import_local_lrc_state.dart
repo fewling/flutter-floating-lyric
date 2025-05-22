@@ -8,12 +8,7 @@ class ImportLocalLrcState with _$ImportLocalLrcState {
   }) = _ImportLocalLrcState;
 }
 
-enum ImportLocalLrcStatus {
-  initial,
-  processingFiles,
-  failed,
-  success,
-}
+enum ImportLocalLrcStatus { initial, processingFiles, failed, success }
 
 extension ImportLocalLrcStatusX on ImportLocalLrcStatus {
   bool get isInitial => this == ImportLocalLrcStatus.initial;

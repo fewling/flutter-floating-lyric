@@ -9,9 +9,7 @@ import '../../utils/logger.dart';
 import '../../utils/lrc_builder.dart';
 
 class LrcProcessorService {
-  LrcProcessorService({
-    required LocalDbRepo localDB,
-  }) {
+  LrcProcessorService({required LocalDbRepo localDB}) {
     _localDB = localDB;
   }
 
@@ -78,11 +76,13 @@ Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
       final title = lrc.title;
       final artist = lrc.artist;
 
-      lrcDbList.add(LrcDB()
-        ..fileName = fileName
-        ..artist = artist
-        ..title = title
-        ..content = processed);
+      lrcDbList.add(
+        LrcDB()
+          ..fileName = fileName
+          ..artist = artist
+          ..title = title
+          ..content = processed,
+      );
     } catch (e) {
       logger.e('Error processing file $fileName: $e');
       failed.add(item);
@@ -97,7 +97,10 @@ String _sortLrc(String lrc) {
   final newLines = [];
   for (final line in lines) {
     if (line.contains('[') && line.contains(']')) {
-      final timeTags = line.substring(line.indexOf('['), line.lastIndexOf(']') + 1);
+      final timeTags = line.substring(
+        line.indexOf('['),
+        line.lastIndexOf(']') + 1,
+      );
       final text = line.substring(line.lastIndexOf(']') + 1);
       final timeTagList = timeTags.split(']');
       for (final tag in timeTagList) {

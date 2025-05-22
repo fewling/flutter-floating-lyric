@@ -14,18 +14,24 @@ class OverlayWindowSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final visibleFloatingWindow = context.select<OverlayWindowSettingsBloc, bool>(
-      (bloc) => bloc.state.isWindowVisible,
-    );
+    final visibleFloatingWindow = context
+        .select<OverlayWindowSettingsBloc, bool>(
+          (bloc) => bloc.state.isWindowVisible,
+        );
 
-    final useAppColor = context.select((PreferenceBloc b) => b.state.useAppColor);
+    final useAppColor = context.select(
+      (PreferenceBloc b) => b.state.useAppColor,
+    );
     final useCustomColor = !useAppColor;
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () =>
-            context.read<OverlayWindowSettingsBloc>().add(OverlayWindowVisibilityToggled(!visibleFloatingWindow)),
-        icon: visibleFloatingWindow ? const Icon(Icons.hide_source) : const Icon(Icons.play_arrow_outlined),
+        onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
+          OverlayWindowVisibilityToggled(!visibleFloatingWindow),
+        ),
+        icon: visibleFloatingWindow
+            ? const Icon(Icons.hide_source)
+            : const Icon(Icons.play_arrow_outlined),
         label: visibleFloatingWindow ? const Text('Hide') : const Text('Show'),
       ),
       body: SingleChildScrollView(
@@ -37,7 +43,10 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 0,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Styling', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: const Text(
+                  'Styling',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 leading: const Icon(Icons.style_outlined),
                 selected: isExpanded,
               ),
@@ -51,22 +60,28 @@ class OverlayWindowSetting extends StatelessWidget {
                       secondary: const Icon(Icons.palette_outlined),
                       onChanged: !visibleFloatingWindow
                           ? null
-                          : (value) => context.read<PreferenceBloc>().add(WindowColorThemeToggled(value)),
+                          : (value) => context.read<PreferenceBloc>().add(
+                              WindowColorThemeToggled(value),
+                            ),
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,
                       title: const Text('Custom Backgound Color'),
                       leading: const Icon(Icons.color_lens_outlined),
-                      trailing: Builder(builder: (context) {
-                        final color = context.select<PreferenceBloc, int>(
-                          (bloc) => bloc.state.backgroundColor,
-                        );
+                      trailing: Builder(
+                        builder: (context) {
+                          final color = context.select<PreferenceBloc, int>(
+                            (bloc) => bloc.state.backgroundColor,
+                          );
 
-                        return ColoredBox(
-                          color: Color(color).withOpacity(useCustomColor ? 1 : 0.5),
-                          child: const SizedBox(width: 24, height: 24),
-                        );
-                      }),
+                          return ColoredBox(
+                            color: Color(
+                              color,
+                            ).withOpacity(useCustomColor ? 1 : 0.5),
+                            child: const SizedBox(width: 24, height: 24),
+                          );
+                        },
+                      ),
                       onTap: () => showDialog(
                         builder: (dialogCtx) => BlocProvider.value(
                           value: context.read<PreferenceBloc>(),
@@ -75,14 +90,16 @@ class OverlayWindowSetting extends StatelessWidget {
                             content: SingleChildScrollView(
                               child: Builder(
                                 builder: (context) {
-                                  final color = context.select<PreferenceBloc, int>(
-                                    (bloc) => bloc.state.backgroundColor,
-                                  );
+                                  final color = context
+                                      .select<PreferenceBloc, int>(
+                                        (bloc) => bloc.state.backgroundColor,
+                                      );
 
                                   return ColorPicker(
                                     pickerColor: Color(color),
-                                    onColorChanged: (value) =>
-                                        context.read<PreferenceBloc>().add(BackgroundColorUpdated(value)),
+                                    onColorChanged: (value) => context
+                                        .read<PreferenceBloc>()
+                                        .add(BackgroundColorUpdated(value)),
                                     paletteType: PaletteType.hueWheel,
                                     hexInputBar: true,
                                   );
@@ -105,9 +122,10 @@ class OverlayWindowSetting extends StatelessWidget {
                       leading: const Icon(Icons.opacity_outlined),
                       trailing: Builder(
                         builder: (context) {
-                          final opacity = context.select<PreferenceBloc, double>(
-                            (bloc) => bloc.state.opacity,
-                          );
+                          final opacity = context
+                              .select<PreferenceBloc, double>(
+                                (bloc) => bloc.state.opacity,
+                              );
 
                           return Text('${opacity.toInt()}%');
                         },
@@ -125,7 +143,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: opacity,
                           label: '${opacity.toInt()}%',
                           onChanged: visibleFloatingWindow
-                              ? (o) => context.read<PreferenceBloc>().add(OpacityUpdated(o))
+                              ? (o) => context.read<PreferenceBloc>().add(
+                                  OpacityUpdated(o),
+                                )
                               : null,
                         );
                       },
@@ -133,7 +153,11 @@ class OverlayWindowSetting extends StatelessWidget {
                     ListTile(
                       enabled: visibleFloatingWindow,
                       leading: const Icon(Icons.font_download_outlined),
-                      trailing: Builder(builder: (ctx) => Text(ctx.select((PreferenceBloc b) => b.state.fontFamily))),
+                      trailing: Builder(
+                        builder: (ctx) => Text(
+                          ctx.select((PreferenceBloc b) => b.state.fontFamily),
+                        ),
+                      ),
                       title: const Text('Font Family'),
                       onTap: () => context.goNamed(AppRoute.fonts.name),
                     ),
@@ -163,7 +187,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: fontSize.toDouble(),
                           label: '$fontSize%',
                           onChanged: visibleFloatingWindow
-                              ? (value) => context.read<PreferenceBloc>().add(FontSizeUpdated(value.toInt()))
+                              ? (value) => context.read<PreferenceBloc>().add(
+                                  FontSizeUpdated(value.toInt()),
+                                )
                               : null,
                         );
                       },
@@ -172,16 +198,20 @@ class OverlayWindowSetting extends StatelessWidget {
                       enabled: visibleFloatingWindow && useCustomColor,
                       title: const Text('Custom Text Color'),
                       leading: const Icon(Icons.color_lens_outlined),
-                      trailing: Builder(builder: (context) {
-                        final color = context.select<PreferenceBloc, int>(
-                          (bloc) => bloc.state.color,
-                        );
+                      trailing: Builder(
+                        builder: (context) {
+                          final color = context.select<PreferenceBloc, int>(
+                            (bloc) => bloc.state.color,
+                          );
 
-                        return ColoredBox(
-                          color: Color(color).withOpacity(useCustomColor ? 1 : 0.5),
-                          child: const SizedBox(width: 24, height: 24),
-                        );
-                      }),
+                          return ColoredBox(
+                            color: Color(
+                              color,
+                            ).withOpacity(useCustomColor ? 1 : 0.5),
+                            child: const SizedBox(width: 24, height: 24),
+                          );
+                        },
+                      ),
                       onTap: () => showDialog(
                         builder: (dialogCtx) => BlocProvider.value(
                           value: context.read<PreferenceBloc>(),
@@ -190,13 +220,16 @@ class OverlayWindowSetting extends StatelessWidget {
                             content: SingleChildScrollView(
                               child: Builder(
                                 builder: (context) {
-                                  final color = context.select<PreferenceBloc, int>(
-                                    (bloc) => bloc.state.color,
-                                  );
+                                  final color = context
+                                      .select<PreferenceBloc, int>(
+                                        (bloc) => bloc.state.color,
+                                      );
 
                                   return ColorPicker(
                                     pickerColor: Color(color),
-                                    onColorChanged: (value) => context.read<PreferenceBloc>().add(ColorUpdated(value)),
+                                    onColorChanged: (value) => context
+                                        .read<PreferenceBloc>()
+                                        .add(ColorUpdated(value)),
                                     paletteType: PaletteType.hueWheel,
                                     hexInputBar: true,
                                   );
@@ -222,7 +255,10 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 1,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Element Visibilities', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: const Text(
+                  'Element Visibilities',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 leading: const Icon(Icons.visibility_outlined),
                 selected: isExpanded,
               ),
@@ -236,7 +272,11 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showMilliseconds,
                         );
 
-                        final title = Text(showMillis ? 'Show Milliseconds' : 'Hide Milliseconds');
+                        final title = Text(
+                          showMillis
+                              ? 'Show Milliseconds'
+                              : 'Hide Milliseconds',
+                        );
                         const secondary = Icon(Icons.timelapse_outlined);
 
                         return ToggleableSwitchListTile(
@@ -244,7 +284,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: showMillis,
                           title: title,
                           secondary: secondary,
-                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowMillisecondsToggled()),
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(const ShowMillisecondsToggled()),
                         );
                       },
                     ),
@@ -254,7 +296,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showProgressBar,
                         );
 
-                        final title = Text(showBar ? 'Show Progress Bar' : 'Hide Progress Bar');
+                        final title = Text(
+                          showBar ? 'Show Progress Bar' : 'Hide Progress Bar',
+                        );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
                         return ToggleableSwitchListTile(
@@ -262,7 +306,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: showBar,
                           title: title,
                           secondary: secondary,
-                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowProgressBarToggled()),
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(const ShowProgressBarToggled()),
                         );
                       },
                     ),
@@ -272,7 +318,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           (bloc) => bloc.state.showLine2,
                         );
 
-                        final title = Text(showLine2 ? 'Show Line 2' : 'Hide Line 2');
+                        final title = Text(
+                          showLine2 ? 'Show Line 2' : 'Hide Line 2',
+                        );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
                         return ToggleableSwitchListTile(
@@ -280,17 +328,24 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: showLine2,
                           title: title,
                           secondary: secondary,
-                          onChanged: (value) => context.read<PreferenceBloc>().add(const ShowLine2Toggled()),
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(const ShowLine2Toggled()),
                         );
                       },
                     ),
                     Builder(
                       builder: (context) {
-                        final enableAnimation = context.select<PreferenceBloc, bool>(
-                          (bloc) => bloc.state.enableAnimation,
-                        );
+                        final enableAnimation = context
+                            .select<PreferenceBloc, bool>(
+                              (bloc) => bloc.state.enableAnimation,
+                            );
 
-                        final title = Text(enableAnimation ? 'Enable Animation' : 'Disable Animation');
+                        final title = Text(
+                          enableAnimation
+                              ? 'Enable Animation'
+                              : 'Disable Animation',
+                        );
                         const secondary = Icon(Icons.animation_outlined);
 
                         return ToggleableSwitchListTile(
@@ -298,19 +353,23 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: enableAnimation,
                           title: title,
                           secondary: secondary,
-                          onChanged: (value) => context.read<PreferenceBloc>().add(const EnableAnimationToggled()),
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(const EnableAnimationToggled()),
                         );
                       },
                     ),
                     Builder(
                       builder: (context) {
-                        final animationMode = context.select<PreferenceBloc, AnimationMode>(
-                          (bloc) => bloc.state.animationMode,
-                        );
+                        final animationMode = context
+                            .select<PreferenceBloc, AnimationMode>(
+                              (bloc) => bloc.state.animationMode,
+                            );
 
-                        final enableAnimation = context.select<PreferenceBloc, bool>(
-                          (bloc) => bloc.state.enableAnimation,
-                        );
+                        final enableAnimation = context
+                            .select<PreferenceBloc, bool>(
+                              (bloc) => bloc.state.enableAnimation,
+                            );
 
                         return SegmentedButton(
                           selected: {animationMode},
@@ -322,10 +381,13 @@ class OverlayWindowSetting extends StatelessWidget {
                               ),
                           ],
                           showSelectedIcon: false,
-                          onSelectionChanged: !visibleFloatingWindow || !enableAnimation
+                          onSelectionChanged:
+                              !visibleFloatingWindow || !enableAnimation
                               ? null
                               : (Set<AnimationMode> selections) =>
-                                  context.read<PreferenceBloc>().add(AnimationModeUpdated(selections.first)),
+                                    context.read<PreferenceBloc>().add(
+                                      AnimationModeUpdated(selections.first),
+                                    ),
                         );
                       },
                     ),
@@ -342,7 +404,9 @@ class OverlayWindowSetting extends StatelessWidget {
                         },
                       ),
                       title: const Text('Tolerance'),
-                      subtitle: const Text('Increase this to make the lyrics ahead of the song, vice versa.'),
+                      subtitle: const Text(
+                        'Increase this to make the lyrics ahead of the song, vice versa.',
+                      ),
                     ),
                     Builder(
                       builder: (context) {
@@ -356,7 +420,9 @@ class OverlayWindowSetting extends StatelessWidget {
                           value: tolerance.toDouble(),
                           label: '$tolerance',
                           onChanged: visibleFloatingWindow
-                              ? (o) => context.read<PreferenceBloc>().add(ToleranceUpdated(o.toInt()))
+                              ? (o) => context.read<PreferenceBloc>().add(
+                                  ToleranceUpdated(o.toInt()),
+                                )
                               : null,
                         );
                       },
@@ -369,7 +435,10 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 2,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text('Special Settings', style: TextStyle(fontWeight: FontWeight.bold)),
+                title: const Text(
+                  'Special Settings',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 leading: const Icon(Icons.settings_suggest_outlined),
                 selected: isExpanded,
               ),
@@ -377,38 +446,53 @@ class OverlayWindowSetting extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    Builder(builder: (context) {
-                      final isIgnoreTouch = context.select<OverlayWindowSettingsBloc, bool>(
-                        (bloc) => bloc.state.settings.ignoreTouch ?? false,
-                      );
-                      return SwitchListTile(
-                        value: isIgnoreTouch,
-                        title: const Text('Ignore Touch'),
-                        subtitle: const Text(
-                          'Enabling this will lock the window from moving too.\n'
-                          'Disabling this will not unlock it.',
-                        ),
-                        secondary: const Icon(Icons.warning, color: Colors.orange),
-                        onChanged: !visibleFloatingWindow
-                            ? null
-                            : (value) => context.read<OverlayWindowSettingsBloc>().add(WindowIgnoreTouchToggled(value)),
-                      );
-                    }),
                     Builder(
                       builder: (context) {
-                        final isTouchThru = context.select<OverlayWindowSettingsBloc, bool>(
-                          (bloc) => bloc.state.settings.touchThru ?? false,
+                        final isIgnoreTouch = context
+                            .select<OverlayWindowSettingsBloc, bool>(
+                              (bloc) =>
+                                  bloc.state.settings.ignoreTouch ?? false,
+                            );
+                        return SwitchListTile(
+                          value: isIgnoreTouch,
+                          title: const Text('Ignore Touch'),
+                          subtitle: const Text(
+                            'Enabling this will lock the window from moving too.\n'
+                            'Disabling this will not unlock it.',
+                          ),
+                          secondary: const Icon(
+                            Icons.warning,
+                            color: Colors.orange,
+                          ),
+                          onChanged: !visibleFloatingWindow
+                              ? null
+                              : (value) => context
+                                    .read<OverlayWindowSettingsBloc>()
+                                    .add(WindowIgnoreTouchToggled(value)),
                         );
+                      },
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final isTouchThru = context
+                            .select<OverlayWindowSettingsBloc, bool>(
+                              (bloc) => bloc.state.settings.touchThru ?? false,
+                            );
                         return SwitchListTile(
                           value: isTouchThru,
-                          secondary: const Icon(Icons.warning, color: Colors.red),
+                          secondary: const Icon(
+                            Icons.warning,
+                            color: Colors.red,
+                          ),
                           title: const Text('Touch Through'),
                           subtitle: const Text(
                             'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
                             "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
                           ),
                           onChanged: visibleFloatingWindow
-                              ? (value) => context.read<OverlayWindowSettingsBloc>().add(WindowTouchThruToggled(value))
+                              ? (value) => context
+                                    .read<OverlayWindowSettingsBloc>()
+                                    .add(WindowTouchThruToggled(value))
                               : null,
                         );
                       },

@@ -14,9 +14,9 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
   LyricListBloc({
     required LocalDbService localDbService,
     required LrcProcessorService lrcProcessorService,
-  })  : _localDbService = localDbService,
-        _lrcProcessorService = lrcProcessorService,
-        super(const LyricListState()) {
+  }) : _localDbService = localDbService,
+       _lrcProcessorService = lrcProcessorService,
+       super(const LyricListState()) {
     on<LyricListEvent>(
       (event, emit) => switch (event) {
         LyricListLoaded() => _onLyricListLoaded(event, emit),
@@ -32,12 +32,18 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
   final LrcProcessorService _lrcProcessorService;
   final LocalDbService _localDbService;
 
-  Future<void> _onLyricListLoaded(LyricListLoaded event, Emitter<LyricListState> emit) async {
+  Future<void> _onLyricListLoaded(
+    LyricListLoaded event,
+    Emitter<LyricListState> emit,
+  ) async {
     final lyrics = await _localDbService.getAllLyrics();
     emit(state.copyWith(lyrics: lyrics));
   }
 
-  Future<void> _onSearchUpdated(SearchUpdated event, Emitter<LyricListState> emit) async {
+  Future<void> _onSearchUpdated(
+    SearchUpdated event,
+    Emitter<LyricListState> emit,
+  ) async {
     if (event.searchTerm.isEmpty) {
       add(const LyricListLoaded());
       return;
@@ -47,59 +53,72 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     emit(state.copyWith(lyrics: lyrics));
   }
 
-  Future<void> _onDeleteRequested(DeleteRequested event, Emitter<LyricListState> emit) async {
+  Future<void> _onDeleteRequested(
+    DeleteRequested event,
+    Emitter<LyricListState> emit,
+  ) async {
     try {
       await _localDbService.deleteLrc(event.lyric);
 
       final lyrics = state.lyrics.where((l) => l.id != event.lyric.id).toList();
-      emit(state.copyWith(
-        lyrics: lyrics,
-        deleteStatus: LyricListDeleteStatus.deleted,
-      ));
+      emit(
+        state.copyWith(
+          lyrics: lyrics,
+          deleteStatus: LyricListDeleteStatus.deleted,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        deleteStatus: LyricListDeleteStatus.error,
-      ));
+      emit(state.copyWith(deleteStatus: LyricListDeleteStatus.error));
     }
   }
 
-  Future<void> _onDeleteAllRequested(DeleteAllRequested event, Emitter<LyricListState> emit) async {
+  Future<void> _onDeleteAllRequested(
+    DeleteAllRequested event,
+    Emitter<LyricListState> emit,
+  ) async {
     try {
       await _localDbService.deleteAllLyrics();
-      emit(state.copyWith(
-        lyrics: [],
-        deleteStatus: LyricListDeleteStatus.deleted,
-      ));
+      emit(
+        state.copyWith(lyrics: [], deleteStatus: LyricListDeleteStatus.deleted),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        deleteStatus: LyricListDeleteStatus.error,
-      ));
+      emit(state.copyWith(deleteStatus: LyricListDeleteStatus.error));
     }
   }
 
-  Future<void> _onImportLRCsRequested(ImportLRCsRequested event, Emitter<LyricListState> emit) async {
+  Future<void> _onImportLRCsRequested(
+    ImportLRCsRequested event,
+    Emitter<LyricListState> emit,
+  ) async {
     try {
-      emit(state.copyWith(
-        importStatus: LyricListImportStatus.importing,
-      ));
+      emit(state.copyWith(importStatus: LyricListImportStatus.importing));
 
       final failed = await _lrcProcessorService.pickLrcFiles();
 
-      emit(state.copyWith(
-        failedImportFiles: failed,
-        importStatus: failed.isEmpty ? LyricListImportStatus.initial : LyricListImportStatus.error,
-      ));
+      emit(
+        state.copyWith(
+          failedImportFiles: failed,
+          importStatus: failed.isEmpty
+              ? LyricListImportStatus.initial
+              : LyricListImportStatus.error,
+        ),
+      );
     } catch (e) {
-      emit(state.copyWith(
-        importStatus: LyricListImportStatus.error,
-        failedImportFiles: [],
-      ));
+      emit(
+        state.copyWith(
+          importStatus: LyricListImportStatus.error,
+          failedImportFiles: [],
+        ),
+      );
     } finally {
       add(const LyricListLoaded());
     }
   }
 
-  void _onDeleteStatusHandled(DeleteStatusHandled event, Emitter<LyricListState> emit) {
+  void _onDeleteStatusHandled(
+    DeleteStatusHandled event,
+    Emitter<LyricListState> emit,
+  ) {
     emit(state.copyWith(deleteStatus: LyricListDeleteStatus.initial));
   }
 }

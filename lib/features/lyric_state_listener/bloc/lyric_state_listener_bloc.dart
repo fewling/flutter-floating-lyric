@@ -18,15 +18,16 @@ part 'lyric_state_listener_bloc.g.dart';
 part 'lyric_state_listener_event.dart';
 part 'lyric_state_listener_state.dart';
 
-class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateListenerState> {
+class LyricStateListenerBloc
+    extends Bloc<LyricStateListenerEvent, LyricStateListenerState> {
   LyricStateListenerBloc({
     required LocalDbService localDbService,
     required LrcLibRepository lyricRepository,
     required PermissionService permissionService,
-  })  : _localDbService = localDbService,
-        _lyricRepository = lyricRepository,
-        _permissionService = permissionService,
-        super(const LyricStateListenerState()) {
+  }) : _localDbService = localDbService,
+       _lyricRepository = lyricRepository,
+       _permissionService = permissionService,
+       super(const LyricStateListenerState()) {
     on<LyricStateListenerEvent>(
       (event, emit) => switch (event) {
         LyricStateListenerLoaded() => _onLoaded(event, emit),
@@ -47,11 +48,16 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
   // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
 
-  Future<void> _onLoaded(LyricStateListenerLoaded event, Emitter<LyricStateListenerState> emit) async {
-    emit(state.copyWith(
-      isAutoFetch: event.isAutoFetch,
-      showLine2: event.showLine2,
-    ));
+  Future<void> _onLoaded(
+    LyricStateListenerLoaded event,
+    Emitter<LyricStateListenerState> emit,
+  ) async {
+    emit(
+      state.copyWith(
+        isAutoFetch: event.isAutoFetch,
+        showLine2: event.showLine2,
+      ),
+    );
 
     _tolerance = event.tolerance;
 
@@ -69,18 +75,25 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
           final currentLrc = state.currentLrc;
           if (duration <= 0) continue;
 
-          final isNewSong = state.mediaState?.title != title || state.mediaState?.artist != artist;
+          final isNewSong =
+              state.mediaState?.title != title ||
+              state.mediaState?.artist != artist;
 
           if (isNewSong) {
-            emit(state.copyWith(
-              mediaState: mediaState,
-              currentLrc: null,
-              line1: null,
-              line2: null,
-              searchLyricStatus: SearchLyricStatus.initial,
-            ));
+            emit(
+              state.copyWith(
+                mediaState: mediaState,
+                currentLrc: null,
+                line1: null,
+                line2: null,
+                searchLyricStatus: SearchLyricStatus.initial,
+              ),
+            );
 
-            final lrcDB = await _localDbService.getLyricBySongInfo(title, artist);
+            final lrcDB = await _localDbService.getLyricBySongInfo(
+              title,
+              artist,
+            );
             final isLyricFound = lrcDB != null;
 
             logger.t('New song: $title - $artist - $album - $duration');
@@ -88,10 +101,12 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
 
             if (isLyricFound) {
               logger.t('Lyric found in db: ${lrcDB.fileName}');
-              emit(state.copyWith(
-                currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
-                searchLyricStatus: SearchLyricStatus.found,
-              ));
+              emit(
+                state.copyWith(
+                  currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
+                  searchLyricStatus: SearchLyricStatus.found,
+                ),
+              );
 
               break;
             } else if (state.isAutoFetch) {
@@ -106,117 +121,134 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
 
               logger.t('Lyric fetch success: $success');
               if (success) {
-                emit(state.copyWith(
-                  searchLyricStatus: SearchLyricStatus.found,
-                ));
+                emit(
+                  state.copyWith(searchLyricStatus: SearchLyricStatus.found),
+                );
                 break;
               } else {
-                emit(state.copyWith(
-                  searchLyricStatus: SearchLyricStatus.notFound,
-                ));
+                emit(
+                  state.copyWith(searchLyricStatus: SearchLyricStatus.notFound),
+                );
               }
             } else {
-              emit(state.copyWith(
-                searchLyricStatus: SearchLyricStatus.notFound,
-              ));
+              emit(
+                state.copyWith(searchLyricStatus: SearchLyricStatus.notFound),
+              );
             }
           } else if (currentLrc != null) {
             if (currentLrc.lines.isEmpty) {
-              emit(state.copyWith(
-                line1: null,
-                line2: null,
-                searchLyricStatus: SearchLyricStatus.empty,
-                mediaState: state.mediaState?.copyWith(
-                  position: position,
-                  duration: duration,
+              emit(
+                state.copyWith(
+                  line1: null,
+                  line2: null,
+                  searchLyricStatus: SearchLyricStatus.empty,
+                  mediaState: state.mediaState?.copyWith(
+                    position: position,
+                    duration: duration,
+                  ),
                 ),
-              ));
+              );
               break;
             }
 
             if (state.showLine2) {
-              final oddLines = currentLrc.lines.whereIndexed((index, _) => index.isOdd).toList();
-              final evenLines = currentLrc.lines.whereIndexed((index, _) => index.isEven).toList();
+              final oddLines = currentLrc.lines
+                  .whereIndexed((index, _) => index.isOdd)
+                  .toList();
+              final evenLines = currentLrc.lines
+                  .whereIndexed((index, _) => index.isEven)
+                  .toList();
 
               var line1 = state.line1;
               var line2 = state.line2;
 
               for (final line in oddLines.reversed) {
-                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
+                if (position > (line.time.inMilliseconds - _tolerance) ||
+                    line == currentLrc.lines.first) {
                   line2 = line;
                   break;
                 }
               }
 
               for (final line in evenLines.reversed) {
-                if (position > (line.time.inMilliseconds - _tolerance) || line == currentLrc.lines.first) {
+                if (position > (line.time.inMilliseconds - _tolerance) ||
+                    line == currentLrc.lines.first) {
                   line1 = line;
                   break;
                 }
               }
 
-              emit(state.copyWith(
-                line1: line1,
-                line2: line2,
-                mediaState: state.mediaState?.copyWith(
-                  position: position,
-                  duration: duration,
+              emit(
+                state.copyWith(
+                  line1: line1,
+                  line2: line2,
+                  mediaState: state.mediaState?.copyWith(
+                    position: position,
+                    duration: duration,
+                  ),
                 ),
-              ));
+              );
             } else {
               final reversed = currentLrc.lines.reversed.toList();
               for (final line in reversed) {
-                if (position > line.time.inMilliseconds - _tolerance || line == currentLrc.lines.first) {
-                  emit(state.copyWith(
-                    line1: line,
-                    mediaState: state.mediaState?.copyWith(
-                      position: position,
-                      duration: duration,
+                if (position > line.time.inMilliseconds - _tolerance ||
+                    line == currentLrc.lines.first) {
+                  emit(
+                    state.copyWith(
+                      line1: line,
+                      mediaState: state.mediaState?.copyWith(
+                        position: position,
+                        duration: duration,
+                      ),
                     ),
-                  ));
+                  );
                   break;
                 }
               }
             }
           } else if (currentLrc == null) {
-            emit(state.copyWith(
-              line1: null,
-              line2: null,
-              mediaState: state.mediaState?.copyWith(
-                position: position,
-                duration: duration,
+            emit(
+              state.copyWith(
+                line1: null,
+                line2: null,
+                mediaState: state.mediaState?.copyWith(
+                  position: position,
+                  duration: duration,
+                ),
               ),
-            ));
+            );
           }
         }
       },
     );
   }
 
-  void _onAutoFetchUpdated(AutoFetchUpdated event, Emitter<LyricStateListenerState> emit) {
+  void _onAutoFetchUpdated(
+    AutoFetchUpdated event,
+    Emitter<LyricStateListenerState> emit,
+  ) {
     // if no current lrc and auto fetch is enabled, fetch lyric
     if (state.currentLrc == null && event.isAutoFetch) {
-      emit(state.copyWith(
-        isAutoFetch: event.isAutoFetch,
-        mediaState: null,
-        currentLrc: null,
-        line1: null,
-        line2: null,
-        searchLyricStatus: SearchLyricStatus.initial,
-      ));
+      emit(
+        state.copyWith(
+          isAutoFetch: event.isAutoFetch,
+          mediaState: null,
+          currentLrc: null,
+          line1: null,
+          line2: null,
+          searchLyricStatus: SearchLyricStatus.initial,
+        ),
+      );
     } else {
-      emit(state.copyWith(
-        isAutoFetch: event.isAutoFetch,
-      ));
+      emit(state.copyWith(isAutoFetch: event.isAutoFetch));
     }
   }
 
-  void _onShowLine2Updated(ShowLine2Updated event, Emitter<LyricStateListenerState> emit) {
-    emit(state.copyWith(
-      showLine2: event.showLine2,
-      line1: null,
-      line2: null,
-    ));
+  void _onShowLine2Updated(
+    ShowLine2Updated event,
+    Emitter<LyricStateListenerState> emit,
+  ) {
+    emit(state.copyWith(showLine2: event.showLine2, line1: null, line2: null));
   }
 
   Future<bool> _fetchLyric(
@@ -229,13 +261,15 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     if (state.mediaState == null) return false;
 
     try {
-      emit(state.copyWith(
-        isSearchingOnline: true,
-        line1: const LrcLine(
-          time: Duration.zero,
-          content: 'Searching Online...',
+      emit(
+        state.copyWith(
+          isSearchingOnline: true,
+          line1: const LrcLine(
+            time: Duration.zero,
+            content: 'Searching Online...',
+          ),
         ),
-      ));
+      );
 
       final response = await _lyricRepository.getLyric(
         trackName: title,
@@ -255,23 +289,30 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
       if (id < 0) return false;
 
       final lrcDB = await _localDbService.getLyricById(id.toString());
-      emit(state.copyWith(
-        currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
-        searchLyricStatus: SearchLyricStatus.found,
-      ));
+      emit(
+        state.copyWith(
+          currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
+          searchLyricStatus: SearchLyricStatus.found,
+        ),
+      );
 
       return true;
     } catch (e) {
-      emit(state.copyWith(
-        isSearchingOnline: false,
-        searchLyricStatus: SearchLyricStatus.notFound,
-      ));
+      emit(
+        state.copyWith(
+          isSearchingOnline: false,
+          searchLyricStatus: SearchLyricStatus.notFound,
+        ),
+      );
       return false;
     }
   }
 
   Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
-    final content = lrcResponse.syncedLyrics?.toString() ?? lrcResponse.plainLyrics?.toString() ?? '';
+    final content =
+        lrcResponse.syncedLyrics?.toString() ??
+        lrcResponse.plainLyrics?.toString() ??
+        '';
     if (content.isEmpty) return -1;
 
     final id = await _localDbService.saveLrc(
@@ -282,21 +323,32 @@ class LyricStateListenerBloc extends Bloc<LyricStateListenerEvent, LyricStateLis
     return id;
   }
 
-  void _onMusicPlayerRequested(StartMusicPlayerRequested event, Emitter<LyricStateListenerState> emit) {
+  void _onMusicPlayerRequested(
+    StartMusicPlayerRequested event,
+    Emitter<LyricStateListenerState> emit,
+  ) {
     _permissionService.start3rdMusicPlayer();
   }
 
-  void _onNewLyricSaved(NewLyricSaved event, Emitter<LyricStateListenerState> emit) {
-    emit(state.copyWith(
-      mediaState: null,
-      currentLrc: null,
-      line1: null,
-      line2: null,
-      searchLyricStatus: SearchLyricStatus.initial,
-    ));
+  void _onNewLyricSaved(
+    NewLyricSaved event,
+    Emitter<LyricStateListenerState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        mediaState: null,
+        currentLrc: null,
+        line1: null,
+        line2: null,
+        searchLyricStatus: SearchLyricStatus.initial,
+      ),
+    );
   }
 
-  void _onTolerancePrefUpdated(TolerancePrefUpdated event, Emitter<LyricStateListenerState> emit) {
+  void _onTolerancePrefUpdated(
+    TolerancePrefUpdated event,
+    Emitter<LyricStateListenerState> emit,
+  ) {
     _tolerance = event.tolerance;
   }
 }

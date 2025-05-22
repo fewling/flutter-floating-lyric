@@ -18,5 +18,6 @@ class LrcLibResponse with _$LrcLibResponse {
     @Default('') String? syncedLyrics,
   }) = _LrcLibResponse;
 
-  factory LrcLibResponse.fromJson(Map<String, dynamic> json) => _$LrcLibResponseFromJson(json);
+  factory LrcLibResponse.fromJson(Map<String, dynamic> json) =>
+      _$LrcLibResponseFromJson(json);
 }

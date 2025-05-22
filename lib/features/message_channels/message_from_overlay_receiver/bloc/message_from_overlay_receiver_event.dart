@@ -4,7 +4,8 @@ sealed class MessageFromOverlayReceiverEvent {
   const MessageFromOverlayReceiverEvent();
 }
 
-final class MessageFromOverlayReceiverStarted extends MessageFromOverlayReceiverEvent {
+final class MessageFromOverlayReceiverStarted
+    extends MessageFromOverlayReceiverEvent {
   const MessageFromOverlayReceiverStarted();
 }
 

@@ -21,7 +21,9 @@ class _FontSelectState extends State<FontSelect> {
     super.initState();
 
     _scrollController.addListener(() {
-      final isEnd = _scrollController.position.pixels >= _scrollController.position.maxScrollExtent;
+      final isEnd =
+          _scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent;
       final isSearchEmpty = _searchController.text.isEmpty;
       if (isEnd && isSearchEmpty) {
         context.read<FontSelectBloc>().add(const FontSelectLoadMore());
@@ -39,17 +41,18 @@ class _FontSelectState extends State<FontSelect> {
 
   @override
   Widget build(BuildContext context) {
-    final fontStyles = context.select((FontSelectBloc bloc) => bloc.state.filteredFontStyles);
-    final currentFont = context.select((PreferenceBloc bloc) => bloc.state.fontFamily);
+    final fontStyles = context.select(
+      (FontSelectBloc bloc) => bloc.state.filteredFontStyles,
+    );
+    final currentFont = context.select(
+      (PreferenceBloc bloc) => bloc.state.fontFamily,
+    );
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => launchUrl(Uri.parse('https://fonts.google.com/')),
         icon: const Icon(Icons.open_in_new),
-        label: const Text(
-          'Visit Google Fonts',
-          textAlign: TextAlign.center,
-        ),
+        label: const Text('Visit Google Fonts', textAlign: TextAlign.center),
       ),
       body: CustomScrollView(
         controller: _scrollController,
@@ -60,7 +63,8 @@ class _FontSelectState extends State<FontSelect> {
               IconButton(
                 tooltip: 'Reset font family',
                 icon: const Icon(Icons.refresh),
-                onPressed: () => context.read<PreferenceBloc>().add(const FontFamilyReset()),
+                onPressed: () =>
+                    context.read<PreferenceBloc>().add(const FontFamilyReset()),
               ),
             ],
             bottom: PreferredSize(
@@ -70,7 +74,9 @@ class _FontSelectState extends State<FontSelect> {
                 child: SearchBar(
                   hintText: 'Search font',
                   leading: const Icon(Icons.search),
-                  onChanged: (value) => context.read<FontSelectBloc>().add(FontSelectSearchChanged(value)),
+                  onChanged: (value) => context.read<FontSelectBloc>().add(
+                    FontSelectSearchChanged(value),
+                  ),
                 ),
               ),
             ),
@@ -100,7 +106,8 @@ class _FontSelectState extends State<FontSelect> {
                   textStyle?.fontFamily ?? 'Unknown',
                   style: textStyle,
                 ),
-                onTap: () => context.read<PreferenceBloc>().add(FontFamilyUpdated(key)),
+                onTap: () =>
+                    context.read<PreferenceBloc>().add(FontFamilyUpdated(key)),
               );
             },
           ),

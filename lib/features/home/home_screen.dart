@@ -14,24 +14,16 @@ class HomeScreen extends StatelessWidget {
       length: 3,
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(
-            child: MediaStateInfo(),
-          ),
+          SliverToBoxAdapter(child: MediaStateInfo()),
           SliverToBoxAdapter(
             child: TabBar(
               tabs: [
-                Tab(
-                  text: 'Window Configs',
-                  icon: Icon(Icons.window_outlined),
-                ),
+                Tab(text: 'Window Configs', icon: Icon(Icons.window_outlined)),
                 Tab(
                   text: 'Import Lyrics',
                   icon: Icon(Icons.folder_copy_outlined),
                 ),
-                Tab(
-                  text: 'Online Lyrics',
-                  icon: Icon(Icons.cloud_outlined),
-                ),
+                Tab(text: 'Online Lyrics', icon: Icon(Icons.cloud_outlined)),
               ],
             ),
           ),

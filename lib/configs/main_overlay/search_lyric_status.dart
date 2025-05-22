@@ -1,10 +1,4 @@
-enum SearchLyricStatus {
-  initial,
-  empty,
-  searching,
-  found,
-  notFound,
-}
+enum SearchLyricStatus { initial, empty, searching, found, notFound }
 
 extension SearchLyricStatusX on SearchLyricStatus {
   bool get isInitial => this == SearchLyricStatus.initial;

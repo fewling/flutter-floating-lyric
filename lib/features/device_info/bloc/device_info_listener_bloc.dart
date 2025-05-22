@@ -6,7 +6,8 @@ part 'device_info_listener_bloc.g.dart';
 part 'device_info_listener_event.dart';
 part 'device_info_listener_state.dart';
 
-class DeviceInfoListenerBloc extends Bloc<DeviceInfoListenerEvent, DeviceInfoListenerState> {
+class DeviceInfoListenerBloc
+    extends Bloc<DeviceInfoListenerEvent, DeviceInfoListenerState> {
   DeviceInfoListenerBloc() : super(const DeviceInfoListenerState()) {
     on<DeviceInfoListenerEvent>(
       (event, emit) => switch (event) {
@@ -15,9 +16,10 @@ class DeviceInfoListenerBloc extends Bloc<DeviceInfoListenerEvent, DeviceInfoLis
     );
   }
 
-  void _onLoaded(DeviceInfoListenerLoaded event, Emitter<DeviceInfoListenerState> emit) {
-    emit(state.copyWith(
-      devicePixelRatio: event.devicePixelRatio,
-    ));
+  void _onLoaded(
+    DeviceInfoListenerLoaded event,
+    Emitter<DeviceInfoListenerState> emit,
+  ) {
+    emit(state.copyWith(devicePixelRatio: event.devicePixelRatio));
   }
 }

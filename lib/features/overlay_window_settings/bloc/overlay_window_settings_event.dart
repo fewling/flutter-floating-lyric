@@ -17,17 +17,13 @@ final class OverlayWindowSettingsLoaded extends OverlayWindowSettingsEvent {
 }
 
 final class PreferenceUpdated extends OverlayWindowSettingsEvent {
-  const PreferenceUpdated({
-    required this.preferenceState,
-  });
+  const PreferenceUpdated({required this.preferenceState});
 
   final PreferenceState preferenceState;
 }
 
 final class LyricStateListenerUpdated extends OverlayWindowSettingsEvent {
-  const LyricStateListenerUpdated({
-    required this.lyricStateListenerState,
-  });
+  const LyricStateListenerUpdated({required this.lyricStateListenerState});
 
   final LyricStateListenerState lyricStateListenerState;
 }
@@ -48,4 +44,8 @@ final class WindowTouchThruToggled extends OverlayWindowSettingsEvent {
   const WindowTouchThruToggled(this.isTouchThru);
 
   final bool isTouchThru;
+}
+
+final class ToggleNotiListenerSettings extends OverlayWindowSettingsEvent {
+  const ToggleNotiListenerSettings();
 }

@@ -40,12 +40,8 @@ class GlobalDependencyInjector extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => LocalDbRepo(isar),
-        ),
-        RepositoryProvider(
-          create: (context) => LrcLibRepository(),
-        ),
+        RepositoryProvider(create: (context) => LocalDbRepo(isar)),
+        RepositoryProvider(create: (context) => LrcLibRepository()),
         RepositoryProvider(
           create: (context) => PreferenceRepo(sharedPreferences: pref),
         ),
@@ -55,46 +51,59 @@ class GlobalDependencyInjector extends StatelessWidget {
           BlocProvider.value(value: permissionBloc),
           BlocProvider(
             lazy: false,
-            create: (context) => MessageFromOverlayReceiverBloc()..add(const MessageFromOverlayReceiverStarted()),
+            create: (context) =>
+                MessageFromOverlayReceiverBloc()
+                  ..add(const MessageFromOverlayReceiverStarted()),
           ),
           BlocProvider(
             create: (context) => PreferenceBloc(
-              spService: PreferenceService(spRepo: context.read<PreferenceRepo>()),
+              spService: PreferenceService(
+                spRepo: context.read<PreferenceRepo>(),
+              ),
             )..add(const PreferenceEventLoad()),
           ),
           BlocProvider(
             create: (context) => AppInfoBloc()..add(const AppInfoLoaded()),
           ),
           BlocProvider(
-            create: (context) => LyricStateListenerBloc(
-              localDbService: LocalDbService(
-                localDBRepo: context.read<LocalDbRepo>(),
-              ),
-              lyricRepository: context.read<LrcLibRepository>(),
-              permissionService: PermissionService(),
-            )..add(LyricStateListenerLoaded(
-                isAutoFetch: context.read<PreferenceBloc>().state.autoFetchOnline,
-                showLine2: context.read<PreferenceBloc>().state.showLine2,
-                tolerance: context.read<PreferenceBloc>().state.tolerance,
-              )),
+            create: (context) =>
+                LyricStateListenerBloc(
+                  localDbService: LocalDbService(
+                    localDBRepo: context.read<LocalDbRepo>(),
+                  ),
+                  lyricRepository: context.read<LrcLibRepository>(),
+                  permissionService: PermissionService(),
+                )..add(
+                  LyricStateListenerLoaded(
+                    isAutoFetch: context
+                        .read<PreferenceBloc>()
+                        .state
+                        .autoFetchOnline,
+                    showLine2: context.read<PreferenceBloc>().state.showLine2,
+                    tolerance: context.read<PreferenceBloc>().state.tolerance,
+                  ),
+                ),
           ),
           BlocProvider(
-            create: (context) => OverlayWindowSettingsBloc(
-              toOverlayMessageService: ToOverlayMessageService(),
-              windowChannelService: WindowChannelService(),
-            )..add(OverlayWindowSettingsLoaded(
-                lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
-                preferenceState: context.read<PreferenceBloc>().state,
-                screenWidth: screenWidth,
-              )),
+            create: (context) =>
+                OverlayWindowSettingsBloc(
+                  toOverlayMessageService: ToOverlayMessageService(),
+                  windowChannelService: WindowChannelService(),
+                )..add(
+                  OverlayWindowSettingsLoaded(
+                    lyricStateListenerState: context
+                        .read<LyricStateListenerBloc>()
+                        .state,
+                    preferenceState: context.read<PreferenceBloc>().state,
+                    screenWidth: screenWidth,
+                  ),
+                ),
           ),
         ],
         child: PreferenceStateListener(
           child: LyricStateListener(
             child: MsgFromOverlayListener(
-              child: OverlaySettingListener(
-                child: child,
-              ),
+              child: OverlaySettingListener(child: child),
             ),
           ),
         ),
@@ -104,10 +113,7 @@ class GlobalDependencyInjector extends StatelessWidget {
 }
 
 class PreferenceStateListener extends StatelessWidget {
-  const PreferenceStateListener({
-    super.key,
-    required this.child,
-  });
+  const PreferenceStateListener({super.key, required this.child});
 
   final Widget child;
 
@@ -116,27 +122,30 @@ class PreferenceStateListener extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<PreferenceBloc, PreferenceState>(
-          listenWhen: (previous, current) => previous.autoFetchOnline != current.autoFetchOnline,
-          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
-                AutoFetchUpdated(isAutoFetch: state.autoFetchOnline),
-              ),
+          listenWhen: (previous, current) =>
+              previous.autoFetchOnline != current.autoFetchOnline,
+          listener: (context, state) => context
+              .read<LyricStateListenerBloc>()
+              .add(AutoFetchUpdated(isAutoFetch: state.autoFetchOnline)),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
-          listenWhen: (previous, current) => previous.showLine2 != current.showLine2,
-          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
-                ShowLine2Updated(showLine2: state.showLine2),
-              ),
+          listenWhen: (previous, current) =>
+              previous.showLine2 != current.showLine2,
+          listener: (context, state) => context
+              .read<LyricStateListenerBloc>()
+              .add(ShowLine2Updated(showLine2: state.showLine2)),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
-          listenWhen: (previous, current) => previous.tolerance != current.tolerance,
-          listener: (context, state) => context.read<LyricStateListenerBloc>().add(
-                TolerancePrefUpdated(tolerance: state.tolerance),
-              ),
+          listenWhen: (previous, current) =>
+              previous.tolerance != current.tolerance,
+          listener: (context, state) => context
+              .read<LyricStateListenerBloc>()
+              .add(TolerancePrefUpdated(tolerance: state.tolerance)),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
-          listener: (context, state) => context.read<OverlayWindowSettingsBloc>().add(
-                PreferenceUpdated(preferenceState: state),
-              ),
+          listener: (context, state) => context
+              .read<OverlayWindowSettingsBloc>()
+              .add(PreferenceUpdated(preferenceState: state)),
         ),
       ],
       child: child,
@@ -145,10 +154,7 @@ class PreferenceStateListener extends StatelessWidget {
 }
 
 class LyricStateListener extends StatelessWidget {
-  const LyricStateListener({
-    super.key,
-    required this.child,
-  });
+  const LyricStateListener({super.key, required this.child});
 
   final Widget child;
 
@@ -157,8 +163,9 @@ class LyricStateListener extends StatelessWidget {
     return MultiBlocListener(
       listeners: [
         BlocListener<LyricStateListenerBloc, LyricStateListenerState>(
-          listener: (context, state) =>
-              context.read<OverlayWindowSettingsBloc>().add(LyricStateListenerUpdated(lyricStateListenerState: state)),
+          listener: (context, state) => context
+              .read<OverlayWindowSettingsBloc>()
+              .add(LyricStateListenerUpdated(lyricStateListenerState: state)),
         ),
       ],
       child: child,
@@ -167,35 +174,41 @@ class LyricStateListener extends StatelessWidget {
 }
 
 class MsgFromOverlayListener extends StatelessWidget {
-  const MsgFromOverlayListener({
-    super.key,
-    required this.child,
-  });
+  const MsgFromOverlayListener({super.key, required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MessageFromOverlayReceiverBloc, MessageFromOverlayReceiverState>(
+    return BlocListener<
+      MessageFromOverlayReceiverBloc,
+      MessageFromOverlayReceiverState
+    >(
       listener: (context, state) {
         logger.d('MessageFromOverlayReceiverBloc: $state');
         if (state.msg == null) return;
 
         if (state.msg?.action?.isClose ?? false) {
-          context.read<OverlayWindowSettingsBloc>().add(const OverlayWindowVisibilityToggled(false));
+          context.read<OverlayWindowSettingsBloc>().add(
+            const OverlayWindowVisibilityToggled(false),
+          );
         }
 
         if (state.msg?.action?.isMeasureScreenWidth ?? false) {
           context.read<OverlayWindowSettingsBloc>().add(
-                OverlayWindowSettingsLoaded(
-                  lyricStateListenerState: context.read<LyricStateListenerBloc>().state,
-                  preferenceState: context.read<PreferenceBloc>().state,
-                  screenWidth: MediaQuery.sizeOf(context).width,
-                ),
-              );
+            OverlayWindowSettingsLoaded(
+              lyricStateListenerState: context
+                  .read<LyricStateListenerBloc>()
+                  .state,
+              preferenceState: context.read<PreferenceBloc>().state,
+              screenWidth: MediaQuery.sizeOf(context).width,
+            ),
+          );
         }
 
-        context.read<MessageFromOverlayReceiverBloc>().add(const MsgOverlayHandled());
+        context.read<MessageFromOverlayReceiverBloc>().add(
+          const MsgOverlayHandled(),
+        );
       },
       child: child,
     );
@@ -203,17 +216,15 @@ class MsgFromOverlayListener extends StatelessWidget {
 }
 
 class OverlaySettingListener extends StatelessWidget {
-  const OverlaySettingListener({
-    super.key,
-    required this.child,
-  });
+  const OverlaySettingListener({super.key, required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
-      listenWhen: (previous, current) => previous.isWindowVisible != current.isWindowVisible,
+      listenWhen: (previous, current) =>
+          previous.isWindowVisible != current.isWindowVisible,
       listener: (context, state) {
         logger.w('isWindowVisible: ${state.isWindowVisible}');
       },

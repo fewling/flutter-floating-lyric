@@ -17,7 +17,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
   }
 
-  Future<void> _onFeedbackEmailClicked(FeedbackEmailClicked event, Emitter<SettingsState> emit) async {
+  Future<void> _onFeedbackEmailClicked(
+    FeedbackEmailClicked event,
+    Emitter<SettingsState> emit,
+  ) async {
     final packageInfo = await PackageInfo.fromPlatform();
 
     final version = packageInfo.version;
@@ -26,7 +29,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     final deviceInfoPlugin = DeviceInfoPlugin();
     final androidInfo = await deviceInfoPlugin.androidInfo;
 
-    final body = '''
+    final body =
+        '''
 # FeedBack/Feature Request:
 Please provide information about the feedback or feature request you would like to share here... (if any)
 
@@ -66,15 +70,17 @@ Tags: ${androidInfo.tags}
       path: 'floatinglyricsapp@gmail.com',
 
       // TODO(@fewling): Include the followings:
-      query: _encodeQueryParameters({
-        'subject': 'Feedback',
-        'body': body,
-      }),
+      query: _encodeQueryParameters({'subject': 'Feedback', 'body': body}),
     );
     launchUrl(uri);
   }
 
   String? _encodeQueryParameters(Map<String, String> params) {
-    return params.entries.map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}').join('&');
+    return params.entries
+        .map(
+          (e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
   }
 }

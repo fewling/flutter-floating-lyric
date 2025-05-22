@@ -15,12 +15,17 @@ class AppInfoBloc extends Bloc<AppInfoEvent, AppInfoState> {
     );
   }
 
-  Future<void> _onLoaded(AppInfoLoaded event, Emitter<AppInfoState> emit) async {
+  Future<void> _onLoaded(
+    AppInfoLoaded event,
+    Emitter<AppInfoState> emit,
+  ) async {
     final packageInfo = await PackageInfo.fromPlatform();
 
-    emit(state.copyWith(
-      version: packageInfo.version,
-      buildNumber: packageInfo.buildNumber,
-    ));
+    emit(
+      state.copyWith(
+        version: packageInfo.version,
+        buildNumber: packageInfo.buildNumber,
+      ),
+    );
   }
 }

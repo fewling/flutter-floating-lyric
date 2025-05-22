@@ -13,10 +13,7 @@ final class CloseRequested extends OverlayWindowEvent {
 }
 
 final class WindowResized extends OverlayWindowEvent {
-  const WindowResized({
-    required this.width,
-    required this.height,
-  });
+  const WindowResized({required this.width, required this.height});
 
   final double width;
   final double height;

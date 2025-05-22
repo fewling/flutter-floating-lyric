@@ -20,4 +20,8 @@ class WindowChannelService {
       'isTouchThru': isTouchThru,
     });
   }
+
+  Future<bool?> toggleNotiListenerSettings() {
+    return _channel.invokeMethod<bool>('toggleNotiListenerSettings');
+  }
 }

@@ -13,21 +13,29 @@ part 'overlay_window_settings_bloc.g.dart';
 part 'overlay_window_settings_event.dart';
 part 'overlay_window_settings_state.dart';
 
-class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, OverlayWindowSettingsState> {
+class OverlayWindowSettingsBloc
+    extends Bloc<OverlayWindowSettingsEvent, OverlayWindowSettingsState> {
   OverlayWindowSettingsBloc({
     required ToOverlayMessageService toOverlayMessageService,
     required WindowChannelService windowChannelService,
-  })  : _toOverlayMessageService = toOverlayMessageService,
-        _windowChannelService = windowChannelService,
-        super(const OverlayWindowSettingsState()) {
+  }) : _toOverlayMessageService = toOverlayMessageService,
+       _windowChannelService = windowChannelService,
+       super(const OverlayWindowSettingsState()) {
     on<OverlayWindowSettingsEvent>(
       (event, emit) => switch (event) {
         OverlayWindowSettingsLoaded() => _onLoaded(event, emit),
         PreferenceUpdated() => _onPreferenceUpdated(event, emit),
-        LyricStateListenerUpdated() => _onLyricStateListenerUpdated(event, emit),
+        LyricStateListenerUpdated() => _onLyricStateListenerUpdated(
+          event,
+          emit,
+        ),
         OverlayWindowVisibilityToggled() => _onVisibilityToggled(event, emit),
         WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
         WindowTouchThruToggled() => _onTouchThruToggled(event, emit),
+        ToggleNotiListenerSettings() => _onToggleNotiListenerSettings(
+          event,
+          emit,
+        ),
       },
     );
   }
@@ -35,7 +43,10 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
   final ToOverlayMessageService _toOverlayMessageService;
   final WindowChannelService _windowChannelService;
 
-  Future<void> _onLoaded(OverlayWindowSettingsLoaded event, Emitter<OverlayWindowSettingsState> emit) async {
+  Future<void> _onLoaded(
+    OverlayWindowSettingsLoaded event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) async {
     final pref = event.preferenceState;
     final lyric = event.lyricStateListenerState;
 
@@ -75,10 +86,15 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
+    _toOverlayMessageService.sendMsg(
+      ToOverlayMsgModel(settings: newState.settings),
+    );
   }
 
-  void _onPreferenceUpdated(PreferenceUpdated event, Emitter<OverlayWindowSettingsState> emit) {
+  void _onPreferenceUpdated(
+    PreferenceUpdated event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) {
     final pref = event.preferenceState;
 
     final newState = state.copyWith(
@@ -100,10 +116,15 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
+    _toOverlayMessageService.sendMsg(
+      ToOverlayMsgModel(settings: newState.settings),
+    );
   }
 
-  void _onLyricStateListenerUpdated(LyricStateListenerUpdated event, Emitter<OverlayWindowSettingsState> emit) {
+  void _onLyricStateListenerUpdated(
+    LyricStateListenerUpdated event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) {
     final lyric = event.lyricStateListenerState;
 
     final title = '${lyric.mediaState?.title} - ${lyric.mediaState?.artist}';
@@ -120,45 +141,58 @@ class OverlayWindowSettingsBloc extends Bloc<OverlayWindowSettingsEvent, Overlay
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(settings: newState.settings));
+    _toOverlayMessageService.sendMsg(
+      ToOverlayMsgModel(settings: newState.settings),
+    );
   }
 
   Future<void> _onVisibilityToggled(
     OverlayWindowVisibilityToggled ev,
     Emitter<OverlayWindowSettingsState> emit,
   ) async {
-    final isSuccess = ev.shouldVisible ? await _windowChannelService.show() : await _windowChannelService.hide();
+    final isSuccess = ev.shouldVisible
+        ? await _windowChannelService.show()
+        : await _windowChannelService.hide();
 
     if (isSuccess != null && isSuccess) {
-      emit(state.copyWith(
-        isWindowVisible: ev.shouldVisible,
-      ));
+      emit(state.copyWith(isWindowVisible: ev.shouldVisible));
     }
   }
 
-  Future<void> _onIgnoreTouchToggled(WindowIgnoreTouchToggled event, Emitter<OverlayWindowSettingsState> emit) async {
+  Future<void> _onIgnoreTouchToggled(
+    WindowIgnoreTouchToggled event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) async {
     final newState = state.copyWith(
-      settings: state.settings.copyWith(
-        ignoreTouch: event.isIgnored,
-      ),
+      settings: state.settings.copyWith(ignoreTouch: event.isIgnored),
     );
     emit(newState);
 
-    _toOverlayMessageService.sendMsg(ToOverlayMsgModel(
-      settings: newState.settings,
-    ));
+    _toOverlayMessageService.sendMsg(
+      ToOverlayMsgModel(settings: newState.settings),
+    );
   }
 
-  Future<void> _onTouchThruToggled(WindowTouchThruToggled event, Emitter<OverlayWindowSettingsState> emit) async {
+  Future<void> _onTouchThruToggled(
+    WindowTouchThruToggled event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) async {
     final newState = state.copyWith(
-      settings: state.settings.copyWith(
-        touchThru: event.isTouchThru,
-      ),
+      settings: state.settings.copyWith(touchThru: event.isTouchThru),
     );
 
-    final isSuccessful = await _windowChannelService.setTouchThru(event.isTouchThru);
+    final isSuccessful = await _windowChannelService.setTouchThru(
+      event.isTouchThru,
+    );
     if (isSuccessful != null && isSuccessful) {
       emit(newState);
     }
+  }
+
+  void _onToggleNotiListenerSettings(
+    ToggleNotiListenerSettings event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) {
+    _windowChannelService.toggleNotiListenerSettings();
   }
 }

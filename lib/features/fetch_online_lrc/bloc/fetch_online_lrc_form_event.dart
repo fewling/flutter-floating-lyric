@@ -19,12 +19,7 @@ final class FetchOnlineLrcFormStarted extends FetchOnlineLrcFormEvent {
 }
 
 final class NewSongPlayed extends FetchOnlineLrcFormEvent {
-  const NewSongPlayed({
-    this.title,
-    this.artist,
-    this.album,
-    this.duration,
-  });
+  const NewSongPlayed({this.title, this.artist, this.album, this.duration});
 
   final String? title;
   final String? artist;

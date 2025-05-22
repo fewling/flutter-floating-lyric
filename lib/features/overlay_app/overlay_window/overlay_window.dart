@@ -11,11 +11,7 @@ import '../bloc/overlay_app_bloc.dart';
 import 'bloc/overlay_window_bloc.dart';
 
 class OverlayWindow extends StatelessWidget {
-  const OverlayWindow({
-    super.key,
-    this.debugText,
-    this.isLoading = false,
-  });
+  const OverlayWindow({super.key, this.debugText, this.isLoading = false});
 
   final String? debugText;
   final bool isLoading;
@@ -33,9 +29,15 @@ class OverlayWindow extends StatelessWidget {
 
     final useAppColor = settings.useAppColor;
     final opacity = (settings.opacity ?? 50) / 100;
-    final textColor = (useAppColor ? foregroundColor : Color(settings.color ?? Colors.white.value));
-    final width = context.select((MessageFromMainReceiverBloc b) => b.state.settings?.width);
-    final isLyricOnly = context.select((OverlayWindowBloc b) => b.state.isLyricOnly);
+    final textColor = (useAppColor
+        ? foregroundColor
+        : Color(settings.color ?? Colors.white.value));
+    final width = context.select(
+      (MessageFromMainReceiverBloc b) => b.state.settings?.width,
+    );
+    final isLyricOnly = context.select(
+      (OverlayWindowBloc b) => b.state.isLyricOnly,
+    );
 
     return SizedBox(
       width: width,
@@ -50,11 +52,14 @@ class OverlayWindow extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               color: useAppColor
                   ? colorScheme.primaryContainer.withOpacity(opacity)
-                  : Color(settings.backgroundColor ?? Colors.black.value).withOpacity(opacity),
+                  : Color(
+                      settings.backgroundColor ?? Colors.black.value,
+                    ).withOpacity(opacity),
             ),
             margin: EdgeInsets.zero,
             child: InkWell(
-              onTap: () => context.read<OverlayWindowBloc>().add(const WindowTapped()),
+              onTap: () =>
+                  context.read<OverlayWindowBloc>().add(const WindowTapped()),
               borderRadius: BorderRadius.circular(8),
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
@@ -67,14 +72,8 @@ class OverlayWindow extends StatelessWidget {
                         style: TextStyle(color: colorScheme.onPrimaryContainer),
                       ),
                     if (!isLyricOnly)
-                      OverlayHeader(
-                        settings: settings,
-                        textColor: textColor,
-                      ),
-                    OverlayContent(
-                      settings: settings,
-                      textColor: textColor,
-                    ),
+                      OverlayHeader(settings: settings, textColor: textColor),
+                    OverlayContent(settings: settings, textColor: textColor),
                     if (!isLyricOnly || (settings.showProgressBar ?? false))
                       OverlayProgressBar(
                         settings: settings,
@@ -106,7 +105,8 @@ class OverlayContent extends StatelessWidget {
     final line1Pos = settings.line1?.time;
     final line2Pos = settings.line2?.time;
 
-    final line1IsFurther = (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
+    final line1IsFurther =
+        (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
     final status = settings.searchLyricStatus;
     final showLine2 = settings.showLine2 ?? false;
@@ -116,24 +116,15 @@ class OverlayContent extends StatelessWidget {
     switch (status) {
       case SearchLyricStatus.empty:
         return Center(
-          child: Text(
-            'No lyric',
-            style: TextStyle(color: textColor),
-          ),
+          child: Text('No lyric', style: TextStyle(color: textColor)),
         );
       case SearchLyricStatus.searching:
         return Center(
-          child: Text(
-            'Searching lyric...',
-            style: TextStyle(color: textColor),
-          ),
+          child: Text('Searching lyric...', style: TextStyle(color: textColor)),
         );
       case SearchLyricStatus.notFound:
         return Center(
-          child: Text(
-            'Lyric not found',
-            style: TextStyle(color: textColor),
-          ),
+          child: Text('Lyric not found', style: TextStyle(color: textColor)),
         );
       case SearchLyricStatus.initial:
       case SearchLyricStatus.found:
@@ -156,7 +147,9 @@ class OverlayContent extends StatelessWidget {
                       style: TextStyle(
                         color: textColor,
                         fontSize: settings.fontSize,
-                        fontWeight: line1IsFurther ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: line1IsFurther
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     ),
             ),
@@ -178,7 +171,9 @@ class OverlayContent extends StatelessWidget {
                         style: TextStyle(
                           color: textColor,
                           fontSize: settings.fontSize,
-                          fontWeight: !line1IsFurther ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: !line1IsFurther
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
               ),
@@ -210,7 +205,8 @@ class AnimatedLyricLine extends StatefulWidget {
   State<AnimatedLyricLine> createState() => _AnimatedLyricLineState();
 }
 
-class _AnimatedLyricLineState extends State<AnimatedLyricLine> with SingleTickerProviderStateMixin {
+class _AnimatedLyricLineState extends State<AnimatedLyricLine>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
@@ -251,10 +247,7 @@ class _AnimatedLyricLineState extends State<AnimatedLyricLine> with SingleTicker
               begin: const Offset(0, -0.5),
               end: Offset.zero,
             ).animate(_controller),
-            child: Opacity(
-              opacity: _controller.value,
-              child: plainLine,
-            ),
+            child: Opacity(opacity: _controller.value, child: plainLine),
           ),
         );
       case AnimationMode.typer:
@@ -311,18 +304,21 @@ class OverlayHeader extends StatelessWidget {
           ),
         ),
         IconButton(
-          onPressed: () =>
-              context.read<OverlayWindowBloc>().add(LockToggled(!context.read<OverlayWindowBloc>().state.isLocked)),
+          onPressed: () => context.read<OverlayWindowBloc>().add(
+            LockToggled(!context.read<OverlayWindowBloc>().state.isLocked),
+          ),
           icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
               ? Icon(Icons.lock, color: textColor)
               : Icon(Icons.lock_open_outlined, color: textColor),
         ),
         IconButton(
-          onPressed: () => context.read<OverlayAppBloc>().add(const MinimizeRequested()),
+          onPressed: () =>
+              context.read<OverlayAppBloc>().add(const MinimizeRequested()),
           icon: Icon(Icons.remove, color: textColor),
         ),
         IconButton(
-          onPressed: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+          onPressed: () =>
+              context.read<OverlayWindowBloc>().add(const CloseRequested()),
           icon: Icon(Icons.close, color: textColor),
         ),
       ],
@@ -345,27 +341,23 @@ class OverlayProgressBar extends StatelessWidget {
     final pos = Duration(milliseconds: settings.position?.toInt() ?? 0);
     final max = Duration(milliseconds: settings.duration?.toInt() ?? 0);
 
-    final progress = max.inMilliseconds == 0 ? 0 : pos.inMilliseconds / max.inMilliseconds;
+    final progress = max.inMilliseconds == 0
+        ? 0
+        : pos.inMilliseconds / max.inMilliseconds;
 
     final left = (settings.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
     final right = (settings.showMillis ?? false) ? max.mmssmm() : max.mmss();
 
     return Row(
       children: [
-        Text(
-          left,
-          style: TextStyle(color: textColor),
-        ),
+        Text(left, style: TextStyle(color: textColor)),
         Expanded(
           child: LinearProgressIndicator(
             value: progress.toDouble(),
             color: textColor,
           ),
         ),
-        Text(
-          right,
-          style: TextStyle(color: textColor),
-        ),
+        Text(right, style: TextStyle(color: textColor)),
       ].separatedBy(const SizedBox(width: 8)).toList(),
     );
   }
@@ -395,7 +387,9 @@ class OverlayLoadingIndicator extends StatelessWidget {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                onPressed: () => context.read<OverlayWindowBloc>().add(const CloseRequested()),
+                onPressed: () => context.read<OverlayWindowBloc>().add(
+                  const CloseRequested(),
+                ),
                 icon: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
               ),
             ),

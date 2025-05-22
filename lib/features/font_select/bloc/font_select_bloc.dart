@@ -27,14 +27,19 @@ class FontSelectBloc extends Bloc<FontSelectEvent, FontSelectState> {
       fontStyles[key] = GoogleFonts.getFont(key);
     }
 
-    emit(state.copyWith(
-      fontStyles: fontStyles,
-      filteredFontStyles: fontStyles,
-      offset: state.offset + state.limit,
-    ));
+    emit(
+      state.copyWith(
+        fontStyles: fontStyles,
+        filteredFontStyles: fontStyles,
+        offset: state.offset + state.limit,
+      ),
+    );
   }
 
-  void _onSearchChanged(FontSelectSearchChanged event, Emitter<FontSelectState> emit) {
+  void _onSearchChanged(
+    FontSelectSearchChanged event,
+    Emitter<FontSelectState> emit,
+  ) {
     if (event.searchTerm.isEmpty) {
       emit(state.copyWith(filteredFontStyles: state.fontStyles));
       return;
@@ -53,10 +58,12 @@ class FontSelectBloc extends Bloc<FontSelectEvent, FontSelectState> {
       }
     }
 
-    emit(state.copyWith(
-      fontStyles: fontStyles,
-      filteredFontStyles: filteredFontStyles,
-    ));
+    emit(
+      state.copyWith(
+        fontStyles: fontStyles,
+        filteredFontStyles: filteredFontStyles,
+      ),
+    );
   }
 
   void _onLoadMore(FontSelectLoadMore event, Emitter<FontSelectState> emit) {
@@ -70,10 +77,12 @@ class FontSelectBloc extends Bloc<FontSelectEvent, FontSelectState> {
       fontStyles[key] = GoogleFonts.getFont(key);
     }
 
-    emit(state.copyWith(
-      fontStyles: fontStyles,
-      filteredFontStyles: fontStyles,
-      offset: state.offset + state.limit,
-    ));
+    emit(
+      state.copyWith(
+        fontStyles: fontStyles,
+        filteredFontStyles: fontStyles,
+        offset: state.offset + state.limit,
+      ),
+    );
   }
 }

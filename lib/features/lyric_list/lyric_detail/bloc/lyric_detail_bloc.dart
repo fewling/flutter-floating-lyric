@@ -9,10 +9,9 @@ part 'lyric_detail_event.dart';
 part 'lyric_detail_state.dart';
 
 class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
-  LyricDetailBloc({
-    required LocalDbService localDbService,
-  })  : _localDbService = localDbService,
-        super(const LyricDetailState()) {
+  LyricDetailBloc({required LocalDbService localDbService})
+    : _localDbService = localDbService,
+      super(const LyricDetailState()) {
     on<LyricDetailEvent>(
       (event, emit) => switch (event) {
         LyricDetailLoaded() => _onLoaded(event, emit),
@@ -25,26 +24,31 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
 
   final LocalDbService _localDbService;
 
-  Future<void> _onLoaded(LyricDetailLoaded event, Emitter<LyricDetailState> emit) async {
+  Future<void> _onLoaded(
+    LyricDetailLoaded event,
+    Emitter<LyricDetailState> emit,
+  ) async {
     if (event.id == null) return;
 
     final lrc = await _localDbService.getLyricById(event.id!);
-    emit(state.copyWith(
-      lrcDB: lrc,
-      originalContent: lrc?.content ?? '',
-    ));
+    emit(state.copyWith(lrcDB: lrc, originalContent: lrc?.content ?? ''));
   }
 
-  Future<void> _onSaveRequested(SaveRequested event, Emitter<LyricDetailState> emit) async {
+  Future<void> _onSaveRequested(
+    SaveRequested event,
+    Emitter<LyricDetailState> emit,
+  ) async {
     if (state.lrcDB == null) return;
 
     try {
       await _localDbService.updateLrc(state.lrcDB!);
 
-      emit(state.copyWith(
-        originalContent: state.lrcDB!.content ?? '',
-        saveStatus: LyricSaveStatus.saved,
-      ));
+      emit(
+        state.copyWith(
+          originalContent: state.lrcDB!.content ?? '',
+          saveStatus: LyricSaveStatus.saved,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(saveStatus: LyricSaveStatus.error));
     }
@@ -57,7 +61,10 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
     emit(state.copyWith(lrcDB: newLrc));
   }
 
-  void _onSaveStatusReset(SaveStatusReset event, Emitter<LyricDetailState> emit) {
+  void _onSaveStatusReset(
+    SaveStatusReset event,
+    Emitter<LyricDetailState> emit,
+  ) {
     emit(state.copyWith(saveStatus: LyricSaveStatus.initial));
   }
 }

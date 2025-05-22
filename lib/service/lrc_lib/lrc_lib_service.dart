@@ -1,9 +1,8 @@
 import '../../repos/remote/lrclib/lrclib_repository.dart';
 
 class LrcLibService {
-  LrcLibService({
-    required LrcLibRepository lrcLibRepository,
-  }) : _lrcLibRepository = lrcLibRepository;
+  LrcLibService({required LrcLibRepository lrcLibRepository})
+    : _lrcLibRepository = lrcLibRepository;
 
   final LrcLibRepository _lrcLibRepository;
 

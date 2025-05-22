@@ -9,7 +9,9 @@ class ToOverlayMessageService {
   void sendMsg(ToOverlayMsgModel msg) {
     final json = jsonDecode(jsonEncode(msg.toJson()));
 
-    final overlayPort = IsolateNameServer.lookupPortByName(MainOverlayPort.overlayPortName.key);
+    final overlayPort = IsolateNameServer.lookupPortByName(
+      MainOverlayPort.overlayPortName.key,
+    );
     if (overlayPort == null) {
       logger.e('Overlay port is null');
     } else {

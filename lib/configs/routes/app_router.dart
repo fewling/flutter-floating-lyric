@@ -28,22 +28,21 @@ import 'app_routes_observer.dart';
 part 'app_routes.dart';
 
 class AppRouter {
-  AppRouter({
-    required this.permissionBloc,
-  }) {
+  AppRouter({required this.permissionBloc}) {
     _router = GoRouter(
       navigatorKey: _rootKey,
-      refreshListenable: StreamToListenable([
-        permissionBloc.stream,
-      ]),
+      refreshListenable: StreamToListenable([permissionBloc.stream]),
       initialLocation: AppRoute.permission.path,
       observers: [AppRouteObserver()],
       redirect: (context, state) {
         final permissionState = permissionBloc.state;
-        final allGranted = permissionState.isSystemAlertWindowGranted && permissionState.isNotificationListenerGranted;
+        final allGranted =
+            permissionState.isSystemAlertWindowGranted &&
+            permissionState.isNotificationListenerGranted;
         if (!allGranted) return AppRoute.permission.path;
 
-        final inPermissionPg = state.matchedLocation == AppRoute.permission.path;
+        final inPermissionPg =
+            state.matchedLocation == AppRoute.permission.path;
         if (inPermissionPg) return AppRoute.home.path;
 
         return null;
@@ -65,8 +64,15 @@ class AppRouter {
               path: AppRoute.home.path,
               name: AppRoute.home.name,
               builder: (context, state) => BlocProvider(
-                create: (context) =>
-                    HomeBloc()..add(HomeStarted(mediaState: context.read<LyricStateListenerBloc>().state.mediaState)),
+                create: (context) => HomeBloc()
+                  ..add(
+                    HomeStarted(
+                      mediaState: context
+                          .read<LyricStateListenerBloc>()
+                          .state
+                          .mediaState,
+                    ),
+                  ),
                 child: const HomeScreen(),
               ),
               routes: [
@@ -74,7 +80,8 @@ class AppRouter {
                   path: AppRoute.fonts.path,
                   name: AppRoute.fonts.name,
                   builder: (context, state) => BlocProvider(
-                    create: (context) => FontSelectBloc()..add(const FontSelectStarted()),
+                    create: (context) =>
+                        FontSelectBloc()..add(const FontSelectStarted()),
                     child: const FontSelect(),
                   ),
                 ),
