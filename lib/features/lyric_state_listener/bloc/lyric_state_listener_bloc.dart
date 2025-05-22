@@ -45,6 +45,8 @@ class LyricStateListenerBloc
 
   int _tolerance = 0;
 
+  var _isSearchingOnline = false;
+
   // TODO(@fewling): replace with remote lrc_lib_service
   final LrcLibRepository _lyricRepository;
 
@@ -259,6 +261,9 @@ class LyricStateListenerBloc
     required double duration,
   }) async {
     if (state.mediaState == null) return false;
+    if (_isSearchingOnline) return false;
+
+    _isSearchingOnline = true;
 
     try {
       emit(
@@ -305,6 +310,8 @@ class LyricStateListenerBloc
         ),
       );
       return false;
+    } finally {
+      _isSearchingOnline = false;
     }
   }
 
