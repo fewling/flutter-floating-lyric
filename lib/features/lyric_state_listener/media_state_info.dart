@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 import 'bloc/lyric_state_listener_bloc.dart';
 
 class MediaStateInfo extends StatelessWidget {
@@ -68,6 +69,21 @@ class MediaStateInfo extends StatelessWidget {
                 )
               : null,
         ),
+        if (!isPlaying)
+          ListTile(
+            leading: const Icon(Icons.question_mark_outlined),
+            title: const Text('Not detecting active music player?'),
+            trailing: ElevatedButton.icon(
+              onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
+                const ToggleNotiListenerSettings(),
+              ),
+              label: const Text('Re-Enable Manually'),
+              icon: const Icon(Icons.refresh_outlined),
+            ),
+            subtitle: const Text('''
+Some heavily customized Android brands (e.g., Huawei, Xiaomi) kill background services aggressively and do not restart them when they should.
+'''),
+          ),
       ],
     );
   }

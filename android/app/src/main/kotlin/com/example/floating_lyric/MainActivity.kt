@@ -1,6 +1,11 @@
 package com.example.floating_lyric
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import com.example.floating_lyric.features.media_tracker.MediaStateEventStreamHandler
 import com.example.floating_lyric.features.overlay_window.OverlayView
 import com.example.floating_lyric.features.permissions.PermissionMethodCallHandler
@@ -12,6 +17,10 @@ import io.flutter.embedding.engine.FlutterEngineGroup
 import io.flutter.embedding.engine.dart.DartExecutor
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : FlutterActivity() {
 
@@ -26,6 +35,7 @@ class MainActivity : FlutterActivity() {
 
     private var overlayView: OverlayView? = null
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
@@ -73,6 +83,51 @@ class MainActivity : FlutterActivity() {
                             val isTouchThru = call.argument<Boolean>("isTouchThru")
                             overlayView?.updateWindowTouchThrough(isTouchThru ?: false)
                             result.success(true)
+                        }
+
+                        "toggleNotiListenerSettings" -> {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                val componentName = ComponentName(
+                                    this,
+                                    "com.example.floating_lyric.features.media_tracker.MediaNotificationListener"
+                                )
+
+                                // Disable the notification listener service
+                                packageManager.setComponentEnabledSetting(
+                                    componentName,
+                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                                    PackageManager.DONT_KILL_APP
+                                )
+
+                                // enable the notification listener service after a delay
+                                // to allow the system to process the disable request
+                                CoroutineScope(Dispatchers.Default).launch {
+                                    delay(1000)
+                                    packageManager.setComponentEnabledSetting(
+                                        componentName,
+                                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                                        PackageManager.DONT_KILL_APP
+                                    )
+                                    result.success(true)
+                                }
+                            } else {
+                                // For Android versions below TIRAMISU, show a dialog to inform the user
+                                val builder = android.app.AlertDialog.Builder(this)
+                                builder.setTitle("Manual Action - Notification Listener Service")
+                                builder.setMessage("Please re-enable the Notification Listener Service in your device settings to continue.")
+                                builder.setPositiveButton("Open Settings") { _, _ ->
+                                    val intent =
+                                        Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    startActivity(intent)
+                                    result.success(true)
+                                }
+                                builder.setNegativeButton("Cancel") { dialog, _ ->
+                                    dialog.dismiss()
+                                    result.success(true)
+                                }
+                                builder.create().show()
+                            }
                         }
                     }
                 }
