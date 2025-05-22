@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126527453672",
+    "project_id": "floating-lyrics",
+    "storage_bucket": "floating-lyrics.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126527453672:android:d4ff1ee2951ff366a24c5d",
+        "android_client_info": {
+          "package_name": "com.floating.lyrics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQG4A9mt2F41tMGZ-sOvUH4Vi-gug_WTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

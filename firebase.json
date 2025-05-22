@@ -1,0 +1,21 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "floating-lyrics",
+                    "appId": "1:126527453672:android:d4ff1ee2951ff366a24c5d",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "floating-lyrics",
+                    "configurations": {
+                        "android": "1:126527453672:android:d4ff1ee2951ff366a24c5d"
+                    }
+                }
+            }
+        }
+    }
+}

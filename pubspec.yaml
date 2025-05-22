@@ -6,7 +6,8 @@ publish_to: "none"
 version: 4.1.2+31
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  # sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.8.0
 
 dependencies:
   flutter:
@@ -32,6 +33,7 @@ dependencies:
   google_fonts: ^6.2.1
   animated_text_kit: ^4.2.2
   device_info_plus: ^11.1.0
+  firebase_core: ^3.8.1
 
 dev_dependencies:
   flutter_test:
