@@ -70,19 +70,61 @@ class MediaStateInfo extends StatelessWidget {
               : null,
         ),
         if (!isPlaying)
-          ListTile(
-            leading: const Icon(Icons.question_mark_outlined),
-            title: const Text('Not detecting active music player?'),
-            trailing: ElevatedButton.icon(
-              onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
-                const ToggleNotiListenerSettings(),
+          Row(
+            children: [
+              Expanded(
+                child: ListTile(
+                  leading: const Icon(Icons.touch_app_outlined),
+                  title: const FittedBox(
+                    child: Text(
+                      'Not detecting active music player?',
+                      maxLines: 1,
+                    ),
+                  ),
+                  subtitle: const FittedBox(
+                    child: Text(
+                      'Tap here to re-enable the notification listener',
+                      maxLines: 1,
+                    ),
+                  ),
+                  trailing: TextButton(
+                    child: Text(
+                      'Learn More',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) => const AlertDialog(
+                        icon: Icon(Icons.info_outline),
+                        title: Text('Notification Listener'),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          spacing: 8,
+                          children: [
+                            Text(
+                              'On some Android devices (such as those from Huawei or Xiaomi), system-level battery and memory management features may restrict background services, including the notification listener required for music detection.',
+                            ),
+                            Text(
+                              'If the app is closed, these optimizations can terminate the background service after a short period, and it may not restart automatically.',
+                            ),
+                            Text(
+                              'If music is not being detected, please tap the button above to manually re-enable the notification listener.',
+                            ),
+                            Text(
+                              'Due to manufacturer-specific customizations and limited documentation, ensuring reliable background operation on these devices can be challenging. We appreciate your understanding as we continue to improve compatibility.',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: () => context.read<OverlayWindowSettingsBloc>().add(
+                    const ToggleNotiListenerSettings(),
+                  ),
+                ),
               ),
-              label: const Text('Re-Enable Manually'),
-              icon: const Icon(Icons.refresh_outlined),
-            ),
-            subtitle: const Text('''
-Some heavily customized Android brands (e.g., Huawei, Xiaomi) kill background services aggressively and do not restart them when they should.
-'''),
+            ],
           ),
       ],
     );
