@@ -76,12 +76,16 @@ class MediaStateInfo extends StatelessWidget {
                 child: ListTile(
                   leading: const Icon(Icons.touch_app_outlined),
                   title: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Not detecting active music player?',
                       maxLines: 1,
                     ),
                   ),
                   subtitle: const FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
                     child: Text(
                       'Tap here to re-enable the notification listener',
                       maxLines: 1,
