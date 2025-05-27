@@ -25,12 +25,15 @@ Future<void> main() async {
 
   FlutterError.onError = (errorDetails) {
     logger.e('FlutterError: ${errorDetails.exceptionAsString()}');
+    if (kDebugMode) return;
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
   };
 
   // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
   PlatformDispatcher.instance.onError = (error, stack) {
     logger.e('PlatformDispatcher Error: $error');
+    if (kDebugMode) return false;
+
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
