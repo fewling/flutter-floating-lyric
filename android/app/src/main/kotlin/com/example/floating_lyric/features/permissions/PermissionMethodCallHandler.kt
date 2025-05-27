@@ -160,10 +160,14 @@ class PermissionMethodCallHandler :
 
     private fun isNotificationListenerGranted(): Boolean {
         val contentResolver: ContentResolver? = mActivity?.contentResolver
-        val enabledNotificationListeners: String =
+        if (contentResolver == null) {
+            Log.w(TAG, "ContentResolver is null, cannot check notification listener permission")
+            return false
+        }
+        val enabledNotificationListeners =
             Settings.Secure.getString(contentResolver, "enabled_notification_listeners")
         val packageName = mActivity?.packageName
-        return enabledNotificationListeners.contains(packageName.toString())
+        return packageName != null && enabledNotificationListeners.contains(packageName.toString())
     }
 
     private fun isSystemAlertWindowGranted(): Boolean = Settings.canDrawOverlays(mContext)
