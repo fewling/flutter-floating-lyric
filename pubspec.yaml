@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  file_picker: ^10.1.9
+  file_picker: ^10.2.0
   flutter_colorpicker: ^1.1.0
   shared_preferences: ^2.3.2
   introduction_screen: ^3.1.14
@@ -47,7 +47,7 @@ dev_dependencies:
   json_serializable: ^6.6.1
   isar_generator: ^3.0.5
   analyzer: 5.13.0
-  flutter_gen_runner: ^5.7.0
+  flutter_gen_runner: 5.7.0
 
 flutter_icons:
   android: "launcher_icon"
