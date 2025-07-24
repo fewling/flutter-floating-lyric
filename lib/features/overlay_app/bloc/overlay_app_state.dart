@@ -1,7 +1,7 @@
 part of 'overlay_app_bloc.dart';
 
 @freezed
-class OverlayAppState with _$OverlayAppState {
+sealed class OverlayAppState with _$OverlayAppState {
   const factory OverlayAppState({@Default(false) bool isMinimized}) =
       _OverlayAppState;
 

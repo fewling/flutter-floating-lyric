@@ -1,7 +1,7 @@
 part of 'overlay_window_settings_bloc.dart';
 
 @freezed
-class OverlayWindowSettingsState with _$OverlayWindowSettingsState {
+sealed class OverlayWindowSettingsState with _$OverlayWindowSettingsState {
   const factory OverlayWindowSettingsState({
     @Default(false) bool isWindowVisible,
     @Default(OverlaySettingsModel()) OverlaySettingsModel settings,

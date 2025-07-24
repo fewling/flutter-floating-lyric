@@ -5,7 +5,7 @@ part 'from_overlay_msg_model.freezed.dart';
 part 'from_overlay_msg_model.g.dart';
 
 @freezed
-class FromOverlayMsgModel with _$FromOverlayMsgModel {
+sealed class FromOverlayMsgModel with _$FromOverlayMsgModel {
   const factory FromOverlayMsgModel({
     @JsonKey(fromJson: _overlayActionFromJson, toJson: _overlayActionToJson)
     OverlayAction? action,

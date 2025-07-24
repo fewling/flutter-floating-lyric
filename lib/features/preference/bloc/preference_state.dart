@@ -1,7 +1,7 @@
 part of 'preference_bloc.dart';
 
 @freezed
-class PreferenceState with _$PreferenceState {
+sealed class PreferenceState with _$PreferenceState {
   const factory PreferenceState({
     required double opacity,
     required int color,

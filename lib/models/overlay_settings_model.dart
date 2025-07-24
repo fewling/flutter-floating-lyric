@@ -8,7 +8,7 @@ part 'overlay_settings_model.freezed.dart';
 part 'overlay_settings_model.g.dart';
 
 @freezed
-class OverlaySettingsModel with _$OverlaySettingsModel {
+sealed class OverlaySettingsModel with _$OverlaySettingsModel {
   const factory OverlaySettingsModel({
     // Themes:
     @Default(false) bool isLight,
@@ -39,6 +39,7 @@ class OverlaySettingsModel with _$OverlaySettingsModel {
     double? lineHeight,
     double? letterSpacing,
     @Default(false) bool enableAnimation,
+    @Default(false) bool transparentNotFoundTxt,
 
     //
     @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)

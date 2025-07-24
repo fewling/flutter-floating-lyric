@@ -4,7 +4,7 @@ part 'media_state.freezed.dart';
 part 'media_state.g.dart';
 
 @freezed
-class MediaState with _$MediaState {
+sealed class MediaState with _$MediaState {
   const factory MediaState({
     required String mediaPlayerName,
     required String title,

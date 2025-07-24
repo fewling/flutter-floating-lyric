@@ -124,8 +124,12 @@ class OverlayContent extends StatelessWidget {
           child: Text('Searching lyric...', style: TextStyle(color: textColor)),
         );
       case SearchLyricStatus.notFound:
-        return Center(
-          child: Text('Lyric not found', style: TextStyle(color: textColor)),
+        return const Center(
+          // child: Text('Lyric not found', style: TextStyle(color: textColor)),
+          child: Text(
+            'Lyric not found',
+            style: TextStyle(color: Colors.transparent),
+          ),
         );
       case SearchLyricStatus.initial:
       case SearchLyricStatus.found:

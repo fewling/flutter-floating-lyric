@@ -1,7 +1,7 @@
 part of 'lyric_detail_bloc.dart';
 
 @freezed
-class LyricDetailState with _$LyricDetailState {
+sealed class LyricDetailState with _$LyricDetailState {
   const factory LyricDetailState({
     @Default(null) LrcDB? lrcDB,
     @Default('') String originalContent,

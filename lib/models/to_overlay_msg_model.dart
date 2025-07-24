@@ -6,7 +6,7 @@ part 'to_overlay_msg_model.freezed.dart';
 part 'to_overlay_msg_model.g.dart';
 
 @freezed
-class ToOverlayMsgModel with _$ToOverlayMsgModel {
+sealed class ToOverlayMsgModel with _$ToOverlayMsgModel {
   const factory ToOverlayMsgModel({OverlaySettingsModel? settings}) =
       _ToOverlayMsgModel;
 

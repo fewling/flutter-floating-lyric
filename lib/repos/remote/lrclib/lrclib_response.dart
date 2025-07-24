@@ -1,7 +1,7 @@
 part of 'lrclib_repository.dart';
 
 @freezed
-class LrcLibResponse with _$LrcLibResponse {
+sealed class LrcLibResponse with _$LrcLibResponse {
   const factory LrcLibResponse({
     required int id,
     required String name,

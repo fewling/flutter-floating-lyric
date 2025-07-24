@@ -1,7 +1,7 @@
 part of 'message_from_main_receiver_bloc.dart';
 
 @freezed
-class MessageFromMainReceiverState with _$MessageFromMainReceiverState {
+sealed class MessageFromMainReceiverState with _$MessageFromMainReceiverState {
   const factory MessageFromMainReceiverState({OverlaySettingsModel? settings}) =
       _MessageFromMainReceiverState;
 

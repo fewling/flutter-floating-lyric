@@ -1,7 +1,7 @@
 part of 'lyric_state_listener_bloc.dart';
 
 @freezed
-class LyricStateListenerState with _$LyricStateListenerState {
+sealed class LyricStateListenerState with _$LyricStateListenerState {
   const factory LyricStateListenerState({
     @Default(null) MediaState? mediaState,
     Lrc? currentLrc,

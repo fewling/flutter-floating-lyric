@@ -1,7 +1,7 @@
 part of 'fetch_online_lrc_form_bloc.dart';
 
 @freezed
-class FetchOnlineLrcFormState with _$FetchOnlineLrcFormState {
+sealed class FetchOnlineLrcFormState with _$FetchOnlineLrcFormState {
   const factory FetchOnlineLrcFormState({
     String? title,
     String? artist,

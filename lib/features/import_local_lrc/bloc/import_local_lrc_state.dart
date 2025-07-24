@@ -1,7 +1,7 @@
 part of 'import_local_lrc_bloc.dart';
 
 @freezed
-class ImportLocalLrcState with _$ImportLocalLrcState {
+sealed class ImportLocalLrcState with _$ImportLocalLrcState {
   const factory ImportLocalLrcState({
     @Default(<PlatformFile>[]) List<PlatformFile> failedFiles,
     @Default(ImportLocalLrcStatus.initial) ImportLocalLrcStatus status,

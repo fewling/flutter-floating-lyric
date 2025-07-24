@@ -4,7 +4,7 @@ part 'lrc.freezed.dart';
 part 'lrc.g.dart';
 
 @freezed
-class Lrc with _$Lrc {
+sealed class Lrc with _$Lrc {
   const factory Lrc({
     String? artist,
     String? title,
@@ -20,7 +20,7 @@ class Lrc with _$Lrc {
 }
 
 @freezed
-class LrcLine with _$LrcLine {
+sealed class LrcLine with _$LrcLine {
   const factory LrcLine({required Duration time, required String content}) =
       _LrcLine;
 
