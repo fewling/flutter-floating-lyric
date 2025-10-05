@@ -34,6 +34,8 @@ dependencies:
   firebase_core: ^4.1.1
   firebase_crashlytics: ^5.0.2
   firebase_analytics: ^12.0.2
+  hive_ce: ^2.14.0
+  hive_ce_flutter: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +47,7 @@ dev_dependencies:
   json_serializable: ^6.11.1
   analyzer: ^8.1.1
   flutter_gen_runner: ^5.12.0
+  hive_ce_generator: ^1.9.5
 
 flutter_icons:
   android: "launcher_icon"
