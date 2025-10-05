@@ -30,22 +30,22 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
   ) async {
     if (event.id == null) return;
 
-    final lrc = await _localDbService.getLyricById(event.id!);
-    emit(state.copyWith(lrcDB: lrc, originalContent: lrc?.content ?? ''));
+    final lrc = _localDbService.getLyricById(event.id!);
+    emit(state.copyWith(lrcModel: lrc, originalContent: lrc?.content ?? ''));
   }
 
   Future<void> _onSaveRequested(
     SaveRequested event,
     Emitter<LyricDetailState> emit,
   ) async {
-    if (state.lrcDB == null) return;
+    if (state.lrcModel == null) return;
 
     try {
-      await _localDbService.updateLrc(state.lrcDB!);
+      await _localDbService.updateLrc(state.lrcModel!);
 
       emit(
         state.copyWith(
-          originalContent: state.lrcDB!.content ?? '',
+          originalContent: state.lrcModel!.content ?? '',
           saveStatus: LyricSaveStatus.saved,
         ),
       );
@@ -55,10 +55,10 @@ class LyricDetailBloc extends Bloc<LyricDetailEvent, LyricDetailState> {
   }
 
   void _onContentUpdated(ContentUpdated event, Emitter<LyricDetailState> emit) {
-    if (state.lrcDB == null) return;
+    if (state.lrcModel == null) return;
 
-    final newLrc = state.lrcDB!..content = event.content;
-    emit(state.copyWith(lrcDB: newLrc));
+    final newLrc = state.lrcModel!.copyWith(content: event.content);
+    emit(state.copyWith(lrcModel: newLrc));
   }
 
   void _onSaveStatusReset(

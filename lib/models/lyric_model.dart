@@ -1,13 +1,18 @@
-import 'package:isar/isar.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
+part 'lyric_model.freezed.dart';
 part 'lyric_model.g.dart';
 
-@collection
-class LrcDB {
-  Id id = Isar.autoIncrement;
+@freezed
+sealed class LrcModel with _$LrcModel {
+  const factory LrcModel({
+    required String id,
+    String? fileName,
+    String? content,
+    String? title,
+    String? artist,
+  }) = _LrcModel;
 
-  String? fileName;
-  String? content;
-  String? title;
-  String? artist;
+  factory LrcModel.fromJson(Map<String, dynamic> json) =>
+      _$LrcModelFromJson(json);
 }

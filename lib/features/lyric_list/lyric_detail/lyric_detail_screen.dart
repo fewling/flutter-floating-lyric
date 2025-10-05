@@ -90,7 +90,7 @@ class LyricFileNameLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fileName = context.select<LyricDetailBloc, String?>(
-      (bloc) => bloc.state.lrcDB?.fileName,
+      (bloc) => bloc.state.lrcModel?.fileName,
     );
 
     return Text(fileName ?? '...');
@@ -117,9 +117,9 @@ class _LyricContentFieldState extends State<LyricContentField> {
   Widget build(BuildContext context) {
     return BlocListener<LyricDetailBloc, LyricDetailState>(
       listenWhen: (previous, current) =>
-          current.lrcDB?.content != _controller.text,
+          current.lrcModel?.content != _controller.text,
       listener: (context, state) =>
-          _controller.text = state.lrcDB?.content ?? '',
+          _controller.text = state.lrcModel?.content ?? '',
       child: TextField(
         controller: _controller,
         onChanged: (value) =>

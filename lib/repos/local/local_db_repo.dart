@@ -1,100 +1,57 @@
-import 'package:isar/isar.dart';
+import 'package:collection/collection.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import '../../models/lyric_model.dart';
 import '../../utils/logger.dart';
 
 class LocalDbRepo {
-  LocalDbRepo(Isar isar) {
-    _isar = isar;
+  LocalDbRepo({required Box<LrcModel> lrcBox}) : _lrcBox = lrcBox;
+
+  final Box<LrcModel> _lrcBox;
+
+  bool fileNameExists(String fileName) =>
+      _lrcBox.values.any((e) => e.fileName == fileName);
+
+  List<LrcModel> get allRawLyrics => _lrcBox.values.toList();
+
+  LrcModel? getLyricByID(dynamic id) => _lrcBox.get(id);
+
+  LrcModel? getLyric(String title, String artist) =>
+      _lrcBox.values.firstWhereOrNull(
+        (e) =>
+            (e.title == title && e.artist == artist) ||
+            (e.title == artist && e.artist == title) ||
+            (e.fileName == '$title - $artist') ||
+            (e.fileName == '$artist - $title'),
+      );
+
+  List<LrcModel> search(String searchTerm) {
+    final search = searchTerm.toLowerCase().trim();
+    return _lrcBox.values
+        .where(
+          (e) =>
+              (e.title != null && e.title!.toLowerCase().contains(search)) ||
+              (e.artist != null && e.artist!.toLowerCase().contains(search)) ||
+              (e.fileName != null &&
+                  e.fileName!.toLowerCase().contains(search)),
+        )
+        .toList();
   }
 
-  late Isar _isar;
+  Future<void> addBatchLyrics(List<LrcModel> lyrics) async {
+    final entries = {for (final lyric in lyrics) lyric.id: lyric};
+    logger.i('Adding batch lyrics: ${entries.length} lyrics');
 
-  Future<bool> fileNameExists(String fileName) async =>
-      await _isar.lrcDBs.filter().fileNameEqualTo(fileName).count() > 0;
-
-  Future<List<LrcDB>> get allRawLyrics => _isar.lrcDBs.where().findAll();
-
-  Future<LrcDB?> getLyricByID(int id) {
-    return _isar.lrcDBs.where().idEqualTo(id).findFirst();
-  }
-
-  Future<LrcDB?>? getLyric(String title, String artist) async {
-    final result = await _isar.lrcDBs
-        .filter()
-        .fileNameEqualTo('$title - $artist', caseSensitive: false)
-        .findFirst();
-    if (result != null) return result;
-
-    final resultReverse = await _isar.lrcDBs
-        .filter()
-        .fileNameEqualTo('$artist - $title', caseSensitive: false)
-        .findFirst();
-    if (resultReverse != null) return resultReverse;
-
-    final allLyrics = await allRawLyrics;
-    final hasLyric = allLyrics.any(
-      (element) => element.title == title && element.artist == artist,
-    );
-    if (!hasLyric) return null;
-
-    final lyric = allLyrics.firstWhere(
-      (lyric) => lyric.title == title && lyric.artist == artist,
-    );
-    return lyric;
-  }
-
-  Future<List<LrcDB>> search(String searchTerm) async {
-    final foundLyrics = <LrcDB>{};
-
-    // final titleF = _isar.lrcDBs.where().filter().titleContains(searchTerm, caseSensitive: false).findAll();
-    // final artistF = _isar.lrcDBs.where().filter().artistContains(searchTerm, caseSensitive: false).findAll();
-    final filesF = _isar.lrcDBs
-        .where()
-        .filter()
-        .fileNameContains(searchTerm, caseSensitive: false)
-        .findAll();
-
-    final results = await Future.wait([
-      // titleF,
-      // artistF,
-      filesF,
-    ]);
-
-    for (final result in results) {
-      foundLyrics.addAll(result);
-    }
-
-    return foundLyrics.toList();
-  }
-
-  Future<List<Id>> addBatchLyrics(List<LrcDB> lyrics) {
-    logger.i('Adding batch lyrics: ${lyrics.length} lyrics');
-    return _isar.writeTxn(() => _isar.lrcDBs.putAll(lyrics)).onError((
-      error,
-      stackTrace,
-    ) {
+    return _lrcBox.putAll(entries).onError((error, stackTrace) {
       logger.e('Error adding batch lyrics: $error\nstacktrace: $stackTrace');
-      return [-1];
     });
   }
 
-  Future<bool> deleteLyric(LrcDB lyric) =>
-      _isar.writeTxn(() => _isar.lrcDBs.delete(lyric.id));
+  Future<void> deleteLyric(LrcModel lyric) => _lrcBox.delete(lyric.id);
 
-  Future<void> deleteAllLyrics() => _isar.writeTxn(() => _isar.lrcDBs.clear());
+  Future<int> deleteAllLyrics() => _lrcBox.clear();
 
-  Future<Id> updateLyric(LrcDB lrc) {
-    return _isar.writeTxn(() => _isar.lrcDBs.put(lrc)).onError((
-      error,
-      stackTrace,
-    ) {
-      logger.e('Error updating lyric: $error\nstacktrace: $stackTrace');
-      return -1;
-    });
-  }
+  Future<void> updateLyric(LrcModel lrc) => _lrcBox.put(lrc.id, lrc);
 
-  Future<Id> putLyric(LrcDB lrcDB) {
-    return _isar.writeTxn(() => _isar.lrcDBs.put(lrcDB));
-  }
+  Future<void> putLyric(LrcModel lrcDB) => _lrcBox.put(lrcDB.id, lrcDB);
 }

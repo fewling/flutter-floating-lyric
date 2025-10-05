@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:crypto/crypto.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 
@@ -40,8 +42,7 @@ class LrcProcessorService {
         final result = await compute(processLrcFiles, batch);
         final lyrics = result.success;
         failed.addAll(result.failed);
-        final ids = await _localDB.addBatchLyrics(lyrics);
-        logger.i('inserted ids: $ids');
+        await _localDB.addBatchLyrics(lyrics);
         batch.clear();
       }
     }
@@ -53,12 +54,12 @@ class LrcProcessorService {
 
 class LrcProcessResult {
   LrcProcessResult(this.success, this.failed);
-  final List<LrcDB> success;
+  final List<LrcModel> success;
   final List<PlatformFile> failed;
 }
 
 Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
-  final lrcDbList = <LrcDB>[];
+  final lrcDbList = <LrcModel>[];
   final failed = <PlatformFile>[];
 
   for (final item in files) {
@@ -76,12 +77,18 @@ Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
       final title = lrc.title;
       final artist = lrc.artist;
 
+      // ! Same as [local_db_service.dart]
+      final digest = sha256.convert(utf8.encode('$title$artist$content'));
+      final id = digest.toString();
+
       lrcDbList.add(
-        LrcDB()
-          ..fileName = fileName
-          ..artist = artist
-          ..title = title
-          ..content = processed,
+        LrcModel(
+          id: id,
+          fileName: fileName,
+          artist: artist,
+          title: title,
+          content: processed,
+        ),
       );
     } catch (e) {
       logger.e('Error processing file $fileName: $e');

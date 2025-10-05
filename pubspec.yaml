@@ -36,6 +36,7 @@ dependencies:
   firebase_analytics: ^12.0.2
   hive_ce: ^2.14.0
   hive_ce_flutter: ^2.3.2
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:
