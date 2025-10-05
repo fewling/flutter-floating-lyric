@@ -13,6 +13,7 @@ import 'features/overlay_app/overlay_app.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
 import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
 import 'service/platform_methods/permission_channel_service.dart';
@@ -99,6 +100,9 @@ class FloatingLyricApp extends StatelessWidget {
       ),
       themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
       routerConfig: appRouter.router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('zh'),
     );
   }
 }

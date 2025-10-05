@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../configs/routes/app_router.dart';
+import '../../utils/extensions/custom_extensions.dart';
 import '../device_info/device_info_listener.dart';
 
 part 'base_drawer_routes.dart';
@@ -30,7 +31,7 @@ class BaseShell extends StatelessWidget {
         destinations: [
           for (final route in BaseDrawerRoutes.values)
             NavigationDestination(
-              label: route.label,
+              label: route.label(context),
               icon: Icon(route.icon),
               selectedIcon: Icon(route.selectedIcon),
             ),
