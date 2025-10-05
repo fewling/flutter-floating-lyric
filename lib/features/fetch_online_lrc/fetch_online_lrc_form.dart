@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../repos/local/local_db_repo.dart';
 import '../../repos/remote/lrclib/lrclib_repository.dart';
@@ -274,6 +276,30 @@ class FetchOnlineLrcForm extends StatelessWidget {
 
                       return Text(duration.mmss());
                     },
+                  ),
+                ),
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Powered by ',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'LrcLib',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => launchUrl(
+                              Uri.parse('https://lrclib.net'),
+                              mode: LaunchMode.externalApplication,
+                            ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
