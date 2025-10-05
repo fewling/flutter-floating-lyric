@@ -334,6 +334,30 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
                       },
                     ),
+
+                    Builder(
+                      builder: (context) {
+                        final transparentNotFoundTxt = context
+                            .select<PreferenceBloc, bool>(
+                              (value) => value.state.transparentNotFoundTxt,
+                            );
+
+                        const secondary = Icon(Icons.lyrics_outlined);
+                        return ToggleableSwitchListTile(
+                          enabled: visibleFloatingWindow,
+                          value: transparentNotFoundTxt,
+                          title: const Text('Hide "No Lyrics Found" Text'),
+                          subtitle: const Text(
+                            'When no lyrics is found, make the text transparent',
+                          ),
+                          secondary: secondary,
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(TransparentNotFoundTxtToggled(value)),
+                        );
+                      },
+                    ),
+
                     Builder(
                       builder: (context) {
                         final enableAnimation = context
@@ -359,6 +383,7 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
                       },
                     ),
+
                     Builder(
                       builder: (context) {
                         final animationMode = context
@@ -514,6 +539,7 @@ class ToggleableSwitchListTile extends StatelessWidget {
     required this.enabled,
     required this.value,
     required this.title,
+    this.subtitle,
     required this.secondary,
     required this.onChanged,
   });
@@ -522,6 +548,7 @@ class ToggleableSwitchListTile extends StatelessWidget {
   final bool value;
   final Widget title;
   final Widget secondary;
+  final Widget? subtitle;
   final void Function(bool) onChanged;
 
   @override
@@ -530,6 +557,7 @@ class ToggleableSwitchListTile extends StatelessWidget {
         ? SwitchListTile(
             value: value,
             title: title,
+            subtitle: subtitle,
             secondary: secondary,
             onChanged: onChanged,
           )
@@ -537,6 +565,7 @@ class ToggleableSwitchListTile extends StatelessWidget {
             enabled: false,
             leading: secondary,
             title: title,
+            subtitle: subtitle,
             trailing: Switch(value: value, onChanged: null),
           );
   }

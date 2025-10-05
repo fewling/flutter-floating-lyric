@@ -73,6 +73,7 @@ class OverlayWindowSettingsBloc
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
         animationMode: pref.animationMode,
+        transparentNotFoundTxt: pref.transparentNotFoundTxt,
 
         // lyric:
         line1: lyric.line1,
@@ -112,6 +113,7 @@ class OverlayWindowSettingsBloc
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
         animationMode: pref.animationMode,
+        transparentNotFoundTxt: pref.transparentNotFoundTxt,
       ),
     );
 

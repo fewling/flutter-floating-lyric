@@ -100,6 +100,10 @@ class _OverlayAppState extends State<OverlayApp> {
               final title = context.select(
                 (MessageFromMainReceiverBloc b) => b.state.settings?.title,
               );
+              final transparentNotFoundTxt = context.select(
+                (MessageFromMainReceiverBloc b) =>
+                    b.state.settings?.transparentNotFoundTxt,
+              );
 
               return BlocListener<
                 MessageFromMainReceiverBloc,

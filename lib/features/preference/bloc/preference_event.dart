@@ -89,3 +89,9 @@ final class AnimationModeUpdated extends PreferenceEvent {
 
   final AnimationMode mode;
 }
+
+final class TransparentNotFoundTxtToggled extends PreferenceEvent {
+  const TransparentNotFoundTxtToggled(this.transparentNotFoundTxt);
+
+  final bool transparentNotFoundTxt;
+}

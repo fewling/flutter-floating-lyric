@@ -25,6 +25,7 @@ class PreferenceRepo {
   static const enableAnimationKey = 'enable animation';
   static const toleranceKey = 'tolerance';
   static const animationModeKey = 'animation mode';
+  static const transparentNotFoundTxtKey = 'transparent not found';
 
   static const defaultFont = 'Roboto';
 
@@ -67,6 +68,9 @@ class PreferenceRepo {
         : AnimationMode.values.firstWhereOrNull((e) => e.name == mode) ??
               AnimationMode.fadeIn;
   }
+
+  bool get transparentNotFoundTxt =>
+      _sp.getBool(transparentNotFoundTxtKey) ?? false;
 
   Future<bool> updateOpacity(double value) =>
       _sp.setDouble(windowOpacityKey, value);
@@ -112,4 +116,7 @@ class PreferenceRepo {
 
   Future<bool> updateAnimationMode(AnimationMode mode) =>
       _sp.setString(animationModeKey, mode.name);
+
+  Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
+      _sp.setBool(transparentNotFoundTxtKey, transparentNotFoundTxt);
 }

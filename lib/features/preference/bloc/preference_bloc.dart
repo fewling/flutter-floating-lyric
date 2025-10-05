@@ -32,6 +32,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           enableAnimation: spService.enableAnimation,
           tolerance: spService.tolerance,
           animationMode: spService.animationMode,
+          transparentNotFoundTxt: spService.transparentNotFoundTxt,
         ),
       ) {
     on<PreferenceEvent>(
@@ -53,6 +54,10 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
         EnableAnimationToggled() => _onEnableAnimationToggled(event, emit),
         ToleranceUpdated() => _onToleranceUpdated(event, emit),
         AnimationModeUpdated() => _onAnimationModeUpdated(event, emit),
+        TransparentNotFoundTxtToggled() => _onTransparentNotFoundTxtUpdated(
+          event,
+          emit,
+        ),
       },
     );
   }
@@ -228,6 +233,20 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _spService.updateAnimationMode(event.mode);
     if (isSuccess) {
       emit(state.copyWith(animationMode: event.mode));
+    }
+  }
+
+  Future<void> _onTransparentNotFoundTxtUpdated(
+    TransparentNotFoundTxtToggled event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _spService.updateTransparentNotFoundTxt(
+      event.transparentNotFoundTxt,
+    );
+    if (isSuccess) {
+      emit(
+        state.copyWith(transparentNotFoundTxt: event.transparentNotFoundTxt),
+      );
     }
   }
 }

@@ -38,6 +38,8 @@ class PreferenceService {
 
   AnimationMode get animationMode => _spRepo.animationMode;
 
+  bool get transparentNotFoundTxt => _spRepo.transparentNotFoundTxt;
+
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) =>
@@ -80,4 +82,7 @@ class PreferenceService {
 
   Future<bool> updateAnimationMode(AnimationMode mode) =>
       _spRepo.updateAnimationMode(mode);
+
+  Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
+      _spRepo.updateTransparentNotFoundTxt(transparentNotFoundTxt);
 }
