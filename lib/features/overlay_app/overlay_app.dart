@@ -3,14 +3,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../gen/assets.gen.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
+import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
 import 'overlay_window/overlay_window.dart';
+
+const _minimizedSize = 48.0;
 
 class OverlayApp extends StatefulWidget {
   const OverlayApp({super.key});
@@ -125,21 +127,21 @@ class _OverlayAppState extends State<OverlayApp> {
                   ),
                   child: isMinimized
                       ? SizedBox(
-                          height: 64,
-                          width: 64,
+                          height: _minimizedSize,
+                          width: _minimizedSize,
                           child: Material(
-                            color: Color(appColor ?? Colors.purple.value),
+                            color: Color(
+                              appColor ?? Colors.purple.toARGB32(),
+                            ).withTransparency(0.25),
                             shape: const CircleBorder(),
                             clipBehavior: Clip.antiAlias,
                             child: InkWell(
                               onTap: () => context.read<OverlayAppBloc>().add(
                                 const MaximizeRequested(),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Image.asset(
-                                  Assets.launcherIcon.appIcon.path,
-                                ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.music_note_outlined),
                               ),
                             ),
                           ),
@@ -174,7 +176,7 @@ class _OverlayAppState extends State<OverlayApp> {
       final pxRatio = view.devicePixelRatio;
 
       final width = isMinimized
-          ? 64.0
+          ? _minimizedSize
           : (screenWidth > 0 ? screenWidth : 300.0);
       final height = box.getMaxIntrinsicHeight(width);
 
