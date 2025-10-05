@@ -13,6 +13,7 @@ import 'features/overlay_app/overlay_app.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'firebase_options.dart';
+import 'hive/hive_registrar.g.dart';
 import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
 import 'service/platform_methods/permission_channel_service.dart';
@@ -41,7 +42,9 @@ Future<void> main() async {
   final dir = await getApplicationDocumentsDirectory();
 
   await Hive.initFlutter();
+  Hive.registerAdapters();
   final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
+
   final pref = await SharedPreferences.getInstance();
 
   final permissionBloc = PermissionBloc(

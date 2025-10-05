@@ -4,6 +4,7 @@ part 'lyric_model.freezed.dart';
 part 'lyric_model.g.dart';
 
 @freezed
+@immutable
 sealed class LrcModel with _$LrcModel {
   const factory LrcModel({
     required String id,
