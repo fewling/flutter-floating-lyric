@@ -112,7 +112,7 @@ class LyricListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lyrics = context.select<LyricListBloc, List<LrcDB>>(
+    final lyrics = context.select<LyricListBloc, List<LrcModel>>(
       (bloc) => bloc.state.lyrics,
     );
 
@@ -124,14 +124,14 @@ class LyricListView extends StatelessWidget {
               title: lyrics[index].fileName,
               onTap: () => context.goNamed(
                 AppRoute.localLyricDetail.name,
-                pathParameters: {'id': lyrics[index].id.toString()},
+                pathParameters: {'id': lyrics[index].id},
               ),
               onDelete: () => _promptDeleteDialog(context, lyrics[index]),
             ),
           );
   }
 
-  void _promptDeleteDialog(BuildContext context, LrcDB lrcDB) {
+  void _promptDeleteDialog(BuildContext context, LrcModel lrcModel) {
     showDialog(
       context: context,
       builder: (dialogCtx) => BlocProvider.value(
@@ -167,8 +167,9 @@ class LyricListView extends StatelessWidget {
                 child: const Text('Cancel'),
               ),
               TextButton(
-                onPressed: () =>
-                    context.read<LyricListBloc>().add(DeleteRequested(lrcDB)),
+                onPressed: () => context.read<LyricListBloc>().add(
+                  DeleteRequested(lrcModel),
+                ),
                 child: const Text('Delete'),
               ),
             ],

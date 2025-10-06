@@ -15,7 +15,7 @@ final class SearchUpdated extends LyricListEvent {
 
 final class DeleteRequested extends LyricListEvent {
   const DeleteRequested(this.lyric);
-  final LrcDB lyric;
+  final LrcModel lyric;
 }
 
 final class DeleteAllRequested extends LyricListEvent {

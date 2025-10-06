@@ -1,6 +1,7 @@
 *.gen.dart
 *.g.dart
 *.freezed.dart
+*.g.yaml
 
 # Miscellaneous
 *.class

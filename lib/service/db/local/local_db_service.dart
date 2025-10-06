@@ -1,4 +1,6 @@
-import 'package:isar/isar.dart';
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 
 import '../../../models/lyric_model.dart';
 import '../../../repos/local/local_db_repo.dart';
@@ -8,47 +10,36 @@ class LocalDbService {
 
   final LocalDbRepo _localDB;
 
-  Future<int> saveLrc({
+  Future<String> saveLrc({
     required String title,
     required String artist,
     String? content,
   }) async {
-    final lrcDB = LrcDB()
-      ..fileName = '$title - $artist'
-      ..title = title
-      ..artist = artist
-      ..content = content;
-    return _localDB.putLyric(lrcDB);
+    final digest = sha256.convert(utf8.encode('$title$artist$content'));
+    final id = digest.toString();
+    final lrcDB = LrcModel(
+      id: id,
+      fileName: '$title - $artist',
+      title: title,
+      artist: artist,
+      content: content,
+    );
+    await _localDB.putLyric(lrcDB);
+    return id;
   }
 
-  Future<LrcDB?>? getLyricById(String id) {
-    final numId = int.tryParse(id);
-    if (numId == null) return Future.value();
+  LrcModel? getLyricById(String id) => _localDB.getLyricByID(id);
 
-    return _localDB.getLyricByID(numId);
-  }
+  LrcModel? getLyricBySongInfo(String title, String artist) =>
+      _localDB.getLyric(title, artist);
 
-  Future<LrcDB?>? getLyricBySongInfo(String title, String artist) {
-    return _localDB.getLyric(title, artist);
-  }
+  List<LrcModel> getAllLyrics() => _localDB.allRawLyrics;
 
-  Future<List<LrcDB>> getAllLyrics() {
-    return _localDB.allRawLyrics;
-  }
+  List<LrcModel> searchLyrics(String searchTerm) => _localDB.search(searchTerm);
 
-  Future<List<LrcDB>> searchLyrics(String searchTerm) {
-    return _localDB.search(searchTerm);
-  }
+  Future<void> updateLrc(LrcModel lrcDb) => _localDB.updateLyric(lrcDb);
 
-  Future<Id> updateLrc(LrcDB lrcDb) {
-    return _localDB.updateLyric(lrcDb);
-  }
+  Future<void> deleteLrc(LrcModel lrcDb) => _localDB.deleteLyric(lrcDb);
 
-  Future<void> deleteLrc(LrcDB lrcDb) {
-    return _localDB.deleteLyric(lrcDb);
-  }
-
-  Future<void> deleteAllLyrics() {
-    return _localDB.deleteAllLyrics();
-  }
+  Future<int> deleteAllLyrics() => _localDB.deleteAllLyrics();
 }
