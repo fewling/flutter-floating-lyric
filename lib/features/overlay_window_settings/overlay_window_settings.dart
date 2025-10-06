@@ -312,6 +312,31 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
                       },
                     ),
+
+                    Builder(
+                      builder: (context) {
+                        final transparentNotFoundTxt = context
+                            .select<PreferenceBloc, bool>(
+                              (value) => value.state.transparentNotFoundTxt,
+                            );
+
+                        const secondary = Icon(Icons.lyrics_outlined);
+                        final prefix = transparentNotFoundTxt ? 'Hide' : 'Show';
+                        return ToggleableSwitchListTile(
+                          enabled: visibleFloatingWindow,
+                          value: transparentNotFoundTxt,
+                          title: Text('$prefix "No Lyrics Found" Text'),
+                          subtitle: const Text(
+                            'When no lyrics is found, toggle the text transparency.',
+                          ),
+                          secondary: secondary,
+                          onChanged: (value) => context
+                              .read<PreferenceBloc>()
+                              .add(TransparentNotFoundTxtToggled(value)),
+                        );
+                      },
+                    ),
+
                     Builder(
                       builder: (context) {
                         final showLine2 = context.select<PreferenceBloc, bool>(
@@ -331,29 +356,6 @@ class OverlayWindowSetting extends StatelessWidget {
                           onChanged: (value) => context
                               .read<PreferenceBloc>()
                               .add(const ShowLine2Toggled()),
-                        );
-                      },
-                    ),
-
-                    Builder(
-                      builder: (context) {
-                        final transparentNotFoundTxt = context
-                            .select<PreferenceBloc, bool>(
-                              (value) => value.state.transparentNotFoundTxt,
-                            );
-
-                        const secondary = Icon(Icons.lyrics_outlined);
-                        return ToggleableSwitchListTile(
-                          enabled: visibleFloatingWindow,
-                          value: transparentNotFoundTxt,
-                          title: const Text('Hide "No Lyrics Found" Text'),
-                          subtitle: const Text(
-                            'When no lyrics is found, make the text transparent',
-                          ),
-                          secondary: secondary,
-                          onChanged: (value) => context
-                              .read<PreferenceBloc>()
-                              .add(TransparentNotFoundTxtToggled(value)),
                         );
                       },
                     ),
