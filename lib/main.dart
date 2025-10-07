@@ -3,7 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +13,7 @@ import 'features/overlay_app/overlay_app.dart';
 import 'features/permissions/bloc/permission_bloc.dart';
 import 'features/preference/bloc/preference_bloc.dart';
 import 'firebase_options.dart';
+import 'hive/hive_registrar.g.dart';
 import 'l10n/app_localizations.dart';
 import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
@@ -40,7 +41,11 @@ Future<void> main() async {
   };
 
   final dir = await getApplicationDocumentsDirectory();
-  final isar = await Isar.open([LrcDBSchema], directory: dir.path);
+
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
+
   final pref = await SharedPreferences.getInstance();
 
   final permissionBloc = PermissionBloc(
@@ -52,7 +57,7 @@ Future<void> main() async {
 
   runApp(
     GlobalDependencyInjector(
-      isar: isar,
+      lrcBox: lrcModelBox,
       pref: pref,
       permissionBloc: permissionBloc,
       child: FloatingLyricApp(appRouter: router),

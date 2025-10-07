@@ -3,7 +3,7 @@ part of 'lyric_list_bloc.dart';
 @freezed
 sealed class LyricListState with _$LyricListState {
   const factory LyricListState({
-    @Default(<LrcDB>[]) List<LrcDB> lyrics,
+    @Default(<LrcModel>[]) List<LrcModel> lyrics,
     @Default(LyricListDeleteStatus.initial) LyricListDeleteStatus deleteStatus,
     @Default(LyricListImportStatus.initial) LyricListImportStatus importStatus,
     @Default(<PlatformFile>[]) List<PlatformFile> failedImportFiles,

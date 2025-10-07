@@ -36,7 +36,7 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     LyricListLoaded event,
     Emitter<LyricListState> emit,
   ) async {
-    final lyrics = await _localDbService.getAllLyrics();
+    final lyrics = _localDbService.getAllLyrics();
     emit(state.copyWith(lyrics: lyrics));
   }
 
@@ -49,7 +49,7 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
       return;
     }
 
-    final lyrics = await _localDbService.searchLyrics(event.searchTerm);
+    final lyrics = _localDbService.searchLyrics(event.searchTerm);
     emit(state.copyWith(lyrics: lyrics));
   }
 

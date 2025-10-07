@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/from_overlay_msg_model.dart';
+import '../../models/lyric_model.dart';
 import '../../repos/local/local_db_repo.dart';
 import '../../repos/local/preference_repo.dart';
 import '../../repos/remote/lrclib/lrclib_repository.dart';
@@ -24,13 +25,13 @@ class GlobalDependencyInjector extends StatelessWidget {
   const GlobalDependencyInjector({
     super.key,
     required this.child,
-    required this.isar,
     required this.pref,
     required this.permissionBloc,
+    required this.lrcBox,
   });
 
   final Widget child;
-  final Isar isar;
+  final Box<LrcModel> lrcBox;
   final SharedPreferences pref;
   final PermissionBloc permissionBloc;
 
@@ -40,7 +41,7 @@ class GlobalDependencyInjector extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => LocalDbRepo(isar)),
+        RepositoryProvider(create: (context) => LocalDbRepo(lrcBox: lrcBox)),
         RepositoryProvider(create: (context) => LrcLibRepository()),
         RepositoryProvider(
           create: (context) => PreferenceRepo(sharedPreferences: pref),

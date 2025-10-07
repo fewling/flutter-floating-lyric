@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
 
 import '../../../configs/main_overlay/search_lyric_status.dart';
 import '../../../models/lrc.dart';
@@ -92,10 +91,7 @@ class LyricStateListenerBloc
               ),
             );
 
-            final lrcDB = await _localDbService.getLyricBySongInfo(
-              title,
-              artist,
-            );
+            final lrcDB = _localDbService.getLyricBySongInfo(title, artist);
             final isLyricFound = lrcDB != null;
 
             logger.t('New song: $title - $artist - $album - $duration');
@@ -291,9 +287,9 @@ class LyricStateListenerBloc
       if (content.isEmpty) return false;
 
       final id = await saveLyric(response);
-      if (id < 0) return false;
+      if (id == null) return false;
 
-      final lrcDB = await _localDbService.getLyricById(id.toString());
+      final lrcDB = _localDbService.getLyricById(id);
       emit(
         state.copyWith(
           currentLrc: LrcBuilder().buildLrc(lrcDB?.content ?? ''),
@@ -315,19 +311,18 @@ class LyricStateListenerBloc
     }
   }
 
-  Future<Id> saveLyric(LrcLibResponse lrcResponse) async {
+  Future<String?> saveLyric(LrcLibResponse lrcResponse) async {
     final content =
         lrcResponse.syncedLyrics?.toString() ??
         lrcResponse.plainLyrics?.toString() ??
         '';
-    if (content.isEmpty) return -1;
+    if (content.isEmpty) return null;
 
-    final id = await _localDbService.saveLrc(
+    return _localDbService.saveLrc(
       title: lrcResponse.trackName,
       artist: lrcResponse.artistName,
       content: content,
     );
-    return id;
   }
 
   void _onMusicPlayerRequested(
