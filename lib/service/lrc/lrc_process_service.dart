@@ -66,7 +66,7 @@ Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
     if (item.path == null) continue;
 
     final fileNameWithExt = item.path!.split('/').last;
-    final fileName = fileNameWithExt.split('.').first;
+    final fileName = fileNameWithExt.split('.lrc').first;
 
     final f = File(item.path!);
     final content = await f.readAsString();
