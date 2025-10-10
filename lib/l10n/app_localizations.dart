@@ -98,6 +98,18 @@ abstract class AppLocalizations {
     Locale('zh'),
   ];
 
+  /// No description provided for @permission_screen_notif_listener_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Listener Permission'**
+  String get permission_screen_notif_listener_permission_title;
+
+  /// No description provided for @permission_screen_overlay_window_permission_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay Window Permission'**
+  String get permission_screen_overlay_window_permission_title;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:

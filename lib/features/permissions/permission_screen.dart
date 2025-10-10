@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/permission_bloc.dart';
@@ -43,6 +44,8 @@ class _PermissionScreenState extends State<PermissionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     const pageDecoration = PageDecoration(
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imagePadding: EdgeInsets.zero,
@@ -56,16 +59,25 @@ class _PermissionScreenState extends State<PermissionScreen>
       child: IntroductionScreen(
         pages: [
           PageViewModel(
-            title: 'Notification Listener Permission',
+            title: l10n.permission_screen_notif_listener_permission_title,
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'This app needs to access the music player in the notification bar to work.\n',
+                RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            'This app needs to access the music player in the notification bar to work.',
+                      ),
+                      TextSpan(text: '\n'),
+
+                      TextSpan(text: '1. Grant Access button'),
+                      TextSpan(text: '2. This app'),
+                      TextSpan(text: '3. Turn on "Allow notification access"'),
+                    ],
+                  ),
                 ),
-                const Text('1. Grant Access button'),
-                const Text('2. This app'),
-                const Text('3. Turn on "Allow notification access"'),
                 const SizedBox(height: 8),
                 Center(
                   child: SizedBox(
@@ -99,7 +111,7 @@ class _PermissionScreenState extends State<PermissionScreen>
             decoration: pageDecoration,
           ),
           PageViewModel(
-            title: 'Overlay Window Permission',
+            title: l10n.permission_screen_overlay_window_permission_title,
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

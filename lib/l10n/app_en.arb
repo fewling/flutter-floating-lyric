@@ -1,5 +1,8 @@
 {
     "@@locale": "en",
+    "permission_screen_notif_listener_permission_title": "Notification Listener Permission",
+    "permission_screen_notif_listener_permission_instruction": "This app needs to access the music player in the notification bar to work.",
+    "permission_screen_overlay_window_permission_title": "Overlay Window Permission",
     "home": "Home",
     "storedLyrics": "Stored Lyrics",
     "settings": "Settings"

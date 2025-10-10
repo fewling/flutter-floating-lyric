@@ -107,6 +107,7 @@ class FloatingLyricApp extends StatelessWidget {
       routerConfig: appRouter.router,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      // TODO: support system language
       locale: const Locale('zh'),
     );
   }

@@ -1,5 +1,7 @@
 {
     "@@locale": "zh",
+    "permission_screen_notif_listener_permission_title": "通知監聽權限",
+    "permission_screen_overlay_window_permission_title": "浮窗權限",
     "home": "首頁",
     "storedLyrics": "本地歌詞",
     "settings": "設定"
