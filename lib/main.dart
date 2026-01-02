@@ -22,46 +22,50 @@ import 'utils/logger.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  FlutterError.onError = (errorDetails) {
-    logger.e('FlutterError: ${errorDetails.exceptionAsString()}');
-    if (kDebugMode) return;
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
+    FlutterError.onError = (errorDetails) {
+      logger.e('FlutterError: ${errorDetails.exceptionAsString()}');
+      if (kDebugMode) return;
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
 
-  // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
-  PlatformDispatcher.instance.onError = (error, stack) {
-    logger.e('PlatformDispatcher Error: $error');
-    if (kDebugMode) return false;
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      logger.e('PlatformDispatcher Error: $error');
+      if (kDebugMode) return false;
 
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  } finally {
+    final dir = await getApplicationDocumentsDirectory();
 
-  final dir = await getApplicationDocumentsDirectory();
+    await Hive.initFlutter();
+    Hive.registerAdapters();
+    final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
 
-  await Hive.initFlutter();
-  Hive.registerAdapters();
-  final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
+    final pref = await SharedPreferences.getInstance();
 
-  final pref = await SharedPreferences.getInstance();
+    final permissionBloc = PermissionBloc(
+      permissionService: PermissionService(),
+      platformMethodService: PermissionChannelService(),
+    )..add(const PermissionEventInitial());
 
-  final permissionBloc = PermissionBloc(
-    permissionService: PermissionService(),
-    platformMethodService: PermissionChannelService(),
-  )..add(const PermissionEventInitial());
+    final router = AppRouter(permissionBloc: permissionBloc);
 
-  final router = AppRouter(permissionBloc: permissionBloc);
-
-  runApp(
-    GlobalDependencyInjector(
-      lrcBox: lrcModelBox,
-      pref: pref,
-      permissionBloc: permissionBloc,
-      child: FloatingLyricApp(appRouter: router),
-    ),
-  );
+    runApp(
+      GlobalDependencyInjector(
+        lrcBox: lrcModelBox,
+        pref: pref,
+        permissionBloc: permissionBloc,
+        child: FloatingLyricApp(appRouter: router),
+      ),
+    );
+  }
 }
 
 @pragma('vm:entry-point')
