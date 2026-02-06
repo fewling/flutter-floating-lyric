@@ -194,6 +194,24 @@ abstract class AppLocalizations {
   /// **'Display Window Over Apps'**
   String get permission_screen_display_window_over_apps;
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @language_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_english;
+
+  /// No description provided for @language_chinese.
+  ///
+  /// In en, this message translates to:
+  /// **'中文'**
+  String get language_chinese;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:

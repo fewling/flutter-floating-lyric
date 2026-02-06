@@ -61,6 +61,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get permission_screen_display_window_over_apps => '在其他應用程式上層顯示視窗';
 
   @override
+  String get language => '語言';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get language_chinese => '中文';
+
+  @override
   String get home => '首頁';
 
   @override

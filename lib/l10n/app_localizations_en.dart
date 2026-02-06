@@ -67,6 +67,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Display Window Over Apps';
 
   @override
+  String get language => 'Language';
+
+  @override
+  String get language_english => 'English';
+
+  @override
+  String get language_chinese => '中文';
+
+  @override
   String get home => 'Home';
 
   @override
