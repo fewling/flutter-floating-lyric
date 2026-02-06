@@ -447,4 +447,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get overlay_window_touch_through_subtitle_line2 =>
       'Such issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
+
+  @override
+  String get animation_mode_fade_in => 'Fade In';
+
+  @override
+  String get animation_mode_typer => 'Typer';
+
+  @override
+  String get animation_mode_type_writer => 'Type Writer';
 }

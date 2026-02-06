@@ -133,5 +133,8 @@
   "overlay_window_ignore_touch_subtitle_line2": "Disabling this will not unlock it.",
   "overlay_window_touch_through_title": "Touch Through",
   "overlay_window_touch_through_subtitle_line1": "This will disable back gesture, keyboard and maybe something else. So use it at your own risk.",
-  "overlay_window_touch_through_subtitle_line2": "Such issue is due to Android's design limitation and is out of this app's control. 🙏"
+  "overlay_window_touch_through_subtitle_line2": "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
+  "animation_mode_fade_in": "Fade In",
+  "animation_mode_typer": "Typer",
+  "animation_mode_type_writer": "Type Writer"
 }

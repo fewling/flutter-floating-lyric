@@ -164,7 +164,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_show => '顯示';
 
   @override
-  String get overlay_window_styling => '樣式';
+  String get overlay_window_styling => '風格';
 
   @override
   String get overlay_window_use_app_color => '使用應用程式顏色';
@@ -191,7 +191,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_custom_text_color => '自訂文字顏色';
 
   @override
-  String get overlay_window_element_visibilities => '元素可見性';
+  String get overlay_window_element_visibilities => '組件可見性';
 
   @override
   String get overlay_window_show_milliseconds => '顯示毫秒';
@@ -250,7 +250,7 @@ class AppLocalizationsZh extends AppLocalizations {
       '這會停用返回手勢、鍵盤等功能。請自行承擔風險。\\n此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
 
   @override
-  String get fetch_online_auto_fetch => '自動取得';
+  String get fetch_online_auto_fetch => '自動搜索';
 
   @override
   String get fetch_online_title => '標題';
@@ -423,4 +423,13 @@ class AppLocalizationsZh extends AppLocalizations {
   @override
   String get overlay_window_touch_through_subtitle_line2 =>
       '此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
+
+  @override
+  String get animation_mode_fade_in => '淡入';
+
+  @override
+  String get animation_mode_typer => '逐字顯示';
+
+  @override
+  String get animation_mode_type_writer => '打字機';
 }

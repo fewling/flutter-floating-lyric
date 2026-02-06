@@ -901,6 +901,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Such issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
   String get overlay_window_touch_through_subtitle_line2;
+
+  /// No description provided for @animation_mode_fade_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade In'**
+  String get animation_mode_fade_in;
+
+  /// No description provided for @animation_mode_typer.
+  ///
+  /// In en, this message translates to:
+  /// **'Typer'**
+  String get animation_mode_typer;
+
+  /// No description provided for @animation_mode_type_writer.
+  ///
+  /// In en, this message translates to:
+  /// **'Type Writer'**
+  String get animation_mode_type_writer;
 }
 
 class _AppLocalizationsDelegate
