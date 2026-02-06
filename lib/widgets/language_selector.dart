@@ -45,7 +45,10 @@ class LanguageSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.language),
+          Icon(
+            Icons.language,
+            semanticLabel: l10n.language,
+          ),
           const SizedBox(width: 8),
           Text(getLocaleDisplayName(context, currentLocale)),
           const Icon(Icons.arrow_drop_down),
