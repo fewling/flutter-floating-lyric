@@ -18,6 +18,8 @@ class FetchOnlineLrcForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return BlocProvider(
       create: (context) =>
           FetchOnlineLrcFormBloc(
@@ -294,7 +296,9 @@ class FetchOnlineLrcForm extends StatelessWidget {
                         text: TextSpan(
                           text: l10n.fetch_online_powered_by,
                           style: TextStyle(
-                            color: Theme.of(context).textTheme.bodyMedium?.color,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.color,
                           ),
                           children: [
                             TextSpan(
@@ -363,6 +367,7 @@ class _TitleAltFieldState extends State<TitleAltField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
       listenWhen: (previous, current) => previous.titleAlt != current.titleAlt,
       listener: (context, state) {
@@ -419,6 +424,7 @@ class _ArtistAltFieldState extends State<ArtistAltField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
       listenWhen: (previous, current) =>
           previous.artistAlt != current.artistAlt,
@@ -478,6 +484,7 @@ class _AlbumAltFieldState extends State<AlbumAltField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
       listenWhen: (previous, current) => previous.albumAlt != current.albumAlt,
       listener: (context, state) {
