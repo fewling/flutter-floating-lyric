@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/color_picker_sheet.dart';
 import '../app_info/bloc/app_info_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
@@ -11,6 +12,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
     final primary = colorScheme.primary;
 
@@ -26,7 +28,7 @@ class SettingsScreen extends StatelessWidget {
           Builder(
             builder: (context) => ListTile(
               leading: Icon(Icons.brightness_2_outlined, color: primary),
-              title: const Text('Use Dark Mode'),
+              title: Text(l10n.settings_use_dark_mode),
               onTap: () =>
                   context.read<PreferenceBloc>().add(const BrightnessToggled()),
               trailing: Switch(
@@ -39,7 +41,7 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.color_lens_outlined, color: primary),
-            title: const Text('Color Scheme'),
+            title: Text(l10n.settings_color_scheme),
             trailing: Icon(Icons.square, color: colorScheme.primary),
             onTap: () => showModalBottomSheet(
               context: context,
@@ -60,8 +62,8 @@ class SettingsScreen extends StatelessWidget {
           Builder(
             builder: (context) => ListTile(
               leading: Icon(Icons.email_outlined, color: primary),
-              title: const Text('Bug Report/Feature Request'),
-              subtitle: const Text('Send us your feedback'),
+              title: Text(l10n.settings_bug_report_feature_request),
+              subtitle: Text(l10n.settings_send_feedback),
               trailing: const Icon(Icons.arrow_forward_ios_outlined),
               onTap: () => context.read<SettingsBloc>().add(
                 const FeedbackEmailClicked(),
@@ -89,19 +91,17 @@ class SettingsScreen extends StatelessWidget {
 
           ListTile(
             leading: Icon(Icons.info_outline, color: primary),
-            title: const Text('Known Issues'),
+            title: Text(l10n.settings_known_issues),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SelectionArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'In some heavy customized Android OS like MIUI, ColorOS, HuaWei: ',
-                  ),
-                  Text('1. Could not retrieve necessary permissions.'),
-                  Text('2. Not detecting music app from notification bar.'),
+                  Text(l10n.settings_known_issues_issue1),
+                  Text(l10n.settings_known_issues_issue2),
+                  Text(l10n.settings_known_issues_issue3),
                 ],
               ),
             ),

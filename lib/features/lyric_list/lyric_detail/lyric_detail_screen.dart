@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../utils/extensions/custom_extensions.dart';
 import 'bloc/lyric_detail_bloc.dart';
 
 class LyricDetailScreen extends StatelessWidget {
@@ -38,6 +39,7 @@ class LyricDetailScreen extends StatelessWidget {
   }
 
   void _showError(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -47,7 +49,7 @@ class LyricDetailScreen extends StatelessWidget {
             Icon(Icons.error_outline, color: colorScheme.onErrorContainer),
             const SizedBox(width: 8),
             Text(
-              'Error saving lyric',
+              l10n.lyric_detail_error_saving_lyric,
               style: TextStyle(color: colorScheme.onErrorContainer),
             ),
           ],
@@ -60,6 +62,7 @@ class LyricDetailScreen extends StatelessWidget {
   }
 
   void _showSuccess(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -74,7 +77,7 @@ class LyricDetailScreen extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'Lyric saved',
+              l10n.lyric_detail_lyric_saved,
               style: TextStyle(color: colorScheme.onPrimaryContainer),
             ),
           ],

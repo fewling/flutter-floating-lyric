@@ -63,21 +63,13 @@ class _PermissionScreenState extends State<PermissionScreen>
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            'This app needs to access the music player in the notification bar to work.',
-                      ),
-                      TextSpan(text: '\n'),
-
-                      TextSpan(text: '1. Grant Access button'),
-                      TextSpan(text: '2. This app'),
-                      TextSpan(text: '3. Turn on "Allow notification access"'),
-                    ],
-                  ),
+                Text(
+                  l10n.permission_screen_notif_listener_permission_instruction,
                 ),
+                const SizedBox(height: 8),
+                Text(l10n.permission_screen_notif_listener_permission_step1),
+                Text(l10n.permission_screen_notif_listener_permission_step2),
+                Text(l10n.permission_screen_notif_listener_permission_step3),
                 const SizedBox(height: 8),
                 Center(
                   child: SizedBox(
@@ -96,7 +88,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                               : () => context.read<PermissionBloc>().add(
                                   const NotificationListenerRequested(),
                                 ),
-                          child: const Text('Grant Access'),
+                          child: Text(l10n.permission_screen_grant_access),
                         );
                       },
                     ),
@@ -115,12 +107,13 @@ class _PermissionScreenState extends State<PermissionScreen>
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'This permission is required to display floating window on top of other apps.\n',
+                Text(
+                  l10n.permission_screen_overlay_window_permission_instruction,
                 ),
-                const Text('1. Grant Access button'),
-                const Text('2. This app'),
-                const Text('3. Turn on "Allow display over other apps"'),
+                const SizedBox(height: 8),
+                Text(l10n.permission_screen_overlay_window_permission_step1),
+                Text(l10n.permission_screen_overlay_window_permission_step2),
+                Text(l10n.permission_screen_overlay_window_permission_step3),
                 const SizedBox(height: 8),
                 Center(
                   child: SizedBox(
@@ -138,7 +131,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                               : () => context.read<PermissionBloc>().add(
                                   const SystemAlertWindowRequested(),
                                 ),
-                          child: const Text('Grant Access'),
+                          child: Text(l10n.permission_screen_grant_access),
                         );
                       },
                     ),
@@ -156,7 +149,10 @@ class _PermissionScreenState extends State<PermissionScreen>
         showBackButton: true,
         back: const Icon(Icons.arrow_back),
         next: const Icon(Icons.arrow_forward),
-        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+        done: Text(
+          l10n.permission_screen_done,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
         curve: Curves.fastLinearToSlowEaseIn,
         controlsPadding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -181,14 +177,15 @@ class _PermissionScreenState extends State<PermissionScreen>
 
   void _onIntroEnd(BuildContext context) {
     final permissionBloc = context.read<PermissionBloc>();
+    final l10n = context.l10n;
 
     showDialog(
       context: context,
       builder: (context) => BlocProvider.value(
         value: permissionBloc,
         child: AlertDialog(
-          title: const Text('Missing Permission'),
-          content: const Text('Please enable the permissions to proceed.'),
+          title: Text(l10n.permission_screen_missing_permission),
+          content: Text(l10n.permission_screen_enable_permissions),
           actions: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -205,7 +202,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                           : () => permissionBloc.add(
                               const NotificationListenerRequested(),
                             ),
-                      child: const Text('Notification Access'),
+                      child: Text(l10n.permission_screen_notification_access),
                     );
                   },
                 ),
@@ -222,7 +219,9 @@ class _PermissionScreenState extends State<PermissionScreen>
                           : () => permissionBloc.add(
                               const SystemAlertWindowRequested(),
                             ),
-                      child: const Text('Display Window Over Apps'),
+                      child: Text(
+                        l10n.permission_screen_display_window_over_apps,
+                      ),
                     );
                   },
                 ),

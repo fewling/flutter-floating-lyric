@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../utils/extensions/custom_extensions.dart';
+
 class ErrorDialogIconButton extends StatelessWidget {
   const ErrorDialogIconButton({
     super.key,
@@ -13,6 +15,7 @@ class ErrorDialogIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
     final txtTheme = Theme.of(context).textTheme;
 
@@ -30,7 +33,7 @@ class ErrorDialogIconButton extends StatelessWidget {
             color: colorScheme.onError,
           ),
           icon: const Icon(Icons.error_outline),
-          title: const Text('Something went wrong'),
+          title: Text(l10n.error_dialog_title),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,12 +45,15 @@ class ErrorDialogIconButton extends StatelessWidget {
             ),
           ),
           actions: [
-            TextButton(onPressed: context.pop, child: const Text('OK')),
+            TextButton(
+              onPressed: context.pop,
+              child: Text(l10n.error_dialog_ok),
+            ),
             ElevatedButton(
               onPressed: () {
                 // TODO: send to developer button
               },
-              child: const Text('Report'),
+              child: Text(l10n.error_dialog_report),
             ),
           ],
         ),
