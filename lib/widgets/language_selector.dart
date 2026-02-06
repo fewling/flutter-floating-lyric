@@ -10,9 +10,14 @@ class LanguageSelector extends StatelessWidget {
 
   static String getLocaleDisplayName(BuildContext context, String locale) {
     final l10n = context.l10n;
-    return locale == LocaleConstants.english
-        ? l10n.language_english
-        : l10n.language_chinese;
+    switch (locale) {
+      case LocaleConstants.english:
+        return l10n.language_english;
+      case LocaleConstants.chinese:
+        return l10n.language_chinese;
+      default:
+        return l10n.language_english; // Fallback to English for unknown locales
+    }
   }
 
   @override
