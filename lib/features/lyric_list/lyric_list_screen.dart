@@ -157,8 +157,9 @@ class LyricListView extends StatelessWidget {
                 context.read<LyricListBloc>().add(const DeleteStatusHandled());
                 showDialog(
                   context: context,
-                  builder: (context) =>
-                      AlertDialog(content: Text(l10n.lyric_list_error_deleting_lyric)),
+                  builder: (context) => AlertDialog(
+                    content: Text(l10n.lyric_list_error_deleting_lyric),
+                  ),
                 );
                 break;
             }

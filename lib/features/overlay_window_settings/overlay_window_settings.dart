@@ -33,7 +33,9 @@ class OverlayWindowSetting extends StatelessWidget {
         icon: visibleFloatingWindow
             ? const Icon(Icons.hide_source)
             : const Icon(Icons.play_arrow_outlined),
-        label: visibleFloatingWindow ? Text(l10n.overlay_window_hide) : Text(l10n.overlay_window_show),
+        label: visibleFloatingWindow
+            ? Text(l10n.overlay_window_hide)
+            : Text(l10n.overlay_window_show),
       ),
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
@@ -44,8 +46,9 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 0,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: Text(l10n.overlay_window_styling,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+                  l10n.overlay_window_styling,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 leading: const Icon(Icons.style_outlined),
                 selected: isExpanded,
@@ -255,7 +258,7 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 1,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: Text(
+                title: const Text(
                   'Element Visibilities',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -297,7 +300,9 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
 
                         final title = Text(
-                          showBar ? l10n.overlay_window_show_progress_bar : l10n.overlay_window_hide_progress_bar,
+                          showBar
+                              ? l10n.overlay_window_show_progress_bar
+                              : l10n.overlay_window_hide_progress_bar,
                         );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
@@ -325,8 +330,12 @@ class OverlayWindowSetting extends StatelessWidget {
                         return ToggleableSwitchListTile(
                           enabled: visibleFloatingWindow,
                           value: transparentNotFoundTxt,
-                          title: Text('\${l10n.overlay_window_hide_no_lyrics_found_text.replaceAll("Hide", prefix).replaceAll("Show", prefix)}'),
-                          subtitle: Text(
+                          title: Text(
+                            l10n.overlay_window_hide_no_lyrics_found_text
+                                .replaceAll('Hide', prefix)
+                                .replaceAll('Show', prefix),
+                          ),
+                          subtitle: const Text(
                             'When no lyrics is found, toggle the text transparency.',
                           ),
                           secondary: secondary,
@@ -344,7 +353,9 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
 
                         final title = Text(
-                          showLine2 ? l10n.overlay_window_show_line_2 : l10n.overlay_window_hide_line_2,
+                          showLine2
+                              ? l10n.overlay_window_show_line_2
+                              : l10n.overlay_window_hide_line_2,
                         );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
@@ -430,8 +441,8 @@ class OverlayWindowSetting extends StatelessWidget {
                           return Text('$tolerance ms');
                         },
                       ),
-                      title: Text('Tolerance'),
-                      subtitle: Text(
+                      title: const Text('Tolerance'),
+                      subtitle: const Text(
                         'Increase this to make the lyrics ahead of the song, vice versa.',
                       ),
                     ),
@@ -462,7 +473,7 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 2,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: Text(
+                title: const Text(
                   'Special Settings',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -482,8 +493,8 @@ class OverlayWindowSetting extends StatelessWidget {
                             );
                         return SwitchListTile(
                           value: isIgnoreTouch,
-                          title: Text('Ignore Touch'),
-                          subtitle: Text(
+                          title: const Text('Ignore Touch'),
+                          subtitle: const Text(
                             'Enabling this will lock the window from moving too.\n'
                             'Disabling this will not unlock it.',
                           ),
@@ -511,8 +522,8 @@ class OverlayWindowSetting extends StatelessWidget {
                             Icons.warning,
                             color: Colors.red,
                           ),
-                          title: Text('Touch Through'),
-                          subtitle: Text(
+                          title: const Text('Touch Through'),
+                          subtitle: const Text(
                             'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
                             "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
                           ),

@@ -122,7 +122,11 @@ class _ImportFab extends StatelessWidget {
             : () => context.read<ImportLocalLrcBloc>().add(
                 const ImportLRCsRequested(),
               ),
-        label: Text(isProcessing ? l10n.import_local_lrc_importing : l10n.import_local_lrc_import),
+        label: Text(
+          isProcessing
+              ? l10n.import_local_lrc_importing
+              : l10n.import_local_lrc_import,
+        ),
         icon: isProcessing
             ? const CircularProgressIndicator()
             : const Icon(Icons.drive_folder_upload_outlined),

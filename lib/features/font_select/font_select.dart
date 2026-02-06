@@ -54,7 +54,10 @@ class _FontSelectState extends State<FontSelect> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => launchUrl(Uri.parse('https://fonts.google.com/')),
         icon: const Icon(Icons.open_in_new),
-        label: Text(l10n.font_select_visit_google_fonts, textAlign: TextAlign.center),
+        label: Text(
+          l10n.font_select_visit_google_fonts,
+          textAlign: TextAlign.center,
+        ),
       ),
       body: CustomScrollView(
         controller: _scrollController,

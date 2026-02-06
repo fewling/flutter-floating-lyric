@@ -63,7 +63,9 @@ class _PermissionScreenState extends State<PermissionScreen>
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.permission_screen_notif_listener_permission_instruction),
+                Text(
+                  l10n.permission_screen_notif_listener_permission_instruction,
+                ),
                 const SizedBox(height: 8),
                 Text(l10n.permission_screen_notif_listener_permission_step1),
                 Text(l10n.permission_screen_notif_listener_permission_step2),
@@ -105,7 +107,9 @@ class _PermissionScreenState extends State<PermissionScreen>
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.permission_screen_overlay_window_permission_instruction),
+                Text(
+                  l10n.permission_screen_overlay_window_permission_instruction,
+                ),
                 const SizedBox(height: 8),
                 Text(l10n.permission_screen_overlay_window_permission_step1),
                 Text(l10n.permission_screen_overlay_window_permission_step2),
@@ -145,7 +149,10 @@ class _PermissionScreenState extends State<PermissionScreen>
         showBackButton: true,
         back: const Icon(Icons.arrow_back),
         next: const Icon(Icons.arrow_forward),
-        done: Text(l10n.permission_screen_done, style: const TextStyle(fontWeight: FontWeight.w600)),
+        done: Text(
+          l10n.permission_screen_done,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
         curve: Curves.fastLinearToSlowEaseIn,
         controlsPadding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -212,7 +219,9 @@ class _PermissionScreenState extends State<PermissionScreen>
                           : () => permissionBloc.add(
                               const SystemAlertWindowRequested(),
                             ),
-                      child: Text(l10n.permission_screen_display_window_over_apps),
+                      child: Text(
+                        l10n.permission_screen_display_window_over_apps,
+                      ),
                     );
                   },
                 ),
