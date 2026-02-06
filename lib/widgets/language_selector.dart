@@ -27,17 +27,16 @@ class LanguageSelector extends StatelessWidget {
       (bloc) => bloc.state.locale,
     );
 
-    return PopupMenuButton<String>(
+    return PopupMenuButton(
       initialValue: currentLocale,
-      onSelected: (String locale) {
-        context.read<PreferenceBloc>().add(LocaleUpdated(locale));
-      },
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
+      onSelected: (locale) =>
+          context.read<PreferenceBloc>().add(LocaleUpdated(locale)),
+      itemBuilder: (context) => [
+        PopupMenuItem(
           value: LocaleConstants.english,
           child: Text(l10n.language_english),
         ),
-        PopupMenuItem<String>(
+        PopupMenuItem(
           value: LocaleConstants.chinese,
           child: Text(l10n.language_chinese),
         ),
@@ -45,11 +44,6 @@ class LanguageSelector extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.language,
-            semanticLabel: l10n.language,
-          ),
-          const SizedBox(width: 8),
           Text(getLocaleDisplayName(context, currentLocale)),
           const Icon(Icons.arrow_drop_down),
         ],
