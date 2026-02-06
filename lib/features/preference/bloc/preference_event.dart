@@ -95,3 +95,9 @@ final class TransparentNotFoundTxtToggled extends PreferenceEvent {
 
   final bool transparentNotFoundTxt;
 }
+
+final class LocaleUpdated extends PreferenceEvent {
+  const LocaleUpdated(this.locale);
+
+  final String locale;
+}

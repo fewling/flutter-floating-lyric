@@ -94,6 +94,9 @@ class FloatingLyricApp extends StatelessWidget {
     final colorSchemeSeed = context.select<PreferenceBloc, int>(
       (bloc) => bloc.state.appColorScheme,
     );
+    final locale = context.select<PreferenceBloc, String>(
+      (bloc) => bloc.state.locale,
+    );
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -111,8 +114,7 @@ class FloatingLyricApp extends StatelessWidget {
       routerConfig: appRouter.router,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      // TODO: support system language
-      locale: const Locale('zh'),
+      locale: Locale(locale),
     );
   }
 }

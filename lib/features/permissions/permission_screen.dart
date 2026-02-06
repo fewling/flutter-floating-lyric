@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
+import '../../widgets/language_selector.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/permission_bloc.dart';
 
@@ -54,10 +55,20 @@ class _PermissionScreenState extends State<PermissionScreen>
     final fontFamily = context.select(
       (PreferenceBloc bloc) => bloc.state.fontFamily,
     );
-    return DefaultTextStyle(
-      style: GoogleFonts.getFont(fontFamily),
-      child: IntroductionScreen(
-        pages: [
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.language),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: LanguageSelector(),
+          ),
+        ],
+      ),
+      body: DefaultTextStyle(
+        style: GoogleFonts.getFont(fontFamily),
+        child: IntroductionScreen(
+          pages: [
           PageViewModel(
             title: l10n.permission_screen_notif_listener_permission_title,
             bodyWidget: Column(
@@ -172,7 +183,7 @@ class _PermissionScreenState extends State<PermissionScreen>
           ),
         ),
       ),
-    );
+    ));
   }
 
   void _onIntroEnd(BuildContext context) {
