@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../configs/routes/app_router.dart';
 import '../../models/lyric_model.dart';
+import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
 import 'bloc/lyric_list_bloc.dart';
@@ -13,6 +14,7 @@ class LyricListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: const LyricListView(),
       bottomNavigationBar: _BottomBar(
@@ -44,7 +46,7 @@ class LyricListScreen extends StatelessWidget {
 
             return FloatingActionButton(
               hoverElevation: 16,
-              tooltip: 'Import',
+              tooltip: l10n.lyric_list_import,
               onPressed: importing
                   ? null
                   : () => context.read<LyricListBloc>().add(
@@ -60,6 +62,7 @@ class LyricListScreen extends StatelessWidget {
   }
 
   void _promptDeleteAllDialog(BuildContext context) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (dialogCtx) => BlocProvider.value(
@@ -78,26 +81,26 @@ class LyricListScreen extends StatelessWidget {
                 context.read<LyricListBloc>().add(const DeleteStatusHandled());
                 showDialog(
                   context: context,
-                  builder: (context) => const AlertDialog(
-                    content: Text('Error deleting lyrics.'),
+                  builder: (context) => AlertDialog(
+                    content: Text(l10n.lyric_list_error_deleting_lyrics),
                   ),
                 );
                 break;
             }
           },
           child: AlertDialog(
-            title: const Text('Delete All Lyric'),
-            content: const Text('Are you sure you want to delete All lyrics?'),
+            title: Text(l10n.lyric_list_delete_all_title),
+            content: Text(l10n.lyric_list_delete_all_message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogCtx).pop(),
-                child: const Text('Cancel'),
+                child: Text(l10n.lyric_list_cancel),
               ),
               TextButton(
                 onPressed: () => context.read<LyricListBloc>().add(
                   const DeleteAllRequested(),
                 ),
-                child: const Text('Delete'),
+                child: Text(l10n.lyric_list_delete),
               ),
             ],
           ),
@@ -112,12 +115,13 @@ class LyricListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final lyrics = context.select<LyricListBloc, List<LrcModel>>(
       (bloc) => bloc.state.lyrics,
     );
 
     return lyrics.isEmpty
-        ? const Center(child: Text('No lyrics found.'))
+        ? Center(child: Text(l10n.lyric_list_no_lyrics_found))
         : ListView.builder(
             itemCount: lyrics.length,
             itemBuilder: (context, index) => _LyricTile(
@@ -132,6 +136,7 @@ class LyricListView extends StatelessWidget {
   }
 
   void _promptDeleteDialog(BuildContext context, LrcModel lrcModel) {
+    final l10n = context.l10n;
     showDialog(
       context: context,
       builder: (dialogCtx) => BlocProvider.value(
@@ -153,24 +158,24 @@ class LyricListView extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (context) =>
-                      const AlertDialog(content: Text('Error deleting lyric.')),
+                      AlertDialog(content: Text(l10n.lyric_list_error_deleting_lyric)),
                 );
                 break;
             }
           },
           child: AlertDialog(
-            title: const Text('Delete Lyric'),
-            content: const Text('Are you sure you want to delete this lyric?'),
+            title: Text(l10n.lyric_list_delete_title),
+            content: Text(l10n.lyric_list_delete_message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(dialogCtx).pop(),
-                child: const Text('Cancel'),
+                child: Text(l10n.lyric_list_cancel),
               ),
               TextButton(
                 onPressed: () => context.read<LyricListBloc>().add(
                   DeleteRequested(lrcModel),
                 ),
-                child: const Text('Delete'),
+                child: Text(l10n.lyric_list_delete),
               ),
             ],
           ),
@@ -189,6 +194,7 @@ class _LyricTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
     return ListTile(
       onTap: onTap,
@@ -196,7 +202,7 @@ class _LyricTile extends StatelessWidget {
       trailing: IconButton(
         onPressed: onDelete,
         icon: Icon(Icons.remove_circle_outline, color: colorScheme.error),
-        tooltip: 'Delete',
+        tooltip: l10n.lyric_list_delete,
       ),
     );
   }
@@ -217,6 +223,7 @@ class _BottomBarState extends State<_BottomBar> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: 80,
@@ -228,7 +235,7 @@ class _BottomBarState extends State<_BottomBar> {
                 firstChild: IconButton(
                   onPressed: () => setState(() => _isSearching = true),
                   icon: Icon(_isSearching ? Icons.search_off : Icons.search),
-                  tooltip: 'Search',
+                  tooltip: l10n.lyric_list_search,
                 ),
                 secondChild: TextField(
                   onChanged: widget.onSearch,
@@ -237,7 +244,7 @@ class _BottomBarState extends State<_BottomBar> {
                       onPressed: () => setState(() => _isSearching = false),
                       icon: const Icon(Icons.arrow_back),
                     ),
-                    hintText: 'Filename',
+                    hintText: l10n.lyric_list_filename,
                     border: InputBorder.none,
                   ),
                 ),
@@ -250,7 +257,7 @@ class _BottomBarState extends State<_BottomBar> {
             IconButton(
               onPressed: widget.onDeleteAllPressed,
               icon: const Icon(Icons.delete),
-              tooltip: 'Delete All',
+              tooltip: l10n.lyric_list_delete_all,
             ),
           ],
         ),
