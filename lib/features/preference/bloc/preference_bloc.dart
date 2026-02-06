@@ -33,6 +33,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           tolerance: spService.tolerance,
           animationMode: spService.animationMode,
           transparentNotFoundTxt: spService.transparentNotFoundTxt,
+          locale: spService.locale,
         ),
       ) {
     on<PreferenceEvent>(
@@ -58,6 +59,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           event,
           emit,
         ),
+        LocaleUpdated() => _onLocaleUpdated(event, emit),
       },
     );
   }
@@ -247,6 +249,16 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
       emit(
         state.copyWith(transparentNotFoundTxt: event.transparentNotFoundTxt),
       );
+    }
+  }
+
+  Future<void> _onLocaleUpdated(
+    LocaleUpdated event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _spService.updateLocale(event.locale);
+    if (isSuccess) {
+      emit(state.copyWith(locale: event.locale));
     }
   }
 }

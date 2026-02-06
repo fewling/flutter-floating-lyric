@@ -194,6 +194,24 @@ abstract class AppLocalizations {
   /// **'Display Window Over Apps'**
   String get permission_screen_display_window_over_apps;
 
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @language_english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get language_english;
+
+  /// No description provided for @language_chinese.
+  ///
+  /// In en, this message translates to:
+  /// **'中文'**
+  String get language_chinese;
+
   /// No description provided for @home.
   ///
   /// In en, this message translates to:
@@ -883,6 +901,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Such issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
   String get overlay_window_touch_through_subtitle_line2;
+
+  /// No description provided for @animation_mode_fade_in.
+  ///
+  /// In en, this message translates to:
+  /// **'Fade In'**
+  String get animation_mode_fade_in;
+
+  /// No description provided for @animation_mode_typer.
+  ///
+  /// In en, this message translates to:
+  /// **'Typer'**
+  String get animation_mode_typer;
+
+  /// No description provided for @animation_mode_type_writer.
+  ///
+  /// In en, this message translates to:
+  /// **'Type Writer'**
+  String get animation_mode_type_writer;
 }
 
 class _AppLocalizationsDelegate
