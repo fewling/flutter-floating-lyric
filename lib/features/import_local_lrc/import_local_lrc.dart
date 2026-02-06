@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../repos/local/local_db_repo.dart';
 import '../../service/lrc/lrc_process_service.dart';
+import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/fail_import_dialog.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import 'bloc/import_local_lrc_bloc.dart';
@@ -31,6 +32,7 @@ class _LrcFormatInstruction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final colorScheme = Theme.of(context).colorScheme;
     final txtTheme = Theme.of(context).textTheme;
 
@@ -48,26 +50,24 @@ class _LrcFormatInstruction extends StatelessWidget {
           titleTextStyle: txtTheme.titleSmall?.copyWith(
             color: colorScheme.onPrimaryContainer,
           ),
-          title: const Text(
-            'Your LRC file should match one of the following formats:',
-          ),
+          title: Text(l10n.import_local_lrc_your_lrc_file_format),
         ),
         ListTile(
-          title: const Text('1. File name should be:'),
+          title: Text(l10n.import_local_lrc_file_name_format_1),
           subtitle: SelectableText(
             '$title - $artist.lrc',
             style: TextStyle(color: colorScheme.outline),
           ),
         ),
         ListTile(
-          title: const Text('2. File name should be:'),
+          title: Text(l10n.import_local_lrc_file_name_format_2),
           subtitle: SelectableText(
             '$artist - $title.lrc',
             style: TextStyle(color: colorScheme.outline),
           ),
         ),
         ListTile(
-          title: const Text('3. File should contain:'),
+          title: Text(l10n.import_local_lrc_file_should_contain),
           subtitle: SelectableText(
             '[ti:$title]\n'
             '[ar:$artist]',
@@ -84,6 +84,7 @@ class _ImportFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isProcessing = context.select<ImportLocalLrcBloc, bool>(
       (bloc) => bloc.state.status.isProcessingFiles,
     );
@@ -121,7 +122,7 @@ class _ImportFab extends StatelessWidget {
             : () => context.read<ImportLocalLrcBloc>().add(
                 const ImportLRCsRequested(),
               ),
-        label: Text(isProcessing ? 'Importing...' : 'Import'),
+        label: Text(isProcessing ? l10n.import_local_lrc_importing : l10n.import_local_lrc_import),
         icon: isProcessing
             ? const CircularProgressIndicator()
             : const Icon(Icons.drive_folder_upload_outlined),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/font_select_bloc.dart';
 
@@ -41,6 +42,7 @@ class _FontSelectState extends State<FontSelect> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final fontStyles = context.select(
       (FontSelectBloc bloc) => bloc.state.filteredFontStyles,
     );
@@ -52,16 +54,16 @@ class _FontSelectState extends State<FontSelect> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => launchUrl(Uri.parse('https://fonts.google.com/')),
         icon: const Icon(Icons.open_in_new),
-        label: const Text('Visit Google Fonts', textAlign: TextAlign.center),
+        label: Text(l10n.font_select_visit_google_fonts, textAlign: TextAlign.center),
       ),
       body: CustomScrollView(
         controller: _scrollController,
         slivers: [
           SliverAppBar(
-            title: const Text('Font Options'),
+            title: Text(l10n.font_select_font_options),
             actions: [
               IconButton(
-                tooltip: 'Reset font family',
+                tooltip: l10n.font_select_reset_font_family,
                 icon: const Icon(Icons.refresh),
                 onPressed: () =>
                     context.read<PreferenceBloc>().add(const FontFamilyReset()),
@@ -72,7 +74,7 @@ class _FontSelectState extends State<FontSelect> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: SearchBar(
-                  hintText: 'Search font',
+                  hintText: l10n.font_select_search_font,
                   leading: const Icon(Icons.search),
                   onChanged: (value) => context.read<FontSelectBloc>().add(
                     FontSelectSearchChanged(value),
@@ -81,14 +83,10 @@ class _FontSelectState extends State<FontSelect> {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'To save your internet data, limited options are loaded each time.\n'
-                'We recommend visiting Google Fonts to view and feel the full list of fonts.\n'
-                'Then, you can search for the font name here and apply it.',
-              ),
+              padding: const EdgeInsets.all(16.0),
+              child: Text(l10n.font_select_disclaimer),
             ),
           ),
           SliverList.builder(
