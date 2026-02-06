@@ -104,7 +104,7 @@ class _FontSelectState extends State<FontSelect> {
                 selected: isSelected,
                 trailing: isSelected ? const Icon(Icons.check) : null,
                 title: Text(
-                  textStyle?.fontFamily ?? 'Unknown',
+                  textStyle?.fontFamily ?? l10n.font_select_unknown,
                   style: textStyle,
                 ),
                 onTap: () =>

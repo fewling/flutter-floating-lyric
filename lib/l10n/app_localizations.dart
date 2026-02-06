@@ -733,6 +733,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Visit Google Fonts'**
   String get font_select_visit_google_fonts;
+
+  /// No description provided for @font_select_unknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get font_select_unknown;
+
+  /// No description provided for @error_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get error_dialog_title;
+
+  /// No description provided for @error_dialog_ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get error_dialog_ok;
+
+  /// No description provided for @error_dialog_report.
+  ///
+  /// In en, this message translates to:
+  /// **'Report'**
+  String get error_dialog_report;
+
+  /// No description provided for @overlay_window_no_lyric.
+  ///
+  /// In en, this message translates to:
+  /// **'No lyric'**
+  String get overlay_window_no_lyric;
+
+  /// No description provided for @overlay_window_searching_lyric.
+  ///
+  /// In en, this message translates to:
+  /// **'Searching lyric...'**
+  String get overlay_window_searching_lyric;
+
+  /// No description provided for @overlay_window_waiting_for_music_player.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for music player'**
+  String get overlay_window_waiting_for_music_player;
+
+  /// No description provided for @media_state_play_song.
+  ///
+  /// In en, this message translates to:
+  /// **'Play a song'**
+  String get media_state_play_song;
+
+  /// No description provided for @media_state_not_detecting_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Not detecting active music player?'**
+  String get media_state_not_detecting_title;
+
+  /// No description provided for @media_state_not_detecting_subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap here to re-enable the notification listener'**
+  String get media_state_not_detecting_subtitle;
+
+  /// No description provided for @media_state_learn_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn More'**
+  String get media_state_learn_more;
+
+  /// No description provided for @media_state_notification_listener_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification Listener'**
+  String get media_state_notification_listener_title;
+
+  /// No description provided for @media_state_notification_listener_info1.
+  ///
+  /// In en, this message translates to:
+  /// **'On some Android devices (such as those from Huawei or Xiaomi), system-level battery and memory management features may restrict background services, including the notification listener required for music detection.'**
+  String get media_state_notification_listener_info1;
+
+  /// No description provided for @media_state_notification_listener_info2.
+  ///
+  /// In en, this message translates to:
+  /// **'If the app is closed, these optimizations can terminate the background service after a short period, and it may not restart automatically.'**
+  String get media_state_notification_listener_info2;
+
+  /// No description provided for @media_state_notification_listener_info3.
+  ///
+  /// In en, this message translates to:
+  /// **'If music is not being detected, please tap the button above to manually re-enable the notification listener.'**
+  String get media_state_notification_listener_info3;
+
+  /// No description provided for @media_state_notification_listener_info4.
+  ///
+  /// In en, this message translates to:
+  /// **'Due to manufacturer-specific customizations and limited documentation, ensuring reliable background operation on these devices can be challenging. We appreciate your understanding as we continue to improve compatibility.'**
+  String get media_state_notification_listener_info4;
+
+  /// No description provided for @overlay_window_element_visibilities_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Element Visibilities'**
+  String get overlay_window_element_visibilities_title;
+
+  /// No description provided for @overlay_window_special_settings_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Special Settings'**
+  String get overlay_window_special_settings_title;
+
+  /// No description provided for @overlay_window_tolerance_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tolerance'**
+  String get overlay_window_tolerance_title;
+
+  /// No description provided for @overlay_window_ignore_touch_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore Touch'**
+  String get overlay_window_ignore_touch_title;
+
+  /// No description provided for @overlay_window_ignore_touch_subtitle_line1.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabling this will lock the window from moving too.'**
+  String get overlay_window_ignore_touch_subtitle_line1;
+
+  /// No description provided for @overlay_window_ignore_touch_subtitle_line2.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabling this will not unlock it.'**
+  String get overlay_window_ignore_touch_subtitle_line2;
+
+  /// No description provided for @overlay_window_touch_through_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch Through'**
+  String get overlay_window_touch_through_title;
+
+  /// No description provided for @overlay_window_touch_through_subtitle_line1.
+  ///
+  /// In en, this message translates to:
+  /// **'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.'**
+  String get overlay_window_touch_through_subtitle_line1;
+
+  /// No description provided for @overlay_window_touch_through_subtitle_line2.
+  ///
+  /// In en, this message translates to:
+  /// **'Such issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
+  String get overlay_window_touch_through_subtitle_line2;
 }
 
 class _AppLocalizationsDelegate

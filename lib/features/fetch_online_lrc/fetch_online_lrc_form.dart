@@ -275,7 +275,6 @@ class FetchOnlineLrcForm extends StatelessWidget {
                   title: Text(l10n.fetch_online_duration),
                   subtitle: Builder(
                     builder: (context) {
-                      final l10n = context.l10n;
                       final millis = context
                           .select<LyricStateListenerBloc, int>(
                             (bloc) =>

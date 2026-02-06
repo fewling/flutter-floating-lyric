@@ -103,6 +103,7 @@ class OverlayContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final line1Pos = settings.line1?.time;
     final line2Pos = settings.line2?.time;
 
@@ -117,17 +118,23 @@ class OverlayContent extends StatelessWidget {
     switch (status) {
       case SearchLyricStatus.empty:
         return Center(
-          child: Text('No lyric', style: TextStyle(color: textColor)),
+          child: Text(
+            l10n.overlay_window_no_lyric,
+            style: TextStyle(color: textColor),
+          ),
         );
       case SearchLyricStatus.searching:
         return Center(
-          child: Text('Searching lyric...', style: TextStyle(color: textColor)),
+          child: Text(
+            l10n.overlay_window_searching_lyric,
+            style: TextStyle(color: textColor),
+          ),
         );
       case SearchLyricStatus.notFound:
         return Center(
           // child: Text('Lyric not found', style: TextStyle(color: textColor)),
           child: Text(
-            'Lyric not found',
+            l10n.fetch_online_no_lyric_found,
             style: TextStyle(
               color: settings.transparentNotFoundTxt
                   ? Colors.transparent
@@ -404,7 +411,7 @@ class OverlayLoadingIndicator extends StatelessWidget {
             ),
             Align(
               child: Text(
-                'Waiting for music player',
+                context.l10n.overlay_window_waiting_for_music_player,
                 style: TextStyle(color: colorScheme.onPrimaryContainer),
               ),
             ),

@@ -351,4 +351,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get font_select_visit_google_fonts => 'Visit Google Fonts';
+
+  @override
+  String get font_select_unknown => 'Unknown';
+
+  @override
+  String get error_dialog_title => 'Something went wrong';
+
+  @override
+  String get error_dialog_ok => 'OK';
+
+  @override
+  String get error_dialog_report => 'Report';
+
+  @override
+  String get overlay_window_no_lyric => 'No lyric';
+
+  @override
+  String get overlay_window_searching_lyric => 'Searching lyric...';
+
+  @override
+  String get overlay_window_waiting_for_music_player =>
+      'Waiting for music player';
+
+  @override
+  String get media_state_play_song => 'Play a song';
+
+  @override
+  String get media_state_not_detecting_title =>
+      'Not detecting active music player?';
+
+  @override
+  String get media_state_not_detecting_subtitle =>
+      'Tap here to re-enable the notification listener';
+
+  @override
+  String get media_state_learn_more => 'Learn More';
+
+  @override
+  String get media_state_notification_listener_title => 'Notification Listener';
+
+  @override
+  String get media_state_notification_listener_info1 =>
+      'On some Android devices (such as those from Huawei or Xiaomi), system-level battery and memory management features may restrict background services, including the notification listener required for music detection.';
+
+  @override
+  String get media_state_notification_listener_info2 =>
+      'If the app is closed, these optimizations can terminate the background service after a short period, and it may not restart automatically.';
+
+  @override
+  String get media_state_notification_listener_info3 =>
+      'If music is not being detected, please tap the button above to manually re-enable the notification listener.';
+
+  @override
+  String get media_state_notification_listener_info4 =>
+      'Due to manufacturer-specific customizations and limited documentation, ensuring reliable background operation on these devices can be challenging. We appreciate your understanding as we continue to improve compatibility.';
+
+  @override
+  String get overlay_window_element_visibilities_title =>
+      'Element Visibilities';
+
+  @override
+  String get overlay_window_special_settings_title => 'Special Settings';
+
+  @override
+  String get overlay_window_tolerance_title => 'Tolerance';
+
+  @override
+  String get overlay_window_ignore_touch_title => 'Ignore Touch';
+
+  @override
+  String get overlay_window_ignore_touch_subtitle_line1 =>
+      'Enabling this will lock the window from moving too.';
+
+  @override
+  String get overlay_window_ignore_touch_subtitle_line2 =>
+      'Disabling this will not unlock it.';
+
+  @override
+  String get overlay_window_touch_through_title => 'Touch Through';
+
+  @override
+  String get overlay_window_touch_through_subtitle_line1 =>
+      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.';
+
+  @override
+  String get overlay_window_touch_through_subtitle_line2 =>
+      'Such issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
 }

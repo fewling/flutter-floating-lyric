@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
 import 'bloc/lyric_state_listener_bloc.dart';
 
@@ -9,6 +10,7 @@ class MediaStateInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isPlaying = context.select<LyricStateListenerBloc, bool>(
       (bloc) => bloc.state.mediaState?.isPlaying ?? false,
     );
@@ -62,7 +64,7 @@ class MediaStateInfo extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 )
-              : const Text('Play a song'),
+              : Text(l10n.media_state_play_song),
           subtitle: isPlaying
               ? LinearProgressIndicator(
                   value: progress.isInfinite || progress.isNaN ? 0 : progress,
@@ -75,49 +77,43 @@ class MediaStateInfo extends StatelessWidget {
               Expanded(
                 child: ListTile(
                   leading: const Icon(Icons.touch_app_outlined),
-                  title: const FittedBox(
+                  title: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Not detecting active music player?',
+                      l10n.media_state_not_detecting_title,
                       maxLines: 1,
                     ),
                   ),
-                  subtitle: const FittedBox(
+                  subtitle: FittedBox(
                     fit: BoxFit.scaleDown,
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Tap here to re-enable the notification listener',
+                      l10n.media_state_not_detecting_subtitle,
                       maxLines: 1,
                     ),
                   ),
                   trailing: TextButton(
                     child: Text(
-                      'Learn More',
+                      l10n.media_state_learn_more,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     onPressed: () => showDialog(
                       context: context,
-                      builder: (context) => const AlertDialog(
-                        icon: Icon(Icons.info_outline),
-                        title: Text('Notification Listener'),
+                      builder: (context) => AlertDialog(
+                        icon: const Icon(Icons.info_outline),
+                        title: Text(
+                          l10n.media_state_notification_listener_title,
+                        ),
                         content: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           spacing: 8,
                           children: [
-                            Text(
-                              'On some Android devices (such as those from Huawei or Xiaomi), system-level battery and memory management features may restrict background services, including the notification listener required for music detection.',
-                            ),
-                            Text(
-                              'If the app is closed, these optimizations can terminate the background service after a short period, and it may not restart automatically.',
-                            ),
-                            Text(
-                              'If music is not being detected, please tap the button above to manually re-enable the notification listener.',
-                            ),
-                            Text(
-                              'Due to manufacturer-specific customizations and limited documentation, ensuring reliable background operation on these devices can be challenging. We appreciate your understanding as we continue to improve compatibility.',
-                            ),
+                            Text(l10n.media_state_notification_listener_info1),
+                            Text(l10n.media_state_notification_listener_info2),
+                            Text(l10n.media_state_notification_listener_info3),
+                            Text(l10n.media_state_notification_listener_info4),
                           ],
                         ),
                       ),

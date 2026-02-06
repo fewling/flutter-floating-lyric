@@ -333,4 +333,85 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get font_select_visit_google_fonts => '造訪 Google Fonts';
+
+  @override
+  String get font_select_unknown => '未知';
+
+  @override
+  String get error_dialog_title => '發生錯誤';
+
+  @override
+  String get error_dialog_ok => '確定';
+
+  @override
+  String get error_dialog_report => '回報';
+
+  @override
+  String get overlay_window_no_lyric => '無歌詞';
+
+  @override
+  String get overlay_window_searching_lyric => '搜尋歌詞中...';
+
+  @override
+  String get overlay_window_waiting_for_music_player => '等待音樂播放器';
+
+  @override
+  String get media_state_play_song => '播放歌曲';
+
+  @override
+  String get media_state_not_detecting_title => '未偵測到音樂播放器?';
+
+  @override
+  String get media_state_not_detecting_subtitle => '點擊此處重新啟用通知監聽器';
+
+  @override
+  String get media_state_learn_more => '了解更多';
+
+  @override
+  String get media_state_notification_listener_title => '通知監聽器';
+
+  @override
+  String get media_state_notification_listener_info1 =>
+      '在某些 Android 裝置(如華為或小米)上,系統層級的電池和記憶體管理功能可能會限制背景服務,包括音樂偵測所需的通知監聽器。';
+
+  @override
+  String get media_state_notification_listener_info2 =>
+      '如果應用程式關閉,這些最佳化可能會在短時間後終止背景服務,且可能不會自動重新啟動。';
+
+  @override
+  String get media_state_notification_listener_info3 =>
+      '如果無法偵測到音樂,請點擊上方按鈕手動重新啟用通知監聽器。';
+
+  @override
+  String get media_state_notification_listener_info4 =>
+      '由於製造商的特定客製化和有限的文件,確保在這些裝置上可靠的背景運作可能具有挑戰性。我們感謝您的理解,並將持續改善相容性。';
+
+  @override
+  String get overlay_window_element_visibilities_title => '元素可見性';
+
+  @override
+  String get overlay_window_special_settings_title => '特殊設定';
+
+  @override
+  String get overlay_window_tolerance_title => '容差';
+
+  @override
+  String get overlay_window_ignore_touch_title => '忽略觸控';
+
+  @override
+  String get overlay_window_ignore_touch_subtitle_line1 => '啟用此功能將鎖定視窗移動。';
+
+  @override
+  String get overlay_window_ignore_touch_subtitle_line2 => '停用此功能不會解鎖視窗。';
+
+  @override
+  String get overlay_window_touch_through_title => '觸控穿透';
+
+  @override
+  String get overlay_window_touch_through_subtitle_line1 =>
+      '這會停用返回手勢、鍵盤等功能。請自行承擔風險。';
+
+  @override
+  String get overlay_window_touch_through_subtitle_line2 =>
+      '此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
 }
