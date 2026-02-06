@@ -18,6 +18,7 @@ sealed class PreferenceState with _$PreferenceState {
     required bool enableAnimation,
     required bool transparentNotFoundTxt,
     required int tolerance,
+    @Default('en') String locale,
     @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)
     required AnimationMode animationMode,
   }) = _PreferenceState;

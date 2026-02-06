@@ -14,6 +14,7 @@ class OverlayWindowSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final visibleFloatingWindow = context
         .select<OverlayWindowSettingsBloc, bool>(
           (bloc) => bloc.state.isWindowVisible,
@@ -32,7 +33,9 @@ class OverlayWindowSetting extends StatelessWidget {
         icon: visibleFloatingWindow
             ? const Icon(Icons.hide_source)
             : const Icon(Icons.play_arrow_outlined),
-        label: visibleFloatingWindow ? const Text('Hide') : const Text('Show'),
+        label: visibleFloatingWindow
+            ? Text(l10n.overlay_window_hide)
+            : Text(l10n.overlay_window_show),
       ),
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
@@ -43,9 +46,9 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 0,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text(
-                  'Styling',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+                  l10n.overlay_window_styling,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 leading: const Icon(Icons.style_outlined),
                 selected: isExpanded,
@@ -56,7 +59,7 @@ class OverlayWindowSetting extends StatelessWidget {
                   children: [
                     SwitchListTile(
                       value: useAppColor,
-                      title: const Text('Use App Color'),
+                      title: Text(l10n.overlay_window_use_app_color),
                       secondary: const Icon(Icons.palette_outlined),
                       onChanged: !visibleFloatingWindow
                           ? null
@@ -66,7 +69,7 @@ class OverlayWindowSetting extends StatelessWidget {
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,
-                      title: const Text('Custom Backgound Color'),
+                      title: Text(l10n.overlay_window_custom_background_color),
                       leading: const Icon(Icons.color_lens_outlined),
                       trailing: Builder(
                         builder: (context) {
@@ -86,7 +89,7 @@ class OverlayWindowSetting extends StatelessWidget {
                         builder: (dialogCtx) => BlocProvider.value(
                           value: context.read<PreferenceBloc>(),
                           child: AlertDialog(
-                            title: const Text('Pick a color!'),
+                            title: Text(l10n.overlay_window_pick_a_color),
                             content: SingleChildScrollView(
                               child: Builder(
                                 builder: (context) {
@@ -109,7 +112,7 @@ class OverlayWindowSetting extends StatelessWidget {
                             actions: [
                               ElevatedButton(
                                 onPressed: () => Navigator.of(dialogCtx).pop(),
-                                child: const Text('Got it'),
+                                child: Text(l10n.overlay_window_got_it),
                               ),
                             ],
                           ),
@@ -130,7 +133,7 @@ class OverlayWindowSetting extends StatelessWidget {
                           return Text('${opacity.toInt()}%');
                         },
                       ),
-                      title: const Text('Window Opacity'),
+                      title: Text(l10n.overlay_window_opacity),
                     ),
                     Builder(
                       builder: (context) {
@@ -158,7 +161,7 @@ class OverlayWindowSetting extends StatelessWidget {
                           ctx.select((PreferenceBloc b) => b.state.fontFamily),
                         ),
                       ),
-                      title: const Text('Font Family'),
+                      title: Text(l10n.overlay_window_font_family),
                       onTap: () => context.goNamed(AppRoute.fonts.name),
                     ),
                     ListTile(
@@ -173,7 +176,7 @@ class OverlayWindowSetting extends StatelessWidget {
                           return Text('$fontSize');
                         },
                       ),
-                      title: const Text('Lyrics Font Size'),
+                      title: Text(l10n.overlay_window_lyrics_font_size),
                     ),
                     Builder(
                       builder: (context) {
@@ -196,7 +199,7 @@ class OverlayWindowSetting extends StatelessWidget {
                     ),
                     ListTile(
                       enabled: visibleFloatingWindow && useCustomColor,
-                      title: const Text('Custom Text Color'),
+                      title: Text(l10n.overlay_window_custom_text_color),
                       leading: const Icon(Icons.color_lens_outlined),
                       trailing: Builder(
                         builder: (context) {
@@ -216,7 +219,7 @@ class OverlayWindowSetting extends StatelessWidget {
                         builder: (dialogCtx) => BlocProvider.value(
                           value: context.read<PreferenceBloc>(),
                           child: AlertDialog(
-                            title: const Text('Pick a color!'),
+                            title: Text(l10n.overlay_window_pick_a_color),
                             content: SingleChildScrollView(
                               child: Builder(
                                 builder: (context) {
@@ -239,7 +242,7 @@ class OverlayWindowSetting extends StatelessWidget {
                             actions: [
                               ElevatedButton(
                                 onPressed: () => Navigator.of(dialogCtx).pop(),
-                                child: const Text('Got it'),
+                                child: Text(l10n.overlay_window_got_it),
                               ),
                             ],
                           ),
@@ -255,9 +258,9 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 1,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text(
-                  'Element Visibilities',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+                  l10n.overlay_window_element_visibilities_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 leading: const Icon(Icons.visibility_outlined),
                 selected: isExpanded,
@@ -274,8 +277,8 @@ class OverlayWindowSetting extends StatelessWidget {
 
                         final title = Text(
                           showMillis
-                              ? 'Show Milliseconds'
-                              : 'Hide Milliseconds',
+                              ? l10n.overlay_window_show_milliseconds
+                              : l10n.overlay_window_hide_milliseconds,
                         );
                         const secondary = Icon(Icons.timelapse_outlined);
 
@@ -297,7 +300,9 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
 
                         final title = Text(
-                          showBar ? 'Show Progress Bar' : 'Hide Progress Bar',
+                          showBar
+                              ? l10n.overlay_window_show_progress_bar
+                              : l10n.overlay_window_hide_progress_bar,
                         );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
@@ -325,9 +330,13 @@ class OverlayWindowSetting extends StatelessWidget {
                         return ToggleableSwitchListTile(
                           enabled: visibleFloatingWindow,
                           value: transparentNotFoundTxt,
-                          title: Text('$prefix "No Lyrics Found" Text'),
-                          subtitle: const Text(
-                            'When no lyrics is found, toggle the text transparency.',
+                          title: Text(
+                            l10n.overlay_window_hide_no_lyrics_found_text
+                                .replaceAll('Hide', prefix)
+                                .replaceAll('Show', prefix),
+                          ),
+                          subtitle: Text(
+                            l10n.overlay_window_no_lyrics_found_subtitle,
                           ),
                           secondary: secondary,
                           onChanged: (value) => context
@@ -344,7 +353,9 @@ class OverlayWindowSetting extends StatelessWidget {
                         );
 
                         final title = Text(
-                          showLine2 ? 'Show Line 2' : 'Hide Line 2',
+                          showLine2
+                              ? l10n.overlay_window_show_line_2
+                              : l10n.overlay_window_hide_line_2,
                         );
                         const secondary = Icon(Icons.linear_scale_outlined);
 
@@ -369,8 +380,8 @@ class OverlayWindowSetting extends StatelessWidget {
 
                         final title = Text(
                           enableAnimation
-                              ? 'Enable Animation'
-                              : 'Disable Animation',
+                              ? l10n.overlay_window_enable_animation
+                              : l10n.overlay_window_disable_animation,
                         );
                         const secondary = Icon(Icons.animation_outlined);
 
@@ -430,10 +441,8 @@ class OverlayWindowSetting extends StatelessWidget {
                           return Text('$tolerance ms');
                         },
                       ),
-                      title: const Text('Tolerance'),
-                      subtitle: const Text(
-                        'Increase this to make the lyrics ahead of the song, vice versa.',
-                      ),
+                      title: Text(l10n.overlay_window_tolerance_title),
+                      subtitle: Text(l10n.overlay_window_tolerance_subtitle),
                     ),
                     Builder(
                       builder: (context) {
@@ -462,9 +471,9 @@ class OverlayWindowSetting extends StatelessWidget {
               canTapOnHeader: true,
               value: 2,
               headerBuilder: (context, isExpanded) => ListTile(
-                title: const Text(
-                  'Special Settings',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+                  l10n.overlay_window_special_settings_title,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 leading: const Icon(Icons.settings_suggest_outlined),
                 selected: isExpanded,
@@ -482,10 +491,10 @@ class OverlayWindowSetting extends StatelessWidget {
                             );
                         return SwitchListTile(
                           value: isIgnoreTouch,
-                          title: const Text('Ignore Touch'),
-                          subtitle: const Text(
-                            'Enabling this will lock the window from moving too.\n'
-                            'Disabling this will not unlock it.',
+                          title: Text(l10n.overlay_window_ignore_touch_title),
+                          subtitle: Text(
+                            '${l10n.overlay_window_ignore_touch_subtitle_line1}\n'
+                            '${l10n.overlay_window_ignore_touch_subtitle_line2}',
                           ),
                           secondary: const Icon(
                             Icons.warning,
@@ -511,10 +520,10 @@ class OverlayWindowSetting extends StatelessWidget {
                             Icons.warning,
                             color: Colors.red,
                           ),
-                          title: const Text('Touch Through'),
-                          subtitle: const Text(
-                            'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\n'
-                            "Such issue is due to Android's design limitation and is out of this app's control. 🙏",
+                          title: Text(l10n.overlay_window_touch_through_title),
+                          subtitle: Text(
+                            '${l10n.overlay_window_touch_through_subtitle_line1}\n'
+                            '${l10n.overlay_window_touch_through_subtitle_line2}',
                           ),
                           onChanged: visibleFloatingWindow
                               ? (value) => context

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../fetch_online_lrc/fetch_online_lrc_form.dart';
 import '../import_local_lrc/import_local_lrc.dart';
 import '../lyric_state_listener/media_state_info.dart';
@@ -10,24 +11,31 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const DefaultTabController(
+    final l10n = context.l10n;
+    return DefaultTabController(
       length: 3,
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: MediaStateInfo()),
+          const SliverToBoxAdapter(child: MediaStateInfo()),
           SliverToBoxAdapter(
             child: TabBar(
               tabs: [
-                Tab(text: 'Window Configs', icon: Icon(Icons.window_outlined)),
                 Tab(
-                  text: 'Import Lyrics',
-                  icon: Icon(Icons.folder_copy_outlined),
+                  text: l10n.home_screen_window_configs,
+                  icon: const Icon(Icons.window_outlined),
                 ),
-                Tab(text: 'Online Lyrics', icon: Icon(Icons.cloud_outlined)),
+                Tab(
+                  text: l10n.home_screen_import_lyrics,
+                  icon: const Icon(Icons.folder_copy_outlined),
+                ),
+                Tab(
+                  text: l10n.home_screen_online_lyrics,
+                  icon: const Icon(Icons.cloud_outlined),
+                ),
               ],
             ),
           ),
-          SliverFillRemaining(
+          const SliverFillRemaining(
             child: TabBarView(
               children: [
                 OverlayWindowSetting(),

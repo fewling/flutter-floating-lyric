@@ -34,6 +34,9 @@ dependencies:
   firebase_core: ^4.1.1
   firebase_crashlytics: ^5.0.2
   firebase_analytics: ^12.0.2
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
   hive_ce: ^2.14.0
   hive_ce_flutter: ^2.3.2
   crypto: ^3.0.6
@@ -60,6 +63,7 @@ flutter_gen:
   line_length: 80 # Optional (default: 80)
 
 flutter:
+  generate: true
   uses-material-design: true
   assets:
     - assets/images/

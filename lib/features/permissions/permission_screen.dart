@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/permission_bloc.dart';
@@ -43,6 +44,8 @@ class _PermissionScreenState extends State<PermissionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     const pageDecoration = PageDecoration(
       bodyPadding: EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
       imagePadding: EdgeInsets.zero,
@@ -56,16 +59,17 @@ class _PermissionScreenState extends State<PermissionScreen>
       child: IntroductionScreen(
         pages: [
           PageViewModel(
-            title: 'Notification Listener Permission',
+            title: l10n.permission_screen_notif_listener_permission_title,
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'This app needs to access the music player in the notification bar to work.\n',
+                Text(
+                  l10n.permission_screen_notif_listener_permission_instruction,
                 ),
-                const Text('1. Grant Access button'),
-                const Text('2. This app'),
-                const Text('3. Turn on "Allow notification access"'),
+                const SizedBox(height: 8),
+                Text(l10n.permission_screen_notif_listener_permission_step1),
+                Text(l10n.permission_screen_notif_listener_permission_step2),
+                Text(l10n.permission_screen_notif_listener_permission_step3),
                 const SizedBox(height: 8),
                 Center(
                   child: SizedBox(
@@ -84,7 +88,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                               : () => context.read<PermissionBloc>().add(
                                   const NotificationListenerRequested(),
                                 ),
-                          child: const Text('Grant Access'),
+                          child: Text(l10n.permission_screen_grant_access),
                         );
                       },
                     ),
@@ -99,16 +103,17 @@ class _PermissionScreenState extends State<PermissionScreen>
             decoration: pageDecoration,
           ),
           PageViewModel(
-            title: 'Overlay Window Permission',
+            title: l10n.permission_screen_overlay_window_permission_title,
             bodyWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'This permission is required to display floating window on top of other apps.\n',
+                Text(
+                  l10n.permission_screen_overlay_window_permission_instruction,
                 ),
-                const Text('1. Grant Access button'),
-                const Text('2. This app'),
-                const Text('3. Turn on "Allow display over other apps"'),
+                const SizedBox(height: 8),
+                Text(l10n.permission_screen_overlay_window_permission_step1),
+                Text(l10n.permission_screen_overlay_window_permission_step2),
+                Text(l10n.permission_screen_overlay_window_permission_step3),
                 const SizedBox(height: 8),
                 Center(
                   child: SizedBox(
@@ -126,7 +131,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                               : () => context.read<PermissionBloc>().add(
                                   const SystemAlertWindowRequested(),
                                 ),
-                          child: const Text('Grant Access'),
+                          child: Text(l10n.permission_screen_grant_access),
                         );
                       },
                     ),
@@ -144,7 +149,10 @@ class _PermissionScreenState extends State<PermissionScreen>
         showBackButton: true,
         back: const Icon(Icons.arrow_back),
         next: const Icon(Icons.arrow_forward),
-        done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
+        done: Text(
+          l10n.permission_screen_done,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
         curve: Curves.fastLinearToSlowEaseIn,
         controlsPadding: const EdgeInsets.symmetric(
           horizontal: 8.0,
@@ -169,14 +177,15 @@ class _PermissionScreenState extends State<PermissionScreen>
 
   void _onIntroEnd(BuildContext context) {
     final permissionBloc = context.read<PermissionBloc>();
+    final l10n = context.l10n;
 
     showDialog(
       context: context,
       builder: (context) => BlocProvider.value(
         value: permissionBloc,
         child: AlertDialog(
-          title: const Text('Missing Permission'),
-          content: const Text('Please enable the permissions to proceed.'),
+          title: Text(l10n.permission_screen_missing_permission),
+          content: Text(l10n.permission_screen_enable_permissions),
           actions: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -193,7 +202,7 @@ class _PermissionScreenState extends State<PermissionScreen>
                           : () => permissionBloc.add(
                               const NotificationListenerRequested(),
                             ),
-                      child: const Text('Notification Access'),
+                      child: Text(l10n.permission_screen_notification_access),
                     );
                   },
                 ),
@@ -210,7 +219,9 @@ class _PermissionScreenState extends State<PermissionScreen>
                           : () => permissionBloc.add(
                               const SystemAlertWindowRequested(),
                             ),
-                      child: const Text('Display Window Over Apps'),
+                      child: Text(
+                        l10n.permission_screen_display_window_over_apps,
+                      ),
                     );
                   },
                 ),

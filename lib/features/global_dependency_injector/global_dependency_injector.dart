@@ -13,7 +13,6 @@ import '../../service/message_channels/to_overlay_message_service.dart';
 import '../../service/permissions/permission_service.dart';
 import '../../service/platform_methods/window_channel_service.dart';
 import '../../service/preference/preference_service.dart';
-import '../../utils/logger.dart';
 import '../app_info/bloc/app_info_bloc.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../message_channels/message_from_overlay_receiver/bloc/message_from_overlay_receiver_bloc.dart';
@@ -186,7 +185,6 @@ class MsgFromOverlayListener extends StatelessWidget {
       MessageFromOverlayReceiverState
     >(
       listener: (context, state) {
-        logger.d('MessageFromOverlayReceiverBloc: $state');
         if (state.msg == null) return;
 
         if (state.msg?.action?.isClose ?? false) {
@@ -226,9 +224,7 @@ class OverlaySettingListener extends StatelessWidget {
     return BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
       listenWhen: (previous, current) =>
           previous.isWindowVisible != current.isWindowVisible,
-      listener: (context, state) {
-        logger.w('isWindowVisible: ${state.isWindowVisible}');
-      },
+      listener: (context, state) {},
       child: child,
     );
   }
