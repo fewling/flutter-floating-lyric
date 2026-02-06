@@ -57,7 +57,6 @@ class _PermissionScreenState extends State<PermissionScreen>
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.language),
         actions: const [
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),

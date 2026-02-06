@@ -25,15 +25,13 @@ class SettingsScreen extends StatelessWidget {
               final currentLocale = context.select<PreferenceBloc, String>(
                 (bloc) => bloc.state.locale,
               );
-              final l10n = context.l10n;
-              final displayLocale = currentLocale == 'en'
-                  ? l10n.language_english
-                  : l10n.language_chinese;
 
               return ListTile(
                 leading: Icon(Icons.language_outlined, color: primary),
                 title: Text(l10n.language),
-                subtitle: Text(displayLocale),
+                subtitle: Text(
+                  LanguageSelector.getLocaleDisplayName(context, currentLocale),
+                ),
                 trailing: const LanguageSelector(),
               );
             },

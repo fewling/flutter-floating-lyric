@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../configs/locale_constants.dart';
 import '../features/preference/bloc/preference_bloc.dart';
 import '../utils/extensions/custom_extensions.dart';
 
 class LanguageSelector extends StatelessWidget {
   const LanguageSelector({super.key});
+
+  static String getLocaleDisplayName(BuildContext context, String locale) {
+    final l10n = context.l10n;
+    return locale == LocaleConstants.english
+        ? l10n.language_english
+        : l10n.language_chinese;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +29,18 @@ class LanguageSelector extends StatelessWidget {
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
-          value: 'en',
+          value: LocaleConstants.english,
           child: Text(l10n.language_english),
         ),
         PopupMenuItem<String>(
-          value: 'zh',
+          value: LocaleConstants.chinese,
           child: Text(l10n.language_chinese),
         ),
       ],
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            currentLocale == 'en'
-                ? l10n.language_english
-                : l10n.language_chinese,
-          ),
+          Text(getLocaleDisplayName(context, currentLocale)),
           const Icon(Icons.arrow_drop_down),
         ],
       ),
