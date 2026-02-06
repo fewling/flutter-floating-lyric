@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
+import '../../widgets/language_selector.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/permission_bloc.dart';
 
@@ -54,121 +55,137 @@ class _PermissionScreenState extends State<PermissionScreen>
     final fontFamily = context.select(
       (PreferenceBloc bloc) => bloc.state.fontFamily,
     );
-    return DefaultTextStyle(
-      style: GoogleFonts.getFont(fontFamily),
-      child: IntroductionScreen(
-        pages: [
-          PageViewModel(
-            title: l10n.permission_screen_notif_listener_permission_title,
-            bodyWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Row(
               children: [
-                Text(
-                  l10n.permission_screen_notif_listener_permission_instruction,
-                ),
-                const SizedBox(height: 8),
-                Text(l10n.permission_screen_notif_listener_permission_step1),
-                Text(l10n.permission_screen_notif_listener_permission_step2),
-                Text(l10n.permission_screen_notif_listener_permission_step3),
-                const SizedBox(height: 8),
-                Center(
-                  child: SizedBox(
-                    width: 150,
-                    child: Builder(
-                      builder: (context) {
-                        final isNotificationListenerGranted = context
-                            .select<PermissionBloc, bool>(
-                              (bloc) =>
-                                  bloc.state.isNotificationListenerGranted,
-                            );
-
-                        return ElevatedButton(
-                          onPressed: isNotificationListenerGranted
-                              ? null
-                              : () => context.read<PermissionBloc>().add(
-                                  const NotificationListenerRequested(),
-                                ),
-                          child: Text(l10n.permission_screen_grant_access),
-                        );
-                      },
-                    ),
-                  ),
-                ),
+                Icon(Icons.language, semanticLabel: l10n.language),
+                const SizedBox(width: 8),
+                const LanguageSelector(),
               ],
             ),
-            image: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Lottie.asset('assets/images/music-player-pop-up.json'),
-            ),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: l10n.permission_screen_overlay_window_permission_title,
-            bodyWidget: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  l10n.permission_screen_overlay_window_permission_instruction,
-                ),
-                const SizedBox(height: 8),
-                Text(l10n.permission_screen_overlay_window_permission_step1),
-                Text(l10n.permission_screen_overlay_window_permission_step2),
-                Text(l10n.permission_screen_overlay_window_permission_step3),
-                const SizedBox(height: 8),
-                Center(
-                  child: SizedBox(
-                    width: 150,
-                    child: Builder(
-                      builder: (context) {
-                        final isSystemAlertWindowGranted = context
-                            .select<PermissionBloc, bool>(
-                              (bloc) => bloc.state.isSystemAlertWindowGranted,
-                            );
-
-                        return ElevatedButton(
-                          onPressed: isSystemAlertWindowGranted
-                              ? null
-                              : () => context.read<PermissionBloc>().add(
-                                  const SystemAlertWindowRequested(),
-                                ),
-                          child: Text(l10n.permission_screen_grant_access),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            image: Lottie.asset('assets/images/stack.json'),
-            decoration: pageDecoration,
           ),
         ],
-        onDone: () => _onIntroEnd(context),
-        skipOrBackFlex: 0,
-        nextFlex: 0,
-        showBackButton: true,
-        back: const Icon(Icons.arrow_back),
-        next: const Icon(Icons.arrow_forward),
-        done: Text(
-          l10n.permission_screen_done,
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-        curve: Curves.fastLinearToSlowEaseIn,
-        controlsPadding: const EdgeInsets.symmetric(
-          horizontal: 8.0,
-          vertical: 4.0,
-        ),
-        dotsDecorator: DotsDecorator(
-          size: const Size(10.0, 10.0),
-          color: const Color(0xFFBDBDBD),
-          activeSize: const Size(22.0, 10.0),
-          activeShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25.0),
+      ),
+      body: DefaultTextStyle(
+        style: GoogleFonts.getFont(fontFamily),
+        child: IntroductionScreen(
+          pages: [
+            PageViewModel(
+              title: l10n.permission_screen_notif_listener_permission_title,
+              bodyWidget: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.permission_screen_notif_listener_permission_instruction,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(l10n.permission_screen_notif_listener_permission_step1),
+                  Text(l10n.permission_screen_notif_listener_permission_step2),
+                  Text(l10n.permission_screen_notif_listener_permission_step3),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: SizedBox(
+                      width: 150,
+                      child: Builder(
+                        builder: (context) {
+                          final isNotificationListenerGranted = context
+                              .select<PermissionBloc, bool>(
+                                (bloc) =>
+                                    bloc.state.isNotificationListenerGranted,
+                              );
+
+                          return ElevatedButton(
+                            onPressed: isNotificationListenerGranted
+                                ? null
+                                : () => context.read<PermissionBloc>().add(
+                                    const NotificationListenerRequested(),
+                                  ),
+                            child: Text(l10n.permission_screen_grant_access),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              image: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Lottie.asset('assets/images/music-player-pop-up.json'),
+              ),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: l10n.permission_screen_overlay_window_permission_title,
+              bodyWidget: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.permission_screen_overlay_window_permission_instruction,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(l10n.permission_screen_overlay_window_permission_step1),
+                  Text(l10n.permission_screen_overlay_window_permission_step2),
+                  Text(l10n.permission_screen_overlay_window_permission_step3),
+                  const SizedBox(height: 8),
+                  Center(
+                    child: SizedBox(
+                      width: 150,
+                      child: Builder(
+                        builder: (context) {
+                          final isSystemAlertWindowGranted = context
+                              .select<PermissionBloc, bool>(
+                                (bloc) => bloc.state.isSystemAlertWindowGranted,
+                              );
+
+                          return ElevatedButton(
+                            onPressed: isSystemAlertWindowGranted
+                                ? null
+                                : () => context.read<PermissionBloc>().add(
+                                    const SystemAlertWindowRequested(),
+                                  ),
+                            child: Text(l10n.permission_screen_grant_access),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              image: Lottie.asset('assets/images/stack.json'),
+              decoration: pageDecoration,
+            ),
+          ],
+          onDone: () => _onIntroEnd(context),
+          skipOrBackFlex: 0,
+          nextFlex: 0,
+          showBackButton: true,
+          back: const Icon(Icons.arrow_back),
+          next: const Icon(Icons.arrow_forward),
+          done: Text(
+            l10n.permission_screen_done,
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
-        ),
-        dotsContainerDecorator: ShapeDecoration(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
+          curve: Curves.fastLinearToSlowEaseIn,
+          controlsPadding: const EdgeInsets.symmetric(
+            horizontal: 8.0,
+            vertical: 4.0,
+          ),
+          dotsDecorator: DotsDecorator(
+            size: const Size(10.0, 10.0),
+            color: const Color(0xFFBDBDBD),
+            activeSize: const Size(22.0, 10.0),
+            activeShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+          ),
+          dotsContainerDecorator: ShapeDecoration(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
           ),
         ),
       ),

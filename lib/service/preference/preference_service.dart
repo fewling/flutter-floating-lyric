@@ -40,6 +40,8 @@ class PreferenceService {
 
   bool get transparentNotFoundTxt => _spRepo.transparentNotFoundTxt;
 
+  String get locale => _spRepo.locale;
+
   Future<bool> updateOpacity(double value) => _spRepo.updateOpacity(value);
 
   Future<bool> updateColor(Color color) =>
@@ -85,4 +87,6 @@ class PreferenceService {
 
   Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
       _spRepo.updateTransparentNotFoundTxt(transparentNotFoundTxt);
+
+  Future<bool> updateLocale(String locale) => _spRepo.updateLocale(locale);
 }

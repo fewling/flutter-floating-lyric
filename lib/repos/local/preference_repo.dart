@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../configs/animation_modes.dart';
+import '../../configs/locale_constants.dart';
 
 class PreferenceRepo {
   PreferenceRepo({required SharedPreferences sharedPreferences})
@@ -26,6 +27,7 @@ class PreferenceRepo {
   static const toleranceKey = 'tolerance';
   static const animationModeKey = 'animation mode';
   static const transparentNotFoundTxtKey = 'transparent not found';
+  static const localeKey = 'locale';
 
   static const defaultFont = 'Roboto';
 
@@ -71,6 +73,8 @@ class PreferenceRepo {
 
   bool get transparentNotFoundTxt =>
       _sp.getBool(transparentNotFoundTxtKey) ?? false;
+
+  String get locale => _sp.getString(localeKey) ?? LocaleConstants.defaultLocale;
 
   Future<bool> updateOpacity(double value) =>
       _sp.setDouble(windowOpacityKey, value);
@@ -119,4 +123,6 @@ class PreferenceRepo {
 
   Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
       _sp.setBool(transparentNotFoundTxtKey, transparentNotFoundTxt);
+
+  Future<bool> updateLocale(String locale) => _sp.setString(localeKey, locale);
 }

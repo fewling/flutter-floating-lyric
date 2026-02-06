@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/color_picker_sheet.dart';
+import '../../widgets/language_selector.dart';
 import '../app_info/bloc/app_info_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/settings_bloc.dart';
@@ -19,12 +20,22 @@ class SettingsScreen extends StatelessWidget {
     return Scaffold(
       body: ListView(
         children: [
-          // ListTile(
-          //   leading: Icon(Icons.language_outlined, color: primary),
-          //   title: const Text('Language'),
-          //   onTap: () {},
-          //   trailing: const Icon(Icons.arrow_forward_ios_outlined),
-          // ),
+          Builder(
+            builder: (context) {
+              final currentLocale = context.select<PreferenceBloc, String>(
+                (bloc) => bloc.state.locale,
+              );
+
+              return ListTile(
+                leading: Icon(Icons.language_outlined, color: primary),
+                title: Text(l10n.language),
+                subtitle: Text(
+                  LanguageSelector.getLocaleDisplayName(context, currentLocale),
+                ),
+                trailing: const LanguageSelector(),
+              );
+            },
+          ),
           Builder(
             builder: (context) => ListTile(
               leading: Icon(Icons.brightness_2_outlined, color: primary),

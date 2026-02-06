@@ -415,7 +415,7 @@ class OverlayWindowSetting extends StatelessWidget {
                             for (final mode in AnimationMode.values)
                               ButtonSegment(
                                 value: mode,
-                                label: Text(mode.name.capitalize()),
+                                label: Text(mode.label(l10n)),
                               ),
                           ],
                           showSelectedIcon: false,
