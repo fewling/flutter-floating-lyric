@@ -13,6 +13,7 @@ sealed class OverlaySettingsModel with _$OverlaySettingsModel {
     // Themes:
     @Default(false) bool isLight,
     @Default(0) int appColorScheme,
+    @Default('en') String locale,
 
     /// Screen width
     @Default(300) double width,

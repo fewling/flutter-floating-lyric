@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../utils/extensions/custom_extensions.dart';
@@ -26,6 +27,8 @@ class _OverlayAppState extends State<OverlayApp> {
   Widget build(BuildContext rootContext) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -106,6 +109,10 @@ class _OverlayAppState extends State<OverlayApp> {
                 (MessageFromMainReceiverBloc b) =>
                     b.state.settings?.transparentNotFoundTxt,
               );
+              final locale = context.select(
+                (MessageFromMainReceiverBloc b) =>
+                    b.state.settings?.locale ?? 'en',
+              );
 
               return BlocListener<
                 MessageFromMainReceiverBloc,
@@ -125,7 +132,10 @@ class _OverlayAppState extends State<OverlayApp> {
                         ? Brightness.light
                         : Brightness.dark,
                   ),
-                  child: isMinimized
+                  child: Localizations.override(
+                    context: context,
+                    locale: Locale(locale),
+                    child: isMinimized
                       ? SizedBox(
                           height: _minimizedSize,
                           width: _minimizedSize,
@@ -147,6 +157,7 @@ class _OverlayAppState extends State<OverlayApp> {
                           ),
                         )
                       : const OverlayWindow(),
+                  ),
                 ),
               );
             },

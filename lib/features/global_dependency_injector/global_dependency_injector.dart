@@ -143,6 +143,13 @@ class PreferenceStateListener extends StatelessWidget {
               .add(TolerancePrefUpdated(tolerance: state.tolerance)),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
+          listenWhen: (previous, current) =>
+              previous.locale != current.locale,
+          listener: (context, state) => context
+              .read<OverlayWindowSettingsBloc>()
+              .add(PreferenceUpdated(preferenceState: state)),
+        ),
+        BlocListener<PreferenceBloc, PreferenceState>(
           listener: (context, state) => context
               .read<OverlayWindowSettingsBloc>()
               .add(PreferenceUpdated(preferenceState: state)),
