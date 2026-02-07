@@ -39,48 +39,54 @@ class OverlayWindow extends StatelessWidget {
       (OverlayWindowBloc b) => b.state.isLyricOnly,
     );
 
-    return SizedBox(
-      width: width,
-      height: double.infinity,
-      child: Material(
-        color: Colors.transparent,
-        child: IgnorePointer(
-          ignoring: settings.ignoreTouch ?? false,
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: useAppColor
-                  ? colorScheme.primaryContainer.withTransparency(opacity)
-                  : Color(
-                      settings.backgroundColor ?? Colors.black.toARGB32(),
-                    ).withTransparency(opacity),
-            ),
-            margin: EdgeInsets.zero,
-            child: InkWell(
-              onTap: () =>
-                  context.read<OverlayWindowBloc>().add(const WindowTapped()),
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 4,
-                  children: [
-                    if (debugText != null)
-                      Text(
-                        debugText!,
-                        style: TextStyle(color: colorScheme.onPrimaryContainer),
-                      ),
-                    if (!isLyricOnly)
-                      OverlayHeader(settings: settings, textColor: textColor),
-                    OverlayContent(settings: settings, textColor: textColor),
-                    if (!isLyricOnly || (settings.showProgressBar ?? false))
-                      OverlayProgressBar(
-                        settings: settings,
-                        textColor: textColor,
-                      ),
-                  ],
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxHeight: 400, // Prevent unbounded height
+      ),
+      child: SizedBox(
+        width: width,
+        child: Material(
+          color: Colors.transparent,
+          child: IgnorePointer(
+            ignoring: settings.ignoreTouch ?? false,
+            child: Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: useAppColor
+                    ? colorScheme.primaryContainer.withTransparency(opacity)
+                    : Color(
+                        settings.backgroundColor ?? Colors.black.toARGB32(),
+                      ).withTransparency(opacity),
+              ),
+              margin: EdgeInsets.zero,
+              child: InkWell(
+                onTap: () =>
+                    context.read<OverlayWindowBloc>().add(const WindowTapped()),
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 4,
+                    children: [
+                      if (debugText != null)
+                        Text(
+                          debugText!,
+                          style: TextStyle(
+                            color: colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      if (!isLyricOnly)
+                        OverlayHeader(settings: settings, textColor: textColor),
+                      OverlayContent(settings: settings, textColor: textColor),
+                      if (!isLyricOnly || (settings.showProgressBar ?? false))
+                        OverlayProgressBar(
+                          settings: settings,
+                          textColor: textColor,
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ),
