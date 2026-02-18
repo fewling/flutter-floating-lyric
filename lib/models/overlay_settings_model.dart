@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../configs/animation_modes.dart';
 import '../configs/main_overlay/search_lyric_status.dart';
+import '../v2/enums/app_locale.dart';
 import 'lrc.dart';
 
 part 'overlay_settings_model.freezed.dart';
@@ -13,7 +14,10 @@ sealed class OverlaySettingsModel with _$OverlaySettingsModel {
     // Themes:
     @Default(false) bool isLight,
     @Default(0) int appColorScheme,
-    @Default('en') String locale,
+
+    @JsonKey(fromJson: appLocaleFromJson, toJson: appLocaleToJson)
+    @Default(AppLocale.english)
+    AppLocale locale,
 
     /// Screen width
     @Default(300) double width,

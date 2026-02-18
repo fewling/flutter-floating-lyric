@@ -8,6 +8,7 @@ import '../../service/message_channels/to_main_message_service.dart';
 import '../../service/platform_methods/layout_channel_service.dart';
 import '../../utils/extensions/custom_extensions.dart';
 import '../../utils/logger.dart';
+import '../../v2/enums/app_locale.dart';
 import '../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
 import 'bloc/overlay_app_bloc.dart';
 import 'overlay_window/bloc/overlay_window_bloc.dart';
@@ -111,7 +112,7 @@ class _OverlayAppState extends State<OverlayApp> {
               );
               final locale = context.select(
                 (MessageFromMainReceiverBloc b) =>
-                    b.state.settings?.locale ?? 'en',
+                    b.state.settings?.locale ?? AppLocale.english,
               );
 
               return BlocListener<
@@ -134,29 +135,29 @@ class _OverlayAppState extends State<OverlayApp> {
                   ),
                   child: Localizations.override(
                     context: context,
-                    locale: Locale(locale),
+                    locale: Locale(locale.code),
                     child: isMinimized
-                      ? SizedBox(
-                          height: _minimizedSize,
-                          width: _minimizedSize,
-                          child: Material(
-                            color: Color(
-                              appColor ?? Colors.purple.toARGB32(),
-                            ).withTransparency(0.25),
-                            shape: const CircleBorder(),
-                            clipBehavior: Clip.antiAlias,
-                            child: InkWell(
-                              onTap: () => context.read<OverlayAppBloc>().add(
-                                const MaximizeRequested(),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.music_note_outlined),
+                        ? SizedBox(
+                            height: _minimizedSize,
+                            width: _minimizedSize,
+                            child: Material(
+                              color: Color(
+                                appColor ?? Colors.purple.toARGB32(),
+                              ).withTransparency(0.25),
+                              shape: const CircleBorder(),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => context.read<OverlayAppBloc>().add(
+                                  const MaximizeRequested(),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.music_note_outlined),
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const OverlayWindow(),
+                          )
+                        : const OverlayWindow(),
                   ),
                 ),
               );

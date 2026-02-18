@@ -5,10 +5,21 @@ import '../../configs/main_overlay/main_overlay_port.dart';
 import '../../models/to_overlay_msg_model.dart';
 import '../../utils/logger.dart';
 
-class ToOverlayMessageService {
+class ToOverlayMsgService {
   void sendMsg(ToOverlayMsgModel msg) {
     final json = jsonDecode(jsonEncode(msg.toJson()));
+    _sendJson(json as Map<String, dynamic>);
+  }
 
+  void sendWindowSettings(ToOverlayMsgSettings settings) => _sendJson(
+    jsonDecode(jsonEncode(settings.toJson())) as Map<String, dynamic>,
+  );
+
+  void sendMediaState(ToOverlayMsgMediaState mediaState) => _sendJson(
+    jsonDecode(jsonEncode(mediaState.toJson())) as Map<String, dynamic>,
+  );
+
+  void _sendJson(Map<String, dynamic> json) {
     final overlayPort = IsolateNameServer.lookupPortByName(
       MainOverlayPort.overlayPortName.key,
     );

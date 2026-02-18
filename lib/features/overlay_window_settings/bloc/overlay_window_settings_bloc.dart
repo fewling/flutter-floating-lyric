@@ -16,7 +16,7 @@ part 'overlay_window_settings_state.dart';
 class OverlayWindowSettingsBloc
     extends Bloc<OverlayWindowSettingsEvent, OverlayWindowSettingsState> {
   OverlayWindowSettingsBloc({
-    required ToOverlayMessageService toOverlayMessageService,
+    required ToOverlayMsgService toOverlayMessageService,
     required WindowChannelService windowChannelService,
   }) : _toOverlayMessageService = toOverlayMessageService,
        _windowChannelService = windowChannelService,
@@ -40,7 +40,7 @@ class OverlayWindowSettingsBloc
     );
   }
 
-  final ToOverlayMessageService _toOverlayMessageService;
+  final ToOverlayMsgService _toOverlayMessageService;
   final WindowChannelService _windowChannelService;
 
   Future<void> _onLoaded(
@@ -69,7 +69,7 @@ class OverlayWindowSettingsBloc
         showProgressBar: pref.showProgressBar,
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
-        locale: pref.locale,
+        // locale: pref.locale,
         showLine2: pref.showLine2,
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
@@ -88,9 +88,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(
-      ToOverlayMsgModel(settings: newState.settings),
-    );
+    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   void _onPreferenceUpdated(
@@ -110,7 +108,7 @@ class OverlayWindowSettingsBloc
         showProgressBar: pref.showProgressBar,
         isLight: pref.isLight,
         appColorScheme: pref.appColorScheme,
-        locale: pref.locale,
+        // locale: pref.locale,
         showLine2: pref.showLine2,
         useAppColor: pref.useAppColor,
         enableAnimation: pref.enableAnimation,
@@ -120,9 +118,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(
-      ToOverlayMsgModel(settings: newState.settings),
-    );
+    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   void _onLyricStateListenerUpdated(
@@ -145,9 +141,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(
-      ToOverlayMsgModel(settings: newState.settings),
-    );
+    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   Future<void> _onVisibilityToggled(
@@ -172,9 +166,7 @@ class OverlayWindowSettingsBloc
     );
     emit(newState);
 
-    _toOverlayMessageService.sendMsg(
-      ToOverlayMsgModel(settings: newState.settings),
-    );
+    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   Future<void> _onTouchThruToggled(

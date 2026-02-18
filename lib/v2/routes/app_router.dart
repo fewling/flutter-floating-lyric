@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 
 import '../apps/main/pages/home/page.dart';
 import '../apps/main/pages/onboarding/page.dart';
+import '../apps/overlay/pages/lyrics/page.dart';
 import '../blocs/permission/permission_bloc.dart';
 import '../shells/base/shell.dart';
+import '../shells/overlay/shell.dart';
 
 part 'app_route_params.dart';
 part 'app_router_refresh_stream.dart';
@@ -89,10 +91,15 @@ class AppRouter {
   AppRouter.overlay() {
     _router = GoRouter(
       routes: [
-        GoRoute(
-          path: OverlayAppRoutes.root.path,
-          name: OverlayAppRoutes.root.name,
-          builder: (context, state) => const Placeholder(),
+        ShellRoute(
+          builder: (context, state, child) => OverlayShell(child: child),
+          routes: [
+            GoRoute(
+              path: OverlayAppRoutes.lyrics.path,
+              name: OverlayAppRoutes.lyrics.name,
+              builder: (context, state) => const LyricsPage(),
+            ),
+          ],
         ),
       ],
     );

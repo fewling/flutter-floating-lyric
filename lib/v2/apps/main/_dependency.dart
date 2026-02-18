@@ -25,11 +25,13 @@ class _MainAppDependencyState extends State<MainAppDependency> {
 
   late final PermissionChannelService _permissionChannelService;
   late final MethodChannelService _methodChannelService;
+  late final ToOverlayMsgService _toOverlayMsgService;
 
   late final PermissionBloc _permissionBloc;
   late final PreferenceBloc _preferenceBloc;
   late final MediaListenerBloc _mediaListenerBloc;
   late final OverlayWindowSettingsBloc _overlayWindowSettingsBloc;
+  late final MsgToOverlayBloc _msgToOverlayBloc;
 
   @override
   void initState() {
@@ -41,6 +43,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     // services:
     _permissionChannelService = PermissionChannelService();
     _methodChannelService = MethodChannelService();
+    _toOverlayMsgService = ToOverlayMsgService();
 
     // blocs:
     _permissionBloc = PermissionBloc(
@@ -48,7 +51,12 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     );
     _preferenceBloc = PreferenceBloc(preferenceRepo: _preferenceRepo);
     _mediaListenerBloc = MediaListenerBloc();
-    _overlayWindowSettingsBloc = OverlayWindowSettingsBloc();
+    _overlayWindowSettingsBloc = OverlayWindowSettingsBloc(
+      methodChannelService: _methodChannelService,
+    );
+    _msgToOverlayBloc = MsgToOverlayBloc(
+      toOverlayMsgService: _toOverlayMsgService,
+    );
 
     appRouter = AppRouter.standard(permissionBloc: _permissionBloc);
 
@@ -66,6 +74,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
 
         RepositoryProvider.value(value: _permissionChannelService),
         RepositoryProvider.value(value: _methodChannelService),
+        RepositoryProvider.value(value: _toOverlayMsgService),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -73,6 +82,12 @@ class _MainAppDependencyState extends State<MainAppDependency> {
           BlocProvider.value(value: _permissionBloc),
           BlocProvider.value(value: _mediaListenerBloc),
           BlocProvider.value(value: _overlayWindowSettingsBloc),
+          BlocProvider.value(value: _msgToOverlayBloc),
+          BlocProvider(
+            lazy: false,
+            create: (context) =>
+                MsgFromOverlayBloc()..add(const MsgFromOverlayEvent.started()),
+          ),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, appRouter),

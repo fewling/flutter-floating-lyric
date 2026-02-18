@@ -1,17 +1,7 @@
-import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of '../page.dart';
 
-import '../../../configs/animation_modes.dart';
-import '../../../configs/main_overlay/search_lyric_status.dart';
-import '../../../models/overlay_settings_model.dart';
-import '../../../utils/extensions/custom_extensions.dart';
-import '../../message_channels/message_from_main_receiver/bloc/message_from_main_receiver_bloc.dart';
-import '../bloc/overlay_app_bloc.dart';
-import 'bloc/overlay_window_bloc.dart';
-
-class OverlayWindow extends StatelessWidget {
-  const OverlayWindow({super.key, this.debugText, this.isLoading = false});
+class _OverlayWindow extends StatelessWidget {
+  const _OverlayWindow({this.debugText, this.isLoading = false});
 
   final String? debugText;
   final bool isLoading;
@@ -19,10 +9,10 @@ class OverlayWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = context.select(
-      (MessageFromMainReceiverBloc bloc) => bloc.state.settings,
+      (MsgFromMainBloc bloc) => bloc.state.settings,
     );
 
-    if (settings == null) return const OverlayLoadingIndicator();
+    if (settings == null) return const _OverlayLoadingIndicator();
 
     final colorScheme = Theme.of(context).colorScheme;
     final foregroundColor = colorScheme.onPrimaryContainer;
@@ -33,62 +23,46 @@ class OverlayWindow extends StatelessWidget {
         ? foregroundColor
         : Color(settings.color ?? Colors.white.toARGB32()));
     final width = context.select(
-      (MessageFromMainReceiverBloc b) => b.state.settings?.width,
+      (MsgFromMainBloc b) => b.state.settings?.width,
     );
     final isLyricOnly = context.select(
       (OverlayWindowBloc b) => b.state.isLyricOnly,
     );
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 400, // Prevent unbounded height
-      ),
-      child: SizedBox(
-        width: width,
-        child: Material(
-          color: Colors.transparent,
-          child: IgnorePointer(
-            ignoring: settings.ignoreTouch ?? false,
-            child: Container(
-              clipBehavior: Clip.antiAlias,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: useAppColor
-                    ? colorScheme.primaryContainer.withTransparency(opacity)
-                    : Color(
-                        settings.backgroundColor ?? Colors.black.toARGB32(),
-                      ).withTransparency(opacity),
-              ),
-              margin: EdgeInsets.zero,
-              child: InkWell(
-                onTap: () =>
-                    context.read<OverlayWindowBloc>().add(const WindowTapped()),
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    spacing: 4,
-                    children: [
-                      if (debugText != null)
-                        Text(
-                          debugText!,
-                          style: TextStyle(
-                            color: colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                      if (!isLyricOnly)
-                        OverlayHeader(settings: settings, textColor: textColor),
-                      OverlayContent(settings: settings, textColor: textColor),
-                      if (!isLyricOnly || (settings.showProgressBar ?? false))
-                        OverlayProgressBar(
-                          settings: settings,
-                          textColor: textColor,
-                        ),
-                    ],
+    return IgnorePointer(
+      ignoring: settings.ignoreTouch ?? false,
+      child: Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: useAppColor
+              ? colorScheme.primaryContainer.withTransparency(opacity)
+              : Color(
+                  settings.backgroundColor ?? Colors.black.toARGB32(),
+                ).withTransparency(opacity),
+        ),
+        margin: EdgeInsets.zero,
+        child: InkWell(
+          onTap: () => context.read<OverlayWindowBloc>().add(
+            const OverlayWindowEvent.windowTapped(),
+          ),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 4,
+              children: [
+                if (debugText != null)
+                  Text(
+                    debugText!,
+                    style: TextStyle(color: colorScheme.onPrimaryContainer),
                   ),
-                ),
-              ),
+                if (!isLyricOnly) _OverlayHeader(textColor: textColor),
+                _OverlayContent(settings: settings, textColor: textColor),
+                if (!isLyricOnly || (settings.showProgressBar ?? false))
+                  _OverlayProgressBar(textColor: textColor),
+              ],
             ),
           ),
         ),
@@ -97,12 +71,8 @@ class OverlayWindow extends StatelessWidget {
   }
 }
 
-class OverlayContent extends StatelessWidget {
-  const OverlayContent({
-    required this.settings,
-    required this.textColor,
-    super.key,
-  });
+class _OverlayContent extends StatelessWidget {
+  const _OverlayContent({required this.settings, required this.textColor});
 
   final OverlaySettingsModel settings;
   final Color textColor;
@@ -155,7 +125,7 @@ class OverlayContent extends StatelessWidget {
             Align(
               alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
               child: shouldAnimate
-                  ? AnimatedLyricLine(
+                  ? _AnimatedLyricLine(
                       key: ValueKey('line1:${settings.line1?.content}'),
                       textColor: textColor,
                       id: 'line1:${settings.line1?.content}',
@@ -179,7 +149,7 @@ class OverlayContent extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: shouldAnimate
-                    ? AnimatedLyricLine(
+                    ? _AnimatedLyricLine(
                         key: ValueKey('line2:${settings.line2?.content}'),
                         textColor: textColor,
                         id: 'line2:${settings.line2?.content}',
@@ -205,8 +175,8 @@ class OverlayContent extends StatelessWidget {
   }
 }
 
-class AnimatedLyricLine extends StatefulWidget {
-  const AnimatedLyricLine({
+class _AnimatedLyricLine extends StatefulWidget {
+  const _AnimatedLyricLine({
     required this.textColor,
     required this.id,
     required this.isBold,
@@ -224,10 +194,10 @@ class AnimatedLyricLine extends StatefulWidget {
   final AnimationMode animationMode;
 
   @override
-  State<AnimatedLyricLine> createState() => _AnimatedLyricLineState();
+  State<_AnimatedLyricLine> createState() => _AnimatedLyricLineState();
 }
 
-class _AnimatedLyricLineState extends State<AnimatedLyricLine>
+class _AnimatedLyricLineState extends State<_AnimatedLyricLine>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -305,70 +275,78 @@ class _AnimatedLyricLineState extends State<AnimatedLyricLine>
   }
 }
 
-class OverlayHeader extends StatelessWidget {
-  const OverlayHeader({
-    required this.settings,
-    required this.textColor,
-    super.key,
-  });
+class _OverlayHeader extends StatelessWidget {
+  const _OverlayHeader({required this.textColor});
 
-  final OverlaySettingsModel settings;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
+    final mediaState = context.select(
+      (MsgFromMainBloc b) => b.state.mediaState,
+    );
+
     return Row(
       children: [
         Expanded(
           child: Text(
-            settings.title ?? ' ',
+            mediaState?.title ?? ' ',
             style: TextStyle(color: textColor),
           ),
         ),
         IconButton(
-          onPressed: () => context.read<OverlayWindowBloc>().add(
-            LockToggled(!context.read<OverlayWindowBloc>().state.isLocked),
-          ),
+          onPressed: () => _onLockToggle(context),
           icon: context.select((OverlayWindowBloc b) => b.state.isLocked)
               ? Icon(Icons.lock, color: textColor)
               : Icon(Icons.lock_open_outlined, color: textColor),
         ),
         IconButton(
-          onPressed: () =>
-              context.read<OverlayAppBloc>().add(const MinimizeRequested()),
+          onPressed: () => context.read<OverlayAppBloc>().add(
+            const OverlayAppEvent.minimizeRequested(),
+          ),
           icon: Icon(Icons.remove, color: textColor),
         ),
         IconButton(
-          onPressed: () =>
-              context.read<OverlayWindowBloc>().add(const CloseRequested()),
+          onPressed: () => context.read<OverlayWindowBloc>().add(
+            const OverlayWindowEvent.closeRequested(),
+          ),
           icon: Icon(Icons.close, color: textColor),
         ),
       ],
     );
   }
+
+  void _onLockToggle(BuildContext context) {
+    final isLocked = context.read<OverlayWindowBloc>().state.isLocked;
+    context.read<OverlayWindowBloc>().add(
+      OverlayWindowEvent.lockToggled(!isLocked),
+    );
+  }
 }
 
-class OverlayProgressBar extends StatelessWidget {
-  const OverlayProgressBar({
-    required this.settings,
-    required this.textColor,
-    super.key,
-  });
+class _OverlayProgressBar extends StatelessWidget {
+  const _OverlayProgressBar({required this.textColor});
 
-  final OverlaySettingsModel settings;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
-    final pos = Duration(milliseconds: settings.position?.toInt() ?? 0);
-    final max = Duration(milliseconds: settings.duration?.toInt() ?? 0);
+    final msgFromMain = context.watch<MsgFromMainBloc>().state;
+
+    final (settings, mediaState) = (
+      msgFromMain.settings,
+      msgFromMain.mediaState,
+    );
+
+    final pos = Duration(milliseconds: mediaState?.position.toInt() ?? 0);
+    final max = Duration(milliseconds: mediaState?.duration.toInt() ?? 0);
 
     final progress = max.inMilliseconds == 0
         ? 0
         : pos.inMilliseconds / max.inMilliseconds;
 
-    final left = (settings.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
-    final right = (settings.showMillis ?? false) ? max.mmssmm() : max.mmss();
+    final left = (settings?.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
+    final right = (settings?.showMillis ?? false) ? max.mmssmm() : max.mmss();
 
     return Row(
       children: [
@@ -385,44 +363,41 @@ class OverlayProgressBar extends StatelessWidget {
   }
 }
 
-class OverlayLoadingIndicator extends StatelessWidget {
-  const OverlayLoadingIndicator({super.key});
+class _OverlayLoadingIndicator extends StatelessWidget {
+  const _OverlayLoadingIndicator();
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        height: 200,
-        width: 200,
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: colorScheme.primaryContainer,
-        ),
-        margin: EdgeInsets.zero,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                onPressed: () => context.read<OverlayWindowBloc>().add(
-                  const CloseRequested(),
-                ),
-                icon: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
+    return Container(
+      height: 200,
+      width: 200,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: colorScheme.primaryContainer,
+      ),
+      margin: EdgeInsets.zero,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              onPressed: () => context.read<OverlayWindowBloc>().add(
+                const OverlayWindowEvent.closeRequested(),
               ),
+              icon: Icon(Icons.close, color: colorScheme.onPrimaryContainer),
             ),
-            Align(
-              child: Text(
-                context.l10n.overlay_window_waiting_for_music_player,
-                style: TextStyle(color: colorScheme.onPrimaryContainer),
-              ),
+          ),
+          Align(
+            child: Text(
+              context.l10n.overlay_window_waiting_for_music_player,
+              style: TextStyle(color: colorScheme.onPrimaryContainer),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

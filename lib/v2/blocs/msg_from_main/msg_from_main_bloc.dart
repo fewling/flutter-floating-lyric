@@ -3,25 +3,25 @@ import 'dart:isolate';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../configs/main_overlay/main_overlay_port.dart';
-import '../../../../models/overlay_settings_model.dart';
-import '../../../../models/to_overlay_msg_model.dart';
-import '../../../../v2/mixins/isolates_mixin.dart';
+import '../../../configs/main_overlay/main_overlay_port.dart';
+import '../../../models/overlay_settings_model.dart';
+import '../../../models/to_overlay_msg_model.dart';
+import '../../../service/event_channels/media_states/media_state.dart';
+import '../../mixins/isolates_mixin.dart';
 
-part 'message_from_main_receiver_bloc.freezed.dart';
-part 'message_from_main_receiver_bloc.g.dart';
-part 'message_from_main_receiver_event.dart';
-part 'message_from_main_receiver_state.dart';
+part 'msg_from_main_bloc.freezed.dart';
+part 'msg_from_main_event.dart';
+part 'msg_from_main_state.dart';
 
-class MessageFromMainReceiverBloc
-    extends Bloc<MessageFromMainReceiverEvent, MessageFromMainReceiverState>
+class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
     with IsolatesMixin {
-  MessageFromMainReceiverBloc() : super(const MessageFromMainReceiverState()) {
+  MsgFromMainBloc()
+    : super(const MsgFromMainState(settings: null, mediaState: null)) {
     _receivePort = ReceivePort();
 
-    on<MessageFromMainReceiverEvent>(
+    on<MsgFromMainEvent>(
       (event, emit) => switch (event) {
-        MessageFromMainReceiverStarted() => _onStarted(event, emit),
+        _Started() => _onStarted(event, emit),
       },
     );
   }
@@ -35,8 +35,8 @@ class MessageFromMainReceiverBloc
   }
 
   Future<void> _onStarted(
-    MessageFromMainReceiverStarted event,
-    Emitter<MessageFromMainReceiverState> emit,
+    _Started event,
+    Emitter<MsgFromMainState> emit,
   ) async {
     await registerPort(
       _receivePort.sendPort,
@@ -53,7 +53,7 @@ class MessageFromMainReceiverBloc
             return state.copyWith(settings: msg.settings);
 
           case ToOverlayMsgMediaState():
-            return state.copyWith();
+            return state.copyWith(mediaState: msg.mediaState);
         }
       },
     );

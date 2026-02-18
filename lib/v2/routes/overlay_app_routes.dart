@@ -1,7 +1,7 @@
 part of 'app_router.dart';
 
 enum OverlayAppRoutes {
-  root('/');
+  lyrics('/');
 
   const OverlayAppRoutes(this.path);
 

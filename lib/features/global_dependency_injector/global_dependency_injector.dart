@@ -22,11 +22,11 @@ import '../preference/bloc/preference_bloc.dart';
 
 class GlobalDependencyInjector extends StatelessWidget {
   const GlobalDependencyInjector({
-    super.key,
     required this.child,
     required this.pref,
     required this.permissionBloc,
     required this.lrcBox,
+    super.key,
   });
 
   final Widget child;
@@ -87,7 +87,7 @@ class GlobalDependencyInjector extends StatelessWidget {
           BlocProvider(
             create: (context) =>
                 OverlayWindowSettingsBloc(
-                  toOverlayMessageService: ToOverlayMessageService(),
+                  toOverlayMessageService: ToOverlayMsgService(),
                   windowChannelService: WindowChannelService(),
                 )..add(
                   OverlayWindowSettingsLoaded(
@@ -113,7 +113,7 @@ class GlobalDependencyInjector extends StatelessWidget {
 }
 
 class PreferenceStateListener extends StatelessWidget {
-  const PreferenceStateListener({super.key, required this.child});
+  const PreferenceStateListener({required this.child, super.key});
 
   final Widget child;
 
@@ -143,8 +143,7 @@ class PreferenceStateListener extends StatelessWidget {
               .add(TolerancePrefUpdated(tolerance: state.tolerance)),
         ),
         BlocListener<PreferenceBloc, PreferenceState>(
-          listenWhen: (previous, current) =>
-              previous.locale != current.locale,
+          listenWhen: (previous, current) => previous.locale != current.locale,
           listener: (context, state) => context
               .read<OverlayWindowSettingsBloc>()
               .add(PreferenceUpdated(preferenceState: state)),
@@ -161,7 +160,7 @@ class PreferenceStateListener extends StatelessWidget {
 }
 
 class LyricStateListener extends StatelessWidget {
-  const LyricStateListener({super.key, required this.child});
+  const LyricStateListener({required this.child, super.key});
 
   final Widget child;
 
@@ -181,7 +180,7 @@ class LyricStateListener extends StatelessWidget {
 }
 
 class MsgFromOverlayListener extends StatelessWidget {
-  const MsgFromOverlayListener({super.key, required this.child});
+  const MsgFromOverlayListener({required this.child, super.key});
 
   final Widget child;
 
@@ -222,7 +221,7 @@ class MsgFromOverlayListener extends StatelessWidget {
 }
 
 class OverlaySettingListener extends StatelessWidget {
-  const OverlaySettingListener({super.key, required this.child});
+  const OverlaySettingListener({required this.child, super.key});
 
   final Widget child;
 
