@@ -19,6 +19,7 @@ import 'models/lyric_model.dart';
 import 'service/permissions/permission_service.dart';
 import 'service/platform_methods/permission_channel_service.dart';
 import 'utils/logger.dart';
+import 'v2/apps/main/main_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +52,10 @@ Future<void> main() async {
 
     final pref = await SharedPreferences.getInstance();
 
+    runApp(MainApp(pref: pref, lrcBox: lrcModelBox));
+
+    return;
+
     final permissionBloc = PermissionBloc(
       permissionService: PermissionService(),
       platformMethodService: PermissionChannelService(),
@@ -82,7 +87,7 @@ void overlayView() {
 }
 
 class FloatingLyricApp extends StatelessWidget {
-  const FloatingLyricApp({super.key, required this.appRouter});
+  const FloatingLyricApp({required this.appRouter, super.key});
 
   final AppRouter appRouter;
 

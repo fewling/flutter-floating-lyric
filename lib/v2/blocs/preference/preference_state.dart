@@ -20,9 +20,9 @@ sealed class PreferenceState with _$PreferenceState {
     required int tolerance,
     @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)
     required AnimationMode animationMode,
-    @Default('en') String locale,
-  }) = _PreferenceState;
 
-  factory PreferenceState.fromJson(Map<String, dynamic> json) =>
-      _$PreferenceStateFromJson(json);
+    @JsonKey(fromJson: appLocaleFromJson, toJson: appLocaleToJson)
+    @Default(AppLocale.english)
+    AppLocale locale,
+  }) = _PreferenceState;
 }

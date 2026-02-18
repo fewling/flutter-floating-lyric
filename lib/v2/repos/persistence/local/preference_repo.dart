@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../configs/animation_modes.dart';
-import '../../v2/enums/app_locale.dart';
+import '../../../../configs/animation_modes.dart';
+import '../../../../configs/locale_constants.dart';
 
 class PreferenceRepo {
   PreferenceRepo({required SharedPreferences sharedPreferences})
@@ -74,10 +74,8 @@ class PreferenceRepo {
   bool get transparentNotFoundTxt =>
       _sp.getBool(transparentNotFoundTxtKey) ?? false;
 
-  AppLocale get locale => AppLocale.values.firstWhere(
-    (e) => e.code == _sp.getString(localeKey),
-    orElse: () => AppLocale.english,
-  );
+  String get locale =>
+      _sp.getString(localeKey) ?? LocaleConstants.defaultLocale;
 
   Future<bool> updateOpacity(double value) =>
       _sp.setDouble(windowOpacityKey, value);
@@ -127,6 +125,5 @@ class PreferenceRepo {
   Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
       _sp.setBool(transparentNotFoundTxtKey, transparentNotFoundTxt);
 
-  Future<bool> updateLocale(AppLocale locale) =>
-      _sp.setString(localeKey, locale.code);
+  Future<bool> updateLocale(String locale) => _sp.setString(localeKey, locale);
 }

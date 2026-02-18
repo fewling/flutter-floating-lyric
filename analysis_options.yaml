@@ -1,13 +1,19 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
+# Specify analysis options.
 #
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-include: package:flutter_lints/flutter.yaml
+# For a list of lints, see: http://dart-lang.github.io/linter/lints/
+# See the configuration guide for more
+# https://github.com/dart-lang/sdk/tree/main/pkg/analyzer#configuring-the-analyzer
+#
+# There are other similar analysis options files in the flutter repos,
+# which should be kept in sync with this file:
+#
+#   - analysis_options.yaml (this file)
+#   - https://github.com/flutter/plugins/blob/master/analysis_options.yaml
+#   - https://github.com/flutter/engine/blob/master/analysis_options.yaml
+#   - https://github.com/flutter/packages/blob/master/analysis_options.yaml
+#
+# This file contains the analysis options used for code in the flutter/flutter
+# repository.
 
 analyzer:
   plugins:
@@ -19,16 +25,10 @@ analyzer:
     # allow self-reference to deprecated members (we do this because otherwise we have
     # to annotate every member in every test, assert, etc, when we deprecate something)
     deprecated_member_use_from_same_package: ignore
-    flutter_style_todos: ignore
-    todo: ignore
-    prefer_foreach: ignore
   exclude:
     - "bin/cache/**"
       # Ignore protoc generated files
     - "dev/conductor/lib/proto/*"
-    - lib/**/*.gen.dart
-    - lib/**/*.g.dart
-    - lib/**/*.freezed.dart
 
 linter:
   rules:
@@ -36,7 +36,8 @@ linter:
     # https://github.com/dart-lang/linter/blob/master/example/all.yaml
     - always_declare_return_types
     # - always_put_control_body_on_new_line
-    # - always_put_required_named_parameters_first # we prefer having parameters in the same order as fields https://github.com/flutter/flutter/issues/10219
+    - always_put_required_named_parameters_first # we prefer having parameters in the same order as fields https://github.com/flutter/flutter/issues/10219
+    # - always_require_non_null_named_parameters
     # - always_specify_types
     # - always_use_package_imports # we do this commonly
     - annotate_overrides
@@ -65,6 +66,8 @@ linter:
     - avoid_relative_lib_imports
     - avoid_renaming_method_parameters
     - avoid_return_types_on_setters
+    - avoid_returning_null
+    - avoid_returning_null_for_future
     - avoid_returning_null_for_void
     # - avoid_returning_this # there are enough valid reasons to return `this` that this lint ends up with too many false positives
     - avoid_setters_without_getters
@@ -218,7 +221,7 @@ linter:
     - unnecessary_string_interpolations
     - unnecessary_this
     - unnecessary_to_list_in_spreads
-    # - unreachable_from_main # Do not enable this rule until it is un-marked as "experimental" and carefully re-evaluated.
+    - unreachable_from_main
     - unrelated_type_equality_checks
     - unsafe_html
     - use_build_context_synchronously

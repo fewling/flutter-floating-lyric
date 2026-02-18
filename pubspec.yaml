@@ -6,7 +6,8 @@ publish_to: "none"
 version: 5.1.0+39
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  # sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=3.9.2<4.0.0"
 
 dependencies:
   flutter:
@@ -16,7 +17,7 @@ dependencies:
   flutter_colorpicker: ^1.1.0
   shared_preferences: ^2.5.3
   introduction_screen: ^4.0.0
-  lottie: ^3.3.2
+  lottie: ^3.3.1
   freezed_annotation: ^3.1.0
   logger: ^2.6.1
   url_launcher: ^6.3.2
