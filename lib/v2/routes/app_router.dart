@@ -7,49 +7,80 @@ import 'package:go_router/go_router.dart';
 import '../blocs/permission/permission_bloc.dart';
 import '../pages/home/page.dart';
 import '../pages/onboarding/page.dart';
+import '../shells/base/shell.dart';
 
 part 'app_route_params.dart';
 part 'app_router_refresh_stream.dart';
-part 'app_routes.dart';
+part 'main_app_routes.dart';
+part 'overlay_app_routes.dart';
 
 class AppRouter {
   AppRouter.standard({required PermissionBloc permissionBloc}) {
     _router = GoRouter(
       refreshListenable: _GoRouterRefreshStream([permissionBloc.stream]),
       redirect: (context, state) {
-        final currentRoute = AppRoutes.values.firstWhereOrNull(
+        final currentRoute = MainAppRoutes.values.firstWhereOrNull(
           (route) => state.topRoute?.name == route.name,
         );
-
-        print('>>> currentRoute: $currentRoute');
 
         final permissionState = permissionBloc.state;
         final allGranted =
             permissionState.isSystemAlertWindowGranted &&
             permissionState.isNotificationListenerGranted;
-        print('>>> allGranted: $allGranted');
-        if (!allGranted) return AppRoutes.onboarding.path;
+        if (!allGranted) return MainAppRoutes.onboarding.path;
 
         switch (currentRoute) {
+          case MainAppRoutes.onboarding:
+            return MainAppRoutes.home.path;
           case null:
-          case AppRoutes.home:
+          case MainAppRoutes.home:
+          case MainAppRoutes.fonts:
+          case MainAppRoutes.localLyrics:
+          case MainAppRoutes.localLyricDetail:
+          case MainAppRoutes.settings:
             break;
-          case AppRoutes.onboarding:
-            return AppRoutes.home.path;
         }
 
         return null;
       },
       routes: [
         GoRoute(
-          path: AppRoutes.onboarding.path,
-          name: AppRoutes.onboarding.name,
+          path: MainAppRoutes.onboarding.path,
+          name: MainAppRoutes.onboarding.name,
           builder: (context, state) => const OnboardingPage(),
         ),
-        GoRoute(
-          path: AppRoutes.home.path,
-          name: AppRoutes.home.name,
-          builder: (context, state) => const HomePage(),
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              BaseShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: MainAppRoutes.home.path,
+                  name: MainAppRoutes.home.name,
+                  builder: (context, state) => const HomePage(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: MainAppRoutes.localLyrics.path,
+                  name: MainAppRoutes.localLyrics.name,
+                  builder: (context, state) => const Placeholder(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: MainAppRoutes.settings.path,
+                  name: MainAppRoutes.settings.name,
+                  builder: (context, state) => const Placeholder(),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
@@ -59,9 +90,9 @@ class AppRouter {
     _router = GoRouter(
       routes: [
         GoRoute(
-          path: AppRoutes.home.path,
-          name: AppRoutes.home.name,
-          builder: (context, state) => const OnboardingPage(),
+          path: OverlayAppRoutes.root.path,
+          name: OverlayAppRoutes.root.name,
+          builder: (context, state) => const Placeholder(),
         ),
       ],
     );
