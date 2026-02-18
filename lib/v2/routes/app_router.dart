@@ -4,9 +4,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../apps/main/pages/home/page.dart';
+import '../apps/main/pages/onboarding/page.dart';
 import '../blocs/permission/permission_bloc.dart';
-import '../pages/home/page.dart';
-import '../pages/onboarding/page.dart';
 import '../shells/base/shell.dart';
 
 part 'app_route_params.dart';
