@@ -12,6 +12,8 @@ class MainAppDependency extends StatefulWidget {
   final Box<LrcModel> lrcBox;
   final SharedPreferences pref;
 
+  static BuildContext of(BuildContext context) => context;
+
   @override
   State<MainAppDependency> createState() => _MainAppDependencyState();
 }
@@ -22,9 +24,12 @@ class _MainAppDependencyState extends State<MainAppDependency> {
   late final PreferenceRepo _preferenceRepo;
 
   late final PermissionChannelService _permissionChannelService;
+  late final MethodChannelService _methodChannelService;
 
   late final PermissionBloc _permissionBloc;
   late final PreferenceBloc _preferenceBloc;
+  late final MediaListenerBloc _mediaListenerBloc;
+  late final OverlayWindowSettingsBloc _overlayWindowSettingsBloc;
 
   @override
   void initState() {
@@ -35,17 +40,21 @@ class _MainAppDependencyState extends State<MainAppDependency> {
 
     // services:
     _permissionChannelService = PermissionChannelService();
+    _methodChannelService = MethodChannelService();
 
     // blocs:
     _permissionBloc = PermissionBloc(
       permissionChannelService: _permissionChannelService,
     );
     _preferenceBloc = PreferenceBloc(preferenceRepo: _preferenceRepo);
+    _mediaListenerBloc = MediaListenerBloc();
+    _overlayWindowSettingsBloc = OverlayWindowSettingsBloc();
 
     appRouter = AppRouter.standard(permissionBloc: _permissionBloc);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _permissionBloc.add(const PermissionEvent.init());
+      _mediaListenerBloc.add(const MediaListenerEvent.started());
     });
   }
 
@@ -54,12 +63,16 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: _preferenceRepo),
+
         RepositoryProvider.value(value: _permissionChannelService),
+        RepositoryProvider.value(value: _methodChannelService),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider.value(value: _preferenceBloc),
           BlocProvider.value(value: _permissionBloc),
+          BlocProvider.value(value: _mediaListenerBloc),
+          BlocProvider.value(value: _overlayWindowSettingsBloc),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, appRouter),

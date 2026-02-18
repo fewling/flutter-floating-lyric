@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../configs/animation_modes.dart';
+import '../../../service/event_channels/media_states/media_state.dart';
+import '../../../utils/extensions/custom_extensions.dart';
+import '../../apps/main/main_app.dart';
+import '../../blocs/media_listener/media_listener_bloc.dart';
+import '../../blocs/overlay_window_settings/overlay_window_settings_bloc.dart';
+import '../../blocs/preference/preference_bloc.dart';
+import '../../blocs/start_music_app/start_music_app_bloc.dart';
+import '../../routes/app_router.dart';
+import '../../services/platform_channels/method_channel_service.dart';
 
 part '_dependency.dart';
 part '_listener.dart';
 part '_view.dart';
+part '_widgets/_media_state_card.dart';
+part '_widgets/_media_state_carousel.dart';
+part '_widgets/_no_media_tile.dart';
+part '_widgets/_window_config_tab.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});

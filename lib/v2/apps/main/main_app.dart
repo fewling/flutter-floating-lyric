@@ -7,10 +7,13 @@ import '../../../l10n/app_localizations.dart';
 import '../../../models/lyric_model.dart';
 import '../../../repos/local/preference_repo.dart';
 import '../../../service/platform_methods/permission_channel_service.dart';
+import '../../blocs/media_listener/media_listener_bloc.dart';
+import '../../blocs/overlay_window_settings/overlay_window_settings_bloc.dart';
 import '../../blocs/permission/permission_bloc.dart';
 import '../../blocs/preference/preference_bloc.dart';
 import '../../enums/app_locale.dart';
 import '../../routes/app_router.dart';
+import '../../services/platform_channels/method_channel_service.dart';
 
 part '_dependency.dart';
 part '_listener.dart';

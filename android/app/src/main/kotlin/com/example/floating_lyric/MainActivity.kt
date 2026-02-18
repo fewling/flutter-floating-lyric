@@ -1,10 +1,12 @@
 package com.example.floating_lyric
 
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.floating_lyric.features.media_tracker.MediaStateEventStreamHandler
 import com.example.floating_lyric.features.overlay_window.OverlayView
@@ -55,6 +57,17 @@ class MainActivity : FlutterActivity() {
             .also {
                 it.setMethodCallHandler { call, result ->
                     when (call.method) {
+                        "start3rdMusicPlayer" -> {
+                            val intent =
+                                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC)
+                            try {
+                                startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                // Handle the case where no music app is found on the device
+                                Toast.makeText(this, "Could not found music app on device, please open one manually if exists.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
                         "show" -> {
                             if (overlayView == null) {
                                 Log.i("Main", "Updating overlay view")

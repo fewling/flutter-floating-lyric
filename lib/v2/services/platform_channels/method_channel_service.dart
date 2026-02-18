@@ -1,7 +1,10 @@
 import 'package:flutter/services.dart';
 
-class WindowChannelService {
+class MethodChannelService {
   final _channel = const MethodChannel('com.app.methods/actions');
+
+  Future<void> start3rdMusicPlayer() =>
+      _channel.invokeMethod('start3rdMusicPlayer');
 
   Future<bool?> show() {
     return _channel.invokeMethod<bool>('show');

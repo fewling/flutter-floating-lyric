@@ -6,8 +6,6 @@ enum _PermissionMethod {
 
   requestNotificationListenerPermission,
   requestSystemAlertWindowPermission,
-
-  start3rdMusicPlayer,
 }
 
 class PermissionChannelService {
@@ -31,7 +29,4 @@ class PermissionChannelService {
   Future<bool?> requestSystemAlertWindowPermission() => _channel.invokeMethod(
     _PermissionMethod.requestSystemAlertWindowPermission.name,
   );
-
-  Future<void> start3rdMusicPlayer() =>
-      _channel.invokeMethod(_PermissionMethod.start3rdMusicPlayer.name);
 }
