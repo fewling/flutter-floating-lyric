@@ -20,12 +20,14 @@ class _WindowConfigTab extends StatelessWidget {
         onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
           OverlayWindowSettingsEvent.windowVisibilityToggled(!isWindowVisible),
         ),
-        icon: isWindowVisible
-            ? const Icon(Icons.hide_source)
-            : const Icon(Icons.play_arrow_outlined),
-        label: isWindowVisible
-            ? Text(l10n.overlay_window_hide)
-            : Text(l10n.overlay_window_show),
+        icon: switch (isWindowVisible) {
+          true => const Icon(Icons.hide_source),
+          false => const Icon(Icons.play_arrow_outlined),
+        },
+        label: switch (isWindowVisible) {
+          true => Text(l10n.overlay_window_hide),
+          false => Text(l10n.overlay_window_show),
+        },
       ),
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
@@ -51,11 +53,12 @@ class _WindowConfigTab extends StatelessWidget {
                       value: useAppColor,
                       title: Text(l10n.overlay_window_use_app_color),
                       secondary: const Icon(Icons.palette_outlined),
-                      onChanged: !isWindowVisible
-                          ? null
-                          : (value) => context.read<PreferenceBloc>().add(
-                              PreferenceEvent.windowColorThemeToggled(value),
-                            ),
+                      onChanged: switch (isWindowVisible) {
+                        true => (value) => context.read<PreferenceBloc>().add(
+                          PreferenceEvent.windowColorThemeToggled(value),
+                        ),
+                        false => null,
+                      },
                     ),
                     ListTile(
                       enabled: isWindowVisible && useCustomColor,
@@ -75,43 +78,7 @@ class _WindowConfigTab extends StatelessWidget {
                           );
                         },
                       ),
-                      onTap: () => showDialog(
-                        builder: (dialogCtx) => BlocProvider.value(
-                          value: context.read<PreferenceBloc>(),
-                          child: AlertDialog(
-                            title: Text(l10n.overlay_window_pick_a_color),
-                            content: SingleChildScrollView(
-                              child: Builder(
-                                builder: (context) {
-                                  final color = context
-                                      .select<PreferenceBloc, int>(
-                                        (bloc) => bloc.state.backgroundColor,
-                                      );
-
-                                  return ColorPicker(
-                                    pickerColor: Color(color),
-                                    onColorChanged: (c) =>
-                                        context.read<PreferenceBloc>().add(
-                                          PreferenceEvent.backgroundColorUpdated(
-                                            c.toARGB32(),
-                                          ),
-                                        ),
-                                    paletteType: PaletteType.hueWheel,
-                                    hexInputBar: true,
-                                  );
-                                },
-                              ),
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(dialogCtx).pop(),
-                                child: Text(l10n.overlay_window_got_it),
-                              ),
-                            ],
-                          ),
-                        ),
-                        context: context,
-                      ),
+                      onTap: () => _showBackgroundColorPicker(context),
                     ),
                     ListTile(
                       enabled: isWindowVisible,
@@ -182,11 +149,12 @@ class _WindowConfigTab extends StatelessWidget {
                           max: 72,
                           value: fontSize.toDouble(),
                           label: '$fontSize%',
-                          onChanged: isWindowVisible
-                              ? (value) => context.read<PreferenceBloc>().add(
-                                  PreferenceEvent.fontSizeUpdated(value),
-                                )
-                              : null,
+                          onChanged: switch (isWindowVisible) {
+                            true => (v) => context.read<PreferenceBloc>().add(
+                              PreferenceEvent.fontSizeUpdated(v),
+                            ),
+                            false => null,
+                          },
                         );
                       },
                     ),
@@ -208,43 +176,7 @@ class _WindowConfigTab extends StatelessWidget {
                           );
                         },
                       ),
-                      onTap: () => showDialog(
-                        builder: (dialogCtx) => BlocProvider.value(
-                          value: context.read<PreferenceBloc>(),
-                          child: AlertDialog(
-                            title: Text(l10n.overlay_window_pick_a_color),
-                            content: SingleChildScrollView(
-                              child: Builder(
-                                builder: (context) {
-                                  final color = context
-                                      .select<PreferenceBloc, int>(
-                                        (bloc) => bloc.state.color,
-                                      );
-
-                                  return ColorPicker(
-                                    pickerColor: Color(color),
-                                    onColorChanged: (value) =>
-                                        context.read<PreferenceBloc>().add(
-                                          PreferenceEvent.colorUpdated(
-                                            value.toARGB32(),
-                                          ),
-                                        ),
-                                    paletteType: PaletteType.hueWheel,
-                                    hexInputBar: true,
-                                  );
-                                },
-                              ),
-                            ),
-                            actions: [
-                              ElevatedButton(
-                                onPressed: () => Navigator.of(dialogCtx).pop(),
-                                child: Text(l10n.overlay_window_got_it),
-                              ),
-                            ],
-                          ),
-                        ),
-                        context: context,
-                      ),
+                      onTap: () => _showTextColorPicker(context),
                     ),
                   ],
                 ),
@@ -411,7 +343,7 @@ class _WindowConfigTab extends StatelessWidget {
                               (bloc) => bloc.state.enableAnimation,
                             );
 
-                        return SegmentedButton(
+                        return SegmentedButton<AnimationMode>(
                           selected: {animationMode},
                           segments: [
                             for (final mode in AnimationMode.values)
@@ -424,7 +356,7 @@ class _WindowConfigTab extends StatelessWidget {
                           onSelectionChanged:
                               !isWindowVisible || !enableAnimation
                               ? null
-                              : (Set<AnimationMode> selections) =>
+                              : (selections) =>
                                     context.read<PreferenceBloc>().add(
                                       PreferenceEvent.animationModeUpdated(
                                         selections.first,
@@ -459,11 +391,12 @@ class _WindowConfigTab extends StatelessWidget {
                           divisions: 200,
                           value: tolerance.toDouble(),
                           label: '$tolerance',
-                          onChanged: isWindowVisible
-                              ? (o) => context.read<PreferenceBloc>().add(
-                                  PreferenceEvent.toleranceUpdated(o.toInt()),
-                                )
-                              : null,
+                          onChanged: switch (isWindowVisible) {
+                            true => (v) => context.read<PreferenceBloc>().add(
+                              PreferenceEvent.toleranceUpdated(v.toInt()),
+                            ),
+                            false => null,
+                          },
                         );
                       },
                     ),
@@ -504,15 +437,13 @@ class _WindowConfigTab extends StatelessWidget {
                             Icons.warning,
                             color: Colors.orange,
                           ),
-                          onChanged: !isWindowVisible
-                              ? null
-                              : (
-                                  value,
-                                ) => context.read<OverlayWindowSettingsBloc>().add(
-                                  OverlayWindowSettingsEvent.windowIgnoreTouchToggled(
-                                    value,
-                                  ),
-                                ),
+                          onChanged: switch (isWindowVisible) {
+                            true => (value) => _onWindowIgnoreTouchToggled(
+                              context,
+                              value,
+                            ),
+                            false => null,
+                          },
                         );
                       },
                     ),
@@ -533,21 +464,103 @@ class _WindowConfigTab extends StatelessWidget {
                             '${l10n.overlay_window_touch_through_subtitle_line1}\n'
                             '${l10n.overlay_window_touch_through_subtitle_line2}',
                           ),
-                          onChanged: isWindowVisible
-                              ? (
-                                  value,
-                                ) => context.read<OverlayWindowSettingsBloc>().add(
-                                  OverlayWindowSettingsEvent.windowTouchThroughToggled(
-                                    value,
-                                  ),
-                                )
-                              : null,
+                          onChanged: switch (isWindowVisible) {
+                            true => (value) => _onWIndowTouchThruToggled(
+                              context,
+                              value,
+                            ),
+                            false => null,
+                          },
                         );
                       },
                     ),
                   ],
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onWIndowTouchThruToggled(BuildContext context, bool value) => context
+      .read<OverlayWindowSettingsBloc>()
+      .add(OverlayWindowSettingsEvent.windowTouchThroughToggled(value));
+
+  void _onWindowIgnoreTouchToggled(BuildContext context, bool value) => context
+      .read<OverlayWindowSettingsBloc>()
+      .add(OverlayWindowSettingsEvent.windowIgnoreTouchToggled(value));
+
+  void _showTextColorPicker(BuildContext context) {
+    final l10n = context.l10n;
+
+    showDialog(
+      builder: (dialogCtx) => BlocProvider.value(
+        value: context.read<PreferenceBloc>(),
+        child: AlertDialog(
+          title: Text(l10n.overlay_window_pick_a_color),
+          content: SingleChildScrollView(
+            child: Builder(
+              builder: (context) {
+                final color = context.select<PreferenceBloc, int>(
+                  (bloc) => bloc.state.color,
+                );
+
+                return ColorPicker(
+                  pickerColor: Color(color),
+                  onColorChanged: (value) => context.read<PreferenceBloc>().add(
+                    PreferenceEvent.colorUpdated(value.toARGB32()),
+                  ),
+                  paletteType: PaletteType.hueWheel,
+                  hexInputBar: true,
+                );
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: Text(l10n.overlay_window_got_it),
+            ),
+          ],
+        ),
+      ),
+      context: context,
+    );
+  }
+
+  void _showBackgroundColorPicker(BuildContext context) {
+    final l10n = context.l10n;
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => BlocProvider.value(
+        value: context.read<PreferenceBloc>(),
+        child: AlertDialog(
+          title: Text(l10n.overlay_window_pick_a_color),
+          content: SingleChildScrollView(
+            child: Builder(
+              builder: (context) {
+                final color = context.select<PreferenceBloc, int>(
+                  (bloc) => bloc.state.backgroundColor,
+                );
+
+                return ColorPicker(
+                  pickerColor: Color(color),
+                  onColorChanged: (c) => context.read<PreferenceBloc>().add(
+                    PreferenceEvent.backgroundColorUpdated(c.toARGB32()),
+                  ),
+                  paletteType: PaletteType.hueWheel,
+                  hexInputBar: true,
+                );
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: Text(l10n.overlay_window_got_it),
             ),
           ],
         ),
