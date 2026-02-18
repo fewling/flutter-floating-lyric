@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 
-part 'overlay_app_dependency.dart';
-part 'overlay_app_listener.dart';
-part 'overlay_app_view.dart';
+part '_dependency.dart';
+part '_listener.dart';
+part '_view.dart';
 
 class OverlayApp extends StatelessWidget {
   const OverlayApp({super.key});
