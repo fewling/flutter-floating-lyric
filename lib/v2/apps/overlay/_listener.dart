@@ -26,11 +26,8 @@ class OverlayAppListener extends StatelessWidget {
         ),
 
         BlocListener<MsgFromMainBloc, MsgFromMainState>(
-          listenWhen: (previous, current) =>
-              current.mediaState != null &&
-              previous.mediaState?.isSameMedia(current.mediaState!) == false,
           listener: (context, state) => context.read<LyricFinderBloc>().add(
-            LyricFinderEvent.newSong(state.mediaState!),
+            LyricFinderEvent.mediaStateUpdated(state.mediaState!),
           ),
         ),
 

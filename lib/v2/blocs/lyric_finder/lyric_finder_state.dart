@@ -3,6 +3,8 @@ part of 'lyric_finder_bloc.dart';
 @freezed
 sealed class LyricFinderState with _$LyricFinderState {
   const factory LyricFinderState({
+    MediaState? targetMedia,
+
     Lrc? currentLrc,
 
     @Default(true) bool isAutoFetch,

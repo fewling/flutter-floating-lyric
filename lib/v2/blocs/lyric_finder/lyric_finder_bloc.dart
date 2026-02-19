@@ -23,7 +23,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
     on<LyricFinderEvent>(
       (event, emit) => switch (event) {
         _Init() => _onInit(event, emit),
-        _NewSong() => _onNewSong(event, emit),
+        _MediaStateUpdated() => _onNewSong(event, emit),
         _AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
       },
     );
@@ -36,10 +36,20 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
       emit(state.copyWith(isAutoFetch: event.isAutoFetch));
 
   Future<void> _onNewSong(
-    _NewSong event,
+    _MediaStateUpdated event,
     Emitter<LyricFinderState> emit,
   ) async {
     final songInfo = event.mediaState;
+
+    if (state.status.isSearching) return;
+    if (state.targetMedia?.isSameMedia(songInfo) ?? false) return;
+
+    emit(
+      state.copyWith(
+        status: LyricFinderStatus.searching,
+        targetMedia: songInfo,
+      ),
+    );
 
     final lrcDB = _localDbService.getLyricBySongInfo(
       songInfo.title,
@@ -47,10 +57,10 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
     );
 
     // If lyric exists in local DB, use it directly
-    if (lrcDB == null) {
+    if (lrcDB != null) {
       emit(
         state.copyWith(
-          currentLrc: LrcBuilder().buildLrc(lrcDB!.content ?? ''),
+          currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
           status: LyricFinderStatus.found,
         ),
       );

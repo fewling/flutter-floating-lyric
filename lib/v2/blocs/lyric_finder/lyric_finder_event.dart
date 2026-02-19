@@ -4,7 +4,8 @@ part of 'lyric_finder_bloc.dart';
 sealed class LyricFinderEvent with _$LyricFinderEvent {
   const factory LyricFinderEvent.init({required bool isAutoFetch}) = _Init;
 
-  const factory LyricFinderEvent.newSong(MediaState mediaState) = _NewSong;
+  const factory LyricFinderEvent.mediaStateUpdated(MediaState mediaState) =
+      _MediaStateUpdated;
 
   const factory LyricFinderEvent.autoFetchUpdated(bool isAutoFetch) =
       _AutoFetchUpdated;
