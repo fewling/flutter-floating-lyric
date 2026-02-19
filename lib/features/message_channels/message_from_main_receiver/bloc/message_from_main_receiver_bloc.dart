@@ -50,8 +50,7 @@ class MessageFromMainReceiverBloc
 
         switch (msg) {
           case ToOverlayMsgConfig():
-          // return state.copyWith(settings: msg.settings);
-
+          case ToOverlayMsgNewLyricSaved():
           case ToOverlayMsgMediaState():
             return state.copyWith();
         }

@@ -8,4 +8,6 @@ sealed class MsgToOverlayEvent with _$MsgToOverlayEvent {
 
   const factory MsgToOverlayEvent.onMediaStateUpdated(MediaState mediaState) =
       _MediaStateUpdated;
+
+  const factory MsgToOverlayEvent.newLyricSaved() = _NewLyricSaved;
 }

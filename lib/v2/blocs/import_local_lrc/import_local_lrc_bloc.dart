@@ -2,7 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../service/lrc/lrc_process_service.dart';
+import '../../services/lrc/lrc_process_service.dart';
 
 part 'import_local_lrc_bloc.freezed.dart';
 part 'import_local_lrc_event.dart';

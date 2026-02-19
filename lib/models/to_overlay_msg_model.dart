@@ -14,6 +14,8 @@ sealed class ToOverlayMsgModel with _$ToOverlayMsgModel {
   const factory ToOverlayMsgModel.mediaState(MediaState mediaState) =
       ToOverlayMsgMediaState;
 
+  const factory ToOverlayMsgModel.newLyricSaved() = ToOverlayMsgNewLyricSaved;
+
   factory ToOverlayMsgModel.fromJson(Map<String, dynamic> json) =>
       _$ToOverlayMsgModelFromJson(json);
 }

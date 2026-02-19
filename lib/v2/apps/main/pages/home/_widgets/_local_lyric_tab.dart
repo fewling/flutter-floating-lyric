@@ -5,6 +5,116 @@ class _LocalLyricTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Scaffold(
+      body: SingleChildScrollView(child: _LrcFormatInstruction()),
+      floatingActionButton: _ImportFab(),
+    );
+  }
+}
+
+class _LrcFormatInstruction extends StatelessWidget {
+  const _LrcFormatInstruction();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colorScheme = Theme.of(context).colorScheme;
+    final txtTheme = Theme.of(context).textTheme;
+
+    final activeMedia = context.select(
+      (MediaListenerBloc b) => b.state.activeMediaState,
+    );
+
+    final title = activeMedia?.title ?? '';
+    final artist = activeMedia?.artist ?? '';
+
+    return Column(
+      children: [
+        ListTile(
+          titleTextStyle: txtTheme.titleSmall?.copyWith(
+            color: colorScheme.onPrimaryContainer,
+          ),
+          title: Text(l10n.import_local_lrc_your_lrc_file_format),
+        ),
+        ListTile(
+          title: Text(l10n.import_local_lrc_file_name_format_1),
+          subtitle: SelectableText(
+            '$title - $artist.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
+        ),
+        ListTile(
+          title: Text(l10n.import_local_lrc_file_name_format_2),
+          subtitle: SelectableText(
+            '$artist - $title.lrc',
+            style: TextStyle(color: colorScheme.outline),
+          ),
+        ),
+        ListTile(
+          title: Text(l10n.import_local_lrc_file_should_contain),
+          subtitle: SelectableText(
+            '[ti:$title]\n'
+            '[ar:$artist]',
+            style: TextStyle(color: colorScheme.outline),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ImportFab extends StatelessWidget {
+  const _ImportFab();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final isProcessing = context.select<ImportLocalLrcBloc, bool>(
+      (bloc) => bloc.state.status.isProcessingFiles,
+    );
+
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<ImportLocalLrcBloc, ImportLocalLrcState>(
+          listenWhen: (previous, current) => previous.status != current.status,
+          listener: (context, state) {
+            switch (state.status) {
+              case ImportLocalLrcStatus.initial:
+              case ImportLocalLrcStatus.processingFiles:
+                break;
+              case ImportLocalLrcStatus.success:
+              case ImportLocalLrcStatus.failed:
+                if (state.failedFiles.isNotEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => FailedImportDialog(state.failedFiles),
+                  );
+                }
+                context.read<MsgToOverlayBloc>().add(
+                  const MsgToOverlayEvent.newLyricSaved(),
+                );
+                context.read<ImportLocalLrcBloc>().add(
+                  const ImportLocalLrcEvent.importStatusHandled(),
+                );
+            }
+          },
+        ),
+      ],
+      child: FloatingActionButton.extended(
+        onPressed: isProcessing
+            ? null
+            : () => context.read<ImportLocalLrcBloc>().add(
+                const ImportLocalLrcEvent.importLRCsRequested(),
+              ),
+        label: Text(
+          isProcessing
+              ? l10n.import_local_lrc_importing
+              : l10n.import_local_lrc_import,
+        ),
+        icon: isProcessing
+            ? const CircularProgressIndicator()
+            : const Icon(Icons.drive_folder_upload_outlined),
+      ),
+    );
   }
 }

@@ -9,4 +9,6 @@ sealed class LyricFinderEvent with _$LyricFinderEvent {
 
   const factory LyricFinderEvent.autoFetchUpdated(bool isAutoFetch) =
       _AutoFetchUpdated;
+
+  const factory LyricFinderEvent.reset() = _Reset;
 }

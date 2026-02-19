@@ -18,6 +18,7 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
       (event, emit) => switch (event) {
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
+        _NewLyricSaved() => _onNewLyricSaved(event, emit),
       },
     );
   }
@@ -35,4 +36,9 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
   ) => _toOverlayMsgService.sendMediaState(
     ToOverlayMsgMediaState(event.mediaState),
   );
+
+  void _onNewLyricSaved(
+    _NewLyricSaved event,
+    Emitter<MsgToOverlayState> emit,
+  ) => _toOverlayMsgService.sendMsg(const ToOverlayMsgModel.newLyricSaved());
 }

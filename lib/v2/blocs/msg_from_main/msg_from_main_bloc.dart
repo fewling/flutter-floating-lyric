@@ -22,6 +22,7 @@ class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
     on<MsgFromMainEvent>(
       (event, emit) => switch (event) {
         _Started() => _onStarted(event, emit),
+        _NewLyricHandled() => _onNewLyricHandled(event, emit),
       },
     );
   }
@@ -54,8 +55,20 @@ class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
 
           case ToOverlayMsgMediaState():
             return state.copyWith(mediaState: msg.mediaState);
+
+          case ToOverlayMsgNewLyricSaved():
+            return state.copyWith(
+              newLyricHandlingStatus: NewLyricHandlingStatus.received,
+            );
         }
       },
     );
   }
+
+  void _onNewLyricHandled(
+    _NewLyricHandled event,
+    Emitter<MsgFromMainState> emit,
+  ) => emit(
+    state.copyWith(newLyricHandlingStatus: NewLyricHandlingStatus.initial),
+  );
 }

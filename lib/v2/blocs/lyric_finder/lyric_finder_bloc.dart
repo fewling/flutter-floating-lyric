@@ -25,6 +25,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
         _Init() => _onInit(event, emit),
         _MediaStateUpdated() => _onNewSong(event, emit),
         _AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
+        _Reset() => _onReset(event, emit),
       },
     );
   }
@@ -131,4 +132,12 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
       content: content,
     );
   }
+
+  void _onReset(_Reset event, Emitter<LyricFinderState> emit) => emit(
+    state.copyWith(
+      targetMedia: null,
+      currentLrc: null,
+      status: LyricFinderStatus.initial,
+    ),
+  );
 }
