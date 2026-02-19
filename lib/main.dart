@@ -36,20 +36,32 @@ Future<void> main() async {
       return true;
     };
   } finally {
-    final dir = await getApplicationDocumentsDirectory();
-
-    await Hive.initFlutter();
-    Hive.registerAdapters();
-    final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
-
-    final pref = await SharedPreferences.getInstance();
+    final (pref, lrcModelBox) = await bootstrap();
 
     runApp(MainApp(pref: pref, lrcBox: lrcModelBox));
   }
 }
 
 @pragma('vm:entry-point')
-void overlayView() {
+Future<void> overlayView() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(LayoutBuilder(builder: (context, constraints) => const OverlayApp()));
+
+  final (pref, lrcModelBox) = await bootstrap();
+
+  runApp(
+    LayoutBuilder(
+      builder: (context, constraints) => OverlayApp(lrcBox: lrcModelBox),
+    ),
+  );
+}
+
+Future<(SharedPreferences, Box<LrcModel>)> bootstrap() async {
+  final pref = await SharedPreferences.getInstance();
+
+  final dir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter();
+  Hive.registerAdapters();
+  final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
+
+  return (pref, lrcModelBox);
 }
