@@ -5,9 +5,9 @@ part 'to_main_msg.g.dart';
 
 @freezed
 sealed class ToMainMsg with _$ToMainMsg {
-  const factory ToMainMsg.closeOverlay() = _CloseOverlay;
+  const factory ToMainMsg.closeOverlay() = CloseOverlay;
 
-  const factory ToMainMsg.measureScreenWidth() = _MeasureScreenWidth;
+  const factory ToMainMsg.measureScreenWidth() = MeasureScreenWidth;
 
   factory ToMainMsg.fromJson(Map<String, dynamic> json) =>
       _$ToMainMsgFromJson(json);

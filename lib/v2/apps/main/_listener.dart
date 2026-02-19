@@ -28,6 +28,29 @@ class MainAppListener extends StatelessWidget {
             ),
           ),
         ),
+
+        BlocListener<MsgFromOverlayBloc, MsgFromOverlayState>(
+          listener: (context, state) {
+            switch (state.msg) {
+              case null:
+                break;
+
+              case CloseOverlay():
+                context.read<OverlayWindowSettingsBloc>().add(
+                  const OverlayWindowSettingsEvent.windowVisibilityToggled(
+                    false,
+                  ),
+                );
+
+              case MeasureScreenWidth():
+                break;
+            }
+
+            context.read<MsgFromOverlayBloc>().add(
+              const MsgFromOverlayEvent.handled(),
+            );
+          },
+        ),
       ],
       child: Builder(builder: builder),
     );

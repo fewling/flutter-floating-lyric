@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../configs/main_overlay/main_overlay_port.dart';
-import '../../../models/from_overlay_msg_model.dart';
 import '../../mixins/isolates_mixin.dart';
+import '../../models/to_main_msg.dart';
 
 part 'msg_from_overlay_bloc.freezed.dart';
 part 'msg_from_overlay_event.dart';
@@ -41,7 +41,7 @@ class MsgFromOverlayBloc extends Bloc<MsgFromOverlayEvent, MsgFromOverlayState>
     await emit.forEach(
       _receivePort.asBroadcastStream(),
       onData: (data) {
-        final msg = FromOverlayMsgModel.fromJson(data as Map<String, dynamic>);
+        final msg = ToMainMsg.fromJson(data as Map<String, dynamic>);
         return state.copyWith(msg: msg);
       },
     );
