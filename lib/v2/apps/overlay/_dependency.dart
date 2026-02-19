@@ -48,7 +48,7 @@ class _OverlayAppDependencyState extends State<OverlayAppDependency> {
         RepositoryProvider.value(value: _localDbRepo),
         RepositoryProvider.value(value: _localDbService),
 
-        RepositoryProvider(create: (context) => ToMainMessageService()),
+        RepositoryProvider(create: (context) => ToMainMsgService()),
         RepositoryProvider(create: (context) => LayoutChannelService()),
       ],
       child: MultiBlocProvider(
@@ -78,8 +78,13 @@ class _OverlayAppDependencyState extends State<OverlayAppDependency> {
 
           BlocProvider(
             create: (context) => OverlayWindowBloc(
-              toMainMessageService: context.read<ToMainMessageService>(),
+              toMainMsgService: context.read<ToMainMsgService>(),
               layoutChannelService: context.read<LayoutChannelService>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => MsgToMainBloc(
+              toMainMsgService: context.read<ToMainMsgService>(),
             ),
           ),
         ],

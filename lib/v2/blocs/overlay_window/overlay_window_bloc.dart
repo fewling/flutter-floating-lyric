@@ -2,11 +2,11 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../models/from_overlay_msg_model.dart';
 import '../../../models/lrc.dart';
 import '../../../service/event_channels/media_states/media_state.dart';
-import '../../../service/message_channels/to_main_message_service.dart';
 import '../../models/overlay_window_config.dart';
+import '../../models/to_main_msg.dart';
+import '../../services/msg_channels/to_main_msg_service.dart';
 import '../../services/platform_channels/layout_channel_service.dart';
 
 part 'overlay_window_bloc.freezed.dart';
@@ -15,9 +15,9 @@ part 'overlay_window_state.dart';
 
 class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   OverlayWindowBloc({
-    required ToMainMessageService toMainMessageService,
+    required ToMainMsgService toMainMsgService,
     required LayoutChannelService layoutChannelService,
-  }) : _toMainMessageService = toMainMessageService,
+  }) : _toMainMsgService = toMainMsgService,
        _layoutChannelService = layoutChannelService,
        super(const OverlayWindowState()) {
     on<OverlayWindowEvent>(
@@ -35,7 +35,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     );
   }
 
-  final ToMainMessageService _toMainMessageService;
+  final ToMainMsgService _toMainMsgService;
   final LayoutChannelService _layoutChannelService;
 
   void _onStarted(_Started event, Emitter<OverlayWindowState> emit) {}
@@ -43,15 +43,10 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   void _onCloseRequested(
     _CloseRequested event,
     Emitter<OverlayWindowState> emit,
-  ) {
-    _toMainMessageService.sendMsg(
-      const FromOverlayMsgModel(action: OverlayAction.close),
-    );
-  }
+  ) => _toMainMsgService.sendMsg(const ToMainMsg.closeOverlay());
 
-  void _onWindowTapped(_WindowTapped event, Emitter<OverlayWindowState> emit) {
-    emit(state.copyWith(isLyricOnly: !state.isLyricOnly));
-  }
+  void _onWindowTapped(_WindowTapped event, Emitter<OverlayWindowState> emit) =>
+      emit(state.copyWith(isLyricOnly: !state.isLyricOnly));
 
   void _onWindowResized(
     _WindowResized event,
@@ -74,11 +69,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   void _onScreenWidthRequested(
     _ScreenWidthRequested event,
     Emitter<OverlayWindowState> emit,
-  ) {
-    _toMainMessageService.sendMsg(
-      const FromOverlayMsgModel(action: OverlayAction.measureScreenWidth),
-    );
-  }
+  ) => _toMainMsgService.sendMsg(const ToMainMsg.measureScreenWidth());
 
   void _onLyricFound(_LyricFound event, Emitter<OverlayWindowState> emit) {
     emit(state.copyWith(currentLrc: event.lrc));
