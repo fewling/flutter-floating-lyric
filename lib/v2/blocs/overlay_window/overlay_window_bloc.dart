@@ -51,9 +51,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
   void _onWindowResized(
     _WindowResized event,
     Emitter<OverlayWindowState> emit,
-  ) {
-    _layoutChannelService.setLayout(event.width, event.height);
-  }
+  ) => _layoutChannelService.setLayout(event.width, event.height);
 
   Future<void> _onLockToggled(
     _LockToggled event,

@@ -8,6 +8,7 @@ import '../../../../blocs/lyric_finder/lyric_finder_bloc.dart';
 import '../../../../blocs/msg_from_main/msg_from_main_bloc.dart';
 import '../../../../blocs/overlay_app/overlay_app_bloc.dart';
 import '../../../../blocs/overlay_window/overlay_window_bloc.dart';
+import '../../../../mixins/overlay_window_sizing_mixin.dart';
 import '../../../../models/overlay_window_config.dart';
 
 part '_dependency.dart';

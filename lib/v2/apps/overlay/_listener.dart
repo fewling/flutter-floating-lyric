@@ -12,9 +12,15 @@ class OverlayAppListener extends StatelessWidget {
         BlocListener<MsgFromMainBloc, MsgFromMainState>(
           listenWhen: (previous, current) =>
               previous.mediaState != current.mediaState,
-          listener: (context, state) => context.read<OverlayWindowBloc>().add(
-            OverlayWindowEvent.mediaStateUpdated(state.mediaState),
-          ),
+          listener: (context, state) {
+            context.read<OverlayWindowBloc>().add(
+              OverlayWindowEvent.mediaStateUpdated(state.mediaState),
+            );
+
+            context.read<LyricFinderBloc>().add(
+              LyricFinderEvent.mediaStateUpdated(state.mediaState!),
+            );
+          },
         ),
 
         BlocListener<MsgFromMainBloc, MsgFromMainState>(
@@ -22,12 +28,6 @@ class OverlayAppListener extends StatelessWidget {
               previous.config != current.config && current.config != null,
           listener: (context, state) => context.read<OverlayWindowBloc>().add(
             OverlayWindowEvent.windowConfigsUpdated(state.config!),
-          ),
-        ),
-
-        BlocListener<MsgFromMainBloc, MsgFromMainState>(
-          listener: (context, state) => context.read<LyricFinderBloc>().add(
-            LyricFinderEvent.mediaStateUpdated(state.mediaState!),
           ),
         ),
 
@@ -39,11 +39,6 @@ class OverlayAppListener extends StatelessWidget {
             OverlayWindowEvent.lyricFound(lrc: state.currentLrc!),
           ),
         ),
-
-        // BlocListener<MsgFromMainBloc, MsgFromMainState>(
-        //   listenWhen: (previous, current) => current.config?.width == 0,
-        //   listener: (context, state) {},
-        // ),
       ],
       child: Builder(builder: builder),
     );

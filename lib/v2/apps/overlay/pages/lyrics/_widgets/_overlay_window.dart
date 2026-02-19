@@ -1,6 +1,6 @@
 part of '../page.dart';
 
-class _OverlayWindow extends StatelessWidget {
+class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
   const _OverlayWindow({this.debugText, this.isLoading = false});
 
   final String? debugText;
@@ -24,6 +24,8 @@ class _OverlayWindow extends StatelessWidget {
     final isLyricOnly = context.select(
       (OverlayWindowBloc b) => b.state.isLyricOnly,
     );
+
+    updateSize(context);
 
     return IgnorePointer(
       ignoring: configs.ignoreTouch ?? false,
