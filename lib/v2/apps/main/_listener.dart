@@ -9,6 +9,11 @@ class MainAppListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<PreferenceBloc, PreferenceState>(
+          listener: (context, state) => context
+              .read<OverlayWindowSettingsBloc>()
+              .add(OverlayWindowSettingsEvent.preferenceUpdated(state)),
+        ),
         BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
             MsgToOverlayEvent.onWindowConfigUpdated(state.config),

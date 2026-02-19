@@ -35,11 +35,9 @@ class OverlayAppListener extends StatelessWidget {
           listenWhen: (previous, current) =>
               current.status == LyricFinderStatus.found &&
               previous.currentLrc != current.currentLrc,
-          listener: (context, state) {
-            context.read<OverlayWindowBloc>().add(
-              OverlayWindowEvent.lyricFound(lrc: state.currentLrc!),
-            );
-          },
+          listener: (context, state) => context.read<OverlayWindowBloc>().add(
+            OverlayWindowEvent.lyricFound(lrc: state.currentLrc!),
+          ),
         ),
 
         // BlocListener<MsgFromMainBloc, MsgFromMainState>(

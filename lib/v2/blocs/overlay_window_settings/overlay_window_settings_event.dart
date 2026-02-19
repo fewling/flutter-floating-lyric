@@ -13,4 +13,8 @@ sealed class OverlayWindowSettingsEvent with _$OverlayWindowSettingsEvent {
   const factory OverlayWindowSettingsEvent.windowTouchThroughToggled(
     bool value,
   ) = _WindowTouchThroughToggled;
+
+  const factory OverlayWindowSettingsEvent.preferenceUpdated(
+    PreferenceState state,
+  ) = _PreferenceUpdated;
 }

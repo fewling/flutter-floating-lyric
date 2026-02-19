@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/overlay_window_config.dart';
 import '../../services/platform_channels/method_channel_service.dart';
+import '../preference/preference_bloc.dart';
 
 part 'overlay_window_settings_bloc.freezed.dart';
 part 'overlay_window_settings_event.dart';
@@ -19,6 +20,7 @@ class OverlayWindowSettingsBloc
         _WindowVisibilityToggled() => _onVisibilityToggled(event, emit),
         _WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
         _WindowTouchThroughToggled() => _onTouchThroughToggled(event, emit),
+        _PreferenceUpdated() => _onPreferenceUpdated(event, emit),
       },
     );
   }
@@ -60,5 +62,34 @@ class OverlayWindowSettingsBloc
         state.copyWith(config: state.config.copyWith(touchThru: event.value)),
       );
     }
+  }
+
+  void _onPreferenceUpdated(
+    _PreferenceUpdated event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) {
+    final pref = event.state;
+    emit(
+      state.copyWith(
+        config: state.config.copyWith(
+          animationMode: pref.animationMode,
+          appColorScheme: pref.appColorScheme,
+          fontFamily: pref.fontFamily,
+          fontSize: pref.fontSize.toDouble(),
+          locale: pref.locale,
+          showLine2: pref.showLine2,
+          showMillis: pref.showMilliseconds,
+          showProgressBar: pref.showProgressBar,
+          transparentNotFoundTxt: pref.transparentNotFoundTxt,
+          useAppColor: pref.useAppColor,
+          backgroundColor: pref.backgroundColor,
+          color: pref.color,
+          enableAnimation: pref.enableAnimation,
+          opacity: pref.opacity,
+          isLight: pref.isLight,
+          tolerance: pref.tolerance.toDouble(),
+        ),
+      ),
+    );
   }
 }
