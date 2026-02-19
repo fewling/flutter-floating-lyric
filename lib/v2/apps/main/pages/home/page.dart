@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../configs/animation_modes.dart';
 import '../../../../../service/event_channels/media_states/media_state.dart';
+import '../../../../../service/lrc/lrc_process_service.dart';
 import '../../../../../utils/extensions/custom_extensions.dart';
+import '../../../../blocs/import_local_lrc/import_local_lrc_bloc.dart';
 import '../../../../blocs/media_listener/media_listener_bloc.dart';
 import '../../../../blocs/overlay_window_settings/overlay_window_settings_bloc.dart';
 import '../../../../blocs/preference/preference_bloc.dart';

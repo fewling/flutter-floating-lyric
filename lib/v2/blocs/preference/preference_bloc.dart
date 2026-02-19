@@ -2,8 +2,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../configs/animation_modes.dart';
-import '../../../repos/local/preference_repo.dart';
 import '../../enums/app_locale.dart';
+import '../../repos/persistence/local/preference_repo.dart';
 
 part 'preference_bloc.freezed.dart';
 part 'preference_event.dart';

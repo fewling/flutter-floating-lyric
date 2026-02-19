@@ -16,6 +16,13 @@ class _Dependency extends StatelessWidget {
             ).read<MethodChannelService>(),
           ),
         ),
+        BlocProvider(
+          create: (context) => ImportLocalLrcBloc(
+            lrcProcessorService: MainAppDependency.of(
+              context,
+            ).read<LrcProcessorService>(),
+          )..add(const ImportLocalLrcEvent.started()),
+        ),
       ],
       child: Builder(builder: builder),
     );

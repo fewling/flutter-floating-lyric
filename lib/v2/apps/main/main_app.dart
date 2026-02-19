@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../../models/lyric_model.dart';
-import '../../../repos/local/preference_repo.dart';
 import '../../../service/message_channels/to_overlay_message_service.dart';
 import '../../../service/platform_methods/permission_channel_service.dart';
 import '../../blocs/media_listener/media_listener_bloc.dart';
@@ -16,7 +15,10 @@ import '../../blocs/permission/permission_bloc.dart';
 import '../../blocs/preference/preference_bloc.dart';
 import '../../enums/app_locale.dart';
 import '../../models/to_main_msg.dart';
+import '../../repos/persistence/local/local_db_repo.dart';
+import '../../repos/persistence/local/preference_repo.dart';
 import '../../routes/app_router.dart';
+import '../../services/lrc/lrc_process_service.dart';
 import '../../services/platform_channels/method_channel_service.dart';
 
 part '_dependency.dart';
