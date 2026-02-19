@@ -47,4 +47,7 @@ sealed class PreferenceEvent with _$PreferenceEvent {
 
   const factory PreferenceEvent.windowTouchThroughToggled(bool value) =
       _WindowTouchThroughToggled;
+
+  const factory PreferenceEvent.autoFetchOnlineToggled() =
+      _AutoFetchOnlineToggled;
 }

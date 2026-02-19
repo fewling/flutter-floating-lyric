@@ -15,9 +15,11 @@ import '../../blocs/permission/permission_bloc.dart';
 import '../../blocs/preference/preference_bloc.dart';
 import '../../enums/app_locale.dart';
 import '../../models/to_main_msg.dart';
+import '../../repos/lrclib/lrclib_repository.dart';
 import '../../repos/persistence/local/local_db_repo.dart';
 import '../../repos/persistence/local/preference_repo.dart';
 import '../../routes/app_router.dart';
+import '../../services/db/local/local_db_service.dart';
 import '../../services/lrc/lrc_process_service.dart';
 import '../../services/platform_channels/method_channel_service.dart';
 

@@ -23,6 +23,41 @@ class _Dependency extends StatelessWidget {
             ).read<LrcProcessorService>(),
           )..add(const ImportLocalLrcEvent.started()),
         ),
+
+        BlocProvider(
+          create: (context) =>
+              FetchOnlineLrcFormBloc(
+                lrcLibRepo: MainAppDependency.of(
+                  context,
+                ).read<LrcLibRepository>(),
+                localDbService: MainAppDependency.of(
+                  context,
+                ).read<LocalDbService>(),
+              )..add(
+                FetchOnlineLrcFormStarted(
+                  album: context
+                      .read<MediaListenerBloc>()
+                      .state
+                      .activeMediaState
+                      ?.album,
+                  artist: context
+                      .read<MediaListenerBloc>()
+                      .state
+                      .activeMediaState
+                      ?.artist,
+                  title: context
+                      .read<MediaListenerBloc>()
+                      .state
+                      .activeMediaState
+                      ?.title,
+                  duration: context
+                      .read<MediaListenerBloc>()
+                      .state
+                      .activeMediaState
+                      ?.duration,
+                ),
+              ),
+        ),
       ],
       child: Builder(builder: builder),
     );

@@ -57,6 +57,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           event,
           emit,
         ),
+        _AutoFetchOnlineToggled() => _onAutoFetchOnlineToggled(event, emit),
       },
     );
   }
@@ -222,5 +223,17 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     // if (isSuccess) {
     //   emit(state.copyWith(windowTouchThrough: event.value));
     // }
+  }
+
+  Future<void> _onAutoFetchOnlineToggled(
+    _AutoFetchOnlineToggled event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.toggleAutoFetchOnline(
+      !state.autoFetchOnline,
+    );
+    if (isSuccess) {
+      emit(state.copyWith(autoFetchOnline: !state.autoFetchOnline));
+    }
   }
 }

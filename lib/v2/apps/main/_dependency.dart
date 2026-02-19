@@ -23,11 +23,13 @@ class _MainAppDependencyState extends State<MainAppDependency> {
 
   late final PreferenceRepo _preferenceRepo;
   late final LocalDbRepo _localDbRepo;
+  late final LrcLibRepository _lrcLibRepo;
 
   late final PermissionChannelService _permissionChannelService;
   late final MethodChannelService _methodChannelService;
   late final ToOverlayMsgService _toOverlayMsgService;
   late final LrcProcessorService _lrcProcessorService;
+  late final LocalDbService _localDbService;
 
   late final PermissionBloc _permissionBloc;
   late final PreferenceBloc _preferenceBloc;
@@ -43,12 +45,14 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     // repos:
     _preferenceRepo = PreferenceRepo(sharedPreferences: widget.pref);
     _localDbRepo = LocalDbRepo(lrcBox: widget.lrcBox);
+    _lrcLibRepo = LrcLibRepository();
 
     // services:
     _permissionChannelService = PermissionChannelService();
     _methodChannelService = MethodChannelService();
     _toOverlayMsgService = ToOverlayMsgService();
     _lrcProcessorService = LrcProcessorService(localDB: _localDbRepo);
+    _localDbService = LocalDbService(localDBRepo: _localDbRepo);
 
     // blocs:
     _permissionBloc = PermissionBloc(
@@ -79,11 +83,13 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       providers: [
         RepositoryProvider.value(value: _preferenceRepo),
         RepositoryProvider.value(value: _localDbRepo),
+        RepositoryProvider.value(value: _lrcLibRepo),
 
         RepositoryProvider.value(value: _permissionChannelService),
         RepositoryProvider.value(value: _methodChannelService),
         RepositoryProvider.value(value: _toOverlayMsgService),
         RepositoryProvider.value(value: _lrcProcessorService),
+        RepositoryProvider.value(value: _localDbService),
       ],
       child: MultiBlocProvider(
         providers: [

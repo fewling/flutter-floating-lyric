@@ -1,19 +1,25 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../configs/animation_modes.dart';
 import '../../../../../service/event_channels/media_states/media_state.dart';
 import '../../../../../utils/extensions/custom_extensions.dart';
 import '../../../../../widgets/fail_import_dialog.dart';
+import '../../../../../widgets/loading_widget.dart';
+import '../../../../blocs/fetch_online_lrc_form/fetch_online_lrc_form_bloc.dart';
 import '../../../../blocs/import_local_lrc/import_local_lrc_bloc.dart';
 import '../../../../blocs/media_listener/media_listener_bloc.dart';
 import '../../../../blocs/msg_to_overlay/msg_to_overlay_bloc.dart';
 import '../../../../blocs/overlay_window_settings/overlay_window_settings_bloc.dart';
 import '../../../../blocs/preference/preference_bloc.dart';
 import '../../../../blocs/start_music_app/start_music_app_bloc.dart';
+import '../../../../repos/lrclib/lrclib_repository.dart';
 import '../../../../routes/app_router.dart';
+import '../../../../services/db/local/local_db_service.dart';
 import '../../../../services/lrc/lrc_process_service.dart';
 import '../../../../services/platform_channels/method_channel_service.dart';
 import '../../main_app.dart';
