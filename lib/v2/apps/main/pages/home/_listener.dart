@@ -7,17 +7,21 @@ class _Listener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Add listeners here
-    // Example with BlocListener:
-    // return BlocListener<HomePageBloc, HomePageState>(
-    //   listener: (context, state) {
-    //     if (state.shouldNavigate) {
-    //       Navigator.of(context).push(...);
-    //     }
-    //   },
-    //   child: Builder(builder: builder),
-    // );
-
-    return Builder(builder: builder);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
+          listenWhen: (previous, current) =>
+              previous.isWindowVisible != current.isWindowVisible &&
+              current.isWindowVisible,
+          listener: (context, state) =>
+              context.read<OverlayWindowSettingsBloc>().add(
+                OverlayWindowSettingsEvent.preferenceUpdated(
+                  context.read<PreferenceBloc>().state,
+                ),
+              ),
+        ),
+      ],
+      child: Builder(builder: builder),
+    );
   }
 }
