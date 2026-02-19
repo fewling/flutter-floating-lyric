@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
 import '../apps/main/pages/home/page.dart';
+import '../apps/main/pages/local_lyrics/page.dart';
 import '../apps/main/pages/onboarding/page.dart';
 import '../apps/overlay/pages/lyrics/page.dart';
 import '../blocs/permission/permission_bloc.dart';
@@ -69,7 +70,14 @@ class AppRouter {
                 GoRoute(
                   path: MainAppRoutes.localLyrics.path,
                   name: MainAppRoutes.localLyrics.name,
-                  builder: (context, state) => const Placeholder(),
+                  builder: (context, state) => const LocalLyricsPage(),
+                  routes: [
+                    GoRoute(
+                      path: MainAppRoutes.localLyricDetail.path,
+                      name: MainAppRoutes.localLyricDetail.name,
+                      builder: (context, state) => const Placeholder(),
+                    ),
+                  ],
                 ),
               ],
             ),
