@@ -6,6 +6,7 @@ class _View extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      backgroundColor: Colors.transparent,
       body: SizedBox(width: double.infinity, child: _OverlayWindow()),
     );
   }
