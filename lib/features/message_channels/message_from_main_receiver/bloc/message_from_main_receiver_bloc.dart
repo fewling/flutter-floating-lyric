@@ -49,8 +49,8 @@ class MessageFromMainReceiverBloc
         final msg = ToOverlayMsgModel.fromJson(data as Map<String, dynamic>);
 
         switch (msg) {
-          case ToOverlayMsgSettings():
-            return state.copyWith(settings: msg.settings);
+          case ToOverlayMsgConfig():
+          // return state.copyWith(settings: msg.settings);
 
           case ToOverlayMsgMediaState():
             return state.copyWith();

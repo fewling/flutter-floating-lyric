@@ -11,7 +11,7 @@ class MainAppListener extends StatelessWidget {
       listeners: [
         BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
-            MsgToOverlayEvent.onWindowSettingsUpdated(state.settings),
+            MsgToOverlayEvent.onWindowConfigUpdated(state.config),
           ),
         ),
         BlocListener<MediaListenerBloc, MediaListenerState>(

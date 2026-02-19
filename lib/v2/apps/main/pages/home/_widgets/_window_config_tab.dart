@@ -423,8 +423,7 @@ class _WindowConfigTab extends StatelessWidget {
                       builder: (context) {
                         final isIgnoreTouch = context
                             .select<OverlayWindowSettingsBloc, bool>(
-                              (bloc) =>
-                                  bloc.state.settings.ignoreTouch ?? false,
+                              (bloc) => bloc.state.config.ignoreTouch ?? false,
                             );
                         return SwitchListTile(
                           value: isIgnoreTouch,
@@ -451,7 +450,7 @@ class _WindowConfigTab extends StatelessWidget {
                       builder: (context) {
                         final isTouchThru = context
                             .select<OverlayWindowSettingsBloc, bool>(
-                              (bloc) => bloc.state.settings.touchThru ?? false,
+                              (bloc) => bloc.state.config.touchThru ?? false,
                             );
                         return SwitchListTile(
                           value: isTouchThru,

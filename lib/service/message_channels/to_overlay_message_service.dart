@@ -11,8 +11,8 @@ class ToOverlayMsgService {
     _sendJson(json as Map<String, dynamic>);
   }
 
-  void sendWindowSettings(ToOverlayMsgSettings settings) => _sendJson(
-    jsonDecode(jsonEncode(settings.toJson())) as Map<String, dynamic>,
+  void sendWindowConfig(ToOverlayMsgConfig config) => _sendJson(
+    jsonDecode(jsonEncode(config.toJson())) as Map<String, dynamic>,
   );
 
   void sendMediaState(ToOverlayMsgMediaState mediaState) => _sendJson(

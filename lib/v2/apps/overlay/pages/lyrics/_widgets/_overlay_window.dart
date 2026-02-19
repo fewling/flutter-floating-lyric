@@ -8,29 +8,25 @@ class _OverlayWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settings = context.select(
-      (MsgFromMainBloc bloc) => bloc.state.settings,
-    );
+    final configs = context.select((MsgFromMainBloc bloc) => bloc.state.config);
 
-    if (settings == null) return const _OverlayLoadingIndicator();
+    if (configs == null) return const _OverlayLoadingIndicator();
 
     final colorScheme = Theme.of(context).colorScheme;
     final foregroundColor = colorScheme.onPrimaryContainer;
 
-    final useAppColor = settings.useAppColor;
-    final opacity = (settings.opacity ?? 50) / 100;
+    final useAppColor = configs.useAppColor;
+    final opacity = (configs.opacity ?? 50) / 100;
     final textColor = (useAppColor
         ? foregroundColor
-        : Color(settings.color ?? Colors.white.toARGB32()));
-    final width = context.select(
-      (MsgFromMainBloc b) => b.state.settings?.width,
-    );
+        : Color(configs.color ?? Colors.white.toARGB32()));
+
     final isLyricOnly = context.select(
       (OverlayWindowBloc b) => b.state.isLyricOnly,
     );
 
     return IgnorePointer(
-      ignoring: settings.ignoreTouch ?? false,
+      ignoring: configs.ignoreTouch ?? false,
       child: Container(
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
@@ -38,7 +34,7 @@ class _OverlayWindow extends StatelessWidget {
           color: useAppColor
               ? colorScheme.primaryContainer.withTransparency(opacity)
               : Color(
-                  settings.backgroundColor ?? Colors.black.toARGB32(),
+                  configs.backgroundColor ?? Colors.black.toARGB32(),
                 ).withTransparency(opacity),
         ),
         margin: EdgeInsets.zero,
@@ -59,8 +55,8 @@ class _OverlayWindow extends StatelessWidget {
                     style: TextStyle(color: colorScheme.onPrimaryContainer),
                   ),
                 if (!isLyricOnly) _OverlayHeader(textColor: textColor),
-                _OverlayContent(settings: settings, textColor: textColor),
-                if (!isLyricOnly || (settings.showProgressBar ?? false))
+                _OverlayContent(config: configs, textColor: textColor),
+                if (!isLyricOnly || (configs.showProgressBar ?? false))
                   _OverlayProgressBar(textColor: textColor),
               ],
             ),
@@ -72,73 +68,80 @@ class _OverlayWindow extends StatelessWidget {
 }
 
 class _OverlayContent extends StatelessWidget {
-  const _OverlayContent({required this.settings, required this.textColor});
+  const _OverlayContent({required this.config, required this.textColor});
 
-  final OverlaySettingsModel settings;
+  final OverlayWindowConfig config;
   final Color textColor;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final line1Pos = settings.line1?.time;
-    final line2Pos = settings.line2?.time;
+
+    final overlayWindowState = context.watch<OverlayWindowBloc>().state;
+    final lyricFinderState = context.watch<LyricFinderBloc>().state;
+
+    final line1 = overlayWindowState.line1;
+    final line2 = overlayWindowState.line2;
+
+    final line1Pos = line1?.time;
+    final line2Pos = line2?.time;
 
     final line1IsFurther =
         (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
 
-    final status = settings.searchLyricStatus;
-    final showLine2 = settings.showLine2 ?? false;
-    final shouldAnimate = settings.enableAnimation;
-    final animationMode = settings.animationMode;
+    final status = lyricFinderState.status;
+    final showLine2 = config.showLine2 ?? false;
+    final shouldAnimate = config.enableAnimation;
+    final animationMode = config.animationMode;
 
     switch (status) {
-      case SearchLyricStatus.empty:
+      case LyricFinderStatus.empty:
         return Center(
           child: Text(
             l10n.overlay_window_no_lyric,
             style: TextStyle(color: textColor),
           ),
         );
-      case SearchLyricStatus.searching:
+      case LyricFinderStatus.searching:
         return Center(
           child: Text(
             l10n.overlay_window_searching_lyric,
             style: TextStyle(color: textColor),
           ),
         );
-      case SearchLyricStatus.notFound:
+      case LyricFinderStatus.notFound:
         return Center(
           // child: Text('Lyric not found', style: TextStyle(color: textColor)),
           child: Text(
             l10n.fetch_online_no_lyric_found,
             style: TextStyle(
-              color: settings.transparentNotFoundTxt
+              color: config.transparentNotFoundTxt
                   ? Colors.transparent
                   : textColor,
             ),
           ),
         );
-      case SearchLyricStatus.initial:
-      case SearchLyricStatus.found:
+      case LyricFinderStatus.initial:
+      case LyricFinderStatus.found:
         return Column(
           children: [
             Align(
               alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
               child: shouldAnimate
                   ? _AnimatedLyricLine(
-                      key: ValueKey('line1:${settings.line1?.content}'),
+                      key: ValueKey('line1:${line1?.content}'),
                       textColor: textColor,
-                      id: 'line1:${settings.line1?.content}',
-                      content: settings.line1?.content,
-                      fontSize: settings.fontSize,
+                      id: 'line1:${line1?.content}',
+                      content: line1?.content,
+                      fontSize: config.fontSize,
                       isBold: line1IsFurther,
                       animationMode: animationMode,
                     )
                   : Text(
-                      settings.line1?.content ?? '',
+                      line1?.content ?? '',
                       style: TextStyle(
                         color: textColor,
-                        fontSize: settings.fontSize,
+                        fontSize: config.fontSize,
                         fontWeight: line1IsFurther
                             ? FontWeight.bold
                             : FontWeight.normal,
@@ -150,19 +153,19 @@ class _OverlayContent extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 child: shouldAnimate
                     ? _AnimatedLyricLine(
-                        key: ValueKey('line2:${settings.line2?.content}'),
+                        key: ValueKey('line2:${line2?.content}'),
                         textColor: textColor,
-                        id: 'line2:${settings.line2?.content}',
-                        content: settings.line2?.content,
-                        fontSize: settings.fontSize,
+                        id: 'line2:${line2?.content}',
+                        content: line2?.content,
+                        fontSize: config.fontSize,
                         isBold: !line1IsFurther,
                         animationMode: animationMode,
                       )
                     : Text(
-                        settings.line2?.content ?? '',
+                        line2?.content ?? '',
                         style: TextStyle(
                           color: textColor,
-                          fontSize: settings.fontSize,
+                          fontSize: config.fontSize,
                           fontWeight: !line1IsFurther
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -333,10 +336,7 @@ class _OverlayProgressBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final msgFromMain = context.watch<MsgFromMainBloc>().state;
 
-    final (settings, mediaState) = (
-      msgFromMain.settings,
-      msgFromMain.mediaState,
-    );
+    final (config, mediaState) = (msgFromMain.config, msgFromMain.mediaState);
 
     final pos = Duration(milliseconds: mediaState?.position.toInt() ?? 0);
     final max = Duration(milliseconds: mediaState?.duration.toInt() ?? 0);
@@ -345,8 +345,8 @@ class _OverlayProgressBar extends StatelessWidget {
         ? 0
         : pos.inMilliseconds / max.inMilliseconds;
 
-    final left = (settings?.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
-    final right = (settings?.showMillis ?? false) ? max.mmssmm() : max.mmss();
+    final left = (config?.showMillis ?? false) ? pos.mmssmm() : pos.mmss();
+    final right = (config?.showMillis ?? false) ? max.mmssmm() : max.mmss();
 
     return Row(
       children: [

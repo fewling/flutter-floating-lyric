@@ -13,20 +13,13 @@ sealed class LyricFinderState with _$LyricFinderState {
     )
     @Default(LyricFinderStatus.initial)
     LyricFinderStatus status,
-
-    @JsonKey(
-      fromJson: searchLyricStatusFromJson,
-      toJson: searchLyricStatusToJson,
-    )
-    @Default(SearchLyricStatus.initial)
-    SearchLyricStatus searchLyricStatus,
   }) = _LyricFinderState;
 
   factory LyricFinderState.fromJson(Map<String, dynamic> json) =>
       _$LyricFinderStateFromJson(json);
 }
 
-enum LyricFinderStatus { initial, searching, found, notFound }
+enum LyricFinderStatus { initial, empty, searching, found, notFound }
 
 extension LyricFinderStatusX on LyricFinderStatus {
   bool get isInitial => this == LyricFinderStatus.initial;

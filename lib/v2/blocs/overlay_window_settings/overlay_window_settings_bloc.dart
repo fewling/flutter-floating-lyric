@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../models/overlay_settings_model.dart';
+import '../../models/overlay_window_config.dart';
 import '../../services/platform_channels/method_channel_service.dart';
 
 part 'overlay_window_settings_bloc.freezed.dart';
@@ -13,9 +13,7 @@ class OverlayWindowSettingsBloc
   OverlayWindowSettingsBloc({
     required MethodChannelService methodChannelService,
   }) : _methodChannelService = methodChannelService,
-       super(
-         const OverlayWindowSettingsState(settings: OverlaySettingsModel()),
-       ) {
+       super(const OverlayWindowSettingsState(config: OverlayWindowConfig())) {
     on<OverlayWindowSettingsEvent>(
       (event, emit) => switch (event) {
         _WindowVisibilityToggled() => _onVisibilityToggled(event, emit),
@@ -47,9 +45,7 @@ class OverlayWindowSettingsBloc
   ) async {
     // TODO(@Felix)
     emit(
-      state.copyWith(
-        settings: state.settings.copyWith(ignoreTouch: event.value),
-      ),
+      state.copyWith(config: state.config.copyWith(ignoreTouch: event.value)),
     );
   }
 
@@ -61,9 +57,7 @@ class OverlayWindowSettingsBloc
 
     if (isSuccess ?? false) {
       emit(
-        state.copyWith(
-          settings: state.settings.copyWith(touchThru: event.value),
-        ),
+        state.copyWith(config: state.config.copyWith(touchThru: event.value)),
       );
     }
   }

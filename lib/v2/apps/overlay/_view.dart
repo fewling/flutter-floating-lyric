@@ -7,11 +7,11 @@ class OverlayAppView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final windowSettings = context.watch<MsgFromMainBloc>().state.settings;
+    final windowConfig = context.watch<MsgFromMainBloc>().state.config;
 
-    final appColorScheme = windowSettings?.appColorScheme;
-    final isLight = windowSettings?.isLight ?? true;
-    final locale = windowSettings?.locale ?? AppLocale.english;
+    final appColorScheme = windowConfig?.appColorScheme;
+    final isLight = windowConfig?.isLight ?? true;
+    final locale = windowConfig?.locale ?? AppLocale.english;
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,

@@ -20,8 +20,7 @@ class _View extends StatelessWidget {
   void _updateSize(BuildContext context) {
     final isMinimized = context.read<OverlayAppBloc>().state.isMinimized;
 
-    final screenWidth =
-        context.read<MsgFromMainBloc>().state.settings?.width ?? 300.0;
+    const screenWidth = 300.0;
 
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = context.findRenderObject() as RenderBox?;

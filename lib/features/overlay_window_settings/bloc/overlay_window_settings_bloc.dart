@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../models/overlay_settings_model.dart';
-import '../../../models/to_overlay_msg_model.dart';
 import '../../../service/message_channels/to_overlay_message_service.dart';
 import '../../../service/platform_methods/window_channel_service.dart';
 import '../../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
@@ -88,7 +87,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
+    // _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   void _onPreferenceUpdated(
@@ -118,7 +117,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
+    // _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   void _onLyricStateListenerUpdated(
@@ -141,7 +140,7 @@ class OverlayWindowSettingsBloc
     );
 
     emit(newState);
-    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
+    // _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   Future<void> _onVisibilityToggled(
@@ -166,7 +165,7 @@ class OverlayWindowSettingsBloc
     );
     emit(newState);
 
-    _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
+    // _toOverlayMessageService.sendMsg(ToOverlayMsgSettings(newState.settings));
   }
 
   Future<void> _onTouchThruToggled(

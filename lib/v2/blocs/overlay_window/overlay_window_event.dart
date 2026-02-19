@@ -17,4 +17,13 @@ sealed class OverlayWindowEvent with _$OverlayWindowEvent {
 
   const factory OverlayWindowEvent.screenWidthRequested() =
       _ScreenWidthRequested;
+
+  const factory OverlayWindowEvent.mediaStateUpdated(MediaState? mediaState) =
+      _MediaStateUpdated;
+
+  const factory OverlayWindowEvent.windowConfigsUpdated(
+    OverlayWindowConfig config,
+  ) = _WindowConfigsUpdated;
+
+  const factory OverlayWindowEvent.lyricFound({required Lrc lrc}) = _LyricFound;
 }

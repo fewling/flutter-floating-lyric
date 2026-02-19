@@ -59,16 +59,28 @@ class _OverlayAppDependencyState extends State<OverlayAppDependency> {
           ),
 
           BlocProvider(
-            create: (context) => OverlayWindowBloc(
-              toMainMessageService: context.read<ToMainMessageService>(),
-              layoutChannelService: context.read<LayoutChannelService>(),
+            lazy: false,
+            create: (context) =>
+                MsgFromMainBloc()..add(const MsgFromMainEvent.started()),
+          ),
+
+          BlocProvider(
+            create: (context) => LyricFinderBloc(
+              localDbService: OverlayAppDependency.of(
+                context,
+              ).read<LocalDbService>(),
+
+              lyricRepository: OverlayAppDependency.of(
+                context,
+              ).read<LrcLibRepository>(),
             ),
           ),
 
           BlocProvider(
-            lazy: false,
-            create: (context) =>
-                MsgFromMainBloc()..add(const MsgFromMainEvent.started()),
+            create: (context) => OverlayWindowBloc(
+              toMainMessageService: context.read<ToMainMessageService>(),
+              layoutChannelService: context.read<LayoutChannelService>(),
+            ),
           ),
         ],
         child: Builder(
