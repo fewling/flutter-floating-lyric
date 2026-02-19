@@ -49,11 +49,8 @@ class _View extends StatelessWidget {
             child: TabBarView(
               children: [
                 _WindowConfigTab(),
-                Placeholder(),
-                Placeholder(),
-                // OverlayWindowSetting(),
-                // ImportLocalLrc(),
-                // FetchOnlineLrcForm(),
+                _LocalLyricTab(),
+                _OnlineLyricTab(),
               ],
             ),
           ),

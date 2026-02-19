@@ -17,9 +17,11 @@ import '../../main_app.dart';
 part '_dependency.dart';
 part '_listener.dart';
 part '_view.dart';
+part '_widgets/_local_lyric_tab.dart';
 part '_widgets/_media_state_card.dart';
 part '_widgets/_media_state_carousel.dart';
 part '_widgets/_no_media_tile.dart';
+part '_widgets/_online_lyric_tab.dart';
 part '_widgets/_window_config_tab.dart';
 
 class HomePage extends StatelessWidget {
