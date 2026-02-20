@@ -8,6 +8,7 @@ class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
 
   @override
   Widget build(BuildContext context) {
+    final mainMsg = context.watch<MsgFromMainBloc>().state;
     final configs = context.select(
       (OverlayWindowBloc bloc) => bloc.state.config,
     );

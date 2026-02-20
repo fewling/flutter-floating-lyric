@@ -21,6 +21,9 @@ sealed class ToOverlayMsgModel with _$ToOverlayMsgModel {
     Lrc? lrc,
   }) = ToOverlayMsgLrcState;
 
+  const factory ToOverlayMsgModel.deviceWidth(double width) =
+      ToOverlayMsgDeviceWidth;
+
   factory ToOverlayMsgModel.fromJson(Map<String, dynamic> json) =>
       _$ToOverlayMsgModelFromJson(json);
 }

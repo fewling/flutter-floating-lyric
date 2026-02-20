@@ -1,6 +1,6 @@
 part of 'overlay_app.dart';
 
-class OverlayAppListener extends StatelessWidget {
+class OverlayAppListener extends StatelessWidget with OverlayWindowSizingMixin {
   const OverlayAppListener({required this.builder, super.key});
 
   final WidgetBuilder builder;
@@ -34,6 +34,13 @@ class OverlayAppListener extends StatelessWidget {
               lrc: state.currentLrc,
             ),
           ),
+        ),
+
+        BlocListener<OverlayAppBloc, OverlayAppState>(
+          listenWhen: (previous, current) =>
+              previous.isMinimized != current.isMinimized,
+          listener: (context, state) => updateSize(context),
+          child: Container(),
         ),
       ],
       child: Builder(builder: builder),

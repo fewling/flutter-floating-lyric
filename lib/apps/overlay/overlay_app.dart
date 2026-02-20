@@ -10,6 +10,7 @@ import '../../l10n/app_localizations.dart';
 import '../../routes/app_router.dart';
 import '../../services/msg_channels/to_main_msg_service.dart';
 import '../../services/platform_channels/layout_channel_service.dart';
+import '../../utils/mixins/overlay_window_sizing_mixin.dart';
 
 part '_dependency.dart';
 part '_listener.dart';

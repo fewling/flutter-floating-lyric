@@ -45,7 +45,7 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 Future<void> overlayView() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(LayoutBuilder(builder: (context, constraints) => const OverlayApp()));
+  runApp(const OverlayApp());
 }
 
 Future<(SharedPreferences, Box<LrcModel>)> bootstrap() async {

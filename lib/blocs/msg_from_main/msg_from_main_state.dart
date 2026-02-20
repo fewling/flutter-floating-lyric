@@ -10,5 +10,7 @@ sealed class MsgFromMainState with _$MsgFromMainState {
 
     Lrc? currentLrc,
     @Default(SearchLyricStatus.initial) SearchLyricStatus searchLyricStatus,
+
+    double? deviceWidth,
   }) = _MsgFromMainState;
 }

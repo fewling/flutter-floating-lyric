@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../blocs/msg_from_main/msg_from_main_bloc.dart';
 import '../../blocs/overlay_app/overlay_app_bloc.dart';
 import '../../blocs/overlay_window/overlay_window_bloc.dart';
 import '../logger.dart';
 
 mixin OverlayWindowSizingMixin {
   void updateSize(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
-
     SchedulerBinding.instance.addPostFrameCallback((Duration timeStamp) {
       final box = context.findRenderObject() as RenderBox?;
       if (box == null) {
@@ -24,9 +23,8 @@ mixin OverlayWindowSizingMixin {
       final pxRatio = view.devicePixelRatio;
 
       final isMinimized = context.read<OverlayAppBloc>().state.isMinimized;
-      final width = isMinimized
-          ? 48.0
-          : (screenWidth > 0 ? screenWidth : 300.0);
+      final deviceWidth = context.read<MsgFromMainBloc>().state.deviceWidth;
+      final width = isMinimized ? 48.0 : (deviceWidth ?? 300.0);
       final height = box.getMaxIntrinsicHeight(width);
 
       context.read<OverlayWindowBloc>().add(

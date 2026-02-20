@@ -21,6 +21,7 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
         _LrcStateUpdated() => _onLrcUpdated(event, emit),
+        _DeviceWidthUpdated() => _onDeviceWidthUpdated(event, emit),
       },
     );
   }
@@ -44,4 +45,9 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
           searchLyricStatus: event.searchStatus,
         ),
       );
+
+  void _onDeviceWidthUpdated(
+    _DeviceWidthUpdated event,
+    Emitter<MsgToOverlayState> emit,
+  ) => _toOverlayMsgService.sendMsg(ToOverlayMsgModel.deviceWidth(event.width));
 }

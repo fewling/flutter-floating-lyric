@@ -78,6 +78,12 @@ class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
               currentLrc: msg.lrc,
               searchLyricStatus: msg.searchLyricStatus,
             );
+
+          case ToOverlayMsgDeviceWidth():
+            logger.d(
+              '>>> Received device width update from main: ${msg.width}',
+            );
+            return state.copyWith(deviceWidth: msg.width);
         }
       },
     );

@@ -87,6 +87,8 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       _overlayWindowSettingsBloc.add(
         OverlayWindowSettingsEvent.preferenceUpdated(_preferenceBloc.state),
       );
+      final screenWidth = MediaQuery.sizeOf(context).width;
+      _msgToOverlayBloc.add(MsgToOverlayEvent.deviceWidth(screenWidth));
     });
   }
 

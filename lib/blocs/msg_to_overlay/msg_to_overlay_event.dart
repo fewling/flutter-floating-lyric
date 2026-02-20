@@ -13,4 +13,7 @@ sealed class MsgToOverlayEvent with _$MsgToOverlayEvent {
     required Lrc? lrc,
     required SearchLyricStatus searchStatus,
   }) = _LrcStateUpdated;
+
+  const factory MsgToOverlayEvent.deviceWidth(double width) =
+      _DeviceWidthUpdated;
 }
