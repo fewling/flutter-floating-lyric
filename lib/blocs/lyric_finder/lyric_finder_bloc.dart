@@ -23,7 +23,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
     on<LyricFinderEvent>(
       (event, emit) => switch (event) {
         _Init() => _onInit(event, emit),
-        _MediaStateUpdated() => _onNewSong(event, emit),
+        _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
         _AutoFetchUpdated() => _onAutoFetchUpdated(event, emit),
         _Reset() => _onReset(event, emit),
       },
@@ -36,14 +36,19 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
   void _onInit(_Init event, Emitter<LyricFinderState> emit) =>
       emit(state.copyWith(isAutoFetch: event.isAutoFetch));
 
-  Future<void> _onNewSong(
+  Future<void> _onMediaStateUpdated(
     _MediaStateUpdated event,
     Emitter<LyricFinderState> emit,
   ) async {
     final songInfo = event.mediaState;
-
     if (state.status.isSearching) return;
-    if (state.targetMedia?.isSameMedia(songInfo) ?? false) return;
+
+    final isSameAsTarget = state.targetMedia?.isSameMedia(songInfo) ?? false;
+    final isProcessed = switch (state.status) {
+      LyricFinderStatus.found || LyricFinderStatus.notFound => true,
+      _ => false,
+    };
+    if (isSameAsTarget && isProcessed) return;
 
     emit(
       state.copyWith(

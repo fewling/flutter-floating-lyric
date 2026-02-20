@@ -90,7 +90,9 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     try {
       emit(state.copyWith(importStatus: LyricListImportStatus.importing));
 
-      final failed = await _lrcProcessorService.pickLrcFiles();
+      final (success, failed) = await _lrcProcessorService.pickLrcFiles();
+
+      await _localDbService.saveBatchLrc(success);
 
       emit(
         state.copyWith(

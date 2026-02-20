@@ -43,12 +43,6 @@ final class EditFieldRequested extends FetchOnlineLrcFormEvent {
   final bool isAlbum;
 }
 
-final class SaveLyricResponseRequested extends FetchOnlineLrcFormEvent {
-  const SaveLyricResponseRequested(this.response);
-
-  final LrcLibResponse response;
-}
-
 final class SaveTitleAltRequested extends FetchOnlineLrcFormEvent {
   const SaveTitleAltRequested(this.title);
 
@@ -69,8 +63,4 @@ final class SaveAlbumAltRequested extends FetchOnlineLrcFormEvent {
 
 final class ErrorResponseHandled extends FetchOnlineLrcFormEvent {
   const ErrorResponseHandled();
-}
-
-final class SaveResponseHandled extends FetchOnlineLrcFormEvent {
-  const SaveResponseHandled();
 }

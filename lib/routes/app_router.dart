@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 
+import '../apps/main/main_app.dart';
 import '../apps/main/pages/home/page.dart';
 import '../apps/main/pages/local_lyric_detail/page.dart';
 import '../apps/main/pages/local_lyrics/page.dart';
@@ -13,6 +14,7 @@ import '../apps/main/pages/settings/page.dart';
 import '../apps/overlay/pages/lyrics/page.dart';
 import '../blocs/permission/permission_bloc.dart';
 import '../shells/base/shell.dart';
+import '../shells/home/shell.dart';
 import '../shells/overlay/shell.dart';
 import '../utils/logger.dart';
 
@@ -55,50 +57,56 @@ class AppRouter {
         return null;
       },
       routes: [
-        GoRoute(
-          path: MainAppRoutes.onboarding.path,
-          name: MainAppRoutes.onboarding.name,
-          builder: (context, state) => const OnboardingPage(),
-        ),
-        StatefulShellRoute.indexedStack(
-          builder: (context, state, navigationShell) =>
-              BaseShell(navigationShell: navigationShell),
-          branches: [
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: MainAppRoutes.home.path,
-                  name: MainAppRoutes.home.name,
-                  builder: (context, state) => const HomePage(),
-                ),
-              ],
+        ShellRoute(
+          builder: (context, state, child) =>
+              MainAppListener(builder: (context) => BaseShell(child: child)),
+          routes: [
+            GoRoute(
+              path: MainAppRoutes.onboarding.path,
+              name: MainAppRoutes.onboarding.name,
+              builder: (context, state) => const OnboardingPage(),
             ),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: MainAppRoutes.localLyrics.path,
-                  name: MainAppRoutes.localLyrics.name,
-                  builder: (context, state) => const LocalLyricsPage(),
+            StatefulShellRoute.indexedStack(
+              builder: (context, state, navigationShell) =>
+                  HomeShell(navigationShell: navigationShell),
+              branches: [
+                StatefulShellBranch(
                   routes: [
                     GoRoute(
-                      path: MainAppRoutes.localLyricDetail.path,
-                      name: MainAppRoutes.localLyricDetail.name,
-                      builder: (context, state) => LocalLyricDetailPage(
-                        pathParams: LocalLyricDetailPathParams.fromJson(
-                          state.pathParameters,
-                        ),
-                      ),
+                      path: MainAppRoutes.home.path,
+                      name: MainAppRoutes.home.name,
+                      builder: (context, state) => const HomePage(),
                     ),
                   ],
                 ),
-              ],
-            ),
-            StatefulShellBranch(
-              routes: [
-                GoRoute(
-                  path: MainAppRoutes.settings.path,
-                  name: MainAppRoutes.settings.name,
-                  builder: (context, state) => const SettingsPage(),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: MainAppRoutes.localLyrics.path,
+                      name: MainAppRoutes.localLyrics.name,
+                      builder: (context, state) => const LocalLyricsPage(),
+                      routes: [
+                        GoRoute(
+                          path: MainAppRoutes.localLyricDetail.path,
+                          name: MainAppRoutes.localLyricDetail.name,
+                          builder: (context, state) => LocalLyricDetailPage(
+                            pathParams: LocalLyricDetailPathParams.fromJson(
+                              state.pathParameters,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                StatefulShellBranch(
+                  routes: [
+                    GoRoute(
+                      path: MainAppRoutes.settings.path,
+                      name: MainAppRoutes.settings.name,
+                      builder: (context, state) => const SettingsPage(),
+                    ),
+                  ],
                 ),
               ],
             ),

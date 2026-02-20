@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../enums/search_lyric_status.dart';
 import '../../models/lrc.dart';
 import '../../models/media_state.dart';
 import '../../models/overlay_window_config.dart';
@@ -27,7 +28,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
         _WindowResized() => _onWindowResized(event, emit),
         _LockToggled() => _onLockToggled(event, emit),
         _ScreenWidthRequested() => _onScreenWidthRequested(event, emit),
-        _LyricFound() => _onLyricFound(event, emit),
+        _LyricStateUpdated() => _onLyricStateUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
       },
@@ -68,8 +69,13 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     Emitter<OverlayWindowState> emit,
   ) => _toMainMsgService.sendMsg(const ToMainMsg.measureScreenWidth());
 
-  void _onLyricFound(_LyricFound event, Emitter<OverlayWindowState> emit) {
-    emit(state.copyWith(currentLrc: event.lrc));
+  void _onLyricStateUpdated(
+    _LyricStateUpdated event,
+    Emitter<OverlayWindowState> emit,
+  ) {
+    emit(
+      state.copyWith(currentLrc: event.lrc, lyricSearchStatus: event.status),
+    );
     _syncLyric(emit);
   }
 

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../enums/main_overlay_port.dart';
+import '../../enums/search_lyric_status.dart';
+import '../../models/lrc.dart';
 import '../../models/media_state.dart';
 import '../../models/overlay_window_config.dart';
 import '../../models/to_overlay_msg_model.dart';
@@ -22,7 +24,6 @@ class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
     on<MsgFromMainEvent>(
       (event, emit) => switch (event) {
         _Started() => _onStarted(event, emit),
-        _NewLyricHandled() => _onNewLyricHandled(event, emit),
       },
     );
   }
@@ -56,19 +57,13 @@ class MsgFromMainBloc extends Bloc<MsgFromMainEvent, MsgFromMainState>
           case ToOverlayMsgMediaState():
             return state.copyWith(mediaState: msg.mediaState);
 
-          case ToOverlayMsgNewLyricSaved():
+          case ToOverlayMsgLrcState():
             return state.copyWith(
-              newLyricHandlingStatus: NewLyricHandlingStatus.received,
+              currentLrc: msg.lrc,
+              searchLyricStatus: msg.searchLyricStatus,
             );
         }
       },
     );
   }
-
-  void _onNewLyricHandled(
-    _NewLyricHandled event,
-    Emitter<MsgFromMainState> emit,
-  ) => emit(
-    state.copyWith(newLyricHandlingStatus: NewLyricHandlingStatus.initial),
-  );
 }

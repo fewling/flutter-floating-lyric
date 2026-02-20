@@ -14,23 +14,25 @@ class MainAppListener extends StatelessWidget {
               .read<OverlayWindowSettingsBloc>()
               .add(OverlayWindowSettingsEvent.preferenceUpdated(state)),
         ),
+
         BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
             MsgToOverlayEvent.onWindowConfigUpdated(state.config),
           ),
         ),
+
         BlocListener<MediaListenerBloc, MediaListenerState>(
           listenWhen: (previous, current) =>
               previous.mediaStates != current.mediaStates &&
-              current.mediaStates.any((mediaState) => mediaState.isPlaying) &&
-              current.mediaStates.isNotEmpty,
+              current.activeMediaState != null,
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
-            MsgToOverlayEvent.onMediaStateUpdated(
-              state.mediaStates.firstWhere(
-                (mediaState) => mediaState.isPlaying,
-                orElse: () => state.mediaStates.first,
-              ),
-            ),
+            MsgToOverlayEvent.onMediaStateUpdated(state.activeMediaState!),
+          ),
+        ),
+
+        BlocListener<MediaListenerBloc, MediaListenerState>(
+          listener: (context, state) => context.read<LyricFinderBloc>().add(
+            LyricFinderEvent.mediaStateUpdated(state.activeMediaState!),
           ),
         ),
 
@@ -54,6 +56,56 @@ class MainAppListener extends StatelessWidget {
             context.read<MsgFromOverlayBloc>().add(
               const MsgFromOverlayEvent.handled(),
             );
+          },
+        ),
+
+        BlocListener<SaveLrcBloc, SaveLrcState>(
+          listener: (context, state) {
+            switch (state.saveLrcStatus) {
+              case SaveLrcStatus.initial:
+                break;
+              case SaveLrcStatus.loading:
+                break;
+              case SaveLrcStatus.success:
+                context.showSnackBar(
+                  message: context.l10n.fetch_online_lyric_saved,
+                );
+
+                // Reset lyric finder state
+                context.read<LyricFinderBloc>().add(
+                  const LyricFinderEvent.reset(),
+                );
+
+              case SaveLrcStatus.failure:
+                context.showSnackBar(
+                  message: context.l10n.fetch_online_failed_to_save_lyric,
+                );
+            }
+          },
+        ),
+
+        BlocListener<LyricFinderBloc, LyricFinderState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case LyricFinderStatus.initial:
+                break;
+
+              case LyricFinderStatus.empty:
+                break;
+
+              case LyricFinderStatus.searching:
+                break;
+
+              case LyricFinderStatus.found:
+                context.read<MsgToOverlayBloc>().add(
+                  MsgToOverlayEvent.lrcFound(state.currentLrc!),
+                );
+
+              case LyricFinderStatus.notFound:
+                context.read<MsgToOverlayBloc>().add(
+                  const MsgToOverlayEvent.lyricNotFound(),
+                );
+            }
           },
         ),
       ],

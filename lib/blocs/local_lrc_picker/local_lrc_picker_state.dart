@@ -1,18 +1,19 @@
-part of 'import_local_lrc_bloc.dart';
+part of 'local_lrc_picker_bloc.dart';
 
 @freezed
-sealed class ImportLocalLrcState with _$ImportLocalLrcState {
-  const factory ImportLocalLrcState({
+sealed class LocalLrcPickerState with _$LocalLrcPickerState {
+  const factory LocalLrcPickerState({
+    @Default(<LrcModel>[]) List<LrcModel> availableLrcs,
     @Default(<PlatformFile>[]) List<PlatformFile> failedFiles,
     @Default(ImportLocalLrcStatus.initial) ImportLocalLrcStatus status,
-  }) = _ImportLocalLrcState;
+  }) = _LocalLrcPickerState;
 }
 
-enum ImportLocalLrcStatus { initial, processingFiles, failed, success }
+enum ImportLocalLrcStatus { initial, loading, failed, success }
 
 extension ImportLocalLrcStatusX on ImportLocalLrcStatus {
   bool get isInitial => this == ImportLocalLrcStatus.initial;
-  bool get isProcessingFiles => this == ImportLocalLrcStatus.processingFiles;
+  bool get isLoading => this == ImportLocalLrcStatus.loading;
   bool get isFailed => this == ImportLocalLrcStatus.failed;
   bool get isSuccess => this == ImportLocalLrcStatus.success;
 }

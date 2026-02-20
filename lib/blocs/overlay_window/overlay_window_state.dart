@@ -5,7 +5,10 @@ sealed class OverlayWindowState with _$OverlayWindowState {
   const factory OverlayWindowState({
     @Default(false) bool isLyricOnly,
     @Default(false) bool isLocked,
+
     Lrc? currentLrc,
+    @Default(SearchLyricStatus.initial) SearchLyricStatus lyricSearchStatus,
+
     MediaState? mediaState,
 
     @Default(OverlayWindowConfig()) OverlayWindowConfig config,

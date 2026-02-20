@@ -20,7 +20,8 @@ sealed class MediaState with _$MediaState {
 }
 
 extension MediaStateExtension on MediaState {
-  bool isSameMedia(MediaState other) =>
+  bool isSameMedia(MediaState? other) =>
+      other != null &&
       title == other.title &&
       artist == other.artist &&
       album == other.album &&

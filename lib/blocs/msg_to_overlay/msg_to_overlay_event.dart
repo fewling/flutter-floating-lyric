@@ -9,5 +9,11 @@ sealed class MsgToOverlayEvent with _$MsgToOverlayEvent {
   const factory MsgToOverlayEvent.onMediaStateUpdated(MediaState mediaState) =
       _MediaStateUpdated;
 
-  const factory MsgToOverlayEvent.newLyricSaved() = _NewLyricSaved;
+  const factory MsgToOverlayEvent.searchingLrc() = _SearchingLrc;
+
+  const factory MsgToOverlayEvent.lrcFound(Lrc lrc) = _LrcFound;
+
+  const factory MsgToOverlayEvent.emptyLrc() = _EmptyLrc;
+
+  const factory MsgToOverlayEvent.lyricNotFound() = _LyricNotFound;
 }

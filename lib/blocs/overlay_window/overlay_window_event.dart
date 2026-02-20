@@ -25,5 +25,8 @@ sealed class OverlayWindowEvent with _$OverlayWindowEvent {
     OverlayWindowConfig config,
   ) = _WindowConfigsUpdated;
 
-  const factory OverlayWindowEvent.lyricFound({required Lrc lrc}) = _LyricFound;
+  const factory OverlayWindowEvent.lyricStateUpdated({
+    required SearchLyricStatus status,
+    Lrc? lrc,
+  }) = _LyricStateUpdated;
 }

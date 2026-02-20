@@ -39,6 +39,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
   late final MsgFromOverlayBloc _msgFromOverlayBloc;
   late final AppInfoBloc _appInfoBloc;
   late final LyricFinderBloc _lyricFinderBloc;
+  late final SaveLrcBloc _saveLrcBloc;
 
   @override
   void initState() {
@@ -53,7 +54,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     _permissionChannelService = PermissionChannelService();
     _methodChannelService = MethodChannelService();
     _toOverlayMsgService = ToOverlayMsgService();
-    _lrcProcessorService = LrcProcessorService(localDB: _localDbRepo);
+    _lrcProcessorService = LrcProcessorService();
     _localDbService = LocalDbService(localDBRepo: _localDbRepo);
 
     // blocs:
@@ -74,6 +75,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       localDbService: _localDbService,
       lyricRepository: _lrcLibRepo,
     );
+    _saveLrcBloc = SaveLrcBloc(localDbService: _localDbService);
 
     appRouter = AppRouter.standard(permissionBloc: _permissionBloc);
 
@@ -109,6 +111,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
           BlocProvider.value(value: _msgFromOverlayBloc),
           BlocProvider.value(value: _appInfoBloc),
           BlocProvider.value(value: _lyricFinderBloc),
+          BlocProvider.value(value: _saveLrcBloc),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, appRouter),

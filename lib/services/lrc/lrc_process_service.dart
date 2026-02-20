@@ -6,19 +6,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../models/lyric_model.dart';
-import '../../repos/persistence/local/local_db_repo.dart';
 import '../../utils/logger.dart';
 import '../../utils/lrc_builder.dart';
 
 class LrcProcessorService {
-  LrcProcessorService({required LocalDbRepo localDB}) {
-    _localDB = localDB;
-  }
-
-  late final LocalDbRepo _localDB;
-
   /// Returns a list of failed files if any
-  Future<List<PlatformFile>> pickLrcFiles() async {
+  Future<(List<LrcModel>, List<PlatformFile>)> pickLrcFiles() async {
+    final success = <LrcModel>[];
+    final failed = <PlatformFile>[];
+
     final result = await FilePicker.platform.pickFiles(
       // type: FileType.custom,
       allowMultiple: true,
@@ -26,29 +22,26 @@ class LrcProcessorService {
       withData: true,
     );
 
-    if (result == null) return [];
+    if (result == null) return (success, failed);
 
     /// Seems compute cannot handle large amount of data
     /// so we need to split the data into batches
     const batchSize = 10;
     final batch = <PlatformFile>[];
-    final failed = <PlatformFile>[];
 
     for (final item in result.files) {
       if (!item.name.endsWith('.lrc')) continue;
 
       batch.add(item);
       if (batch.length == batchSize || item == result.files.last) {
-        final result = await compute(processLrcFiles, batch);
-        final lyrics = result.success;
+        final result = await compute(_processLrcFiles, batch);
+        success.addAll(result.success);
         failed.addAll(result.failed);
-        await _localDB.addBatchLyrics(lyrics);
         batch.clear();
       }
     }
 
-    logger.e('failed: $failed');
-    return failed;
+    return (success, failed);
   }
 }
 
@@ -58,7 +51,7 @@ class LrcProcessResult {
   final List<PlatformFile> failed;
 }
 
-Future<LrcProcessResult> processLrcFiles(List<PlatformFile> files) async {
+Future<LrcProcessResult> _processLrcFiles(List<PlatformFile> files) async {
   final lrcDbList = <LrcModel>[];
   final failed = <PlatformFile>[];
 

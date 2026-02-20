@@ -69,52 +69,24 @@ class _ImportFab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final isProcessing = context.select<ImportLocalLrcBloc, bool>(
-      (bloc) => bloc.state.status.isProcessingFiles,
+    final isProcessing = context.select<LocalLrcPickerBloc, bool>(
+      (bloc) => bloc.state.status.isLoading,
     );
 
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<ImportLocalLrcBloc, ImportLocalLrcState>(
-          listenWhen: (previous, current) => previous.status != current.status,
-          listener: (context, state) {
-            switch (state.status) {
-              case ImportLocalLrcStatus.initial:
-              case ImportLocalLrcStatus.processingFiles:
-                break;
-              case ImportLocalLrcStatus.success:
-              case ImportLocalLrcStatus.failed:
-                if (state.failedFiles.isNotEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => FailedImportDialog(state.failedFiles),
-                  );
-                }
-                context.read<MsgToOverlayBloc>().add(
-                  const MsgToOverlayEvent.newLyricSaved(),
-                );
-                context.read<ImportLocalLrcBloc>().add(
-                  const ImportLocalLrcEvent.importStatusHandled(),
-                );
-            }
-          },
-        ),
-      ],
-      child: FloatingActionButton.extended(
-        onPressed: isProcessing
-            ? null
-            : () => context.read<ImportLocalLrcBloc>().add(
-                const ImportLocalLrcEvent.importLRCsRequested(),
-              ),
-        label: Text(
-          isProcessing
-              ? l10n.import_local_lrc_importing
-              : l10n.import_local_lrc_import,
-        ),
-        icon: isProcessing
-            ? const CircularProgressIndicator()
-            : const Icon(Icons.drive_folder_upload_outlined),
+    return FloatingActionButton.extended(
+      onPressed: isProcessing
+          ? null
+          : () => context.read<LocalLrcPickerBloc>().add(
+              const LocalLrcPickerEvent.importLRCsRequested(),
+            ),
+      label: Text(
+        isProcessing
+            ? l10n.import_local_lrc_importing
+            : l10n.import_local_lrc_import,
       ),
+      icon: isProcessing
+          ? const CircularProgressIndicator()
+          : const Icon(Icons.drive_folder_upload_outlined),
     );
   }
 }

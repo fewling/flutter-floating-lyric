@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../enums/search_lyric_status.dart';
+import 'lrc.dart';
 import 'media_state.dart';
 import 'overlay_window_config.dart';
 
@@ -14,7 +16,10 @@ sealed class ToOverlayMsgModel with _$ToOverlayMsgModel {
   const factory ToOverlayMsgModel.mediaState(MediaState mediaState) =
       ToOverlayMsgMediaState;
 
-  const factory ToOverlayMsgModel.newLyricSaved() = ToOverlayMsgNewLyricSaved;
+  const factory ToOverlayMsgModel.lrcState({
+    required SearchLyricStatus searchLyricStatus,
+    Lrc? lrc,
+  }) = ToOverlayMsgLrcState;
 
   factory ToOverlayMsgModel.fromJson(Map<String, dynamic> json) =>
       _$ToOverlayMsgModelFromJson(json);

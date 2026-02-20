@@ -80,27 +80,26 @@ class _OverlayContent extends StatelessWidget {
     final l10n = context.l10n;
 
     final overlayWindowState = context.watch<OverlayWindowBloc>().state;
-    final lyricFinderState = context.watch<LyricFinderBloc>().state;
 
-    final status = lyricFinderState.status;
+    final status = overlayWindowState.lyricSearchStatus;
     final shouldAnimate = config.enableAnimation;
 
     switch (status) {
-      case LyricFinderStatus.empty:
+      case SearchLyricStatus.empty:
         return Center(
           child: Text(
             l10n.overlay_window_no_lyric,
             style: TextStyle(color: textColor),
           ),
         );
-      case LyricFinderStatus.searching:
+      case SearchLyricStatus.searching:
         return Center(
           child: Text(
             l10n.overlay_window_searching_lyric,
             style: TextStyle(color: textColor),
           ),
         );
-      case LyricFinderStatus.notFound:
+      case SearchLyricStatus.notFound:
         return Center(
           child: Text(
             l10n.fetch_online_no_lyric_found,
@@ -111,8 +110,8 @@ class _OverlayContent extends StatelessWidget {
             ),
           ),
         );
-      case LyricFinderStatus.initial:
-      case LyricFinderStatus.found:
+      case SearchLyricStatus.initial:
+      case SearchLyricStatus.found:
         final allLines = overlayWindowState.allLines;
         final currentLineIndex = overlayWindowState.currentLineIndex;
         final visibleLinesCount = config.visibleLinesCount ?? 3;

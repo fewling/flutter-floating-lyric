@@ -24,6 +24,17 @@ class OverlayAppListener extends StatelessWidget {
             OverlayWindowEvent.windowConfigsUpdated(state.config!),
           ),
         ),
+
+        BlocListener<MsgFromMainBloc, MsgFromMainState>(
+          listenWhen: (previous, current) =>
+              previous.searchLyricStatus != current.searchLyricStatus,
+          listener: (context, state) => context.read<OverlayWindowBloc>().add(
+            OverlayWindowEvent.lyricStateUpdated(
+              status: state.searchLyricStatus,
+              lrc: state.currentLrc,
+            ),
+          ),
+        ),
       ],
       child: Builder(builder: builder),
     );

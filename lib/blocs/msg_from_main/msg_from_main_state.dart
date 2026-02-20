@@ -5,9 +5,7 @@ sealed class MsgFromMainState with _$MsgFromMainState {
   const factory MsgFromMainState({
     required OverlayWindowConfig? config,
     required MediaState? mediaState,
-    @Default(NewLyricHandlingStatus.initial)
-    NewLyricHandlingStatus newLyricHandlingStatus,
+    Lrc? currentLrc,
+    @Default(SearchLyricStatus.initial) SearchLyricStatus searchLyricStatus,
   }) = _MsgFromMainState;
 }
-
-enum NewLyricHandlingStatus { initial, received }

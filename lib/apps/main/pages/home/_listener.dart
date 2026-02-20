@@ -7,6 +7,8 @@ class _Listener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return MultiBlocListener(
       listeners: [
         BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
@@ -46,7 +48,6 @@ class _Listener extends StatelessWidget {
           listenWhen: (previous, current) =>
               previous.requestStatus != current.requestStatus,
           listener: (context, state) {
-            final l10n = context.l10n;
             switch (state.requestStatus) {
               case OnlineLrcRequestStatus.initial:
               case OnlineLrcRequestStatus.loading:
@@ -60,67 +61,56 @@ class _Listener extends StatelessWidget {
                     l10n.fetch_online_no_lyric_found;
                 showDialog(
                   context: context,
-                  builder: (dialogCtx) => BlocProvider.value(
-                    value: context.read<FetchOnlineLrcFormBloc>(),
-                    child: Theme(
-                      data: Theme.of(context),
-                      child: AlertDialog(
-                        icon: const Icon(Icons.info_outline),
-                        title: Text(l10n.fetch_online_lyric_fetch_result),
-                        content: SelectableText(content),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(dialogCtx).pop(),
-                            child: Text(l10n.fetch_online_close),
-                          ),
-                          if (resp != null)
-                            TextButton(
-                              onPressed: () {
-                                context.read<FetchOnlineLrcFormBloc>().add(
-                                  SaveLyricResponseRequested(resp),
-                                );
-                                Navigator.of(dialogCtx).pop();
-                              },
-                              child: Text(l10n.fetch_online_save),
-                            ),
-                        ],
+                  builder: (dialogCtx) => AlertDialog(
+                    icon: const Icon(Icons.info_outline),
+                    title: Text(l10n.fetch_online_lyric_fetch_result),
+                    content: SelectableText(content),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(dialogCtx).pop(),
+                        child: Text(l10n.fetch_online_close),
                       ),
-                    ),
+                      if (resp != null)
+                        TextButton(
+                          onPressed: () {
+                            MainAppDependency.of(context)
+                                .read<SaveLrcBloc>()
+                                .add(SaveLrcEvent.saveOnlineLrcResponse(resp));
+                            Navigator.of(dialogCtx).pop();
+                          },
+                          child: Text(l10n.fetch_online_save),
+                        ),
+                    ],
                   ),
                 );
                 context.read<FetchOnlineLrcFormBloc>().add(
                   const ErrorResponseHandled(),
                 );
-                break;
             }
           },
         ),
-        BlocListener<FetchOnlineLrcFormBloc, FetchOnlineLrcFormState>(
-          listenWhen: (previous, current) =>
-              previous.saveLrcStatus != current.saveLrcStatus,
+
+        BlocListener<LocalLrcPickerBloc, LocalLrcPickerState>(
+          listenWhen: (previous, current) => previous.status != current.status,
           listener: (context, state) {
-            final l10n = context.l10n;
-            switch (state.saveLrcStatus) {
-              case SaveLrcStatus.initial:
-              case SaveLrcStatus.saving:
+            switch (state.status) {
+              case ImportLocalLrcStatus.initial:
+              case ImportLocalLrcStatus.loading:
                 break;
-              case SaveLrcStatus.success:
-                context.read<MsgToOverlayBloc>().add(
-                  const MsgToOverlayEvent.newLyricSaved(),
-                );
-              case SaveLrcStatus.failure:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.saveLrcStatus.isSuccess
-                          ? l10n.fetch_online_lyric_saved
-                          : l10n.fetch_online_failed_to_save_lyric,
-                    ),
-                  ),
-                );
-                context.read<FetchOnlineLrcFormBloc>().add(
-                  const SaveResponseHandled(),
-                );
+              case ImportLocalLrcStatus.success:
+              case ImportLocalLrcStatus.failed:
+                if (state.availableLrcs.isNotEmpty) {
+                  MainAppDependency.of(context).read<SaveLrcBloc>().add(
+                    SaveLrcEvent.saveLocalLrc(state.availableLrcs),
+                  );
+                }
+
+                if (state.failedFiles.isNotEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => FailedImportDialog(state.failedFiles),
+                  );
+                }
             }
           },
         ),

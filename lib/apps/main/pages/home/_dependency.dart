@@ -17,11 +17,11 @@ class _Dependency extends StatelessWidget {
           ),
         ),
         BlocProvider(
-          create: (context) => ImportLocalLrcBloc(
+          create: (context) => LocalLrcPickerBloc(
             lrcProcessorService: MainAppDependency.of(
               context,
             ).read<LrcProcessorService>(),
-          )..add(const ImportLocalLrcEvent.started()),
+          ),
         ),
 
         BlocProvider(

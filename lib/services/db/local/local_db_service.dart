@@ -28,6 +28,9 @@ class LocalDbService {
     return id;
   }
 
+  Future<void> saveBatchLrc(List<LrcModel> lyrics) =>
+      _localDB.addBatchLyrics(lyrics);
+
   LrcModel? getLyricById(String id) => _localDB.getLyricByID(id);
 
   LrcModel? getLyricBySongInfo(String title, String artist) =>

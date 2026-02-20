@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../enums/search_lyric_status.dart';
+import '../../models/lrc.dart';
 import '../../models/media_state.dart';
 import '../../models/overlay_window_config.dart';
 import '../../models/to_overlay_msg_model.dart';
@@ -18,7 +20,10 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
       (event, emit) => switch (event) {
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
-        _NewLyricSaved() => _onNewLyricSaved(event, emit),
+        _SearchingLrc() => _onSearchingLrc(event, emit),
+        _LrcFound() => _onLrcFound(event, emit),
+        _EmptyLrc() => _onEmptyLrc(event, emit),
+        _LyricNotFound() => _onLyricNotFound(event, emit),
       },
     );
   }
@@ -28,17 +33,41 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
   void _onWindowConfigsUpdated(
     _WindowConfigsUpdated event,
     Emitter<MsgToOverlayState> emit,
-  ) => _toOverlayMsgService.sendWindowConfig(ToOverlayMsgConfig(event.config));
+  ) => _toOverlayMsgService.sendMsg(ToOverlayMsgConfig(event.config));
 
   void _onMediaStateUpdated(
     _MediaStateUpdated event,
     Emitter<MsgToOverlayState> emit,
-  ) => _toOverlayMsgService.sendMediaState(
-    ToOverlayMsgMediaState(event.mediaState),
-  );
+  ) => _toOverlayMsgService.sendMsg(ToOverlayMsgMediaState(event.mediaState));
 
-  void _onNewLyricSaved(
-    _NewLyricSaved event,
+  void _onLrcFound(_LrcFound event, Emitter<MsgToOverlayState> emit) =>
+      _toOverlayMsgService.sendMsg(
+        ToOverlayMsgModel.lrcState(
+          lrc: event.lrc,
+          searchLyricStatus: SearchLyricStatus.found,
+        ),
+      );
+
+  void _onSearchingLrc(_SearchingLrc event, Emitter<MsgToOverlayState> emit) =>
+      _toOverlayMsgService.sendMsg(
+        const ToOverlayMsgModel.lrcState(
+          searchLyricStatus: SearchLyricStatus.searching,
+        ),
+      );
+
+  void _onEmptyLrc(_EmptyLrc event, Emitter<MsgToOverlayState> emit) =>
+      _toOverlayMsgService.sendMsg(
+        const ToOverlayMsgModel.lrcState(
+          searchLyricStatus: SearchLyricStatus.empty,
+        ),
+      );
+
+  void _onLyricNotFound(
+    _LyricNotFound event,
     Emitter<MsgToOverlayState> emit,
-  ) => _toOverlayMsgService.sendMsg(const ToOverlayMsgModel.newLyricSaved());
+  ) => _toOverlayMsgService.sendMsg(
+    const ToOverlayMsgModel.lrcState(
+      searchLyricStatus: SearchLyricStatus.notFound,
+    ),
+  );
 }
