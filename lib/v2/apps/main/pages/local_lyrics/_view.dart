@@ -13,41 +13,23 @@ class _View extends StatelessWidget {
         onSearch: (v) =>
             context.read<LyricListBloc>().add(LyricListEvent.searchUpdated(v)),
       ),
-      floatingActionButton: BlocListener<LyricListBloc, LyricListState>(
-        listenWhen: (previous, current) =>
-            previous.importStatus != current.importStatus,
-        listener: (context, state) {
-          switch (state.importStatus) {
-            case LyricListImportStatus.initial:
-            case LyricListImportStatus.importing:
-              break;
-            case LyricListImportStatus.error:
-              showDialog(
-                context: context,
-                builder: (context) =>
-                    FailedImportDialog(state.failedImportFiles),
-              );
-              break;
-          }
-        },
-        child: Builder(
-          builder: (context) {
-            final importing = context.select(
-              (LyricListBloc bloc) => bloc.state.importStatus.isImporting,
-            );
+      floatingActionButton: Builder(
+        builder: (context) {
+          final importing = context.select(
+            (LyricListBloc bloc) => bloc.state.importStatus.isImporting,
+          );
 
-            return FloatingActionButton(
-              hoverElevation: 16,
-              tooltip: l10n.lyric_list_import,
-              onPressed: importing
-                  ? null
-                  : () => context.read<LyricListBloc>().add(
-                      const LyricListEvent.importLRCsRequested(),
-                    ),
-              child: importing ? const LoadingWidget() : const Icon(Icons.add),
-            );
-          },
-        ),
+          return FloatingActionButton(
+            hoverElevation: 16,
+            tooltip: l10n.lyric_list_import,
+            onPressed: importing
+                ? null
+                : () => context.read<LyricListBloc>().add(
+                    const LyricListEvent.importLRCsRequested(),
+                  ),
+            child: importing ? const LoadingWidget() : const Icon(Icons.add),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endContained,
     );
@@ -117,7 +99,22 @@ class LyricListView extends StatelessWidget {
     );
 
     return lyrics.isEmpty
-        ? Center(child: Text(l10n.lyric_list_no_lyrics_found))
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 16,
+              children: [
+                Text(l10n.lyric_list_no_lyrics_found),
+                ElevatedButton.icon(
+                  onPressed: () => context.read<LyricListBloc>().add(
+                    const LyricListEvent.started(),
+                  ),
+                  icon: const Icon(Icons.refresh_outlined),
+                  label: Text(l10n.lyric_list_refresh),
+                ),
+              ],
+            ),
+          )
         : RefreshIndicator(
             onRefresh: () async => context.read<LyricListBloc>().add(
               const LyricListEvent.started(),

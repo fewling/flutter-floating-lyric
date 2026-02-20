@@ -272,6 +272,12 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get lyric_list_cancel;
 
+  /// No description provided for @lyric_list_refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get lyric_list_refresh;
+
   /// No description provided for @lyric_list_search.
   ///
   /// In en, this message translates to:

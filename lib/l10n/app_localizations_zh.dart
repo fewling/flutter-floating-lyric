@@ -100,6 +100,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lyric_list_cancel => '取消';
 
   @override
+  String get lyric_list_refresh => '刷新';
+
+  @override
   String get lyric_list_search => '搜尋';
 
   @override

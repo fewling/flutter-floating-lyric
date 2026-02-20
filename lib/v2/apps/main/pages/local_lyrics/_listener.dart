@@ -7,22 +7,27 @@ class _Listener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Add listeners here
-    // Example with BlocListener:
-    // return BlocListener<LocalLyricsBloc, LocalLyricsState>(
-    //   listener: (context, state) {
-    //     if (state.shouldNavigate) {
-    //       Navigator.of(context).push(...);
-    //     }
-    //     if (state.error != null) {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text(state.error!)),
-    //       );
-    //     }
-    //   },
-    //   child: Builder(builder: builder),
-    // );
-
-    return Builder(builder: builder);
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LyricListBloc, LyricListState>(
+          listenWhen: (previous, current) =>
+              previous.importStatus != current.importStatus,
+          listener: (context, state) {
+            switch (state.importStatus) {
+              case LyricListImportStatus.initial:
+              case LyricListImportStatus.importing:
+                break;
+              case LyricListImportStatus.error:
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      FailedImportDialog(state.failedImportFiles),
+                );
+            }
+          },
+        ),
+      ],
+      child: Builder(builder: builder),
+    );
   }
 }

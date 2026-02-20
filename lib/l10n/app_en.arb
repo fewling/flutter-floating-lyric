@@ -29,6 +29,7 @@
   "lyric_list_delete": "Delete",
   "lyric_list_delete_all": "Delete All",
   "lyric_list_cancel": "Cancel",
+  "lyric_list_refresh": "Refresh",
   "lyric_list_search": "Search",
   "lyric_list_filename": "Filename",
   "lyric_list_no_lyrics_found": "No lyrics found.",

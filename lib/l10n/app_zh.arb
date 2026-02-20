@@ -29,6 +29,7 @@
   "lyric_list_delete": "刪除",
   "lyric_list_delete_all": "全部刪除",
   "lyric_list_cancel": "取消",
+  "lyric_list_refresh": "刷新",
   "lyric_list_search": "搜尋",
   "lyric_list_filename": "檔案名稱",
   "lyric_list_no_lyrics_found": "找不到歌詞。",

@@ -106,6 +106,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lyric_list_cancel => 'Cancel';
 
   @override
+  String get lyric_list_refresh => 'Refresh';
+
+  @override
   String get lyric_list_search => 'Search';
 
   @override
