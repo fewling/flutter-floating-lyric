@@ -3,12 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../configs/routes/app_router.dart';
 import '../../utils/extensions/custom_extensions.dart';
-import '../device_info/device_info_listener.dart';
 
 part 'base_drawer_routes.dart';
 
 class BaseShell extends StatelessWidget {
-  const BaseShell({super.key, required this.child});
+  const BaseShell({required this.child, super.key});
 
   final Widget child;
 
@@ -37,7 +36,7 @@ class BaseShell extends StatelessWidget {
             ),
         ],
       ),
-      body: SafeArea(child: DeviceInfoListener(child: child)),
+      body: SafeArea(child: child),
     );
   }
 }
