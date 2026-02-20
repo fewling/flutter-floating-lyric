@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_ce_flutter/hive_flutter.dart';
 
-import '../../blocs/lyric_finder/lyric_finder_bloc.dart';
 import '../../blocs/msg_from_main/msg_from_main_bloc.dart';
 import '../../blocs/msg_to_main/msg_to_main_bloc.dart';
 import '../../blocs/overlay_app/overlay_app_bloc.dart';
@@ -22,14 +21,11 @@ part '_listener.dart';
 part '_view.dart';
 
 class OverlayApp extends StatelessWidget {
-  const OverlayApp({required this.lrcBox, super.key});
-
-  final Box<LrcModel> lrcBox;
+  const OverlayApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return OverlayAppDependency(
-      lrcBox: lrcBox,
       builder: (context, appRouter) => OverlayAppListener(
         builder: (context) => OverlayAppView(appRouter: appRouter),
       ),

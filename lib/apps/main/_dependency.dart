@@ -38,6 +38,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
   late final MsgToOverlayBloc _msgToOverlayBloc;
   late final MsgFromOverlayBloc _msgFromOverlayBloc;
   late final AppInfoBloc _appInfoBloc;
+  late final LyricFinderBloc _lyricFinderBloc;
 
   @override
   void initState() {
@@ -69,6 +70,10 @@ class _MainAppDependencyState extends State<MainAppDependency> {
     );
     _msgFromOverlayBloc = MsgFromOverlayBloc();
     _appInfoBloc = AppInfoBloc();
+    _lyricFinderBloc = LyricFinderBloc(
+      localDbService: _localDbService,
+      lyricRepository: _lrcLibRepo,
+    );
 
     appRouter = AppRouter.standard(permissionBloc: _permissionBloc);
 
@@ -103,6 +108,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
           BlocProvider.value(value: _msgToOverlayBloc),
           BlocProvider.value(value: _msgFromOverlayBloc),
           BlocProvider.value(value: _appInfoBloc),
+          BlocProvider.value(value: _lyricFinderBloc),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, appRouter),

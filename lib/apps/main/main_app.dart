@@ -4,6 +4,7 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../blocs/app_info/app_info_bloc.dart';
+import '../../blocs/lyric_finder/lyric_finder_bloc.dart';
 import '../../blocs/media_listener/media_listener_bloc.dart';
 import '../../blocs/msg_from_overlay/msg_from_overlay_bloc.dart';
 import '../../blocs/msg_to_overlay/msg_to_overlay_bloc.dart';

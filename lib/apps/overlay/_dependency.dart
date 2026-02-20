@@ -1,13 +1,8 @@
 part of 'overlay_app.dart';
 
 class OverlayAppDependency extends StatefulWidget {
-  const OverlayAppDependency({
-    required this.builder,
-    required this.lrcBox,
-    super.key,
-  });
+  const OverlayAppDependency({required this.builder, super.key});
 
-  final Box<LrcModel> lrcBox;
   final Widget Function(BuildContext context, AppRouter appRouter) builder;
 
   static BuildContext of(BuildContext context) => context;
@@ -19,35 +14,16 @@ class OverlayAppDependency extends StatefulWidget {
 class _OverlayAppDependencyState extends State<OverlayAppDependency> {
   late final AppRouter _appRouter;
 
-  late final LocalDbService _localDbService;
-
-  late final LocalDbRepo _localDbRepo;
-  late final LrcLibRepository _lrcLibRepository;
-
   @override
   void initState() {
     super.initState();
-
-    // repos:
-    _localDbRepo = LocalDbRepo(lrcBox: widget.lrcBox);
-    _lrcLibRepository = LrcLibRepository();
-
-    // services:
-    _localDbService = LocalDbService(localDBRepo: _localDbRepo);
-
     _appRouter = AppRouter.overlay();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider.value(value: _lrcLibRepository),
-        RepositoryProvider.value(value: _localDbRepo),
-        RepositoryProvider.value(value: _localDbService),
-
         RepositoryProvider(create: (context) => ToMainMsgService()),
         RepositoryProvider(create: (context) => LayoutChannelService()),
       ],
@@ -62,18 +38,6 @@ class _OverlayAppDependencyState extends State<OverlayAppDependency> {
             lazy: false,
             create: (context) =>
                 MsgFromMainBloc()..add(const MsgFromMainEvent.started()),
-          ),
-
-          BlocProvider(
-            create: (context) => LyricFinderBloc(
-              localDbService: OverlayAppDependency.of(
-                context,
-              ).read<LocalDbService>(),
-
-              lyricRepository: OverlayAppDependency.of(
-                context,
-              ).read<LrcLibRepository>(),
-            ),
           ),
 
           BlocProvider(
