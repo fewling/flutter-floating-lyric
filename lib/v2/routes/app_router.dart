@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 
 import '../apps/main/pages/home/page.dart';
+import '../apps/main/pages/local_lyric_detail/page.dart';
 import '../apps/main/pages/local_lyrics/page.dart';
 import '../apps/main/pages/onboarding/page.dart';
 import '../apps/overlay/pages/lyrics/page.dart';
@@ -12,9 +14,11 @@ import '../blocs/permission/permission_bloc.dart';
 import '../shells/base/shell.dart';
 import '../shells/overlay/shell.dart';
 
-part 'app_route_params.dart';
+part 'app_router.freezed.dart';
+part 'app_router.g.dart';
 part 'app_router_refresh_stream.dart';
 part 'main_app_routes.dart';
+part 'main_route_path_params.dart';
 part 'overlay_app_routes.dart';
 
 class AppRouter {
@@ -75,7 +79,11 @@ class AppRouter {
                     GoRoute(
                       path: MainAppRoutes.localLyricDetail.path,
                       name: MainAppRoutes.localLyricDetail.name,
-                      builder: (context, state) => const Placeholder(),
+                      builder: (context, state) => LocalLyricDetailPage(
+                        pathParams: LocalLyricDetailPathParams.fromJson(
+                          state.pathParameters,
+                        ),
+                      ),
                     ),
                   ],
                 ),

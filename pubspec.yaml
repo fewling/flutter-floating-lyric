@@ -40,6 +40,7 @@ dependencies:
   hive_ce: ^2.14.0
   hive_ce_flutter: ^2.3.2
   crypto: ^3.0.6
+  awesome_extensions: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../configs/routes/app_router.dart';
 import '../../models/lyric_model.dart';
 import '../../utils/extensions/custom_extensions.dart';
+import '../../v2/routes/app_router.dart';
 import '../../widgets/fail_import_dialog.dart';
 import '../../widgets/loading_widget.dart';
 import 'bloc/lyric_list_bloc.dart';
@@ -128,7 +129,9 @@ class LyricListView extends StatelessWidget {
               title: lyrics[index].fileName,
               onTap: () => context.goNamed(
                 AppRoute.localLyricDetail.name,
-                pathParameters: {'id': lyrics[index].id},
+                pathParameters: MainRoutePathParams.localLyricDetail(
+                  id: lyrics[index].id,
+                ).toPathJson(),
               ),
               onDelete: () => _promptDeleteDialog(context, lyrics[index]),
             ),
@@ -210,7 +213,7 @@ class _LyricTile extends StatelessWidget {
 }
 
 class _BottomBar extends StatefulWidget {
-  const _BottomBar({this.onDeleteAllPressed, required this.onSearch});
+  const _BottomBar({required this.onSearch, this.onDeleteAllPressed});
 
   final void Function(String value) onSearch;
   final void Function()? onDeleteAllPressed;
