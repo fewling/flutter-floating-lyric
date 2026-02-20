@@ -5,6 +5,9 @@ sealed class MsgFromMainState with _$MsgFromMainState {
   const factory MsgFromMainState({
     required OverlayWindowConfig? config,
     required MediaState? mediaState,
+
+    @Default(AsyncStatus.initial) AsyncStatus isolateRegistrationStatus,
+
     Lrc? currentLrc,
     @Default(SearchLyricStatus.initial) SearchLyricStatus searchLyricStatus,
   }) = _MsgFromMainState;

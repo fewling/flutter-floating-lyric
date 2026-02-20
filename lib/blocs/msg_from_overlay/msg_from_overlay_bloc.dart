@@ -3,8 +3,10 @@ import 'dart:isolate';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../enums/async_status.dart';
 import '../../enums/main_overlay_port.dart';
 import '../../models/to_main_msg.dart';
+import '../../utils/logger.dart';
 import '../../utils/mixins/isolates_mixin.dart';
 
 part 'msg_from_overlay_bloc.freezed.dart';
@@ -36,7 +38,24 @@ class MsgFromOverlayBloc extends Bloc<MsgFromOverlayEvent, MsgFromOverlayState>
     _Started event,
     Emitter<MsgFromOverlayState> emit,
   ) async {
-    await registerPort(_receivePort.sendPort, MainOverlayPort.mainPortName.key);
+    emit(state.copyWith(isolateRegistrationStatus: AsyncStatus.loading));
+
+    final isSuccess = await registerPort(
+      _receivePort.sendPort,
+      MainOverlayPort.mainPortName.key,
+    );
+
+    emit(
+      state.copyWith(
+        isolateRegistrationStatus: isSuccess
+            ? AsyncStatus.success
+            : AsyncStatus.failure,
+      ),
+    );
+
+    logger.d(
+      '>>> MsgFromOverlayBloc started and port registered: isSuccess=$isSuccess',
+    );
 
     await emit.forEach(
       _receivePort.asBroadcastStream(),

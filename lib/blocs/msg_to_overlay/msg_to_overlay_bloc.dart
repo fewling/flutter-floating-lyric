@@ -20,10 +20,7 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
       (event, emit) => switch (event) {
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
-        _SearchingLrc() => _onSearchingLrc(event, emit),
-        _LrcFound() => _onLrcFound(event, emit),
-        _EmptyLrc() => _onEmptyLrc(event, emit),
-        _LyricNotFound() => _onLyricNotFound(event, emit),
+        _LrcStateUpdated() => _onLrcUpdated(event, emit),
       },
     );
   }
@@ -40,34 +37,11 @@ class MsgToOverlayBloc extends Bloc<MsgToOverlayEvent, MsgToOverlayState> {
     Emitter<MsgToOverlayState> emit,
   ) => _toOverlayMsgService.sendMsg(ToOverlayMsgMediaState(event.mediaState));
 
-  void _onLrcFound(_LrcFound event, Emitter<MsgToOverlayState> emit) =>
+  void _onLrcUpdated(_LrcStateUpdated event, Emitter<MsgToOverlayState> emit) =>
       _toOverlayMsgService.sendMsg(
         ToOverlayMsgModel.lrcState(
           lrc: event.lrc,
-          searchLyricStatus: SearchLyricStatus.found,
+          searchLyricStatus: event.searchStatus,
         ),
       );
-
-  void _onSearchingLrc(_SearchingLrc event, Emitter<MsgToOverlayState> emit) =>
-      _toOverlayMsgService.sendMsg(
-        const ToOverlayMsgModel.lrcState(
-          searchLyricStatus: SearchLyricStatus.searching,
-        ),
-      );
-
-  void _onEmptyLrc(_EmptyLrc event, Emitter<MsgToOverlayState> emit) =>
-      _toOverlayMsgService.sendMsg(
-        const ToOverlayMsgModel.lrcState(
-          searchLyricStatus: SearchLyricStatus.empty,
-        ),
-      );
-
-  void _onLyricNotFound(
-    _LyricNotFound event,
-    Emitter<MsgToOverlayState> emit,
-  ) => _toOverlayMsgService.sendMsg(
-    const ToOverlayMsgModel.lrcState(
-      searchLyricStatus: SearchLyricStatus.notFound,
-    ),
-  );
 }

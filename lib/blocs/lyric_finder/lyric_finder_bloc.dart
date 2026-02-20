@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../enums/search_lyric_status.dart';
 import '../../models/lrc.dart';
 import '../../models/media_state.dart';
 import '../../repos/lrclib/lrclib_repository.dart';
@@ -43,19 +44,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
     final songInfo = event.mediaState;
     if (state.status.isSearching) return;
 
-    final isSameAsTarget = state.targetMedia?.isSameMedia(songInfo) ?? false;
-    final isProcessed = switch (state.status) {
-      LyricFinderStatus.found || LyricFinderStatus.notFound => true,
-      _ => false,
-    };
-    if (isSameAsTarget && isProcessed) return;
-
-    emit(
-      state.copyWith(
-        status: LyricFinderStatus.searching,
-        targetMedia: songInfo,
-      ),
-    );
+    emit(state.copyWith(status: SearchLyricStatus.searching));
 
     final lrcDB = _localDbService.getLyricBySongInfo(
       songInfo.title,
@@ -67,7 +56,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
       emit(
         state.copyWith(
           currentLrc: LrcBuilder().buildLrc(lrcDB.content ?? ''),
-          status: LyricFinderStatus.found,
+          status: SearchLyricStatus.found,
         ),
       );
       return;
@@ -75,7 +64,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
 
     // Return not found immediately if auto-fetch is disabled
     if (!state.isAutoFetch) {
-      emit(state.copyWith(status: LyricFinderStatus.notFound));
+      emit(state.copyWith(status: SearchLyricStatus.notFound));
       return;
     }
 
@@ -95,14 +84,14 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
 
         // If no lyric found, update status to not found
         if (content.isEmpty) {
-          emit(state.copyWith(status: LyricFinderStatus.notFound));
+          emit(state.copyWith(status: SearchLyricStatus.notFound));
           return;
         }
 
         // If saving lyric to local DB fails, update status to not found
         final id = await _saveLyric(res.value);
         if (id == null) {
-          emit(state.copyWith(status: LyricFinderStatus.notFound));
+          emit(state.copyWith(status: SearchLyricStatus.notFound));
           return;
         }
 
@@ -110,12 +99,12 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
         emit(
           state.copyWith(
             currentLrc: LrcBuilder().buildLrc(content),
-            status: LyricFinderStatus.found,
+            status: SearchLyricStatus.found,
           ),
         );
 
       case Failure<LrcLibResponse, CustomException>():
-        emit(state.copyWith(status: LyricFinderStatus.notFound));
+        emit(state.copyWith(status: SearchLyricStatus.notFound));
     }
   }
 
@@ -138,11 +127,6 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
     );
   }
 
-  void _onReset(_Reset event, Emitter<LyricFinderState> emit) => emit(
-    state.copyWith(
-      targetMedia: null,
-      currentLrc: null,
-      status: LyricFinderStatus.initial,
-    ),
-  );
+  void _onReset(_Reset event, Emitter<LyricFinderState> emit) =>
+      emit(state.copyWith(currentLrc: null, status: SearchLyricStatus.initial));
 }

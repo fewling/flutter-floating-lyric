@@ -9,11 +9,8 @@ sealed class MsgToOverlayEvent with _$MsgToOverlayEvent {
   const factory MsgToOverlayEvent.onMediaStateUpdated(MediaState mediaState) =
       _MediaStateUpdated;
 
-  const factory MsgToOverlayEvent.searchingLrc() = _SearchingLrc;
-
-  const factory MsgToOverlayEvent.lrcFound(Lrc lrc) = _LrcFound;
-
-  const factory MsgToOverlayEvent.emptyLrc() = _EmptyLrc;
-
-  const factory MsgToOverlayEvent.lyricNotFound() = _LyricNotFound;
+  const factory MsgToOverlayEvent.lrcStateUpdated({
+    required Lrc? lrc,
+    required SearchLyricStatus searchStatus,
+  }) = _LrcStateUpdated;
 }

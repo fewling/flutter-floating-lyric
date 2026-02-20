@@ -43,6 +43,16 @@ class MainAppListener extends StatelessWidget {
         ),
 
         BlocListener<MediaListenerBloc, MediaListenerState>(
+          listenWhen: (previous, current) {
+            final prev = previous.activeMediaState;
+            final curr = current.activeMediaState;
+
+            final isNewSong = switch (prev?.isSameMedia(curr)) {
+              null || false => true,
+              true => false,
+            };
+            return isNewSong && curr != null;
+          },
           listener: (context, state) => context.read<LyricFinderBloc>().add(
             LyricFinderEvent.mediaStateUpdated(state.activeMediaState!),
           ),
@@ -97,32 +107,15 @@ class MainAppListener extends StatelessWidget {
         ),
 
         BlocListener<LyricFinderBloc, LyricFinderState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case LyricFinderStatus.initial:
-                break;
-
-              case LyricFinderStatus.empty:
-                context.read<MsgToOverlayBloc>().add(
-                  const MsgToOverlayEvent.emptyLrc(),
-                );
-
-              case LyricFinderStatus.searching:
-                context.read<MsgToOverlayBloc>().add(
-                  const MsgToOverlayEvent.searchingLrc(),
-                );
-
-              case LyricFinderStatus.found:
-                context.read<MsgToOverlayBloc>().add(
-                  MsgToOverlayEvent.lrcFound(state.currentLrc!),
-                );
-
-              case LyricFinderStatus.notFound:
-                context.read<MsgToOverlayBloc>().add(
-                  const MsgToOverlayEvent.lyricNotFound(),
-                );
-            }
-          },
+          listenWhen: (previous, current) =>
+              previous.currentLrc != current.currentLrc ||
+              previous.status != current.status,
+          listener: (context, state) => context.read<MsgToOverlayBloc>().add(
+            MsgToOverlayEvent.lrcStateUpdated(
+              lrc: state.currentLrc,
+              searchStatus: state.status,
+            ),
+          ),
         ),
       ],
       child: Builder(builder: builder),
