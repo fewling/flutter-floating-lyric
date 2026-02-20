@@ -198,7 +198,7 @@ fvm flutter gen-l10n
 **Or** (via build_runner, which also runs gen-l10n):
 
 ```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 ```
 
 **Generated Files**:

@@ -344,6 +344,7 @@ Future<void> _onEvent(Event event, Emitter<State> emit) async {
 
 ```dart
 Future<void> _onFetch(FetchEvent event, Emitter<State> emit) async {
+  if (state.status == Status.loading) return; // Prevent duplicate calls
   emit(state.copyWith(status: Status.loading));
 
   try {
@@ -494,46 +495,6 @@ BlocListener<LyricListBloc, LyricListState>(
 ❌ **Don't forget to handle all event types**  
 ❌ **Don't mutate state directly** (always use copyWith)  
 ❌ **Don't create BLoCs in UI directly** (use dependency layer)
-
-## Common BLoC Patterns in Floating Lyric
-
-### 1. List Management BLoC
-
-```dart
-// LyricListBloc, etc.
-- Load list
-- Search/filter list
-- Add/delete items
-- Refresh list
-```
-
-### 2. Form BLoC
-
-```dart
-// FormBloc patterns
-- Field updates
-- Validation
-- Submit
-- Reset
-```
-
-### 3. Settings BLoC
-
-```dart
-// PreferenceBloc
-- Load settings
-- Update individual settings
-- Persist changes
-```
-
-### 4. Permission BLoC
-
-```dart
-// PermissionBloc
-- Check permissions
-- Request permissions
-- Update permission status
-```
 
 ## Testing BLoCs
 

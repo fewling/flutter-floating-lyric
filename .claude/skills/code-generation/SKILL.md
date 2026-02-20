@@ -169,27 +169,6 @@ Generates:
 - **Type converters** for custom types
 - **Field renaming** (snake_case ↔ camelCase)
 
-### Basic Usage
-
-```dart
-import 'package:json_annotation/json_annotation.dart';
-
-part 'user.g.dart';
-
-@JsonSerializable()
-class User {
-  final String id;
-  final String name;
-  @JsonKey(name: 'email_address')
-  final String? email;
-
-  User({required this.id, required this.name, this.email});
-
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
-  Map<String, dynamic> toJson() => _$UserToJson(this);
-}
-```
-
 ### With Freezed
 
 ```dart
@@ -229,34 +208,30 @@ String? _dateToJson(DateTime? date) => date?.toIso8601String();
 
 `build_runner` is the orchestrator that runs all code generators in a Dart project.
 
-### Common Commands
-
-See [Build Commands](build-commands/SKILL.md) for detailed reference.
-
 #### One-Time Build
 
 ```bash
 # Generate all files
-fvm flutter pub run build_runner build
+fvm dart run build_runner build
 
 # Delete existing and regenerate
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 ```
 
 #### Watch Mode
 
 ```bash
 # Auto-regenerate on file changes
-fvm flutter pub run build_runner watch
+fvm dart run build_runner watch
 
 # With delete conflicts
-fvm flutter pub run build_runner watch --delete-conflicting-outputs
+fvm dart run build_runner watch -d
 ```
 
 #### Clean Generated Files
 
 ```bash
-fvm flutter pub run build_runner clean
+fvm dart run build_runner clean
 ```
 
 ### When to Run Build Runner
@@ -401,10 +376,10 @@ fvm flutter gen-l10n
 
 ```bash
 # 1. Install dependencies
-fvm flutter pub get
+fvm dart get
 
 # 2. Generate all code
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 
 # 3. Generate localizations (if needed)
 fvm flutter gen-l10n
@@ -414,10 +389,10 @@ fvm flutter gen-l10n
 
 ```bash
 # Option 1: Watch mode (recommended for active development)
-fvm flutter pub run build_runner watch --delete-conflicting-outputs
+fvm dart run build_runner watch -d
 
 # Option 2: Manual rebuild (when needed)
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 ```
 
 ### After Git Pull
@@ -425,84 +400,8 @@ fvm flutter pub run build_runner build --delete-conflicting-outputs
 ```bash
 # Regenerate all files
 fvm flutter clean
-fvm flutter pub get
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-## Troubleshooting
-
-### "Part not found" Error
-
-**Error**:
-
-```
-part 'user.freezed.dart' not found
-```
-
-**Solution**:
-
-```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-### "Conflicting outputs" Error
-
-**Error**:
-
-```
-Conflicting outputs were detected and are listed above.
-```
-
-**Solution**:
-
-```bash
-# Use --delete-conflicting-outputs flag
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-### "Undefined class: \_$ClassName"
-
-**Error**:
-
-```
-Undefined class: '_$User'
-```
-
-**Cause**: Generated file not created yet.
-
-**Solution**:
-
-```bash
-fvm flutter pub run build_runner build
-```
-
-### Import Issues
-
-**Error**:
-
-```
-'package:my_app/gen/l10n/app_localizations.dart' not found
-```
-
-**Solution**:
-
-```bash
-fvm flutter gen-l10n
-# or
-fvm flutter build
-```
-
-### Build Runner Stuck
-
-**Solution**:
-
-```bash
-# Kill existing build runner
-pkill -f "dart.*build_runner"
-
-# Clean and rebuild
-fvm flutter pub run build_runner clean
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart get
+fvm dart run build_runner build -d
 ```
 
 ## File Organization
@@ -574,58 +473,19 @@ When creating a new model:
 - [ ] Add JSON part if needed: `part 'file.g.dart';`
 - [ ] Create factory constructor
 - [ ] Add fromJson/toJson if using JSON
-- [ ] Run build_runner: `fvm flutter pub run build_runner build`
+- [ ] Run build_runner: `fvm dart run build_runner build`
 - [ ] Verify generated files created
 - [ ] Test serialization (if applicable)
 
 ## Performance Tips
-
-### Faster Builds
-
-```bash
-# Use --build-filter to generate only specific files
-fvm flutter pub run build_runner build --build-filter="lib/models/*.dart"
-
-# Skip unnecessary packages
-fvm flutter pub run build_runner build --skip-build-runner-clean
-```
 
 ### Parallel Generation
 
 Watch mode runs incrementally and is faster for iterative development:
 
 ```bash
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 ```
-
-## Integration with IDE
-
-### VS Code
-
-**tasks.json**:
-
-```json
-{
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Build Runner Watch",
-      "type": "shell",
-      "command": "fvm flutter pub run build_runner watch --delete-conflicting-outputs",
-      "isBackground": true,
-      "problemMatcher": []
-    }
-  ]
-}
-```
-
-### Android Studio / IntelliJ
-
-Run configurations:
-
-- **Script**: `pub`
-- **Arguments**: `run build_runner watch --delete-conflicting-outputs`
-- **Working directory**: `$ProjectFileDir$`
 
 ## Common Patterns in Floating Lyric
 

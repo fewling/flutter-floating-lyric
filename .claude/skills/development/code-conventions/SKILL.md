@@ -120,162 +120,6 @@ class LyricModel with _$LyricModel {
 }
 ```
 
-## Naming Conventions
-
-### Classes
-
-- **PascalCase** for all class names
-- Be descriptive and specific
-
-```dart
-// ✅ Good
-class LyricListBloc
-class LocalDbRepo
-class ToOverlayMessageService
-class OverlayWindowSettingsPage
-
-// ❌ Bad
-class lyricListBloc
-class localDb
-class MessageSvc
-class page
-```
-
-### Variables & Parameters
-
-- **camelCase** for variables, parameters, and function names
-- Use descriptive names
-
-```dart
-// ✅ Good
-final SharedPreferences pref;
-final Box<LrcModel> lrcBox;
-String artistName;
-void fetchOnlineLyrics();
-
-// ❌ Bad
-final SharedPreferences p;
-final Box<LrcModel> box;
-String an;
-void fetch();
-```
-
-### Constants
-
-- **lowerCamelCase** for constants (following Dart convention)
-
-```dart
-// ✅ Good
-const defaultTimeout = Duration(seconds: 30);
-const maxRetries = 3;
-
-// ❌ Bad
-const DEFAULT_TIMEOUT = Duration(seconds: 30);
-const MAX_RETRIES = 3;
-```
-
-### Private Members
-
-- Prefix with underscore `_` for private members
-
-```dart
-class MyClass {
-  // Private field
-  final String _privateField;
-
-  // Private method
-  void _privateMethod() {}
-}
-```
-
-## Import Organization
-
-Organize imports in this order:
-
-1. Dart SDK imports
-2. Flutter SDK imports
-3. External package imports
-4. Local relative imports
-5. Part directives
-
-```dart
-// 1. Dart SDK
-import 'dart:async';
-
-// 2. Flutter SDK
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
-// 3. External packages
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:go_router/go_router.dart';
-
-// 4. Local relative imports
-import '../models/lyric_model.dart';
-import '../services/lrc/lrc_process_service.dart';
-
-// 5. Part directives
-part 'lyric_list_event.dart';
-part 'lyric_list_state.dart';
-```
-
-**Note**: Use `prefer_relative_imports` for local files (enabled in linter).
-
-## Code Style
-
-### Constructors
-
-- Use `const` constructors when possible
-- Use `super.key` for key parameter
-
-```dart
-class MyWidget extends StatelessWidget {
-  const MyWidget({super.key, required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return const Text('Hello');
-  }
-}
-```
-
-### Trailing Commas
-
-- Use trailing commas for better formatting and diffs
-
-```dart
-// ✅ Good
-Widget build(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.all(16.0),
-    child: Text('Hello'),
-  );
-}
-
-// ❌ Bad
-Widget build(BuildContext context) {
-  return Container(
-    padding: const EdgeInsets.all(16.0),
-    child: Text('Hello')
-  );
-}
-```
-
-### String Literals
-
-- Use single quotes for strings (enforced by `prefer_single_quotes`)
-
-```dart
-// ✅ Good
-const message = 'Hello World';
-
-// ❌ Bad
-const message = "Hello World";
-```
-
 ## Project Structure
 
 ```
@@ -342,26 +186,6 @@ lib/
 ## Linting Rules
 
 The project uses strict Flutter linting based on [analysis_options.yaml](../../../analysis_options.yaml).
-
-### Key Enabled Rules
-
-- `strict-casts`: Enforce strict type casts
-- `strict-raw-types`: Require type arguments
-- `always_declare_return_types`: Always specify return types
-- `prefer_const_constructors`: Use const when possible
-- `prefer_final_locals`: Use final for local variables
-- `prefer_single_quotes`: Use single quotes for strings
-- `prefer_relative_imports`: Use relative imports for local files
-- `use_key_in_widget_constructors`: Require key in widgets
-- `use_super_parameters`: Use super parameters
-- `avoid_print`: Don't use print(), use logger instead
-
-### Key Disabled Rules
-
-- `always_specify_types`: Not required (type inference OK)
-- `lines_longer_than_80_chars`: No hard line length limit
-- `require_trailing_commas`: Not enforced (but recommended)
-- `prefer_final_parameters`: Not enforced yet
 
 ## Best Practices
 
@@ -448,10 +272,10 @@ After modifying models, BLoCs, or routes:
 
 ```bash
 # One-time generation
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 
 # Watch mode (auto-regenerate)
-fvm flutter pub run build_runner watch --delete-conflicting-outputs
+fvm dart run build_runner watch -d
 ```
 
 See [Build Commands](../../code-generation/build-commands/SKILL.md) for details.
@@ -459,6 +283,5 @@ See [Build Commands](../../code-generation/build-commands/SKILL.md) for details.
 ## Related Skills
 
 - [Page Architecture](../../architecture/page-architecture/SKILL.md) - Page structure pattern
-- [FVM Setup](../fvm-setup/SKILL.md) - Flutter version management
 - [Freezed Models](../../code-generation/freezed-models/SKILL.md) - Creating immutable models
 - [BLoC Structure](../../state-management/bloc-structure/SKILL.md) - BLoC organization

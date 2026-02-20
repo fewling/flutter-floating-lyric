@@ -35,13 +35,7 @@ Run build_runner after modifying:
 ### One-Time Build (Recommended)
 
 ```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-**Short version**:
-
-```bash
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 ```
 
 **When to use**:
@@ -60,13 +54,7 @@ fvm flutter pub run build_runner build -d
 ### Watch Mode
 
 ```bash
-fvm flutter pub run build_runner watch --delete-conflicting-outputs
-```
-
-**Short version**:
-
-```bash
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 ```
 
 **When to use**:
@@ -87,10 +75,10 @@ fvm flutter pub run build_runner watch -d
 
 ```bash
 # Clean generated files
-fvm flutter pub run build_runner clean
+fvm dart run build_runner clean
 
 # Then rebuild
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 ```
 
 **When to use**:
@@ -103,28 +91,28 @@ fvm flutter pub run build_runner build -d
 
 ### Essential Options
 
-| Option                         | Short | Description                                     |
-| ------------------------------ | ----- | ----------------------------------------------- |
-| `--delete-conflicting-outputs` | `-d`  | Delete files that conflict with generated files |
-| `--verbose`                    | `-v`  | Print detailed output                           |
-| `build`                        |       | One-time build                                  |
-| `watch`                        |       | Continuous build on file changes                |
-| `clean`                        |       | Delete all generated files                      |
+| Option      | Short | Description                                     |
+| ----------- | ----- | ----------------------------------------------- |
+| `-d`        | `-d`  | Delete files that conflict with generated files |
+| `--verbose` | `-v`  | Print detailed output                           |
+| `build`     |       | One-time build                                  |
+| `watch`     |       | Continuous build on file changes                |
+| `clean`     |       | Delete all generated files                      |
 
 ### Advanced Options
 
 ```bash
 # Build with verbose logging
-fvm flutter pub run build_runner build -d --verbose
+fvm dart run build_runner build -d --verbose
 
 # Build specific directory only
-fvm flutter pub run build_runner build -d --build-filter="lib/models/**"
+fvm dart run build_runner build -d --build-filter="lib/models/**"
 
 # Set output directory
-fvm flutter pub run build_runner build -d --output=build
+fvm dart run build_runner build -d --output=build
 
 # Enable/disable deletes
-fvm flutter pub run build_runner build --define "build_resolvers|build_to_build_info=enabled=false"
+fvm dart run build_runner build --define "build_resolvers|build_to_build_info=enabled=false"
 ```
 
 ## Generated File Types
@@ -224,10 +212,10 @@ sealed class MainRoutePathParams with _$MainRoutePathParams {
 
 ```bash
 # 1. Install dependencies
-fvm flutter pub get
+fvm dart get
 
 # 2. Generate code
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 ```
 
 ### Daily Development
@@ -235,11 +223,11 @@ fvm flutter pub run build_runner build -d
 ```bash
 # After pulling changes
 git pull
-fvm flutter pub get
-fvm flutter pub run build_runner build -d
+fvm dart get
+fvm dart run build_runner build -d
 
 # During development (optional)
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 ```
 
 ### Before Committing
@@ -249,7 +237,7 @@ fvm flutter pub run build_runner watch -d
 dart format .
 
 # Regenerate to ensure consistency
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 
 # Check for errors
 fvm flutter analyze
@@ -260,9 +248,9 @@ fvm flutter analyze
 ```bash
 # Clean and rebuild
 fvm flutter clean
-fvm flutter pub get
-fvm flutter pub run build_runner clean
-fvm flutter pub run build_runner build -d
+fvm dart get
+fvm dart run build_runner clean
+fvm dart run build_runner build -d
 ```
 
 ## Common Patterns
@@ -272,7 +260,7 @@ fvm flutter pub run build_runner build -d
 ```bash
 # Make changes to model
 # Then regenerate
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 
 # Test changes
 fvm flutter run
@@ -282,7 +270,7 @@ fvm flutter run
 
 ```bash
 # Terminal 1: Run watch mode
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 
 # Terminal 2: Run app
 fvm flutter run
@@ -296,153 +284,9 @@ fvm flutter run
 # Complete reset
 fvm flutter clean
 rm -rf .dart_tool/
-fvm flutter pub get
-fvm flutter pub run build_runner build -d
+fvm dart get
+fvm dart run build_runner build -d
 ```
-
-## Troubleshooting
-
-### Error: "Conflicting outputs"
-
-**Error Message**:
-
-```
-[SEVERE] Conflicting outputs were detected and the build is unable to prompt for permission to delete them.
-```
-
-**Solution**:
-
-```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-**Why it happens**:
-
-- Generated files changed format
-- Manual edits to generated files
-- Version upgrade of generator
-
-### Error: "Duplicate part directive"
-
-**Error Message**:
-
-```
-Part directive found but no part file was generated
-```
-
-**Solution**:
-
-1. Check `part` directive matches filename exactly:
-
-   ```dart
-   part 'lyric_model.freezed.dart';  // Must match exactly
-   part 'lyric_model.g.dart';
-   ```
-
-2. Ensure file has proper annotations:
-
-   ```dart
-   @freezed
-   sealed class LrcModel with _$LrcModel { ... }
-   ```
-
-3. Regenerate:
-   ```bash
-   fvm flutter pub run build_runner build -d
-   ```
-
-### Error: "Build failed"
-
-**Common causes and solutions**:
-
-1. **Syntax error in source file**
-
-   ```bash
-   # Check analyzer output
-   fvm flutter analyze
-
-   # Fix errors, then regenerate
-   fvm flutter pub run build_runner build -d
-   ```
-
-2. **Missing dependency**
-
-   ```yaml
-   # Ensure in pubspec.yaml
-   dependencies:
-     freezed_annotation: ^3.1.0
-
-   dev_dependencies:
-     build_runner: ^2.9.0
-     freezed: ^3.2.3
-     json_serializable: ^6.11.1
-   ```
-
-   ```bash
-   fvm flutter pub get
-   fvm flutter pub run build_runner build -d
-   ```
-
-3. **Corrupted build cache**
-   ```bash
-   fvm flutter pub run build_runner clean
-   rm -rf .dart_tool/build/
-   fvm flutter pub run build_runner build -d
-   ```
-
-### Error: "Generated file not found"
-
-**Solution**:
-
-1. Run build_runner:
-
-   ```bash
-   fvm flutter pub run build_runner build -d
-   ```
-
-2. If still missing, check:
-   - File has necessary annotations (`@freezed`, etc.)
-   - `part` directive exists and is correct
-   - No syntax errors in file
-
-### Warning: "Build is taking too long"
-
-**Solutions**:
-
-1. **Use build filters** (only build specific directories):
-
-   ```bash
-   fvm flutter pub run build_runner build -d \
-     --build-filter="lib/models/**"
-   ```
-
-2. **Stop watch mode** when not needed:
-   - Watch mode runs continuously
-   - Use one-time `build` command instead
-
-3. **Clean before building**:
-   ```bash
-   fvm flutter pub run build_runner clean
-   fvm flutter pub run build_runner build -d
-   ```
-
-### Error: "Invalid argument"
-
-If build_runner command fails:
-
-1. **Check FVM is used**:
-
-   ```bash
-   fvm flutter pub run build_runner build -d
-   # NOT: flutter pub run build_runner build -d
-   ```
-
-2. **Reinstall dependencies**:
-   ```bash
-   fvm flutter clean
-   fvm flutter pub get
-   fvm flutter pub run build_runner build -d
-   ```
 
 ## Performance Tips
 
@@ -455,7 +299,7 @@ If build_runner command fails:
 2. **Build specific directories** when possible:
 
    ```bash
-   fvm flutter pub run build_runner build -d \
+   fvm dart run build_runner build -d \
      --build-filter="lib/models/**.dart"
    ```
 
@@ -469,8 +313,8 @@ If build_runner command fails:
 # GitHub Actions example
 - name: Generate code
   run: |
-    fvm flutter pub get
-    fvm flutter pub run build_runner build --delete-conflicting-outputs
+    fvm dart get
+    fvm dart run build_runner build -d
 ```
 
 ## Best Practices
@@ -496,16 +340,16 @@ If build_runner command fails:
 
 ## Quick Reference
 
-| Task                      | Command                                     |
-| ------------------------- | ------------------------------------------- |
-| **Generate code**         | `fvm flutter pub run build_runner build -d` |
-| **Auto-regenerate**       | `fvm flutter pub run build_runner watch -d` |
-| **Clean generated files** | `fvm flutter pub run build_runner clean`    |
-| **Clean & rebuild**       | `clean` then `build -d`                     |
-| **Verbose output**        | `build -d --verbose`                        |
-| **After git pull**        | `fvm flutter pub get` then `build -d`       |
-| **Before commit**         | `build -d` then `analyze`                   |
-| **Fix conflicts**         | `build --delete-conflicting-outputs`        |
+| Task                      | Command                              |
+| ------------------------- | ------------------------------------ |
+| **Generate code**         | `fvm dart run build_runner build -d` |
+| **Auto-regenerate**       | `fvm dart run build_runner watch -d` |
+| **Clean generated files** | `fvm dart run build_runner clean`    |
+| **Clean & rebuild**       | `clean` then `build -d`              |
+| **Verbose output**        | `build -d --verbose`                 |
+| **After git pull**        | `fvm dart get` then `build -d`       |
+| **Before commit**         | `build -d` then `analyze`            |
+| **Fix conflicts**         | `build -d`                           |
 
 ## Makefile/Scripts (Optional)
 
@@ -517,14 +361,14 @@ Create shortcuts for common tasks:
 .PHONY: gen gen-watch gen-clean
 
 gen:
-	fvm flutter pub run build_runner build --delete-conflicting-outputs
+	fvm dart run build_runner build -d
 
 gen-watch:
-	fvm flutter pub run build_runner watch --delete-conflicting-outputs
+	fvm dart run build_runner watch -d
 
 gen-clean:
-	fvm flutter pub run build_runner clean
-	fvm flutter pub run build_runner build --delete-conflicting-outputs
+	fvm dart run build_runner clean
+	fvm dart run build_runner build -d
 ```
 
 **Usage**:
@@ -539,5 +383,4 @@ make gen-clean
 
 - [Freezed Models](../freezed-models/SKILL.md) - Creating models that use build_runner
 - [BLoC Structure](../../state-management/bloc-structure/SKILL.md) - Events/states with freezed
-- [Common Commands](../../development/common-commands/SKILL.md) - Other development commands
 - [Development Workflow](../../development/SKILL.md) - When to run generation

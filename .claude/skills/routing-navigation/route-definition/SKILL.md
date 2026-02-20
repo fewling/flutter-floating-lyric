@@ -186,12 +186,6 @@ class AppRouter {
 ### 1. Navigate to Simple Route
 
 ```dart
-// Using path
-context.go('/settings');
-
-// Using enum
-context.go(MainAppRoutes.settings.path);
-
 // Using named route
 context.goNamed(MainAppRoutes.settings.name);
 ```
@@ -199,9 +193,6 @@ context.goNamed(MainAppRoutes.settings.name);
 ### 2. Navigate with Path Parameters
 
 ```dart
-// Manual parameter injection
-context.go('/local-lyric/123');
-
 // Type-safe with freezed
 final params = MainRoutePathParams.localLyricDetail(id: '123');
 context.goNamed(
@@ -210,41 +201,18 @@ context.goNamed(
 );
 ```
 
-### 3. Navigate to Child Route
-
-```dart
-// Relative child route
-context.go('/fonts');  // From home page
-
-// Or use full path
-context.go('/${MainAppRoutes.home.path}/${MainAppRoutes.fonts.path}');
-```
-
-### 4. Pop/Back Navigation
+### 3. Pop/Back Navigation
 
 ```dart
 // Go back
 context.pop();
 
-// Pop with result
-context.pop(result);
-
 // Check if can pop
 if (context.canPop()) {
   context.pop();
 } else {
-  context.go('/');
+  context.goNamed(MainAppRoutes.home.name); // Fallback to home if can't pop
 }
-```
-
-### 5. Replace Current Route
-
-```dart
-// Replace instead of push
-context.pushReplacement('/new-route');
-
-// Replace named route
-context.pushReplacementNamed(MainAppRoutes.home.name);
 ```
 
 ## StatefulShellRoute (Bottom Navigation)
@@ -455,7 +423,7 @@ GoRouter(
 3. **Generate code**:
 
    ```bash
-   fvm flutter pub run build_runner build -d
+   fvm dart run build_runner build -d
    ```
 
 4. **Register route** (`app_router.dart`):
@@ -618,6 +586,8 @@ redirect: (context, state) {
 ```
 
 ### 3. Route with Extra Data
+
+> Generally, we don't like using `extra` for passing data. Instead, use path or query parameters.
 
 ```dart
 // Navigate with extra data

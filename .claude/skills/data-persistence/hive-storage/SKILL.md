@@ -526,7 +526,7 @@ Future<(SharedPreferences, Box<LrcModel>)> bootstrap() async {
 ### Generate Type Adapters
 
 ```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 ```
 
 **Generates**:
@@ -537,7 +537,7 @@ fvm flutter pub run build_runner build --delete-conflicting-outputs
 **Watch Mode**:
 
 ```bash
-fvm flutter pub run build_runner watch --delete-conflicting-outputs
+fvm dart run build_runner watch -d
 ```
 
 **See**: [Code Generation - Build Commands](../../code-generation/build-commands/SKILL.md)

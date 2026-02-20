@@ -211,10 +211,10 @@ on<LyricListEvent>(
 ```dart
 @freezed
 sealed class LoadingState with _$LoadingState {
-  const factory LoadingState.initial() = _Initial;
-  const factory LoadingState.loading() = _Loading;
-  const factory LoadingState.loaded(List<Item> items) = _Loaded;
-  const factory LoadingState.error(String message) = _Error;
+  const factory LoadingState.initial() = Initial;
+  const factory LoadingState.loading() = Loading;
+  const factory LoadingState.loaded(List<Item> items) = Loaded;
+  const factory LoadingState.error(String message) = Error;
 }
 ```
 
@@ -223,18 +223,11 @@ sealed class LoadingState with _$LoadingState {
 ```dart
 // Pattern matching in UI
 return switch (state) {
-  _Initial() => const Text('Press button to load'),
-  _Loading() => const CircularProgressIndicator(),
-  _Loaded(:final items) => ListView(children: items.map(...)),
-  _Error(:final message) => Text('Error: $message'),
+  Initial() => const Text('Press button to load'),
+  Loading() => const CircularProgressIndicator(),
+  Loaded(:final items) => ListView(children: items.map(...)),
+  Error(:final message) => Text('Error: $message'),
 };
-
-// Or with mapOrNull
-state.maybeWhen(
-  loaded: (items) => ListView(...),
-  error: (message) => ErrorWidget(message),
-  orElse: () => const SizedBox(),
-);
 ```
 
 ### Path Parameters Union Types
@@ -300,32 +293,6 @@ final state = MediaState(/* ... */);
 print(state.positionStr);  // "00:01:23"
 print(state.progress);     // 0.456
 ```
-
-### Private Constructor for Custom Getters (Alternative)
-
-```dart
-@freezed
-sealed class MyModel with _$MyModel {
-  const MyModel._();  // Private constructor
-
-  const factory MyModel({
-    required String firstName,
-    required String lastName,
-  }) = _MyModel;
-
-  // Custom getter
-  String get fullName => '$firstName $lastName';
-
-  // Custom method
-  bool hasName(String name) =>
-      firstName.contains(name) || lastName.contains(name);
-
-  factory MyModel.fromJson(Map<String, dynamic> json) =>
-      _$MyModelFromJson(json);
-}
-```
-
-**Note**: Private constructor prevents using `const` at call site.
 
 ## Default Values
 
@@ -419,11 +386,9 @@ final newState = state.copyWith(
 ### DON'T
 
 ❌ **Don't forget to run code generation** after changes  
-❌ **Don't use mutable collections** (List, Map, Set) - they'll still be mutable  
 ❌ **Don't modify generated files**  
 ❌ **Don't use private constructor** unless you need custom methods  
-❌ **Don't forget `const factory`**  
-❌ **Don't use freezed for simple value classes** (use records instead)
+❌ **Don't forget `const factory`**
 
 ## Code Generation Commands
 
@@ -431,17 +396,14 @@ After creating or modifying freezed models:
 
 ```bash
 # One-time generation
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-
-# Short version
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 
 # Watch mode (auto-regenerate)
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 
 # Clean and rebuild
-fvm flutter pub run build_runner clean
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner clean
+fvm dart run build_runner build -d
 ```
 
 See [Build Commands](../build-commands/SKILL.md) for details.
@@ -502,38 +464,6 @@ sealed class RouteParams with _$RouteParams {
       _$RouteParamsFromJson(json);
 }
 ```
-
-## Troubleshooting
-
-### Issue: Build fails with conflicts
-
-**Solution**:
-
-```bash
-fvm flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-### Issue: Generated file not found
-
-**Solution**:
-
-1. Check `part` directive matches filename
-2. Run build_runner
-3. Check for errors in pub run output
-
-### Issue: JSON serialization not working
-
-**Solution**:
-
-1. Add `.g.dart` part directive
-2. Add `factory fromJson` method
-3. Add `json_serializable` to `dev_dependencies`
-4. Run build_runner
-
-### Issue: Cannot use const constructor
-
-**Solution**:
-Don't use private constructor `const MyModel._()` if you need const.
 
 ## Related Skills
 

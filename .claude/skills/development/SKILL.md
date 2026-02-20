@@ -29,7 +29,7 @@ fvm use 3.38.6
 fvm flutter pub get
 
 # 5. Generate code
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 
 # 6. Check setup
 fvm flutter doctor
@@ -87,7 +87,7 @@ git pull
 fvm flutter pub get
 
 # Regenerate code (if models/blocs changed)
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 
 # Run the app
 fvm flutter run
@@ -116,7 +116,7 @@ fvm flutter run
 
 4. **Generate code after model/bloc changes**
    ```bash
-   fvm flutter pub run build_runner build -d
+   fvm dart run build_runner build -d
    ```
 
 #### Modifying Existing Code
@@ -131,7 +131,7 @@ fvm flutter run
 
 3. **Regenerate if needed**
    ```bash
-   fvm flutter pub run build_runner build -d
+   fvm dart run build_runner build -d
    ```
 
 ### 3. Testing Changes
@@ -182,17 +182,17 @@ Generate code after modifying:
 
 ```bash
 # One-time generation (recommended for most cases)
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 
 # Short version
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 
 # Watch mode (auto-regenerate on file changes)
-fvm flutter pub run build_runner watch -d
+fvm dart run build_runner watch -d
 
 # Clean and rebuild
-fvm flutter pub run build_runner clean
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner clean
+fvm dart run build_runner build -d
 ```
 
 ### Generated Files
@@ -399,7 +399,7 @@ See [Localization](../localization/SKILL.md) for details.
 # Solution: Clean and regenerate
 fvm flutter clean
 fvm flutter pub get
-fvm flutter pub run build_runner build -d
+fvm dart run build_runner build -d
 ```
 
 #### 2. FVM Not Using Correct Flutter Version
@@ -415,7 +415,7 @@ fvm use 3.38.6
 
 ```bash
 # Solution: Delete conflicting outputs
-fvm flutter pub run build_runner build --delete-conflicting-outputs
+fvm dart run build_runner build -d
 ```
 
 #### 4. VS Code Not Recognizing Imports
@@ -504,8 +504,6 @@ git push origin main --tags
 
 ## Related Skills
 
-- [FVM Setup](fvm-setup/SKILL.md) - Flutter Version Management
 - [Code Conventions](code-conventions/SKILL.md) - Code style and organization
-- [Common Commands](common-commands/SKILL.md) - Command reference
 - [Repository Pattern](../architecture/repository-pattern/SKILL.md) - Architecture pattern
 - [Page Architecture](../architecture/page-architecture/SKILL.md) - Page structure

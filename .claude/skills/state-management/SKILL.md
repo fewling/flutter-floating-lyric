@@ -448,20 +448,6 @@ ToOverlayMessageService.send(message);
 // Via shared data layer (Hive, SharedPreferences)
 ```
 
-### Within Same Page
-
-```dart
-// One BLoC dispatches events to another
-context.read<Bloc2>().add(Event());
-
-// Or use streams
-bloc1.stream.listen((state) {
-  bloc2.add(Event.fromBloc1(state));
-});
-```
-
-See [BLoC Communication](bloc-communication/SKILL.md) for patterns.
-
 ## Testing BLoCs
 
 ```dart

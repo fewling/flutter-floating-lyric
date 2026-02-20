@@ -81,17 +81,6 @@ enum MainAppRoutes {
   lyricDetail,
   lyricEditor,
   createLyric;
-
-  String get name => toString().split('.').last;
-
-  String get path => switch (this) {
-    home => '/',
-    localLyrics => '/local-lyrics',
-    settings => '/settings',
-    lyricDetail => '/lyric/:id',  // Path parameter
-    lyricEditor => '/lyric/:id/edit',
-    createLyric => '/lyric/create',
-  };
 }
 ```
 
@@ -250,20 +239,7 @@ context.goNamed(
 );
 ```
 
-### 2. Navigate by Path
-
-```dart
-// Direct path navigation
-context.go('/local-lyrics');
-
-// With path parameters
-context.go('/lyric/123');
-
-// With query parameters
-context.go('/local-lyrics?filter=favorites');
-```
-
-### 3. Push (Stack Navigation)
+### 2. Push (Stack Navigation)
 
 ```dart
 // Push new page (can go back)
@@ -280,14 +256,14 @@ if (result == true) {
 }
 ```
 
-### 4. Replace
+### 3. Replace
 
 ```dart
 // Replace current route
 context.replaceNamed(MainAppRoutes.home.name);
 ```
 
-### 5. Pop
+### 4. Pop
 
 ```dart
 // Go back
@@ -297,14 +273,13 @@ context.pop();
 context.pop(true);
 ```
 
-### 6. Check if Can Pop
+### 5. Check if Can Pop
 
 ```dart
 if (context.canPop()) {
   context.pop();
 } else {
-  // Already at root, maybe exit app
-  SystemNavigator.pop();
+  context.goNamed(MainAppRoutes.home.name); // Fallback to home if can't pop
 }
 ```
 
@@ -554,7 +529,7 @@ navigationShell.goBranch(1); // Go to "Local Lyrics" tab
 ```dart
 // From list item
 onTap: () {
-  context.pushNamed(
+  context.goNamed(
     MainAppRoutes.lyricDetail.name,
     pathParameters: {'id': lyric.id},
   );

@@ -886,7 +886,6 @@ startActivity(Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"))
 
 - [Dual-App Pattern](../../architecture/dual-app-pattern/SKILL.md) — Platform integration in dual apps
 - [State Management](../../state-management/SKILL.md) — Using channel data in BLoCs
-- [Development - Common Commands](../../development/common-commands/SKILL.md) — Running on Android
 
 ## Summary
 
