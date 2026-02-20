@@ -34,7 +34,7 @@ class MainActivity : FlutterActivity() {
     private lateinit var overlayStateEventChannel: EventChannel
     private lateinit var mediaStateEventStreamHandler: MediaStateEventStreamHandler
 
-
+    private lateinit var overlayEngine: FlutterEngine
     private var overlayView: OverlayView? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -47,7 +47,7 @@ class MainActivity : FlutterActivity() {
             FlutterInjector.instance().flutterLoader().findAppBundlePath(),
             "overlayView"
         )
-        val overlayEngine = engineGroup.createAndRunEngine(this, overlayEntryPoint)
+        overlayEngine = engineGroup.createAndRunEngine(this, overlayEntryPoint)
         FlutterEngineCache.getInstance().put("OVERLAY_ENGINE", overlayEngine)
 
         flutterEngine.plugins.add(PermissionMethodCallHandler())
@@ -70,8 +70,8 @@ class MainActivity : FlutterActivity() {
 
                         "show" -> {
                             if (overlayView == null) {
-                                Log.i("Main", "Updating overlay view")
-                                overlayView = OverlayView(this)
+                                Log.i("Main", "Creating overlay view")
+                                overlayView = OverlayView(this, overlayEngine)
                             }
                             Log.i("Main", "Adding overlay view")
                             overlayView!!.addView()

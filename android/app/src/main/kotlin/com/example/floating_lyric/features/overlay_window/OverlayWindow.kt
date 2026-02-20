@@ -22,9 +22,9 @@ import io.flutter.plugin.common.MethodChannel
 import java.util.concurrent.Executor
 
 
-class OverlayView(context: Context) : View.OnTouchListener {
+class OverlayView(context: Context, engine: FlutterEngine) : View.OnTouchListener {
     private var flutterView: FlutterView?
-    private val flutterEngine: FlutterEngine?
+    private val flutterEngine: FlutterEngine = engine
     private var windowManager: WindowManager =
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var uiHandler: Handler
@@ -78,9 +78,8 @@ class OverlayView(context: Context) : View.OnTouchListener {
                     WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
             }
         }
-        flutterEngine = FlutterEngineCache.getInstance().get(OVERLAY_ENGINE)
         flutterView = null
-        setupLayoutMethodChannel(flutterEngine!!)
+        setupLayoutMethodChannel(flutterEngine)
         this.uiHandler = Handler(Looper.getMainLooper())
         this.executor = ContextCompat.getMainExecutor(context)
     }
