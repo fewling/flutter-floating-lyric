@@ -33,12 +33,6 @@ sealed class PreferenceEvent with _$PreferenceEvent {
   const factory PreferenceEvent.visibleLinesCountUpdated(int count) =
       _VisibleLinesCountUpdated;
 
-  const factory PreferenceEvent.enableAnimationToggled(bool value) =
-      _EnableAnimationToggled;
-
-  const factory PreferenceEvent.animationModeUpdated(AnimationMode mode) =
-      _AnimationModeUpdated;
-
   const factory PreferenceEvent.toleranceUpdated(int tolerance) =
       _ToleranceUpdated;
 

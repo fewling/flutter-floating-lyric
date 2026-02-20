@@ -15,11 +15,8 @@ sealed class PreferenceState with _$PreferenceState {
     required bool autoFetchOnline,
     required int visibleLinesCount,
     required bool useAppColor,
-    required bool enableAnimation,
     required bool transparentNotFoundTxt,
     required int tolerance,
-    @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)
-    required AnimationMode animationMode,
 
     @JsonKey(fromJson: appLocaleFromJson, toJson: appLocaleToJson)
     @Default(AppLocale.english)

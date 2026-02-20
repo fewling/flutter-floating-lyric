@@ -1,8 +1,6 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../enums/animation_mode.dart';
 import '../../../enums/app_locale.dart';
 
 class PreferenceRepo {
@@ -23,9 +21,7 @@ class PreferenceRepo {
   static const autoFetchOnlineKey = 'auto fetch online';
   static const visibleLinesCountKey = 'visible lines count';
   static const useAppColorKey = 'use app color';
-  static const enableAnimationKey = 'enable animation';
   static const toleranceKey = 'tolerance';
-  static const animationModeKey = 'animation mode';
   static const transparentNotFoundTxtKey = 'transparent not found';
   static const localeKey = 'locale';
 
@@ -60,17 +56,7 @@ class PreferenceRepo {
 
   bool get useAppColor => _sp.getBool(useAppColorKey) ?? true;
 
-  bool get enableAnimation => _sp.getBool(enableAnimationKey) ?? true;
-
   int get tolerance => _sp.getInt(toleranceKey) ?? 0;
-
-  AnimationMode get animationMode {
-    final mode = _sp.getString(animationModeKey);
-    return mode == null
-        ? AnimationMode.fadeIn
-        : AnimationMode.values.firstWhereOrNull((e) => e.name == mode) ??
-              AnimationMode.fadeIn;
-  }
 
   bool get transparentNotFoundTxt =>
       _sp.getBool(transparentNotFoundTxtKey) ?? false;
@@ -118,13 +104,7 @@ class PreferenceRepo {
 
   Future<bool> resetFontFamily() => _sp.setString(fontFamilyKey, defaultFont);
 
-  Future<bool> toggleEnableAnimation(bool value) =>
-      _sp.setBool(enableAnimationKey, value);
-
   Future<bool> updateTolerance(int value) => _sp.setInt(toleranceKey, value);
-
-  Future<bool> updateAnimationMode(AnimationMode mode) =>
-      _sp.setString(animationModeKey, mode.name);
 
   Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
       _sp.setBool(transparentNotFoundTxtKey, transparentNotFoundTxt);

@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../enums/animation_mode.dart';
 import '../../enums/app_locale.dart';
 import '../../repos/persistence/local/preference_repo.dart';
 
@@ -26,9 +25,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           autoFetchOnline: preferenceRepo.autoFetchOnline,
           visibleLinesCount: preferenceRepo.visibleLinesCount,
           useAppColor: preferenceRepo.useAppColor,
-          enableAnimation: preferenceRepo.enableAnimation,
           tolerance: preferenceRepo.tolerance,
-          animationMode: preferenceRepo.animationMode,
           transparentNotFoundTxt: preferenceRepo.transparentNotFoundTxt,
           locale: preferenceRepo.locale,
         ),
@@ -49,8 +46,6 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           emit,
         ),
         _VisibleLinesCountUpdated() => _onVisibleLinesCountUpdated(event, emit),
-        _EnableAnimationToggled() => _onEnableAnimationToggled(event, emit),
-        _AnimationModeUpdated() => _onAnimationModeUpdated(event, emit),
         _ToleranceUpdated() => _onToleranceUpdated(event, emit),
         _WindowIgnoreTouchToggled() => _onWindowIgnoreTouchToggled(event, emit),
         _WindowTouchThroughToggled() => _onWindowTouchThroughToggled(
@@ -170,26 +165,6 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     );
     if (isSuccess) {
       emit(state.copyWith(visibleLinesCount: event.count));
-    }
-  }
-
-  Future<void> _onEnableAnimationToggled(
-    _EnableAnimationToggled event,
-    Emitter<PreferenceState> emit,
-  ) async {
-    final isSuccess = await _preferenceRepo.toggleEnableAnimation(event.value);
-    if (isSuccess) {
-      emit(state.copyWith(enableAnimation: event.value));
-    }
-  }
-
-  Future<void> _onAnimationModeUpdated(
-    _AnimationModeUpdated event,
-    Emitter<PreferenceState> emit,
-  ) async {
-    final isSuccess = await _preferenceRepo.updateAnimationMode(event.mode);
-    if (isSuccess) {
-      emit(state.copyWith(animationMode: event.mode));
     }
   }
 

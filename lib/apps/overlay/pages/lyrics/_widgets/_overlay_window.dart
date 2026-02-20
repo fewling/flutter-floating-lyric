@@ -84,7 +84,6 @@ class _OverlayContent extends StatelessWidget {
 
     final status = lyricFinderState.status;
     final shouldAnimate = config.enableAnimation;
-    final animationMode = config.animationMode;
 
     switch (status) {
       case LyricFinderStatus.empty:
@@ -134,7 +133,6 @@ class _OverlayContent extends StatelessWidget {
           textColor: textColor,
           fontSize: config.fontSize,
           shouldAnimate: shouldAnimate,
-          animationMode: animationMode,
         );
     }
   }
@@ -148,7 +146,6 @@ class _ScrollingLyricView extends StatefulWidget {
     required this.textColor,
     this.fontSize,
     this.shouldAnimate = false,
-    this.animationMode = AnimationMode.fadeIn,
   });
 
   final List<LrcLine> allLines;
@@ -157,7 +154,6 @@ class _ScrollingLyricView extends StatefulWidget {
   final Color textColor;
   final double? fontSize;
   final bool shouldAnimate;
-  final AnimationMode animationMode;
 
   @override
   State<_ScrollingLyricView> createState() => _ScrollingLyricViewState();
@@ -219,7 +215,6 @@ class _ScrollingLyricViewState extends State<_ScrollingLyricView> {
               fontSize: widget.fontSize,
               shouldAnimate:
                   widget.shouldAnimate && index == widget.currentLineIndex,
-              animationMode: widget.animationMode,
             );
           },
         ),
@@ -235,7 +230,6 @@ class _LyricLineWidget extends StatelessWidget {
     required this.textColor,
     this.fontSize,
     this.shouldAnimate = false,
-    this.animationMode = AnimationMode.fadeIn,
   });
 
   final LrcLine line;
@@ -243,7 +237,6 @@ class _LyricLineWidget extends StatelessWidget {
   final Color textColor;
   final double? fontSize;
   final bool shouldAnimate;
-  final AnimationMode animationMode;
 
   @override
   Widget build(BuildContext context) {
@@ -256,106 +249,6 @@ class _LyricLineWidget extends StatelessWidget {
         fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
       ),
     );
-  }
-}
-
-class _AnimatedLyricLine extends StatefulWidget {
-  const _AnimatedLyricLine({
-    required this.textColor,
-    required this.id,
-    required this.isBold,
-    required this.animationMode,
-    super.key,
-    this.content,
-    this.fontSize,
-  });
-
-  final String id;
-  final String? content;
-  final Color textColor;
-  final double? fontSize;
-  final bool isBold;
-  final AnimationMode animationMode;
-
-  @override
-  State<_AnimatedLyricLine> createState() => _AnimatedLyricLineState();
-}
-
-class _AnimatedLyricLineState extends State<_AnimatedLyricLine>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final txtStyle = TextStyle(
-      color: widget.textColor,
-      fontSize: widget.fontSize,
-      fontWeight: widget.isBold ? FontWeight.bold : FontWeight.normal,
-    );
-
-    final plainLine = Text(
-      widget.content ?? '',
-      key: ValueKey(widget.id),
-      style: txtStyle,
-    );
-
-    switch (widget.animationMode) {
-      case AnimationMode.fadeIn:
-        return AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) => SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(0, -0.5),
-              end: Offset.zero,
-            ).animate(_controller),
-            child: Opacity(opacity: _controller.value, child: plainLine),
-          ),
-        );
-      case AnimationMode.typer:
-        return widget.isBold
-            ? AnimatedTextKit(
-                isRepeatingAnimation: false,
-                key: ValueKey(widget.id),
-                animatedTexts: [
-                  TyperAnimatedText(
-                    widget.content ?? '',
-                    textStyle: txtStyle,
-                    speed: const Duration(milliseconds: 80),
-                  ),
-                ],
-              )
-            : plainLine;
-
-      case AnimationMode.typeWriter:
-        return widget.isBold
-            ? AnimatedTextKit(
-                isRepeatingAnimation: false,
-                key: ValueKey(widget.id),
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    widget.content ?? '',
-                    textStyle: txtStyle,
-                    speed: const Duration(milliseconds: 80),
-                  ),
-                ],
-              )
-            : plainLine;
-    }
   }
 }
 

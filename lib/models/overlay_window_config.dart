@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../enums/animation_mode.dart';
 import '../enums/app_locale.dart';
 
 part 'overlay_window_config.freezed.dart';
@@ -33,11 +32,6 @@ sealed class OverlayWindowConfig with _$OverlayWindowConfig {
     double? letterSpacing,
     @Default(false) bool enableAnimation,
     @Default(false) bool transparentNotFoundTxt,
-
-    //
-    @JsonKey(fromJson: animationModeFromJson, toJson: animationModeToJson)
-    @Default(AnimationMode.fadeIn)
-    AnimationMode animationMode,
 
     // Settings
     bool? ignoreTouch,

@@ -72,7 +72,6 @@ class OverlayWindowSettingsBloc
     emit(
       state.copyWith(
         config: state.config.copyWith(
-          animationMode: pref.animationMode,
           appColorScheme: pref.appColorScheme,
           fontFamily: pref.fontFamily,
           fontSize: pref.fontSize.toDouble(),
@@ -84,7 +83,6 @@ class OverlayWindowSettingsBloc
           useAppColor: pref.useAppColor,
           backgroundColor: pref.backgroundColor,
           color: pref.color,
-          enableAnimation: pref.enableAnimation,
           opacity: pref.opacity,
           isLight: pref.isLight,
           tolerance: pref.tolerance.toDouble(),

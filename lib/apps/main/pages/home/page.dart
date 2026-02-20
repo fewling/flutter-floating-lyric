@@ -12,7 +12,6 @@ import '../../../../blocs/msg_to_overlay/msg_to_overlay_bloc.dart';
 import '../../../../blocs/overlay_window_settings/overlay_window_settings_bloc.dart';
 import '../../../../blocs/preference/preference_bloc.dart';
 import '../../../../blocs/start_music_app/start_music_app_bloc.dart';
-import '../../../../enums/animation_mode.dart';
 import '../../../../models/media_state.dart';
 import '../../../../repos/lrclib/lrclib_repository.dart';
 import '../../../../routes/app_router.dart';

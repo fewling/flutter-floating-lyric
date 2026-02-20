@@ -319,67 +319,6 @@ class _WindowConfigTab extends StatelessWidget {
                       },
                     ),
 
-                    Builder(
-                      builder: (context) {
-                        final enableAnimation = context
-                            .select<PreferenceBloc, bool>(
-                              (bloc) => bloc.state.enableAnimation,
-                            );
-
-                        final title = Text(
-                          enableAnimation
-                              ? l10n.overlay_window_enable_animation
-                              : l10n.overlay_window_disable_animation,
-                        );
-                        const secondary = Icon(Icons.animation_outlined);
-
-                        return ToggleableSwitchListTile(
-                          enabled: isWindowVisible,
-                          value: enableAnimation,
-                          title: title,
-                          secondary: secondary,
-                          onChanged: (value) =>
-                              context.read<PreferenceBloc>().add(
-                                PreferenceEvent.enableAnimationToggled(value),
-                              ),
-                        );
-                      },
-                    ),
-
-                    Builder(
-                      builder: (context) {
-                        final animationMode = context
-                            .select<PreferenceBloc, AnimationMode>(
-                              (bloc) => bloc.state.animationMode,
-                            );
-
-                        final enableAnimation = context
-                            .select<PreferenceBloc, bool>(
-                              (bloc) => bloc.state.enableAnimation,
-                            );
-
-                        return SegmentedButton<AnimationMode>(
-                          selected: {animationMode},
-                          segments: [
-                            for (final mode in AnimationMode.values)
-                              ButtonSegment(
-                                value: mode,
-                                label: Text(mode.label(l10n)),
-                              ),
-                          ],
-                          showSelectedIcon: false,
-                          onSelectionChanged:
-                              !isWindowVisible || !enableAnimation
-                              ? null
-                              : (selections) =>
-                                    context.read<PreferenceBloc>().add(
-                                      PreferenceEvent.animationModeUpdated(
-                                        selections.first,
-                                      ),
-                                    ),
-                        );
-                      },
-                    ),
                     ListTile(
                       enabled: isWindowVisible,
                       leading: const Icon(Icons.hourglass_top_outlined),
