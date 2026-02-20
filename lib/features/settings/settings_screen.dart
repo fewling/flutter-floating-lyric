@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/extensions/custom_extensions.dart';
 import '../../widgets/color_picker_sheet.dart';
 import '../../widgets/language_selector.dart';
-import '../app_info/bloc/app_info_bloc.dart';
 import '../preference/bloc/preference_bloc.dart';
 import 'bloc/settings_bloc.dart';
 
@@ -80,22 +79,6 @@ class SettingsScreen extends StatelessWidget {
                 const FeedbackEmailClicked(),
               ),
             ),
-          ),
-          Builder(
-            builder: (context) {
-              final version = context.select<AppInfoBloc, String>(
-                (bloc) => bloc.state.version ?? '',
-              );
-
-              final buildNumber = context.select<AppInfoBloc, String>(
-                (bloc) => bloc.state.buildNumber ?? '',
-              );
-
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Chip(label: Text('$version ($buildNumber)')),
-              );
-            },
           ),
 
           const Divider(),

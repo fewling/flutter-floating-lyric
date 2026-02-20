@@ -13,7 +13,6 @@ import '../../service/message_channels/to_overlay_message_service.dart';
 import '../../service/permissions/permission_service.dart';
 import '../../service/platform_methods/window_channel_service.dart';
 import '../../service/preference/preference_service.dart';
-import '../app_info/bloc/app_info_bloc.dart';
 import '../lyric_state_listener/bloc/lyric_state_listener_bloc.dart';
 import '../message_channels/message_from_overlay_receiver/bloc/message_from_overlay_receiver_bloc.dart';
 import '../overlay_window_settings/bloc/overlay_window_settings_bloc.dart';
@@ -61,9 +60,6 @@ class GlobalDependencyInjector extends StatelessWidget {
                 spRepo: context.read<PreferenceRepo>(),
               ),
             )..add(const PreferenceEventLoad()),
-          ),
-          BlocProvider(
-            create: (context) => AppInfoBloc()..add(const AppInfoLoaded()),
           ),
           BlocProvider(
             create: (context) =>
