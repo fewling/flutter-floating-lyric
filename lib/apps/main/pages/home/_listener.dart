@@ -11,18 +11,6 @@ class _Listener extends StatelessWidget {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
-          listenWhen: (previous, current) =>
-              previous.isWindowVisible != current.isWindowVisible &&
-              current.isWindowVisible,
-          listener: (context, state) =>
-              context.read<OverlayWindowSettingsBloc>().add(
-                OverlayWindowSettingsEvent.preferenceUpdated(
-                  context.read<PreferenceBloc>().state,
-                ),
-              ),
-        ),
-
         BlocListener<MediaListenerBloc, MediaListenerState>(
           listenWhen: (previous, current) {
             final mediaState = current.activeMediaState;

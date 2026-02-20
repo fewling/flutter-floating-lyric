@@ -16,6 +16,18 @@ class MainAppListener extends StatelessWidget {
         ),
 
         BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
+          listenWhen: (previous, current) =>
+              previous.isWindowVisible != current.isWindowVisible &&
+              current.isWindowVisible,
+          listener: (context, state) =>
+              context.read<OverlayWindowSettingsBloc>().add(
+                OverlayWindowSettingsEvent.preferenceUpdated(
+                  context.read<PreferenceBloc>().state,
+                ),
+              ),
+        ),
+
+        BlocListener<OverlayWindowSettingsBloc, OverlayWindowSettingsState>(
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
             MsgToOverlayEvent.onWindowConfigUpdated(state.config),
           ),
@@ -91,10 +103,14 @@ class MainAppListener extends StatelessWidget {
                 break;
 
               case LyricFinderStatus.empty:
-                break;
+                context.read<MsgToOverlayBloc>().add(
+                  const MsgToOverlayEvent.emptyLrc(),
+                );
 
               case LyricFinderStatus.searching:
-                break;
+                context.read<MsgToOverlayBloc>().add(
+                  const MsgToOverlayEvent.searchingLrc(),
+                );
 
               case LyricFinderStatus.found:
                 context.read<MsgToOverlayBloc>().add(

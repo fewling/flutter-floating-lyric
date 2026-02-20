@@ -14,43 +14,50 @@ class OverlayAppDependency extends StatefulWidget {
 class _OverlayAppDependencyState extends State<OverlayAppDependency> {
   late final AppRouter _appRouter;
 
+  late final ToMainMsgService _toMainMsgService;
+  late final LayoutChannelService _layoutChannelService;
+
+  late final OverlayAppBloc _overlayAppBloc;
+  late final MsgFromMainBloc _msgFromMainBloc;
+  late final OverlayWindowBloc _overlayWindowBloc;
+  late final MsgToMainBloc _msgToMainBloc;
+
   @override
   void initState() {
     super.initState();
+
+    _toMainMsgService = ToMainMsgService();
+    _layoutChannelService = LayoutChannelService();
+
+    _overlayAppBloc = OverlayAppBloc();
+    _msgFromMainBloc = MsgFromMainBloc();
+    _overlayWindowBloc = OverlayWindowBloc(
+      toMainMsgService: _toMainMsgService,
+      layoutChannelService: _layoutChannelService,
+    );
+    _msgToMainBloc = MsgToMainBloc(toMainMsgService: _toMainMsgService);
+
     _appRouter = AppRouter.overlay();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _overlayAppBloc.add(const OverlayAppEvent.started());
+      _msgFromMainBloc.add(const MsgFromMainEvent.started());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => ToMainMsgService()),
-        RepositoryProvider(create: (context) => LayoutChannelService()),
+        RepositoryProvider.value(value: _toMainMsgService),
+        RepositoryProvider.value(value: _layoutChannelService),
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) =>
-                OverlayAppBloc()..add(const OverlayAppEvent.started()),
-          ),
-
-          BlocProvider(
-            lazy: false,
-            create: (context) =>
-                MsgFromMainBloc()..add(const MsgFromMainEvent.started()),
-          ),
-
-          BlocProvider(
-            create: (context) => OverlayWindowBloc(
-              toMainMsgService: context.read<ToMainMsgService>(),
-              layoutChannelService: context.read<LayoutChannelService>(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => MsgToMainBloc(
-              toMainMsgService: context.read<ToMainMsgService>(),
-            ),
-          ),
+          BlocProvider.value(value: _overlayAppBloc),
+          BlocProvider.value(value: _msgFromMainBloc),
+          BlocProvider.value(value: _overlayWindowBloc),
+          BlocProvider.value(value: _msgToMainBloc),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, _appRouter),

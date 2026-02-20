@@ -84,6 +84,9 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       _mediaListenerBloc.add(const MediaListenerEvent.started());
       _msgFromOverlayBloc.add(const MsgFromOverlayEvent.started());
       _appInfoBloc.add(const AppInfoEvent.started());
+      _overlayWindowSettingsBloc.add(
+        OverlayWindowSettingsEvent.preferenceUpdated(_preferenceBloc.state),
+      );
     });
   }
 

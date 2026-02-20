@@ -11,7 +11,7 @@ sealed class OverlayWindowState with _$OverlayWindowState {
 
     MediaState? mediaState,
 
-    @Default(OverlayWindowConfig()) OverlayWindowConfig config,
+    OverlayWindowConfig? config,
 
     /// All lyric lines from the current song
     @Default(<LrcLine>[]) List<LrcLine> allLines,

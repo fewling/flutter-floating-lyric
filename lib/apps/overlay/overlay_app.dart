@@ -6,7 +6,6 @@ import '../../blocs/msg_to_main/msg_to_main_bloc.dart';
 import '../../blocs/overlay_app/overlay_app_bloc.dart';
 import '../../blocs/overlay_window/overlay_window_bloc.dart';
 import '../../enums/app_locale.dart';
-import '../../enums/search_lyric_status.dart';
 import '../../l10n/app_localizations.dart';
 import '../../routes/app_router.dart';
 import '../../services/msg_channels/to_main_msg_service.dart';

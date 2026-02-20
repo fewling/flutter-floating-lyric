@@ -108,7 +108,7 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     }
 
     final position = mediaState.position;
-    final tolerance = config.tolerance ?? 0;
+    final tolerance = config?.tolerance ?? 0;
 
     // Find the current line index based on position
     var currentIndex = 0;

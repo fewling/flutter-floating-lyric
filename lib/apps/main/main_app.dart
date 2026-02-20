@@ -16,7 +16,6 @@ import '../../blocs/save_lrc/save_lrc_bloc.dart';
 import '../../enums/app_locale.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/lyric_model.dart';
-import '../../models/media_state.dart';
 import '../../models/to_main_msg.dart';
 import '../../repos/lrclib/lrclib_repository.dart';
 import '../../repos/persistence/local/local_db_repo.dart';
