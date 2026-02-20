@@ -1,4 +1,4 @@
-import '../../utils/logger.dart';
+import '../../logger.dart';
 
 part 'custom_exception.dart';
 part 'exception_code.dart';

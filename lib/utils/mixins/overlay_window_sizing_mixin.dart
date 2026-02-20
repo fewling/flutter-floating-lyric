@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/overlay_app/overlay_app_bloc.dart';
-import '../blocs/overlay_window/overlay_window_bloc.dart';
-import '../utils/logger.dart';
+import '../../blocs/overlay_app/overlay_app_bloc.dart';
+import '../../blocs/overlay_window/overlay_window_bloc.dart';
+import '../logger.dart';
 
 mixin OverlayWindowSizingMixin {
   void updateSize(BuildContext context) {

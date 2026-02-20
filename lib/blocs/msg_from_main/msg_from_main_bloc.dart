@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../enums/main_overlay_port.dart';
-import '../../mixins/isolates_mixin.dart';
 import '../../models/media_state.dart';
 import '../../models/overlay_window_config.dart';
 import '../../models/to_overlay_msg_model.dart';
+import '../../utils/mixins/isolates_mixin.dart';
 
 part 'msg_from_main_bloc.freezed.dart';
 part 'msg_from_main_event.dart';

@@ -1,12 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../mixins/custom_exception/custom_exception_handler.dart';
 import '../../models/lrc.dart';
 import '../../models/media_state.dart';
 import '../../repos/lrclib/lrclib_repository.dart';
 import '../../services/db/local/local_db_service.dart';
 import '../../utils/lrc_builder.dart';
+import '../../utils/mixins/custom_exception/custom_exception_handler.dart';
 
 part 'lyric_finder_bloc.freezed.dart';
 part 'lyric_finder_bloc.g.dart';

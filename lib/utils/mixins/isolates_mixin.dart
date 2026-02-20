@@ -1,7 +1,7 @@
 import 'dart:isolate';
 import 'dart:ui';
 
-import '../utils/logger.dart';
+import '../logger.dart';
 
 mixin IsolatesMixin {
   Future<bool> registerPort(SendPort sendPort, String portName) async {

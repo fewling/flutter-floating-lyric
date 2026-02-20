@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:http/http.dart' as http;
 
-import '../../mixins/custom_exception/custom_exception_handler.dart';
 import '../../utils/logger.dart';
+import '../../utils/mixins/custom_exception/custom_exception_handler.dart';
 
 part 'lrclib_repository.freezed.dart';
 part 'lrclib_repository.g.dart';
