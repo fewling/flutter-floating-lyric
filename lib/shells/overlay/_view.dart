@@ -7,6 +7,6 @@ class _View extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) => child);
+    return LayoutBuilder(builder: (context, constraints) => child);
   }
 }
