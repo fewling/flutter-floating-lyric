@@ -232,10 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'When no lyrics is found, toggle the text transparency.';
 
   @override
-  String get overlay_window_show_line_2 => 'Show Line 2';
-
-  @override
-  String get overlay_window_hide_line_2 => 'Hide Line 2';
+  String get overlay_window_visible_lines_count => 'No. of Visible Lines';
 
   @override
   String get overlay_window_enable_animation => 'Enable Animation';

@@ -24,7 +24,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           fontFamily: preferenceRepo.fontFamily,
           fontSize: preferenceRepo.fontSize,
           autoFetchOnline: preferenceRepo.autoFetchOnline,
-          showLine2: preferenceRepo.showLine2,
+          visibleLinesCount: preferenceRepo.visibleLinesCount,
           useAppColor: preferenceRepo.useAppColor,
           enableAnimation: preferenceRepo.enableAnimation,
           tolerance: preferenceRepo.tolerance,
@@ -48,7 +48,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           event,
           emit,
         ),
-        _ShowLine2Toggled() => _onShowLine2Toggled(event, emit),
+        _VisibleLinesCountUpdated() => _onVisibleLinesCountUpdated(event, emit),
         _EnableAnimationToggled() => _onEnableAnimationToggled(event, emit),
         _AnimationModeUpdated() => _onAnimationModeUpdated(event, emit),
         _ToleranceUpdated() => _onToleranceUpdated(event, emit),
@@ -161,13 +161,15 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     }
   }
 
-  Future<void> _onShowLine2Toggled(
-    _ShowLine2Toggled event,
+  Future<void> _onVisibleLinesCountUpdated(
+    _VisibleLinesCountUpdated event,
     Emitter<PreferenceState> emit,
   ) async {
-    final isSuccess = await _preferenceRepo.toggleShowLine2(event.value);
+    final isSuccess = await _preferenceRepo.updateVisibleLinesCount(
+      event.count,
+    );
     if (isSuccess) {
-      emit(state.copyWith(showLine2: event.value));
+      emit(state.copyWith(visibleLinesCount: event.count));
     }
   }
 

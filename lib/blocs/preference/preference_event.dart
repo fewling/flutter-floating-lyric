@@ -30,8 +30,8 @@ sealed class PreferenceEvent with _$PreferenceEvent {
   const factory PreferenceEvent.transparentNotFoundTxtToggled(bool value) =
       _TransparentNotFoundTxtToggled;
 
-  const factory PreferenceEvent.showLine2Toggled(bool value) =
-      _ShowLine2Toggled;
+  const factory PreferenceEvent.visibleLinesCountUpdated(int count) =
+      _VisibleLinesCountUpdated;
 
   const factory PreferenceEvent.enableAnimationToggled(bool value) =
       _EnableAnimationToggled;

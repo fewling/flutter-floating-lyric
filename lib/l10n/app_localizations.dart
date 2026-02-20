@@ -506,17 +506,11 @@ abstract class AppLocalizations {
   /// **'When no lyrics is found, toggle the text transparency.'**
   String get overlay_window_no_lyrics_found_subtitle;
 
-  /// No description provided for @overlay_window_show_line_2.
+  /// No description provided for @overlay_window_visible_lines_count.
   ///
   /// In en, this message translates to:
-  /// **'Show Line 2'**
-  String get overlay_window_show_line_2;
-
-  /// No description provided for @overlay_window_hide_line_2.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide Line 2'**
-  String get overlay_window_hide_line_2;
+  /// **'No. of Visible Lines'**
+  String get overlay_window_visible_lines_count;
 
   /// No description provided for @overlay_window_enable_animation.
   ///

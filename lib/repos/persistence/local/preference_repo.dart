@@ -21,7 +21,7 @@ class PreferenceRepo {
   static const fontFamilyKey = 'font family';
   static const fontSizeKey = 'font size';
   static const autoFetchOnlineKey = 'auto fetch online';
-  static const showLine2Key = 'show line 2';
+  static const visibleLinesCountKey = 'visible lines count';
   static const useAppColorKey = 'use app color';
   static const enableAnimationKey = 'enable animation';
   static const toleranceKey = 'tolerance';
@@ -55,7 +55,8 @@ class PreferenceRepo {
 
   bool get autoFetchOnline => _sp.getBool(autoFetchOnlineKey) ?? true;
 
-  bool get showLine2 => _sp.getBool(showLine2Key) ?? true;
+  /// Number of lyric lines visible in the overlay window (1-10)
+  int get visibleLinesCount => _sp.getInt(visibleLinesCountKey) ?? 3;
 
   bool get useAppColor => _sp.getBool(useAppColorKey) ?? true;
 
@@ -109,7 +110,8 @@ class PreferenceRepo {
   Future<bool> toggleAutoFetchOnline(bool value) =>
       _sp.setBool(autoFetchOnlineKey, value);
 
-  Future<bool> toggleShowLine2(bool value) => _sp.setBool(showLine2Key, value);
+  Future<bool> updateVisibleLinesCount(int count) =>
+      _sp.setInt(visibleLinesCountKey, count.clamp(1, 10));
 
   Future<bool> toggleUseAppColor(bool value) =>
       _sp.setBool(useAppColorKey, value);
