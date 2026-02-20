@@ -12,6 +12,8 @@ class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
       (OverlayWindowBloc bloc) => bloc.state.config,
     );
 
+    updateSize(context);
+
     if (configs == null) return const _OverlayLoadingIndicator();
 
     final colorScheme = Theme.of(context).colorScheme;
@@ -26,8 +28,6 @@ class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
     final isLyricOnly = context.select(
       (OverlayWindowBloc b) => b.state.isLyricOnly,
     );
-
-    updateSize(context);
 
     return IgnorePointer(
       ignoring: configs.ignoreTouch ?? false,
