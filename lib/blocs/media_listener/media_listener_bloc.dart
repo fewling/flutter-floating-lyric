@@ -23,7 +23,21 @@ class MediaListenerBloc extends Bloc<MediaListenerEvent, MediaListenerState> {
   ) async {
     await emit.onEach(
       mediaStateStream,
-      onData: (data) => emit(state.copyWith(mediaStates: data)),
+      onData: (data) {
+        emit(
+          state.copyWith(
+            mediaStates: data
+                .map(
+                  (e) => e.copyWith(
+                    artist: e.mediaPlayerName.toLowerCase() == 'spotify'
+                        ? e.artist.replaceFirst(' • Recommended for you', '')
+                        : e.artist,
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      },
     );
   }
 }
