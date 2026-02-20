@@ -7,6 +7,7 @@ import '../../../l10n/app_localizations.dart';
 import '../../../models/lyric_model.dart';
 import '../../../service/message_channels/to_overlay_message_service.dart';
 import '../../../service/platform_methods/permission_channel_service.dart';
+import '../../blocs/app_info/app_info_bloc.dart';
 import '../../blocs/media_listener/media_listener_bloc.dart';
 import '../../blocs/msg_from_overlay/msg_from_overlay_bloc.dart';
 import '../../blocs/msg_to_overlay/msg_to_overlay_bloc.dart';

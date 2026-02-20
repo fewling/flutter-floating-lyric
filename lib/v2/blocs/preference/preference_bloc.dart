@@ -58,6 +58,8 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           emit,
         ),
         _AutoFetchOnlineToggled() => _onAutoFetchOnlineToggled(event, emit),
+        _BrightnessToggled() => _onBrightnessToggled(event, emit),
+        _AppColorSchemeUpdated() => _onAppColorSchemeUpdated(event, emit),
       },
     );
   }
@@ -234,6 +236,26 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     );
     if (isSuccess) {
       emit(state.copyWith(autoFetchOnline: !state.autoFetchOnline));
+    }
+  }
+
+  Future<void> _onBrightnessToggled(
+    _BrightnessToggled event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.toggleBrightness(!state.isLight);
+    if (isSuccess) {
+      emit(state.copyWith(isLight: !state.isLight));
+    }
+  }
+
+  Future<void> _onAppColorSchemeUpdated(
+    _AppColorSchemeUpdated event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.updateAppColorScheme(event.color);
+    if (isSuccess) {
+      emit(state.copyWith(appColorScheme: event.color));
     }
   }
 }

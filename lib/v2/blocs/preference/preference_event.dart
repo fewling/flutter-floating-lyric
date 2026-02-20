@@ -50,4 +50,9 @@ sealed class PreferenceEvent with _$PreferenceEvent {
 
   const factory PreferenceEvent.autoFetchOnlineToggled() =
       _AutoFetchOnlineToggled;
+
+  const factory PreferenceEvent.brightnessToggled() = _BrightnessToggled;
+
+  const factory PreferenceEvent.appColorSchemeUpdated(int color) =
+      _AppColorSchemeUpdated;
 }

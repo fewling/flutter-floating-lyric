@@ -37,6 +37,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
   late final OverlayWindowSettingsBloc _overlayWindowSettingsBloc;
   late final MsgToOverlayBloc _msgToOverlayBloc;
   late final MsgFromOverlayBloc _msgFromOverlayBloc;
+  late final AppInfoBloc _appInfoBloc;
 
   @override
   void initState() {
@@ -67,6 +68,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       toOverlayMsgService: _toOverlayMsgService,
     );
     _msgFromOverlayBloc = MsgFromOverlayBloc();
+    _appInfoBloc = AppInfoBloc();
 
     appRouter = AppRouter.standard(permissionBloc: _permissionBloc);
 
@@ -74,6 +76,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
       _permissionBloc.add(const PermissionEvent.init());
       _mediaListenerBloc.add(const MediaListenerEvent.started());
       _msgFromOverlayBloc.add(const MsgFromOverlayEvent.started());
+      _appInfoBloc.add(const AppInfoEvent.started());
     });
   }
 
@@ -99,6 +102,7 @@ class _MainAppDependencyState extends State<MainAppDependency> {
           BlocProvider.value(value: _overlayWindowSettingsBloc),
           BlocProvider.value(value: _msgToOverlayBloc),
           BlocProvider.value(value: _msgFromOverlayBloc),
+          BlocProvider.value(value: _appInfoBloc),
         ],
         child: Builder(
           builder: (context) => widget.builder(context, appRouter),
