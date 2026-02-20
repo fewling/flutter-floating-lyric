@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../service/event_channels/media_states/media_state.dart';
-import '../v2/models/overlay_window_config.dart';
+import 'media_state.dart';
+import 'overlay_window_config.dart';
 
 part 'to_overlay_msg_model.freezed.dart';
 part 'to_overlay_msg_model.g.dart';

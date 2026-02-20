@@ -6,12 +6,12 @@ import 'package:hive_ce_flutter/hive_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'apps/main/main_app.dart';
+import 'apps/overlay/overlay_app.dart';
 import 'firebase_options.dart';
 import 'hive/hive_registrar.g.dart';
 import 'models/lyric_model.dart';
 import 'utils/logger.dart';
-import 'v2/apps/main/main_app.dart';
-import 'v2/apps/overlay/overlay_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
