@@ -70,9 +70,6 @@ class MainAppListener extends StatelessWidget {
                     false,
                   ),
                 );
-
-              case MeasureScreenWidth():
-                break;
             }
 
             context.read<MsgFromOverlayBloc>().add(

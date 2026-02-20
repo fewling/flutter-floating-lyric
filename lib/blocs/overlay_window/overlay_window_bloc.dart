@@ -27,7 +27,6 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
         _WindowTapped() => _onWindowTapped(event, emit),
         _WindowResized() => _onWindowResized(event, emit),
         _LockToggled() => _onLockToggled(event, emit),
-        _ScreenWidthRequested() => _onScreenWidthRequested(event, emit),
         _LyricStateUpdated() => _onLyricStateUpdated(event, emit),
         _MediaStateUpdated() => _onMediaStateUpdated(event, emit),
         _WindowConfigsUpdated() => _onWindowConfigsUpdated(event, emit),
@@ -63,11 +62,6 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
       emit(state.copyWith(isLocked: event.isLocked));
     }
   }
-
-  void _onScreenWidthRequested(
-    _ScreenWidthRequested event,
-    Emitter<OverlayWindowState> emit,
-  ) => _toMainMsgService.sendMsg(const ToMainMsg.measureScreenWidth());
 
   void _onLyricStateUpdated(
     _LyricStateUpdated event,
