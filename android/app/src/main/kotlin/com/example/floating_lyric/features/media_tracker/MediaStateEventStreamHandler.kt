@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
+import androidx.core.content.ContextCompat
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import io.flutter.plugin.common.EventChannel.EventSink
 
@@ -32,7 +33,12 @@ class MediaStateEventStreamHandler(private val context: Context) : StreamHandler
                 Context.RECEIVER_EXPORTED
             )
         } else {
-            context.registerReceiver(mediaStateReceiver, intentFilter)
+            ContextCompat.registerReceiver(
+                context,
+                mediaStateReceiver,
+                intentFilter,
+                ContextCompat.RECEIVER_NOT_EXPORTED
+            )
         }
     }
 
