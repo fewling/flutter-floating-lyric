@@ -7,6 +7,7 @@ sealed class LyricListState with _$LyricListState {
     @Default(LyricListDeleteStatus.initial) LyricListDeleteStatus deleteStatus,
     @Default(LyricListImportStatus.initial) LyricListImportStatus importStatus,
     @Default(<PlatformFile>[]) List<PlatformFile> failedImportFiles,
+    @Default('') String searchTerm,
   }) = _LyricListState;
 }
 

@@ -9,6 +9,8 @@ class LocalDbRepo {
 
   final Box<LrcModel> _lrcBox;
 
+  Stream<BoxEvent> watch() => _lrcBox.watch();
+
   bool fileNameExists(String fileName) =>
       _lrcBox.values.any((e) => e.fileName == fileName);
 

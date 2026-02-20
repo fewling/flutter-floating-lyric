@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
+import 'package:hive_ce_flutter/hive_flutter.dart';
 
 import '../../../models/lyric_model.dart';
 import '../../../repos/persistence/local/local_db_repo.dart';
@@ -9,6 +10,8 @@ class LocalDbService {
   LocalDbService({required LocalDbRepo localDBRepo}) : _localDB = localDBRepo;
 
   final LocalDbRepo _localDB;
+
+  Stream<BoxEvent> watch() => _localDB.watch();
 
   Future<String> saveLrc({
     required String title,
