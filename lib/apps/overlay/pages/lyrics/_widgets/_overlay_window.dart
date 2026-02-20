@@ -82,17 +82,7 @@ class _OverlayContent extends StatelessWidget {
     final overlayWindowState = context.watch<OverlayWindowBloc>().state;
     final lyricFinderState = context.watch<LyricFinderBloc>().state;
 
-    final line1 = overlayWindowState.line1;
-    final line2 = overlayWindowState.line2;
-
-    final line1Pos = line1?.time;
-    final line2Pos = line2?.time;
-
-    final line1IsFurther =
-        (line1Pos?.compareTo(line2Pos ?? Duration.zero) ?? 0) > 0;
-
     final status = lyricFinderState.status;
-    final showLine2 = config.showLine2 ?? false;
     final shouldAnimate = config.enableAnimation;
     final animationMode = config.animationMode;
 
@@ -113,7 +103,6 @@ class _OverlayContent extends StatelessWidget {
         );
       case LyricFinderStatus.notFound:
         return Center(
-          // child: Text('Lyric not found', style: TextStyle(color: textColor)),
           child: Text(
             l10n.fetch_online_no_lyric_found,
             style: TextStyle(
@@ -125,58 +114,148 @@ class _OverlayContent extends StatelessWidget {
         );
       case LyricFinderStatus.initial:
       case LyricFinderStatus.found:
-        return Column(
-          children: [
-            Align(
-              alignment: showLine2 ? Alignment.centerLeft : Alignment.center,
-              child: shouldAnimate
-                  ? _AnimatedLyricLine(
-                      key: ValueKey('line1:${line1?.content}'),
-                      textColor: textColor,
-                      id: 'line1:${line1?.content}',
-                      content: line1?.content,
-                      fontSize: config.fontSize,
-                      isBold: line1IsFurther,
-                      animationMode: animationMode,
-                    )
-                  : Text(
-                      line1?.content ?? '',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: config.fontSize,
-                        fontWeight: line1IsFurther
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                      ),
-                    ),
+        final allLines = overlayWindowState.allLines;
+        final currentLineIndex = overlayWindowState.currentLineIndex;
+        final visibleLinesCount = config.visibleLinesCount ?? 3;
+
+        if (allLines.isEmpty) {
+          return Center(
+            child: Text(
+              l10n.overlay_window_no_lyric,
+              style: TextStyle(color: textColor),
             ),
-            if (showLine2)
-              Align(
-                alignment: Alignment.centerRight,
-                child: shouldAnimate
-                    ? _AnimatedLyricLine(
-                        key: ValueKey('line2:${line2?.content}'),
-                        textColor: textColor,
-                        id: 'line2:${line2?.content}',
-                        content: line2?.content,
-                        fontSize: config.fontSize,
-                        isBold: !line1IsFurther,
-                        animationMode: animationMode,
-                      )
-                    : Text(
-                        line2?.content ?? '',
-                        style: TextStyle(
-                          color: textColor,
-                          fontSize: config.fontSize,
-                          fontWeight: !line1IsFurther
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-              ),
-          ],
+          );
+        }
+
+        return _ScrollingLyricView(
+          allLines: allLines,
+          currentLineIndex: currentLineIndex,
+          visibleLinesCount: visibleLinesCount,
+          textColor: textColor,
+          fontSize: config.fontSize,
+          shouldAnimate: shouldAnimate,
+          animationMode: animationMode,
         );
     }
+  }
+}
+
+class _ScrollingLyricView extends StatefulWidget {
+  const _ScrollingLyricView({
+    required this.allLines,
+    required this.currentLineIndex,
+    required this.visibleLinesCount,
+    required this.textColor,
+    this.fontSize,
+    this.shouldAnimate = false,
+    this.animationMode = AnimationMode.fadeIn,
+  });
+
+  final List<LrcLine> allLines;
+  final int currentLineIndex;
+  final int visibleLinesCount;
+  final Color textColor;
+  final double? fontSize;
+  final bool shouldAnimate;
+  final AnimationMode animationMode;
+
+  @override
+  State<_ScrollingLyricView> createState() => _ScrollingLyricViewState();
+}
+
+class _ScrollingLyricViewState extends State<_ScrollingLyricView> {
+  late final FixedExtentScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = FixedExtentScrollController(
+      initialItem: widget.currentLineIndex,
+    );
+  }
+
+  @override
+  void didUpdateWidget(_ScrollingLyricView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentLineIndex != widget.currentLineIndex) {
+      _scrollController.animateToItem(
+        widget.currentLineIndex,
+        duration: 300.milliseconds,
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.allLines.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    // Calculate item height based on font size with line height multiplier
+    final itemHeight = (widget.fontSize ?? 14.0) * 1.8;
+
+    return SizedBox(
+      height: itemHeight * widget.visibleLinesCount,
+      child: ListWheelScrollView.useDelegate(
+        controller: _scrollController,
+        itemExtent: itemHeight,
+        physics: const NeverScrollableScrollPhysics(),
+        childDelegate: ListWheelChildBuilderDelegate(
+          childCount: widget.allLines.length,
+          builder: (context, index) {
+            if (index < 0 || index >= widget.allLines.length) return null;
+
+            return _LyricLineWidget(
+              line: widget.allLines[index],
+              isCurrent: index == widget.currentLineIndex,
+              textColor: widget.textColor,
+              fontSize: widget.fontSize,
+              shouldAnimate:
+                  widget.shouldAnimate && index == widget.currentLineIndex,
+              animationMode: widget.animationMode,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _LyricLineWidget extends StatelessWidget {
+  const _LyricLineWidget({
+    required this.line,
+    required this.isCurrent,
+    required this.textColor,
+    this.fontSize,
+    this.shouldAnimate = false,
+    this.animationMode = AnimationMode.fadeIn,
+  });
+
+  final LrcLine line;
+  final bool isCurrent;
+  final Color textColor;
+  final double? fontSize;
+  final bool shouldAnimate;
+  final AnimationMode animationMode;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      line.content,
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: isCurrent ? textColor : textColor.withTransparency(0.6),
+        fontSize: fontSize,
+        fontWeight: isCurrent ? FontWeight.bold : FontWeight.normal,
+      ),
+    );
   }
 }
 

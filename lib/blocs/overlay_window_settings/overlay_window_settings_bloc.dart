@@ -77,7 +77,7 @@ class OverlayWindowSettingsBloc
           fontFamily: pref.fontFamily,
           fontSize: pref.fontSize.toDouble(),
           locale: pref.locale,
-          showLine2: pref.showLine2,
+          visibleLinesCount: pref.visibleLinesCount,
           showMillis: pref.showMilliseconds,
           showProgressBar: pref.showProgressBar,
           transparentNotFoundTxt: pref.transparentNotFoundTxt,

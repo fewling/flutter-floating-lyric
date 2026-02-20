@@ -26,7 +26,7 @@ sealed class OverlayWindowConfig with _$OverlayWindowConfig {
     int? backgroundColor,
     bool? showProgressBar,
     bool? showMillis,
-    bool? showLine2,
+    int? visibleLinesCount,
     @Default('') String fontFamily,
     double? fontSize,
     double? lineHeight,

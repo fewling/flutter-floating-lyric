@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -98,47 +97,23 @@ class OverlayWindowBloc extends Bloc<OverlayWindowEvent, OverlayWindowState> {
     if (mediaState == null) return;
 
     if (lrc == null) {
-      emit(state.copyWith(line1: null, line2: null));
+      emit(state.copyWith(allLines: [], currentLineIndex: 0));
       return;
     }
 
     final position = mediaState.position;
     final tolerance = config.tolerance ?? 0;
-    final showLine2 = config.showLine2 ?? false;
-    if (showLine2) {
-      final oddLines = lrc.lines
-          .whereIndexed((index, _) => index.isOdd)
-          .toList();
-      final evenLines = lrc.lines
-          .whereIndexed((index, _) => index.isEven)
-          .toList();
 
-      var line1 = state.line1;
-      var line2 = state.line2;
-
-      for (final line in oddLines.reversed) {
-        if (position > (line.time.inMilliseconds - tolerance) ||
-            line == lrc.lines.first) {
-          line2 = line;
-          break;
-        }
+    // Find the current line index based on position
+    var currentIndex = 0;
+    for (var i = lrc.lines.length - 1; i >= 0; i--) {
+      if (position >= (lrc.lines[i].time.inMilliseconds - tolerance)) {
+        currentIndex = i;
+        break;
       }
-
-      for (final line in evenLines.reversed) {
-        if (position > (line.time.inMilliseconds - tolerance) ||
-            line == lrc.lines.first) {
-          line1 = line;
-          break;
-        }
-      }
-      emit(state.copyWith(line1: line1, line2: line2));
-    } else {
-      final currentLine = lrc.lines.lastWhere(
-        (line) => line.time.inMilliseconds <= mediaState.position,
-        orElse: () => lrc.lines.first,
-      );
-
-      emit(state.copyWith(line1: currentLine, line2: null));
     }
+
+    // Pass all lines to the UI, let ListView handle scrolling
+    emit(state.copyWith(allLines: lrc.lines, currentLineIndex: currentIndex));
   }
 }

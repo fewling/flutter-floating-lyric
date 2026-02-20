@@ -10,7 +10,10 @@ sealed class OverlayWindowState with _$OverlayWindowState {
 
     @Default(OverlayWindowConfig()) OverlayWindowConfig config,
 
-    LrcLine? line1,
-    LrcLine? line2,
+    /// All lyric lines from the current song
+    @Default(<LrcLine>[]) List<LrcLine> allLines,
+
+    /// Index of the current (active) line in allLines
+    @Default(0) int currentLineIndex,
   }) = _OverlayWindowState;
 }

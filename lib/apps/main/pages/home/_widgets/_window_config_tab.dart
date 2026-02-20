@@ -281,25 +281,40 @@ class _WindowConfigTab extends StatelessWidget {
 
                     Builder(
                       builder: (context) {
-                        final showLine2 = context.select<PreferenceBloc, bool>(
-                          (bloc) => bloc.state.showLine2,
-                        );
+                        final visibleLinesCount = context
+                            .select<PreferenceBloc, int>(
+                              (bloc) => bloc.state.visibleLinesCount,
+                            );
 
-                        final title = Text(
-                          showLine2
-                              ? l10n.overlay_window_show_line_2
-                              : l10n.overlay_window_hide_line_2,
-                        );
-                        const secondary = Icon(Icons.linear_scale_outlined);
-
-                        return ToggleableSwitchListTile(
+                        return ListTile(
                           enabled: isWindowVisible,
-                          value: showLine2,
-                          title: title,
-                          secondary: secondary,
-                          onChanged: (value) => context
-                              .read<PreferenceBloc>()
-                              .add(PreferenceEvent.showLine2Toggled(value)),
+                          leading: const Icon(Icons.view_headline_outlined),
+                          trailing: Text('$visibleLinesCount'),
+                          title: Text(l10n.overlay_window_visible_lines_count),
+                        );
+                      },
+                    ),
+
+                    Builder(
+                      builder: (context) {
+                        final visibleLinesCount = context
+                            .select<PreferenceBloc, int>(
+                              (bloc) => bloc.state.visibleLinesCount,
+                            );
+
+                        return Slider(
+                          min: 1,
+                          max: 10,
+                          divisions: 9,
+                          value: visibleLinesCount.toDouble(),
+                          label: '$visibleLinesCount',
+                          onChanged: isWindowVisible
+                              ? (value) => context.read<PreferenceBloc>().add(
+                                  PreferenceEvent.visibleLinesCountUpdated(
+                                    value.toInt(),
+                                  ),
+                                )
+                              : null,
                         );
                       },
                     ),

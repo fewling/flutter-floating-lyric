@@ -13,7 +13,7 @@ sealed class PreferenceState with _$PreferenceState {
     required String fontFamily,
     required int fontSize,
     required bool autoFetchOnline,
-    required bool showLine2,
+    required int visibleLinesCount,
     required bool useAppColor,
     required bool enableAnimation,
     required bool transparentNotFoundTxt,

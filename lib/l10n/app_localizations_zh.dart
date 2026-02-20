@@ -218,10 +218,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_no_lyrics_found_subtitle => '當找不到歌詞時，切換文字透明度。';
 
   @override
-  String get overlay_window_show_line_2 => '顯示第二行';
-
-  @override
-  String get overlay_window_hide_line_2 => '隱藏第二行';
+  String get overlay_window_visible_lines_count => '可見歌詞行數';
 
   @override
   String get overlay_window_enable_animation => '啟用動畫';
