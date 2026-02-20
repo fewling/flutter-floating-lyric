@@ -256,6 +256,7 @@ class _WindowConfigTab extends StatelessWidget {
                             );
 
                         const secondary = Icon(Icons.lyrics_outlined);
+                        // TODO(Felix): Migrate to l10n with placeholders
                         final prefix = transparentNotFoundTxt ? 'Hide' : 'Show';
                         return ToggleableSwitchListTile(
                           enabled: isWindowVisible,
