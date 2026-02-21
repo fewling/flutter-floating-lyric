@@ -14,18 +14,21 @@ class _View extends StatelessWidget {
       child: CustomScrollView(
         slivers: [
           SliverToBoxAdapter(
-            child: switch (mediaStates.isEmpty) {
-              true => _NoMediaTile(
-                onStartMusicApp: () => _startMusicApp(context),
-                onLearnMore: () => _onLearnMore(context),
-                onReEnableListener: () {
-                  // context.read<OverlayWindowSettingsBloc>().add(
-                  //   const ToggleNotiListenerSettings(),
-                  // );
-                },
-              ),
-              false => _MediaStateCarousel(mediaStates: mediaStates),
-            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: switch (mediaStates.isEmpty) {
+                true => _NoMediaTile(
+                  onStartMusicApp: () => _startMusicApp(context),
+                  onLearnMore: () => _onLearnMore(context),
+                  onReEnableListener: () => MainAppDependency.of(context)
+                      .read<OverlayWindowSettingsBloc>()
+                      .add(
+                        const OverlayWindowSettingsEvent.toggledNotificationListenerSetting(),
+                      ),
+                ),
+                false => _MediaStateCarousel(mediaStates: mediaStates),
+              },
+            ),
           ),
           SliverToBoxAdapter(
             child: TabBar(

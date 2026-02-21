@@ -18,13 +18,9 @@ class MethodChannelService {
     return _channel.invokeMethod<bool>('isActive');
   }
 
-  Future<bool?> setTouchThru(bool isTouchThru) {
-    return _channel.invokeMethod<bool>('setTouchThru', {
-      'isTouchThru': isTouchThru,
-    });
-  }
+  Future<bool?> setTouchThru(bool isTouchThru) =>
+      _channel.invokeMethod<bool>('setTouchThru', {'isTouchThru': isTouchThru});
 
-  Future<bool?> toggleNotiListenerSettings() {
-    return _channel.invokeMethod<bool>('toggleNotiListenerSettings');
-  }
+  Future<bool?> toggleNotiListenerSettings() =>
+      _channel.invokeMethod<bool>('toggleNotiListenerSettings');
 }

@@ -42,6 +42,7 @@ dependencies:
   crypto: ^3.0.6
   awesome_extensions: ^2.1.0
   auto_size_text: ^3.0.0
+  carousel_slider: ^5.1.2
 
 dev_dependencies:
   flutter_test:

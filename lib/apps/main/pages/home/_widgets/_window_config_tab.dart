@@ -8,7 +8,9 @@ class _WindowConfigTab extends StatelessWidget {
     final l10n = context.l10n;
 
     final pref = MainAppDependency.of(context).watch<PreferenceBloc>().state;
-    final windowState = context.watch<OverlayWindowSettingsBloc>().state;
+    final windowState = MainAppDependency.of(
+      context,
+    ).watch<OverlayWindowSettingsBloc>().state;
 
     final windowConfig = windowState.config;
     final isWindowVisible = windowState.isWindowVisible;
@@ -31,9 +33,12 @@ class _WindowConfigTab extends StatelessWidget {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.read<OverlayWindowSettingsBloc>().add(
-          OverlayWindowSettingsEvent.windowVisibilityToggled(!isWindowVisible),
-        ),
+        onPressed: () =>
+            MainAppDependency.of(context).read<OverlayWindowSettingsBloc>().add(
+              OverlayWindowSettingsEvent.windowVisibilityToggled(
+                !isWindowVisible,
+              ),
+            ),
         icon: switch (isWindowVisible) {
           true => const Icon(Icons.hide_source),
           false => const Icon(Icons.play_arrow_outlined),
@@ -356,9 +361,10 @@ class _WindowConfigTab extends StatelessWidget {
     context,
   ).read<PreferenceBloc>().add(PreferenceEvent.windowColorThemeToggled(value));
 
-  void _onWIndowTouchThruToggled(BuildContext context, bool value) => context
-      .read<OverlayWindowSettingsBloc>()
-      .add(OverlayWindowSettingsEvent.windowTouchThroughToggled(value));
+  void _onWIndowTouchThruToggled(BuildContext context, bool value) =>
+      MainAppDependency.of(context).read<OverlayWindowSettingsBloc>().add(
+        OverlayWindowSettingsEvent.windowTouchThroughToggled(value),
+      );
 
   void _onWindowIgnoreTouchToggled(BuildContext context, bool value) =>
       MainAppDependency.of(context).read<PreferenceBloc>().add(

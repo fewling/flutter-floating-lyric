@@ -21,6 +21,7 @@ class OverlayWindowSettingsBloc
         _WindowIgnoreTouchToggled() => _onIgnoreTouchToggled(event, emit),
         _WindowTouchThroughToggled() => _onTouchThroughToggled(event, emit),
         _PreferenceUpdated() => _onPreferenceUpdated(event, emit),
+        _ToggleNotiListenerSettings() => _onToggleNotiListener(event, emit),
       },
     );
   }
@@ -91,4 +92,9 @@ class OverlayWindowSettingsBloc
       ),
     );
   }
+
+  void _onToggleNotiListener(
+    OverlayWindowSettingsEvent event,
+    Emitter<OverlayWindowSettingsState> emit,
+  ) => _methodChannelService.toggleNotiListenerSettings();
 }

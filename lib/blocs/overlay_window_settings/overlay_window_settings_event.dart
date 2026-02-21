@@ -17,4 +17,7 @@ sealed class OverlayWindowSettingsEvent with _$OverlayWindowSettingsEvent {
   const factory OverlayWindowSettingsEvent.preferenceUpdated(
     PreferenceState state,
   ) = _PreferenceUpdated;
+
+  const factory OverlayWindowSettingsEvent.toggledNotificationListenerSetting() =
+      _ToggleNotiListenerSettings;
 }
