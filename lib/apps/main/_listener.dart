@@ -34,9 +34,6 @@ class MainAppListener extends StatelessWidget {
         ),
 
         BlocListener<MediaListenerBloc, MediaListenerState>(
-          listenWhen: (previous, current) =>
-              previous.mediaStates != current.mediaStates &&
-              current.activeMediaState != null,
           listener: (context, state) => context.read<MsgToOverlayBloc>().add(
             MsgToOverlayEvent.onMediaStateUpdated(state.activeMediaState!),
           ),
