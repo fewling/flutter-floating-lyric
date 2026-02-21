@@ -551,7 +551,7 @@ abstract class AppLocalizations {
   /// No description provided for @overlay_window_ignore_touch_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Enabling this will lock the window from moving too.\\nDisabling this will not unlock it.'**
+  /// **'Enabling this will lock the window from moving too.\nDisabling this will not unlock it.'**
   String get overlay_window_ignore_touch_subtitle;
 
   /// No description provided for @overlay_window_touch_through.
@@ -563,7 +563,7 @@ abstract class AppLocalizations {
   /// No description provided for @overlay_window_touch_through_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
+  /// **'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
   String get overlay_window_touch_through_subtitle;
 
   /// No description provided for @fetch_online_auto_fetch.
@@ -743,7 +743,7 @@ abstract class AppLocalizations {
   /// No description provided for @font_select_disclaimer.
   ///
   /// In en, this message translates to:
-  /// **'To save your internet data, limited options are loaded each time.\\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\\nThen, you can search for the font name here and apply it.'**
+  /// **'To save your internet data, limited options are loaded each time.\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\nThen, you can search for the font name here and apply it.'**
   String get font_select_disclaimer;
 
   /// No description provided for @font_select_visit_google_fonts.

@@ -49,4 +49,9 @@ sealed class PreferenceEvent with _$PreferenceEvent {
 
   const factory PreferenceEvent.appColorSchemeUpdated(int color) =
       _AppColorSchemeUpdated;
+
+  const factory PreferenceEvent.fontFamilyUpdated(String key) =
+      _FontFamilyUpdated;
+
+  const factory PreferenceEvent.fontFamilyReset() = _FontFamilyReset;
 }

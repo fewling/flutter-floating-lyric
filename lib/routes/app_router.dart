@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
 
 import '../apps/main/main_app.dart';
+import '../apps/main/pages/fonts/page.dart';
 import '../apps/main/pages/home/page.dart';
 import '../apps/main/pages/local_lyric_detail/page.dart';
 import '../apps/main/pages/local_lyrics/page.dart';
@@ -77,9 +78,9 @@ class AppRouter {
                       builder: (context, state) => const HomePage(),
                       routes: [
                         GoRoute(
-                          path: MainAppRoutes.home.path,
-                          name: MainAppRoutes.home.name,
-                          builder: (context, state) => const Placeholder(),
+                          path: MainAppRoutes.fonts.path,
+                          name: MainAppRoutes.fonts.name,
+                          builder: (context, state) => const FontsPage(),
                         ),
                       ],
                     ),

@@ -255,14 +255,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_subtitle =>
-      'Enabling this will lock the window from moving too.\\nDisabling this will not unlock it.';
+      'Enabling this will lock the window from moving too.\nDisabling this will not unlock it.';
 
   @override
   String get overlay_window_touch_through => 'Touch Through';
 
   @override
   String get overlay_window_touch_through_subtitle =>
-      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
+      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
 
   @override
   String get fetch_online_auto_fetch => 'Auto Fetch';
@@ -356,7 +356,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get font_select_disclaimer =>
-      'To save your internet data, limited options are loaded each time.\\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\\nThen, you can search for the font name here and apply it.';
+      'To save your internet data, limited options are loaded each time.\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\nThen, you can search for the font name here and apply it.';
 
   @override
   String get font_select_visit_google_fonts => 'Visit Google Fonts';

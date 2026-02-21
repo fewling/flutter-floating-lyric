@@ -240,14 +240,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_subtitle =>
-      '啟用此功能將鎖定視窗移動。\\n停用此功能不會解鎖視窗。';
+      '啟用此功能將鎖定視窗移動。\n停用此功能不會解鎖視窗。';
 
   @override
   String get overlay_window_touch_through => '觸控穿透';
 
   @override
   String get overlay_window_touch_through_subtitle =>
-      '這會停用返回手勢、鍵盤等功能。請自行承擔風險。\\n此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
+      '這會停用返回手勢、鍵盤等功能。請自行承擔風險。\n此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
 
   @override
   String get fetch_online_auto_fetch => '自動搜索';
@@ -338,7 +338,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get font_select_disclaimer =>
-      '為節省您的網路流量，每次載入的選項有限。\\n我們建議造訪 Google Fonts 檢視完整字型清單。\\n然後，您可以在此處搜尋字型名稱並套用。';
+      '為節省您的網路流量，每次載入的選項有限。\n我們建議造訪 Google Fonts 檢視完整字型清單。\n然後，您可以在此處搜尋字型名稱並套用。';
 
   @override
   String get font_select_visit_google_fonts => '造訪 Google Fonts';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../../blocs/msg_from_main/msg_from_main_bloc.dart';
 import '../../blocs/msg_to_main/msg_to_main_bloc.dart';

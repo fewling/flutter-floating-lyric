@@ -12,6 +12,7 @@ class OverlayAppView extends StatelessWidget {
     final appColorScheme = windowConfig?.appColorScheme;
     final isLight = windowConfig?.isLight ?? true;
     final locale = windowConfig?.locale ?? AppLocale.english;
+    final fontFamily = windowConfig?.fontFamily;
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
@@ -19,11 +20,17 @@ class OverlayAppView extends StatelessWidget {
         useMaterial3: true,
         colorSchemeSeed: appColorScheme != null ? Color(appColorScheme) : null,
         brightness: Brightness.light,
+        textTheme: fontFamily == null || fontFamily.isEmpty
+            ? null
+            : GoogleFonts.getTextTheme(fontFamily),
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: appColorScheme != null ? Color(appColorScheme) : null,
         brightness: Brightness.dark,
+        textTheme: fontFamily == null || fontFamily.isEmpty
+            ? null
+            : GoogleFonts.getTextTheme(fontFamily),
       ),
       themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
       routerConfig: appRouter.router,

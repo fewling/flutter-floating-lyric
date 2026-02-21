@@ -56,6 +56,8 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
         _AutoFetchOnlineToggled() => _onAutoFetchOnlineToggled(event, emit),
         _BrightnessToggled() => _onBrightnessToggled(event, emit),
         _AppColorSchemeUpdated() => _onAppColorSchemeUpdated(event, emit),
+        _FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
+        _FontFamilyReset() => _onFontFamilyReset(event, emit),
       },
     );
   }
@@ -233,6 +235,26 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _preferenceRepo.updateAppColorScheme(event.color);
     if (isSuccess) {
       emit(state.copyWith(appColorScheme: event.color));
+    }
+  }
+
+  Future<void> _onFontFamilyUpdated(
+    _FontFamilyUpdated event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.updateFontFamily(event.key);
+    if (isSuccess) {
+      emit(state.copyWith(fontFamily: event.key));
+    }
+  }
+
+  Future<void> _onFontFamilyReset(
+    _FontFamilyReset event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.resetFontFamily();
+    if (isSuccess) {
+      emit(state.copyWith(fontFamily: ''));
     }
   }
 }
