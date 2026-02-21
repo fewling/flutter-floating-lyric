@@ -27,6 +27,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           useAppColor: preferenceRepo.useAppColor,
           tolerance: preferenceRepo.tolerance,
           transparentNotFoundTxt: preferenceRepo.transparentNotFoundTxt,
+          windowIgnoreTouch: preferenceRepo.windowIgnoreTouch,
           locale: preferenceRepo.locale,
         ),
       ) {
@@ -182,13 +183,12 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     _WindowIgnoreTouchToggled event,
     Emitter<PreferenceState> emit,
   ) async {
-    // TODO(@Felix)
-    // final isSuccess = await _preferenceRepo.toggleWindowIgnoreTouch(
-    //   event.value,
-    // );
-    // if (isSuccess) {
-    //   emit(state.copyWith(windowIgnoreTouch: event.value));
-    // }
+    final isSuccess = await _preferenceRepo.toggleWindowIgnoreTouch(
+      event.value,
+    );
+    if (isSuccess) {
+      emit(state.copyWith(windowIgnoreTouch: event.value));
+    }
   }
 
   Future<void> _onWindowTouchThroughToggled(

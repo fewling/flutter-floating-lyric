@@ -129,8 +129,6 @@
   "overlay_window_special_settings_title": "特殊設定",
   "overlay_window_tolerance_title": "容差",
   "overlay_window_ignore_touch_title": "忽略觸控",
-  "overlay_window_ignore_touch_subtitle_line1": "啟用此功能將鎖定視窗移動。",
-  "overlay_window_ignore_touch_subtitle_line2": "停用此功能不會解鎖視窗。",
   "overlay_window_touch_through_title": "觸控穿透",
   "overlay_window_touch_through_subtitle_line1": "這會停用返回手勢、鍵盤等功能。請自行承擔風險。",
   "overlay_window_touch_through_subtitle_line2": "此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏",

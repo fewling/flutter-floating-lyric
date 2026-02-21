@@ -408,12 +408,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_ignore_touch_title => '忽略觸控';
 
   @override
-  String get overlay_window_ignore_touch_subtitle_line1 => '啟用此功能將鎖定視窗移動。';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line2 => '停用此功能不會解鎖視窗。';
-
-  @override
   String get overlay_window_touch_through_title => '觸控穿透';
 
   @override

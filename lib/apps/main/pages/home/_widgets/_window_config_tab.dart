@@ -25,8 +25,8 @@ class _WindowConfigTab extends StatelessWidget {
     final transparentNotFoundTxt = pref.transparentNotFoundTxt;
     final visibleLinesCount = pref.visibleLinesCount;
     final tolerance = pref.tolerance;
+    final isIgnoreTouch = pref.windowIgnoreTouch;
 
-    final isIgnoreTouch = windowConfig.ignoreTouch ?? false;
     final isTouchThru = windowConfig.touchThru ?? false;
 
     return Scaffold(
@@ -313,10 +313,6 @@ class _WindowConfigTab extends StatelessWidget {
                     SwitchListTile(
                       value: isIgnoreTouch,
                       title: Text(l10n.overlay_window_ignore_touch_title),
-                      subtitle: Text(
-                        '${l10n.overlay_window_ignore_touch_subtitle_line1}\n'
-                        '${l10n.overlay_window_ignore_touch_subtitle_line2}',
-                      ),
                       secondary: const Icon(
                         Icons.warning,
                         color: Colors.orange,
@@ -364,9 +360,10 @@ class _WindowConfigTab extends StatelessWidget {
       .read<OverlayWindowSettingsBloc>()
       .add(OverlayWindowSettingsEvent.windowTouchThroughToggled(value));
 
-  void _onWindowIgnoreTouchToggled(BuildContext context, bool value) => context
-      .read<OverlayWindowSettingsBloc>()
-      .add(OverlayWindowSettingsEvent.windowIgnoreTouchToggled(value));
+  void _onWindowIgnoreTouchToggled(BuildContext context, bool value) =>
+      MainAppDependency.of(context).read<PreferenceBloc>().add(
+        PreferenceEvent.windowIgnoreTouchToggled(value),
+      );
 
   void _showTextColorPicker(BuildContext context) {
     final l10n = context.l10n;

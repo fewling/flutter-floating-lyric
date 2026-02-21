@@ -872,18 +872,6 @@ abstract class AppLocalizations {
   /// **'Ignore Touch'**
   String get overlay_window_ignore_touch_title;
 
-  /// No description provided for @overlay_window_ignore_touch_subtitle_line1.
-  ///
-  /// In en, this message translates to:
-  /// **'Enabling this will lock the window from moving too.'**
-  String get overlay_window_ignore_touch_subtitle_line1;
-
-  /// No description provided for @overlay_window_ignore_touch_subtitle_line2.
-  ///
-  /// In en, this message translates to:
-  /// **'Disabling this will not unlock it.'**
-  String get overlay_window_ignore_touch_subtitle_line2;
-
   /// No description provided for @overlay_window_touch_through_title.
   ///
   /// In en, this message translates to:

@@ -17,6 +17,7 @@ sealed class PreferenceState with _$PreferenceState {
     required bool useAppColor,
     required bool transparentNotFoundTxt,
     required int tolerance,
+    required bool windowIgnoreTouch,
 
     @JsonKey(fromJson: appLocaleFromJson, toJson: appLocaleToJson)
     @Default(AppLocale.english)

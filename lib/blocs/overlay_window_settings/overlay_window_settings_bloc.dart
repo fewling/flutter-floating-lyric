@@ -86,6 +86,7 @@ class OverlayWindowSettingsBloc
           opacity: pref.opacity,
           isLight: pref.isLight,
           tolerance: pref.tolerance.toDouble(),
+          ignoreTouch: pref.windowIgnoreTouch,
         ),
       ),
     );

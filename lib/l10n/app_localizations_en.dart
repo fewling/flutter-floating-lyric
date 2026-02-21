@@ -430,14 +430,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overlay_window_ignore_touch_title => 'Ignore Touch';
 
   @override
-  String get overlay_window_ignore_touch_subtitle_line1 =>
-      'Enabling this will lock the window from moving too.';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line2 =>
-      'Disabling this will not unlock it.';
-
-  @override
   String get overlay_window_touch_through_title => 'Touch Through';
 
   @override

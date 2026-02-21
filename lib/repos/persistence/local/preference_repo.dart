@@ -24,6 +24,7 @@ class PreferenceRepo {
   static const toleranceKey = 'tolerance';
   static const transparentNotFoundTxtKey = 'transparent not found';
   static const localeKey = 'locale';
+  static const ignoreTouch = 'ignore touch';
 
   static const defaultFont = 'Roboto';
 
@@ -60,6 +61,8 @@ class PreferenceRepo {
 
   bool get transparentNotFoundTxt =>
       _sp.getBool(transparentNotFoundTxtKey) ?? false;
+
+  bool get windowIgnoreTouch => _sp.getBool(ignoreTouch) ?? false;
 
   AppLocale get locale => AppLocale.values.firstWhere(
     (e) => e.code == _sp.getString(localeKey),
@@ -108,6 +111,9 @@ class PreferenceRepo {
 
   Future<bool> updateTransparentNotFoundTxt(bool transparentNotFoundTxt) =>
       _sp.setBool(transparentNotFoundTxtKey, transparentNotFoundTxt);
+
+  Future<bool> toggleWindowIgnoreTouch(bool value) =>
+      _sp.setBool(ignoreTouch, value);
 
   Future<bool> updateLocale(AppLocale locale) =>
       _sp.setString(localeKey, locale.code);
