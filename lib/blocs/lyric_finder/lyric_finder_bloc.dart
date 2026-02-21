@@ -46,7 +46,7 @@ class LyricFinderBloc extends Bloc<LyricFinderEvent, LyricFinderState> {
 
     emit(state.copyWith(status: SearchLyricStatus.searching));
 
-    final lrcDB = _localDbService.getLyricBySongInfo(
+    final lrcDB = await _localDbService.getLyricBySongInfo(
       songInfo.title,
       songInfo.artist,
     );

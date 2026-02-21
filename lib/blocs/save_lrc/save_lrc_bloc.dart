@@ -40,7 +40,7 @@ class SaveLrcBloc extends Bloc<SaveLrcEvent, SaveLrcState> {
         content: response.syncedLyrics,
       );
 
-      final savedLrc = _localDbService.getLyricById(id);
+      final savedLrc = await _localDbService.getLyricById(id);
 
       emit(
         state.copyWith(

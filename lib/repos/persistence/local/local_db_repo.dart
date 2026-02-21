@@ -5,31 +5,35 @@ import '../../../models/lyric_model.dart';
 import '../../../utils/logger.dart';
 
 class LocalDbRepo {
-  LocalDbRepo({required Box<LrcModel> lrcBox}) : _lrcBox = lrcBox;
+  LocalDbRepo({required IsolatedBox<LrcModel> lrcBox}) : _lrcBox = lrcBox;
 
-  final Box<LrcModel> _lrcBox;
+  final IsolatedBox<LrcModel> _lrcBox;
 
   Stream<BoxEvent> watch() => _lrcBox.watch();
 
-  bool fileNameExists(String fileName) =>
-      _lrcBox.values.any((e) => e.fileName == fileName);
+  Future<bool> fileNameExists(String fileName) =>
+      _lrcBox.values.then((items) => items.any((e) => e.fileName == fileName));
 
-  List<LrcModel> get allRawLyrics => _lrcBox.values.toList();
+  Future<List<LrcModel>> get allRawLyrics =>
+      _lrcBox.values.then((items) => items.toList());
 
-  LrcModel? getLyricByID(dynamic id) => _lrcBox.get(id);
+  Future<LrcModel?> getLyricByID(dynamic id) => _lrcBox.get(id);
 
-  LrcModel? getLyric(String title, String artist) =>
-      _lrcBox.values.firstWhereOrNull(
-        (e) =>
-            (e.title == title && e.artist == artist) ||
-            (e.title == artist && e.artist == title) ||
-            (e.fileName == '$title - $artist') ||
-            (e.fileName == '$artist - $title'),
+  Future<LrcModel?> getLyric(String title, String artist) =>
+      _lrcBox.values.then(
+        (items) => items.firstWhereOrNull(
+          (e) =>
+              (e.title == title && e.artist == artist) ||
+              (e.title == artist && e.artist == title) ||
+              (e.fileName == '$title - $artist') ||
+              (e.fileName == '$artist - $title'),
+        ),
       );
 
-  List<LrcModel> search(String searchTerm) {
+  Future<List<LrcModel>> search(String searchTerm) async {
     final search = searchTerm.toLowerCase().trim();
-    return _lrcBox.values
+    final items = await _lrcBox.values;
+    return items
         .where(
           (e) =>
               (e.title != null && e.title!.toLowerCase().contains(search)) ||

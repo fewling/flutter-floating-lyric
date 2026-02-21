@@ -37,7 +37,7 @@ class MainApp extends StatelessWidget {
   const MainApp({required this.pref, required this.lrcBox, super.key});
 
   final SharedPreferences pref;
-  final Box<LrcModel> lrcBox;
+  final IsolatedBox<LrcModel> lrcBox;
 
   @override
   Widget build(BuildContext context) {

@@ -9,7 +9,7 @@ class MainAppDependency extends StatefulWidget {
   });
 
   final Widget Function(BuildContext context, AppRouter appRouter) builder;
-  final Box<LrcModel> lrcBox;
+  final IsolatedBox<LrcModel> lrcBox;
   final SharedPreferences pref;
 
   static BuildContext of(BuildContext context) => context;

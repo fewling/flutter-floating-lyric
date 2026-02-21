@@ -45,16 +45,22 @@ Future<void> main() async {
 @pragma('vm:entry-point')
 Future<void> overlayView() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final (pref, lrcModelBox) = await bootstrap();
+
   runApp(const OverlayApp());
 }
 
-Future<(SharedPreferences, Box<LrcModel>)> bootstrap() async {
+Future<(SharedPreferences, IsolatedBox<LrcModel>)> bootstrap() async {
   final pref = await SharedPreferences.getInstance();
 
   final dir = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter();
-  Hive.registerAdapters();
-  final lrcModelBox = await Hive.openBox<LrcModel>('lrc', path: dir.path);
+  await IsolatedHive.initFlutter();
+  IsolatedHive.registerAdapters();
+  final lrcModelBox = await IsolatedHive.openBox<LrcModel>(
+    'lrc',
+    path: dir.path,
+  );
 
   return (pref, lrcModelBox);
 }

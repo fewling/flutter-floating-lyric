@@ -34,14 +34,15 @@ class LocalDbService {
   Future<void> saveBatchLrc(List<LrcModel> lyrics) =>
       _localDB.addBatchLyrics(lyrics);
 
-  LrcModel? getLyricById(String id) => _localDB.getLyricByID(id);
+  Future<LrcModel?> getLyricById(String id) => _localDB.getLyricByID(id);
 
-  LrcModel? getLyricBySongInfo(String title, String artist) =>
+  Future<LrcModel?> getLyricBySongInfo(String title, String artist) =>
       _localDB.getLyric(title, artist);
 
-  List<LrcModel> getAllLyrics() => _localDB.allRawLyrics;
+  Future<List<LrcModel>> getAllLyrics() => _localDB.allRawLyrics;
 
-  List<LrcModel> searchLyrics(String searchTerm) => _localDB.search(searchTerm);
+  Future<List<LrcModel>> searchLyrics(String searchTerm) =>
+      _localDB.search(searchTerm);
 
   Future<void> updateLrc(LrcModel lrcDb) => _localDB.updateLyric(lrcDb);
 

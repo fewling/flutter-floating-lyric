@@ -33,16 +33,20 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
   final LocalDbService _localDbService;
 
   Future<void> _onStarted(_Started event, Emitter<LyricListState> emit) async {
-    final lyrics = _localDbService.getAllLyrics();
+    final lyrics = await _localDbService.getAllLyrics();
     emit(state.copyWith(lyrics: lyrics));
 
-    await emit.forEach(
+    await emit.onEach(
       _localDbService.watch(),
-      onData: (event) => state.copyWith(
-        lyrics: state.searchTerm.isEmpty
-            ? _localDbService.getAllLyrics()
-            : _localDbService.searchLyrics(state.searchTerm),
-      ),
+      onData: (data) async {
+        emit(
+          state.copyWith(
+            lyrics: state.searchTerm.isEmpty
+                ? await _localDbService.getAllLyrics()
+                : await _localDbService.searchLyrics(state.searchTerm),
+          ),
+        );
+      },
     );
   }
 
@@ -51,8 +55,8 @@ class LyricListBloc extends Bloc<LyricListEvent, LyricListState> {
     Emitter<LyricListState> emit,
   ) async {
     final lyrics = event.searchTerm.isEmpty
-        ? _localDbService.getAllLyrics()
-        : _localDbService.searchLyrics(event.searchTerm);
+        ? await _localDbService.getAllLyrics()
+        : await _localDbService.searchLyrics(event.searchTerm);
     emit(state.copyWith(lyrics: lyrics, searchTerm: event.searchTerm));
   }
 
