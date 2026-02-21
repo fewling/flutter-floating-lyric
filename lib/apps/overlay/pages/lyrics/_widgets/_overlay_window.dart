@@ -14,6 +14,28 @@ class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
 
     updateSize(context);
 
+    final lyricList = OverlayAppDependency.of(
+      context,
+    ).watch<LyricListBloc>().state.lyrics;
+
+    return Container(
+      height: 300,
+      width: 300,
+      color: Colors.amber,
+      child: Column(
+        children: [
+          Text('Lyrics in DB: ${lyricList.length}'),
+          Expanded(
+            child: ListView.builder(
+              itemCount: lyricList.length,
+              itemBuilder: (context, index) =>
+                  Text(lyricList[index].fileName ?? 'none'),
+            ),
+          ),
+        ],
+      ),
+    );
+
     if (configs == null) return const _OverlayLoadingIndicator();
 
     final colorScheme = Theme.of(context).colorScheme;

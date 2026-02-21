@@ -48,7 +48,7 @@ Future<void> overlayView() async {
 
   final (pref, lrcModelBox) = await bootstrap();
 
-  runApp(const OverlayApp());
+  runApp(OverlayApp(lrcBox: lrcModelBox));
 }
 
 Future<(SharedPreferences, IsolatedBox<LrcModel>)> bootstrap() async {
