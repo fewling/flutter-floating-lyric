@@ -261,17 +261,18 @@ class _OverlayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final mediaState = context.select(
       (MsgFromMainBloc b) => b.state.mediaState,
     );
 
+    final artist = mediaState?.artist ?? l10n.common_unknown;
+    final title = mediaState?.title ?? l10n.common_unknown;
+
     return Row(
       children: [
         Expanded(
-          child: Text(
-            mediaState?.title ?? ' ',
-            style: TextStyle(color: textColor),
-          ),
+          child: Text('$artist - $title', style: TextStyle(color: textColor)),
         ),
         IconButton(
           onPressed: () => _onLockToggle(context),

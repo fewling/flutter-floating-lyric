@@ -68,7 +68,7 @@ class _OnlineLyricTab extends StatelessWidget {
                     ? TitleAltField(title: title)
                     : ListTile(
                         title: Text(l10n.fetch_online_title),
-                        subtitle: Text(title ?? l10n.fetch_online_unknown),
+                        subtitle: Text(title ?? l10n.common_unknown),
                         onTap: () => context.read<FetchOnlineLrcFormBloc>().add(
                           const EditFieldRequested(isTitle: true),
                         ),
@@ -92,7 +92,7 @@ class _OnlineLyricTab extends StatelessWidget {
                     ? ArtistAltField(artist: artist)
                     : ListTile(
                         title: Text(l10n.fetch_online_artist),
-                        subtitle: Text(artist ?? l10n.fetch_online_unknown),
+                        subtitle: Text(artist ?? l10n.common_unknown),
                         onTap: () => context.read<FetchOnlineLrcFormBloc>().add(
                           const EditFieldRequested(isArtist: true),
                         ),
@@ -116,7 +116,7 @@ class _OnlineLyricTab extends StatelessWidget {
                     ? AlbumAltField(album: album)
                     : ListTile(
                         title: Text(l10n.fetch_online_album),
-                        subtitle: Text(album ?? l10n.fetch_online_unknown),
+                        subtitle: Text(album ?? l10n.common_unknown),
                         onTap: () => context.read<FetchOnlineLrcFormBloc>().add(
                           const EditFieldRequested(isAlbum: true),
                         ),

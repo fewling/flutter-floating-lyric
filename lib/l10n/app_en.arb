@@ -83,7 +83,7 @@
   "fetch_online_artist": "Artist",
   "fetch_online_album": "Album",
   "fetch_online_duration": "Duration",
-  "fetch_online_unknown": "Unknown",
+  "common_unknown": "Unknown",
   "fetch_online_powered_by": "Powered by ",
   "fetch_online_search": "Search",
   "fetch_online_lyric_fetch_result": "Lyric Fetch Result",

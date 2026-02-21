@@ -596,11 +596,11 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get fetch_online_duration;
 
-  /// No description provided for @fetch_online_unknown.
+  /// No description provided for @common_unknown.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
-  String get fetch_online_unknown;
+  String get common_unknown;
 
   /// No description provided for @fetch_online_powered_by.
   ///

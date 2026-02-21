@@ -265,7 +265,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fetch_online_duration => '時長';
 
   @override
-  String get fetch_online_unknown => '未知';
+  String get common_unknown => '未知';
 
   @override
   String get fetch_online_powered_by => '技術支援 ';

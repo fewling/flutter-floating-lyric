@@ -280,7 +280,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fetch_online_duration => 'Duration';
 
   @override
-  String get fetch_online_unknown => 'Unknown';
+  String get common_unknown => 'Unknown';
 
   @override
   String get fetch_online_powered_by => 'Powered by ';

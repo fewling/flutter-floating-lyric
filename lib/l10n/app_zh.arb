@@ -83,7 +83,7 @@
   "fetch_online_artist": "演出者",
   "fetch_online_album": "專輯",
   "fetch_online_duration": "時長",
-  "fetch_online_unknown": "未知",
+  "common_unknown": "未知",
   "fetch_online_powered_by": "技術支援 ",
   "fetch_online_search": "搜尋",
   "fetch_online_lyric_fetch_result": "歌詞取得結果",
