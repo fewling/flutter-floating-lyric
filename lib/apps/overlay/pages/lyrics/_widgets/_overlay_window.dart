@@ -197,7 +197,7 @@ class _ScrollingLyricViewState extends State<_ScrollingLyricView> {
     }
 
     // Calculate item height based on font size with line height multiplier
-    final itemHeight = (widget.fontSize ?? 14.0) * 1.8;
+    final itemHeight = (widget.fontSize ?? 14.0) + 8;
 
     return SizedBox(
       height: itemHeight * widget.visibleLinesCount,
@@ -242,9 +242,11 @@ class _LyricLineWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return AutoSizeText(
       line.content,
       textAlign: TextAlign.center,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
       style: TextStyle(
         color: isCurrent ? textColor : textColor.withTransparency(0.6),
         fontSize: fontSize,
