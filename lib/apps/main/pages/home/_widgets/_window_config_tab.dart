@@ -6,6 +6,7 @@ class _WindowConfigTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+
     final isWindowVisible = context.select(
       (OverlayWindowSettingsBloc bloc) => bloc.state.isWindowVisible,
     );
@@ -323,15 +324,6 @@ class _WindowConfigTab extends StatelessWidget {
                     ListTile(
                       enabled: isWindowVisible,
                       leading: const Icon(Icons.hourglass_top_outlined),
-                      trailing: Builder(
-                        builder: (context) {
-                          final tolerance = context.select<PreferenceBloc, int>(
-                            (bloc) => bloc.state.tolerance,
-                          );
-
-                          return Text('$tolerance ms');
-                        },
-                      ),
                       title: Text(l10n.overlay_window_tolerance_title),
                       subtitle: Text(l10n.overlay_window_tolerance_subtitle),
                     ),
@@ -340,18 +332,71 @@ class _WindowConfigTab extends StatelessWidget {
                         final tolerance = context.select<PreferenceBloc, int>(
                           (bloc) => bloc.state.tolerance,
                         );
-                        return Slider(
-                          min: -1000,
-                          max: 1000,
-                          divisions: 200,
-                          value: tolerance.toDouble(),
-                          label: '$tolerance',
-                          onChanged: switch (isWindowVisible) {
-                            true => (v) => context.read<PreferenceBloc>().add(
-                              PreferenceEvent.toleranceUpdated(v.toInt()),
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                _ToleranceButton(
+                                  icon: Icons.remove,
+                                  enabled: isWindowVisible,
+                                  onChanged: (delta) =>
+                                      context.read<PreferenceBloc>().add(
+                                        PreferenceEvent.toleranceUpdated(
+                                          tolerance - delta,
+                                        ),
+                                      ),
+                                ),
+                                Expanded(
+                                  child: Slider(
+                                    min: -5000,
+                                    max: 5000,
+                                    divisions: 500,
+                                    value: tolerance.toDouble().clamp(
+                                      -5000,
+                                      5000,
+                                    ),
+                                    label: '$tolerance ms',
+                                    onChanged: switch (isWindowVisible) {
+                                      true =>
+                                        (v) =>
+                                            context.read<PreferenceBloc>().add(
+                                              PreferenceEvent.toleranceUpdated(
+                                                v.toInt(),
+                                              ),
+                                            ),
+                                      false => null,
+                                    },
+                                  ),
+                                ),
+                                _ToleranceButton(
+                                  icon: Icons.add,
+                                  enabled: isWindowVisible,
+                                  onChanged: (delta) =>
+                                      context.read<PreferenceBloc>().add(
+                                        PreferenceEvent.toleranceUpdated(
+                                          tolerance + delta,
+                                        ),
+                                      ),
+                                ),
+                              ],
                             ),
-                            false => null,
-                          },
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                              ),
+                              child: _ToleranceTextField(
+                                initialValue: tolerance,
+                                enabled: isWindowVisible,
+                                onSubmitted: (value) {
+                                  if (value != null) {
+                                    context.read<PreferenceBloc>().add(
+                                      PreferenceEvent.toleranceUpdated(value),
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -558,5 +603,162 @@ class ToggleableSwitchListTile extends StatelessWidget {
             subtitle: subtitle,
             trailing: Switch(value: value, onChanged: null),
           );
+  }
+}
+
+class _ToleranceButton extends StatefulWidget {
+  const _ToleranceButton({
+    required this.icon,
+    required this.enabled,
+    required this.onChanged,
+  });
+
+  final IconData icon;
+  final bool enabled;
+  final void Function(int delta) onChanged;
+
+  @override
+  State<_ToleranceButton> createState() => _ToleranceButtonState();
+}
+
+class _ToleranceButtonState extends State<_ToleranceButton> {
+  Timer? _timer;
+
+  var _pressDuration = 0;
+
+  void _startLongPress() {
+    _pressDuration = 0;
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      _pressDuration += 100;
+
+      // Accelerating step size based on press duration
+      final step = switch (_pressDuration) {
+        < 500 => 10,
+        < 1000 => 25,
+        < 2000 => 50,
+        _ => 100,
+      };
+
+      widget.onChanged(step);
+    });
+  }
+
+  void _stopLongPress() {
+    _timer?.cancel();
+    _timer = null;
+    _pressDuration = 0;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = context.colorScheme;
+    return GestureDetector(
+      onTap: widget.enabled ? () => widget.onChanged(10) : null,
+      onLongPressStart: widget.enabled ? (_) => _startLongPress() : null,
+      onLongPressEnd: widget.enabled ? (_) => _stopLongPress() : null,
+      onLongPressCancel: widget.enabled ? () => _stopLongPress() : null,
+      child: IconButton.outlined(
+        icon: Icon(widget.icon),
+        onPressed: null, // Handled by GestureDetector
+        disabledColor: widget.enabled ? colorScheme.primary : null,
+      ),
+    );
+  }
+}
+
+class _ToleranceTextField extends StatefulWidget {
+  const _ToleranceTextField({
+    required this.initialValue,
+    required this.enabled,
+    required this.onSubmitted,
+  });
+
+  final int initialValue;
+  final bool enabled;
+  final void Function(int?) onSubmitted;
+
+  @override
+  State<_ToleranceTextField> createState() => _ToleranceTextFieldState();
+}
+
+class _ToleranceTextFieldState extends State<_ToleranceTextField> {
+  late final TextEditingController _controller;
+  String? _errorText;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.initialValue.toString());
+  }
+
+  @override
+  void didUpdateWidget(_ToleranceTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialValue != widget.initialValue) {
+      _controller.text = widget.initialValue.toString();
+      _errorText = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _validateAndSubmit() {
+    final text = _controller.text.trim();
+    final value = int.tryParse(text);
+
+    if (text.isEmpty) {
+      setState(() => _errorText = 'Please enter a value');
+      return;
+    }
+
+    if (value == null) {
+      setState(() => _errorText = 'Invalid number');
+      return;
+    }
+
+    if (value < -10000 || value > 10000) {
+      setState(() => _errorText = 'Value must be between -10000 and 10000');
+      return;
+    }
+
+    setState(() => _errorText = null);
+    widget.onSubmitted(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: _controller,
+      enabled: widget.enabled,
+      keyboardType: const TextInputType.numberWithOptions(signed: true),
+      decoration: InputDecoration(
+        labelText: 'Custom tolerance',
+        hintText: 'Enter value in ms',
+        errorText: _errorText,
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.check),
+          onPressed: widget.enabled ? _validateAndSubmit : null,
+          tooltip: 'Apply',
+        ),
+        border: const OutlineInputBorder(),
+        isDense: true,
+      ),
+      onSubmitted: widget.enabled ? (_) => _validateAndSubmit() : null,
+    );
   }
 }
