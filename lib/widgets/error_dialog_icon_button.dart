@@ -5,9 +5,9 @@ import '../utils/extensions/custom_extensions.dart';
 
 class ErrorDialogIconButton extends StatelessWidget {
   const ErrorDialogIconButton({
-    super.key,
     required this.error,
     required this.stackTrace,
+    super.key,
   });
 
   final Object error;

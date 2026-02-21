@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'error_dialog_icon_button.dart';
 
 class ErrorInfo extends StatelessWidget {
-  const ErrorInfo({super.key, required this.error, required this.stackTrace});
+  const ErrorInfo({required this.error, required this.stackTrace, super.key});
 
   final Object error;
   final StackTrace stackTrace;

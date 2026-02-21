@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 class ColorPickerSheet extends StatelessWidget {
   const ColorPickerSheet({
-    super.key,
     required this.colorValue,
+    super.key,
     this.onColorChanged,
   });
 
