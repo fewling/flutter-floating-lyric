@@ -1,52 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../configs/locale_constants.dart';
-import '../features/preference/bloc/preference_bloc.dart';
-import '../utils/extensions/custom_extensions.dart';
+import '../blocs/preference/preference_bloc.dart';
+import '../enums/app_locale.dart';
 
 class LanguageSelector extends StatelessWidget {
-  const LanguageSelector({super.key});
+  const LanguageSelector({required this.value, super.key});
 
-  static String getLocaleDisplayName(BuildContext context, String locale) {
-    final l10n = context.l10n;
-    switch (locale) {
-      case LocaleConstants.english:
-        return l10n.language_english;
-      case LocaleConstants.chinese:
-        return l10n.language_chinese;
-      default:
-        return l10n.language_english; // Fallback to English for unknown locales
-    }
-  }
+  final AppLocale value;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-    final currentLocale = context.select<PreferenceBloc, String>(
-      (bloc) => bloc.state.locale,
-    );
-
     return PopupMenuButton(
-      initialValue: currentLocale,
-      onSelected: (locale) =>
-          context.read<PreferenceBloc>().add(LocaleUpdated(locale)),
+      initialValue: value,
+      onSelected: (locale) => context.read<PreferenceBloc>().add(
+        PreferenceEvent.localeUpdated(locale),
+      ),
       itemBuilder: (context) => [
-        PopupMenuItem(
-          value: LocaleConstants.english,
-          child: Text(l10n.language_english),
-        ),
-        PopupMenuItem(
-          value: LocaleConstants.chinese,
-          child: Text(l10n.language_chinese),
-        ),
+        for (final locale in AppLocale.values)
+          PopupMenuItem(value: locale, child: Text(locale.displayName)),
       ],
       child: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(getLocaleDisplayName(context, currentLocale)),
-          const Icon(Icons.arrow_drop_down),
-        ],
+        children: [Text(value.displayName), const Icon(Icons.arrow_drop_down)],
       ),
     );
   }

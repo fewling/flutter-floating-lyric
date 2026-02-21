@@ -117,17 +117,6 @@ class PermissionMethodCallHandler :
                 }
             }
 
-            "start3rdMusicPlayer" -> {
-                val intent =
-                    Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC)
-                try {
-                    mActivity?.startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    // Handle the case where no music app is found on the device
-                    Toast.makeText(mActivity, "Could not found music app on device, please open one manually if exists.", Toast.LENGTH_LONG).show()
-                }
-            }
-
             else -> {
                 result.notImplemented()
             }

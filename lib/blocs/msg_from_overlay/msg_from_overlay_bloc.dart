@@ -1,0 +1,71 @@
+import 'dart:isolate';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../enums/async_status.dart';
+import '../../enums/main_overlay_port.dart';
+import '../../models/to_main_msg.dart';
+import '../../utils/logger.dart';
+import '../../utils/mixins/isolates_mixin.dart';
+
+part 'msg_from_overlay_bloc.freezed.dart';
+part 'msg_from_overlay_event.dart';
+part 'msg_from_overlay_state.dart';
+
+class MsgFromOverlayBloc extends Bloc<MsgFromOverlayEvent, MsgFromOverlayState>
+    with IsolatesMixin {
+  MsgFromOverlayBloc() : super(const MsgFromOverlayState()) {
+    _receivePort = ReceivePort();
+
+    on<MsgFromOverlayEvent>(
+      (event, emit) => switch (event) {
+        _Started() => _onStarted(event, emit),
+        _Handled() => _onMsgHandled(event, emit),
+      },
+    );
+  }
+
+  late final ReceivePort _receivePort;
+
+  @override
+  Future<void> close() async {
+    _receivePort.close();
+    return super.close();
+  }
+
+  Future<void> _onStarted(
+    _Started event,
+    Emitter<MsgFromOverlayState> emit,
+  ) async {
+    emit(state.copyWith(isolateRegistrationStatus: AsyncStatus.loading));
+
+    final isSuccess = await registerPort(
+      _receivePort.sendPort,
+      MainOverlayPort.mainPortName.key,
+    );
+
+    emit(
+      state.copyWith(
+        isolateRegistrationStatus: isSuccess
+            ? AsyncStatus.success
+            : AsyncStatus.failure,
+      ),
+    );
+
+    logger.d(
+      '>>> MsgFromOverlayBloc started and port registered: isSuccess=$isSuccess',
+    );
+
+    await emit.forEach(
+      _receivePort.asBroadcastStream(),
+      onData: (data) {
+        final msg = ToMainMsg.fromJson(data as Map<String, dynamic>);
+        return state.copyWith(msg: msg);
+      },
+    );
+  }
+
+  void _onMsgHandled(_Handled event, Emitter<MsgFromOverlayState> emit) =>
+      emit(state.copyWith(msg: null));
+}

@@ -63,7 +63,7 @@ import 'app_localizations_zh.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -86,16 +86,16 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
-    Locale('zh')
+    Locale('zh'),
   ];
 
   /// No description provided for @permission_screen_notif_listener_permission_title.
@@ -271,6 +271,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get lyric_list_cancel;
+
+  /// No description provided for @lyric_list_refresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get lyric_list_refresh;
 
   /// No description provided for @lyric_list_search.
   ///
@@ -452,6 +458,36 @@ abstract class AppLocalizations {
   /// **'Custom Text Color'**
   String get overlay_window_custom_text_color;
 
+  /// No description provided for @overlay_window_text_alignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Alignment'**
+  String get overlay_window_text_alignment;
+
+  /// No description provided for @overlay_window_alignment_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get overlay_window_alignment_left;
+
+  /// No description provided for @overlay_window_alignment_center.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get overlay_window_alignment_center;
+
+  /// No description provided for @overlay_window_alignment_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get overlay_window_alignment_right;
+
+  /// No description provided for @overlay_window_alignment_alternating.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternating'**
+  String get overlay_window_alignment_alternating;
+
   /// No description provided for @overlay_window_element_visibilities.
   ///
   /// In en, this message translates to:
@@ -500,17 +536,11 @@ abstract class AppLocalizations {
   /// **'When no lyrics is found, toggle the text transparency.'**
   String get overlay_window_no_lyrics_found_subtitle;
 
-  /// No description provided for @overlay_window_show_line_2.
+  /// No description provided for @overlay_window_visible_lines_count.
   ///
   /// In en, this message translates to:
-  /// **'Show Line 2'**
-  String get overlay_window_show_line_2;
-
-  /// No description provided for @overlay_window_hide_line_2.
-  ///
-  /// In en, this message translates to:
-  /// **'Hide Line 2'**
-  String get overlay_window_hide_line_2;
+  /// **'No. of Visible Lines'**
+  String get overlay_window_visible_lines_count;
 
   /// No description provided for @overlay_window_enable_animation.
   ///
@@ -551,7 +581,7 @@ abstract class AppLocalizations {
   /// No description provided for @overlay_window_ignore_touch_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'Enabling this will lock the window from moving too.\\nDisabling this will not unlock it.'**
+  /// **'Enabling this will lock the window from moving too.\nDisabling this will not unlock it.'**
   String get overlay_window_ignore_touch_subtitle;
 
   /// No description provided for @overlay_window_touch_through.
@@ -563,7 +593,7 @@ abstract class AppLocalizations {
   /// No description provided for @overlay_window_touch_through_subtitle.
   ///
   /// In en, this message translates to:
-  /// **'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
+  /// **'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏'**
   String get overlay_window_touch_through_subtitle;
 
   /// No description provided for @fetch_online_auto_fetch.
@@ -596,11 +626,11 @@ abstract class AppLocalizations {
   /// **'Duration'**
   String get fetch_online_duration;
 
-  /// No description provided for @fetch_online_unknown.
+  /// No description provided for @common_unknown.
   ///
   /// In en, this message translates to:
   /// **'Unknown'**
-  String get fetch_online_unknown;
+  String get common_unknown;
 
   /// No description provided for @fetch_online_powered_by.
   ///
@@ -743,7 +773,7 @@ abstract class AppLocalizations {
   /// No description provided for @font_select_disclaimer.
   ///
   /// In en, this message translates to:
-  /// **'To save your internet data, limited options are loaded each time.\\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\\nThen, you can search for the font name here and apply it.'**
+  /// **'To save your internet data, limited options are loaded each time.\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\nThen, you can search for the font name here and apply it.'**
   String get font_select_disclaimer;
 
   /// No description provided for @font_select_visit_google_fonts.
@@ -872,18 +902,6 @@ abstract class AppLocalizations {
   /// **'Ignore Touch'**
   String get overlay_window_ignore_touch_title;
 
-  /// No description provided for @overlay_window_ignore_touch_subtitle_line1.
-  ///
-  /// In en, this message translates to:
-  /// **'Enabling this will lock the window from moving too.'**
-  String get overlay_window_ignore_touch_subtitle_line1;
-
-  /// No description provided for @overlay_window_ignore_touch_subtitle_line2.
-  ///
-  /// In en, this message translates to:
-  /// **'Disabling this will not unlock it.'**
-  String get overlay_window_ignore_touch_subtitle_line2;
-
   /// No description provided for @overlay_window_touch_through_title.
   ///
   /// In en, this message translates to:
@@ -948,8 +966,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

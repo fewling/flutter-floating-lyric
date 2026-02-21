@@ -106,6 +106,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lyric_list_cancel => 'Cancel';
 
   @override
+  String get lyric_list_refresh => 'Refresh';
+
+  @override
   String get lyric_list_search => 'Search';
 
   @override
@@ -202,6 +205,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overlay_window_custom_text_color => 'Custom Text Color';
 
   @override
+  String get overlay_window_text_alignment => 'Text Alignment';
+
+  @override
+  String get overlay_window_alignment_left => 'Left';
+
+  @override
+  String get overlay_window_alignment_center => 'Center';
+
+  @override
+  String get overlay_window_alignment_right => 'Right';
+
+  @override
+  String get overlay_window_alignment_alternating => 'Alternating';
+
+  @override
   String get overlay_window_element_visibilities => 'Element Visibilities';
 
   @override
@@ -229,10 +247,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'When no lyrics is found, toggle the text transparency.';
 
   @override
-  String get overlay_window_show_line_2 => 'Show Line 2';
-
-  @override
-  String get overlay_window_hide_line_2 => 'Hide Line 2';
+  String get overlay_window_visible_lines_count => 'No. of Visible Lines';
 
   @override
   String get overlay_window_enable_animation => 'Enable Animation';
@@ -255,14 +270,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_subtitle =>
-      'Enabling this will lock the window from moving too.\\nDisabling this will not unlock it.';
+      'Enabling this will lock the window from moving too.\nDisabling this will not unlock it.';
 
   @override
   String get overlay_window_touch_through => 'Touch Through';
 
   @override
   String get overlay_window_touch_through_subtitle =>
-      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
+      'This will disable back gesture, keyboard and maybe something else. So use it at your own risk.\nSuch issue is due to Android\'s design limitation and is out of this app\'s control. 🙏';
 
   @override
   String get fetch_online_auto_fetch => 'Auto Fetch';
@@ -280,7 +295,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fetch_online_duration => 'Duration';
 
   @override
-  String get fetch_online_unknown => 'Unknown';
+  String get common_unknown => 'Unknown';
 
   @override
   String get fetch_online_powered_by => 'Powered by ';
@@ -356,7 +371,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get font_select_disclaimer =>
-      'To save your internet data, limited options are loaded each time.\\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\\nThen, you can search for the font name here and apply it.';
+      'To save your internet data, limited options are loaded each time.\nWe recommend visiting Google Fonts to view and feel the full list of fonts.\nThen, you can search for the font name here and apply it.';
 
   @override
   String get font_select_visit_google_fonts => 'Visit Google Fonts';
@@ -428,14 +443,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_title => 'Ignore Touch';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line1 =>
-      'Enabling this will lock the window from moving too.';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line2 =>
-      'Disabling this will not unlock it.';
 
   @override
   String get overlay_window_touch_through_title => 'Touch Through';

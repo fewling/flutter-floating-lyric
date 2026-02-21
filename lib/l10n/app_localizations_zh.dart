@@ -100,6 +100,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get lyric_list_cancel => '取消';
 
   @override
+  String get lyric_list_refresh => '刷新';
+
+  @override
   String get lyric_list_search => '搜尋';
 
   @override
@@ -191,6 +194,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_custom_text_color => '自訂文字顏色';
 
   @override
+  String get overlay_window_text_alignment => '文字對齊';
+
+  @override
+  String get overlay_window_alignment_left => '靠左';
+
+  @override
+  String get overlay_window_alignment_center => '置中';
+
+  @override
+  String get overlay_window_alignment_right => '靠右';
+
+  @override
+  String get overlay_window_alignment_alternating => '交替對齊';
+
+  @override
   String get overlay_window_element_visibilities => '組件可見性';
 
   @override
@@ -215,10 +233,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_no_lyrics_found_subtitle => '當找不到歌詞時，切換文字透明度。';
 
   @override
-  String get overlay_window_show_line_2 => '顯示第二行';
-
-  @override
-  String get overlay_window_hide_line_2 => '隱藏第二行';
+  String get overlay_window_visible_lines_count => '可見歌詞行數';
 
   @override
   String get overlay_window_enable_animation => '啟用動畫';
@@ -240,14 +255,14 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_subtitle =>
-      '啟用此功能將鎖定視窗移動。\\n停用此功能不會解鎖視窗。';
+      '啟用此功能將鎖定視窗移動。\n停用此功能不會解鎖視窗。';
 
   @override
   String get overlay_window_touch_through => '觸控穿透';
 
   @override
   String get overlay_window_touch_through_subtitle =>
-      '這會停用返回手勢、鍵盤等功能。請自行承擔風險。\\n此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
+      '這會停用返回手勢、鍵盤等功能。請自行承擔風險。\n此問題是由於 Android 設計限制，超出此應用程式的控制範圍。🙏';
 
   @override
   String get fetch_online_auto_fetch => '自動搜索';
@@ -265,7 +280,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fetch_online_duration => '時長';
 
   @override
-  String get fetch_online_unknown => '未知';
+  String get common_unknown => '未知';
 
   @override
   String get fetch_online_powered_by => '技術支援 ';
@@ -338,7 +353,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get font_select_disclaimer =>
-      '為節省您的網路流量，每次載入的選項有限。\\n我們建議造訪 Google Fonts 檢視完整字型清單。\\n然後，您可以在此處搜尋字型名稱並套用。';
+      '為節省您的網路流量，每次載入的選項有限。\n我們建議造訪 Google Fonts 檢視完整字型清單。\n然後，您可以在此處搜尋字型名稱並套用。';
 
   @override
   String get font_select_visit_google_fonts => '造訪 Google Fonts';
@@ -406,12 +421,6 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get overlay_window_ignore_touch_title => '忽略觸控';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line1 => '啟用此功能將鎖定視窗移動。';
-
-  @override
-  String get overlay_window_ignore_touch_subtitle_line2 => '停用此功能不會解鎖視窗。';
 
   @override
   String get overlay_window_touch_through_title => '觸控穿透';

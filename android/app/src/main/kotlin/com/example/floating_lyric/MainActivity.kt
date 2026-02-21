@@ -1,10 +1,12 @@
 package com.example.floating_lyric
 
+import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.floating_lyric.features.media_tracker.MediaStateEventStreamHandler
 import com.example.floating_lyric.features.overlay_window.OverlayView
@@ -32,7 +34,7 @@ class MainActivity : FlutterActivity() {
     private lateinit var overlayStateEventChannel: EventChannel
     private lateinit var mediaStateEventStreamHandler: MediaStateEventStreamHandler
 
-
+    private lateinit var overlayEngine: FlutterEngine
     private var overlayView: OverlayView? = null
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -45,7 +47,7 @@ class MainActivity : FlutterActivity() {
             FlutterInjector.instance().flutterLoader().findAppBundlePath(),
             "overlayView"
         )
-        val overlayEngine = engineGroup.createAndRunEngine(this, overlayEntryPoint)
+        overlayEngine = engineGroup.createAndRunEngine(this, overlayEntryPoint)
         FlutterEngineCache.getInstance().put("OVERLAY_ENGINE", overlayEngine)
 
         flutterEngine.plugins.add(PermissionMethodCallHandler())
@@ -55,10 +57,21 @@ class MainActivity : FlutterActivity() {
             .also {
                 it.setMethodCallHandler { call, result ->
                     when (call.method) {
+                        "start3rdMusicPlayer" -> {
+                            val intent =
+                                Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC)
+                            try {
+                                startActivity(intent)
+                            } catch (e: ActivityNotFoundException) {
+                                // Handle the case where no music app is found on the device
+                                Toast.makeText(this, "Could not found music app on device, please open one manually if exists.", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
                         "show" -> {
                             if (overlayView == null) {
-                                Log.i("Main", "Updating overlay view")
-                                overlayView = OverlayView(this)
+                                Log.i("Main", "Creating overlay view")
+                                overlayView = OverlayView(this, overlayEngine)
                             }
                             Log.i("Main", "Adding overlay view")
                             overlayView!!.addView()
