@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../repos/lrclib/lrclib_repository.dart';
-import '../../services/db/local/local_db_service.dart';
 import '../../utils/logger.dart';
 import '../../utils/mixins/custom_exception/custom_exception_handler.dart';
 
@@ -12,12 +11,9 @@ part 'fetch_online_lrc_form_state.dart';
 
 class FetchOnlineLrcFormBloc
     extends Bloc<FetchOnlineLrcFormEvent, FetchOnlineLrcFormState> {
-  FetchOnlineLrcFormBloc({
-    required LrcLibRepository lrcLibRepo,
-    required LocalDbService localDbService,
-  }) : _lrcLibRepo = lrcLibRepo,
-       _localDbService = localDbService,
-       super(const FetchOnlineLrcFormState()) {
+  FetchOnlineLrcFormBloc({required LrcLibRepository lrcLibRepo})
+    : _lrcLibRepo = lrcLibRepo,
+      super(const FetchOnlineLrcFormState()) {
     on<FetchOnlineLrcFormEvent>(
       (event, emit) => switch (event) {
         FetchOnlineLrcFormStarted() => _onStarted(event, emit),
@@ -33,7 +29,6 @@ class FetchOnlineLrcFormBloc
   }
 
   final LrcLibRepository _lrcLibRepo;
-  final LocalDbService _localDbService;
 
   void _onStarted(
     FetchOnlineLrcFormStarted event,

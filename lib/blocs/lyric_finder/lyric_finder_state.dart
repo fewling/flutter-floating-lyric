@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 part of 'lyric_finder_bloc.dart';
 
 @freezed

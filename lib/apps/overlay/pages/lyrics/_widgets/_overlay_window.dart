@@ -1,14 +1,13 @@
 part of '../page.dart';
 
 class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
-  const _OverlayWindow({this.debugText, this.isLoading = false});
-
-  final String? debugText;
-  final bool isLoading;
+  const _OverlayWindow();
 
   @override
   Widget build(BuildContext context) {
+    // ignore: unused_local_variable
     final mainMsg = context.watch<MsgFromMainBloc>().state;
+
     final configs = context.select(
       (OverlayWindowBloc bloc) => bloc.state.config,
     );
@@ -54,11 +53,6 @@ class _OverlayWindow extends StatelessWidget with OverlayWindowSizingMixin {
               mainAxisSize: MainAxisSize.min,
               spacing: 4,
               children: [
-                if (debugText != null)
-                  Text(
-                    debugText!,
-                    style: TextStyle(color: colorScheme.onPrimaryContainer),
-                  ),
                 if (!isLyricOnly) _OverlayHeader(textColor: textColor),
                 _OverlayContent(config: configs, textColor: textColor),
                 if (!isLyricOnly || (configs.showProgressBar ?? false))

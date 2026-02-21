@@ -18,7 +18,6 @@ import '../../../../blocs/start_music_app/start_music_app_bloc.dart';
 import '../../../../models/media_state.dart';
 import '../../../../repos/lrclib/lrclib_repository.dart';
 import '../../../../routes/app_router.dart';
-import '../../../../services/db/local/local_db_service.dart';
 import '../../../../services/lrc/lrc_process_service.dart';
 import '../../../../services/platform_channels/method_channel_service.dart';
 import '../../../../utils/extensions/custom_extensions.dart';

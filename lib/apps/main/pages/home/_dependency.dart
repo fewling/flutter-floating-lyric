@@ -30,9 +30,6 @@ class _Dependency extends StatelessWidget {
                 lrcLibRepo: MainAppDependency.of(
                   context,
                 ).read<LrcLibRepository>(),
-                localDbService: MainAppDependency.of(
-                  context,
-                ).read<LocalDbService>(),
               )..add(
                 FetchOnlineLrcFormStarted(
                   album: context

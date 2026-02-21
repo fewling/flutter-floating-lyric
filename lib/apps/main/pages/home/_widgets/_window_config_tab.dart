@@ -455,7 +455,6 @@ class _ToggleableSwitchListTile extends StatelessWidget {
     required this.title,
     required this.secondary,
     required this.onChanged,
-    super.key,
     this.subtitle,
   });
 
