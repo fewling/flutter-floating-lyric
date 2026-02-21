@@ -205,6 +205,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get overlay_window_custom_text_color => 'Custom Text Color';
 
   @override
+  String get overlay_window_text_alignment => 'Text Alignment';
+
+  @override
+  String get overlay_window_alignment_left => 'Left';
+
+  @override
+  String get overlay_window_alignment_center => 'Center';
+
+  @override
+  String get overlay_window_alignment_right => 'Right';
+
+  @override
+  String get overlay_window_alignment_alternating => 'Alternating';
+
+  @override
   String get overlay_window_element_visibilities => 'Element Visibilities';
 
   @override

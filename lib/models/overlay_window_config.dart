@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../enums/app_locale.dart';
+import '../enums/lyric_alignment.dart';
 
 part 'overlay_window_config.freezed.dart';
 part 'overlay_window_config.g.dart';
@@ -34,6 +35,10 @@ sealed class OverlayWindowConfig with _$OverlayWindowConfig {
     double? letterSpacing,
     @Default(false) bool enableAnimation,
     @Default(false) bool transparentNotFoundTxt,
+
+    @JsonKey(fromJson: lyricAlignmentFromJson, toJson: lyricAlignmentToJson)
+    @Default(LyricAlignment.center)
+    LyricAlignment lyricAlignment,
 
     // Settings
     bool? ignoreTouch,

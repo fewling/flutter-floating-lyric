@@ -194,6 +194,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get overlay_window_custom_text_color => '自訂文字顏色';
 
   @override
+  String get overlay_window_text_alignment => '文字對齊';
+
+  @override
+  String get overlay_window_alignment_left => '靠左';
+
+  @override
+  String get overlay_window_alignment_center => '置中';
+
+  @override
+  String get overlay_window_alignment_right => '靠右';
+
+  @override
+  String get overlay_window_alignment_alternating => '交替對齊';
+
+  @override
   String get overlay_window_element_visibilities => '組件可見性';
 
   @override

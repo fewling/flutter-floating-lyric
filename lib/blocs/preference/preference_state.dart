@@ -20,6 +20,7 @@ sealed class PreferenceState with _$PreferenceState {
     required bool transparentNotFoundTxt,
     required int tolerance,
     required bool windowIgnoreTouch,
+    required LyricAlignment lyricAlignment,
 
     @JsonKey(fromJson: appLocaleFromJson, toJson: appLocaleToJson)
     @Default(AppLocale.english)

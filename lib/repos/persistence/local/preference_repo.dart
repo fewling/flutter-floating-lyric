@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../enums/app_locale.dart';
+import '../../../enums/lyric_alignment.dart';
 
 class PreferenceRepo {
   PreferenceRepo({required SharedPreferences sharedPreferences})
@@ -25,6 +26,7 @@ class PreferenceRepo {
   static const transparentNotFoundTxtKey = 'transparent not found';
   static const localeKey = 'locale';
   static const ignoreTouch = 'ignore touch';
+  static const lyricAlignmentKey = 'lyric alignment';
 
   static const defaultFont = 'Roboto';
 
@@ -67,6 +69,11 @@ class PreferenceRepo {
   AppLocale get locale => AppLocale.values.firstWhere(
     (e) => e.code == _sp.getString(localeKey),
     orElse: () => AppLocale.english,
+  );
+
+  LyricAlignment get lyricAlignment => LyricAlignment.values.firstWhere(
+    (e) => e.name == _sp.getString(lyricAlignmentKey),
+    orElse: () => LyricAlignment.center,
   );
 
   Future<bool> updateOpacity(double value) =>
@@ -117,4 +124,7 @@ class PreferenceRepo {
 
   Future<bool> updateLocale(AppLocale locale) =>
       _sp.setString(localeKey, locale.code);
+
+  Future<bool> updateLyricAlignment(LyricAlignment alignment) =>
+      _sp.setString(lyricAlignmentKey, alignment.name);
 }

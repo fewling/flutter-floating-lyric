@@ -129,6 +129,7 @@ class _OverlayContent extends StatelessWidget {
           textColor: textColor,
           fontSize: config.fontSize,
           shouldAnimate: shouldAnimate,
+          lyricAlignment: config.lyricAlignment,
         );
     }
   }
@@ -140,6 +141,7 @@ class _ScrollingLyricView extends StatefulWidget {
     required this.currentLineIndex,
     required this.visibleLinesCount,
     required this.textColor,
+    required this.lyricAlignment,
     this.fontSize,
     this.shouldAnimate = false,
   });
@@ -150,6 +152,7 @@ class _ScrollingLyricView extends StatefulWidget {
   final Color textColor;
   final double? fontSize;
   final bool shouldAnimate;
+  final LyricAlignment lyricAlignment;
 
   @override
   State<_ScrollingLyricView> createState() => _ScrollingLyricViewState();
@@ -204,13 +207,29 @@ class _ScrollingLyricViewState extends State<_ScrollingLyricView> {
           builder: (context, index) {
             if (index < 0 || index >= widget.allLines.length) return null;
 
-            return _LyricLineWidget(
-              line: widget.allLines[index],
-              isCurrent: index == widget.currentLineIndex,
-              textColor: widget.textColor,
-              fontSize: widget.fontSize,
-              shouldAnimate:
-                  widget.shouldAnimate && index == widget.currentLineIndex,
+            return Align(
+              alignment: switch (widget.lyricAlignment) {
+                LyricAlignment.left => Alignment.centerLeft,
+                LyricAlignment.center => Alignment.center,
+                LyricAlignment.right => Alignment.centerRight,
+                LyricAlignment.alternating =>
+                  index.isEven ? Alignment.centerLeft : Alignment.centerRight,
+              },
+              child: _LyricLineWidget(
+                line: widget.allLines[index],
+                isCurrent: index == widget.currentLineIndex,
+                textColor: widget.textColor,
+                fontSize: widget.fontSize,
+                shouldAnimate:
+                    widget.shouldAnimate && index == widget.currentLineIndex,
+                textAlign: switch (widget.lyricAlignment) {
+                  LyricAlignment.left => TextAlign.left,
+                  LyricAlignment.center => TextAlign.center,
+                  LyricAlignment.right => TextAlign.right,
+                  LyricAlignment.alternating =>
+                    index.isEven ? TextAlign.left : TextAlign.right,
+                },
+              ),
             );
           },
         ),
@@ -226,6 +245,7 @@ class _LyricLineWidget extends StatelessWidget {
     required this.textColor,
     this.fontSize,
     this.shouldAnimate = false,
+    this.textAlign = TextAlign.center,
   });
 
   final LrcLine line;
@@ -233,12 +253,13 @@ class _LyricLineWidget extends StatelessWidget {
   final Color textColor;
   final double? fontSize;
   final bool shouldAnimate;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
     return AutoSizeText(
       line.content,
-      textAlign: TextAlign.center,
+      textAlign: textAlign,
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: TextStyle(

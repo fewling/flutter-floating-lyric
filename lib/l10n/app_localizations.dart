@@ -458,6 +458,36 @@ abstract class AppLocalizations {
   /// **'Custom Text Color'**
   String get overlay_window_custom_text_color;
 
+  /// No description provided for @overlay_window_text_alignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Text Alignment'**
+  String get overlay_window_text_alignment;
+
+  /// No description provided for @overlay_window_alignment_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get overlay_window_alignment_left;
+
+  /// No description provided for @overlay_window_alignment_center.
+  ///
+  /// In en, this message translates to:
+  /// **'Center'**
+  String get overlay_window_alignment_center;
+
+  /// No description provided for @overlay_window_alignment_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get overlay_window_alignment_right;
+
+  /// No description provided for @overlay_window_alignment_alternating.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternating'**
+  String get overlay_window_alignment_alternating;
+
   /// No description provided for @overlay_window_element_visibilities.
   ///
   /// In en, this message translates to:

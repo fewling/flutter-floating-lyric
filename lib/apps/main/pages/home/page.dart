@@ -15,6 +15,8 @@ import '../../../../blocs/overlay_window_settings/overlay_window_settings_bloc.d
 import '../../../../blocs/preference/preference_bloc.dart';
 import '../../../../blocs/save_lrc/save_lrc_bloc.dart';
 import '../../../../blocs/start_music_app/start_music_app_bloc.dart';
+import '../../../../enums/lyric_alignment.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../models/media_state.dart';
 import '../../../../repos/lrclib/lrclib_repository.dart';
 import '../../../../routes/app_router.dart';

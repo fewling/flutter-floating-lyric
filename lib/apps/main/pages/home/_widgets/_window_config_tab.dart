@@ -150,6 +150,16 @@ class _WindowConfigTab extends StatelessWidget {
                       ),
                       onTap: () => _showTextColorPicker(context),
                     ),
+
+                    ListTile(
+                      enabled: isWindowVisible,
+                      title: Text(l10n.overlay_window_text_alignment),
+                      leading: const Icon(Icons.format_align_center_outlined),
+                      trailing: Text(
+                        _getAlignmentLabel(pref.lyricAlignment, l10n),
+                      ),
+                      onTap: () => _showAlignmentPicker(context),
+                    ),
                   ],
                 ),
               ),
@@ -443,6 +453,57 @@ class _WindowConfigTab extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  String _getAlignmentLabel(LyricAlignment alignment, AppLocalizations l10n) {
+    return switch (alignment) {
+      LyricAlignment.left => l10n.overlay_window_alignment_left,
+      LyricAlignment.center => l10n.overlay_window_alignment_center,
+      LyricAlignment.right => l10n.overlay_window_alignment_right,
+      LyricAlignment.alternating => l10n.overlay_window_alignment_alternating,
+    };
+  }
+
+  void _showAlignmentPicker(BuildContext context) {
+    final l10n = context.l10n;
+    final currentAlignment = MainAppDependency.of(
+      context,
+    ).read<PreferenceBloc>().state.lyricAlignment;
+
+    showDialog(
+      context: context,
+      builder: (dialogCtx) => AlertDialog(
+        title: Text(l10n.overlay_window_text_alignment),
+        content: RadioGroup(
+          onChanged: (value) {
+            if (value != null) {
+              context.read<PreferenceBloc>().add(
+                PreferenceEvent.lyricAlignmentUpdated(value),
+              );
+            }
+            Navigator.of(dialogCtx).pop();
+          },
+          groupValue: currentAlignment,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: LyricAlignment.values
+                .map(
+                  (alignment) => RadioListTile(
+                    title: Text(_getAlignmentLabel(alignment, l10n)),
+                    value: alignment,
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogCtx).pop(),
+            child: Text(l10n.overlay_window_got_it),
+          ),
+        ],
       ),
     );
   }

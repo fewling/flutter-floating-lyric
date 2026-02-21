@@ -54,4 +54,8 @@ sealed class PreferenceEvent with _$PreferenceEvent {
       _FontFamilyUpdated;
 
   const factory PreferenceEvent.fontFamilyReset() = _FontFamilyReset;
+
+  const factory PreferenceEvent.lyricAlignmentUpdated(
+    LyricAlignment alignment,
+  ) = _LyricAlignmentUpdated;
 }

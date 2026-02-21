@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../enums/app_locale.dart';
+import '../../enums/lyric_alignment.dart';
 import '../../repos/persistence/local/preference_repo.dart';
 
 part 'preference_bloc.freezed.dart';
@@ -29,6 +30,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
           transparentNotFoundTxt: preferenceRepo.transparentNotFoundTxt,
           windowIgnoreTouch: preferenceRepo.windowIgnoreTouch,
           locale: preferenceRepo.locale,
+          lyricAlignment: preferenceRepo.lyricAlignment,
         ),
       ) {
     on<PreferenceEvent>(
@@ -58,6 +60,7 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
         _AppColorSchemeUpdated() => _onAppColorSchemeUpdated(event, emit),
         _FontFamilyUpdated() => _onFontFamilyUpdated(event, emit),
         _FontFamilyReset() => _onFontFamilyReset(event, emit),
+        _LyricAlignmentUpdated() => _onLyricAlignmentUpdated(event, emit),
       },
     );
   }
@@ -255,6 +258,18 @@ class PreferenceBloc extends Bloc<PreferenceEvent, PreferenceState> {
     final isSuccess = await _preferenceRepo.resetFontFamily();
     if (isSuccess) {
       emit(state.copyWith(fontFamily: ''));
+    }
+  }
+
+  Future<void> _onLyricAlignmentUpdated(
+    _LyricAlignmentUpdated event,
+    Emitter<PreferenceState> emit,
+  ) async {
+    final isSuccess = await _preferenceRepo.updateLyricAlignment(
+      event.alignment,
+    );
+    if (isSuccess) {
+      emit(state.copyWith(lyricAlignment: event.alignment));
     }
   }
 }

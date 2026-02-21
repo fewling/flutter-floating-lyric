@@ -88,6 +88,7 @@ class OverlayWindowSettingsBloc
           isLight: pref.isLight,
           tolerance: pref.tolerance.toDouble(),
           ignoreTouch: pref.windowIgnoreTouch,
+          lyricAlignment: pref.lyricAlignment,
         ),
       ),
     );
