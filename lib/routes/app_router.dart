@@ -11,11 +11,10 @@ import '../apps/main/pages/local_lyric_detail/page.dart';
 import '../apps/main/pages/local_lyrics/page.dart';
 import '../apps/main/pages/onboarding/page.dart';
 import '../apps/main/pages/settings/page.dart';
+import '../apps/main/shells/home/shell.dart';
 import '../apps/overlay/pages/lyrics/page.dart';
+import '../apps/overlay/shells/overlay/shell.dart';
 import '../blocs/permission/permission_bloc.dart';
-import '../shells/base/shell.dart';
-import '../shells/home/shell.dart';
-import '../shells/overlay/shell.dart';
 import '../utils/logger.dart';
 
 part 'app_route_observer.dart';
@@ -59,7 +58,7 @@ class AppRouter {
       routes: [
         ShellRoute(
           builder: (context, state, child) =>
-              MainAppListener(builder: (context) => BaseShell(child: child)),
+              MainAppListener(builder: (context) => child),
           routes: [
             GoRoute(
               path: MainAppRoutes.onboarding.path,
@@ -76,6 +75,13 @@ class AppRouter {
                       path: MainAppRoutes.home.path,
                       name: MainAppRoutes.home.name,
                       builder: (context, state) => const HomePage(),
+                      routes: [
+                        GoRoute(
+                          path: MainAppRoutes.home.path,
+                          name: MainAppRoutes.home.name,
+                          builder: (context, state) => const Placeholder(),
+                        ),
+                      ],
                     ),
                   ],
                 ),

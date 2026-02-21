@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../routes/app_router.dart';
-import '../../utils/extensions/custom_extensions.dart';
+import '../../../../routes/app_router.dart';
+import '../../../../utils/extensions/custom_extensions.dart';
 
 part '_dependency.dart';
 part '_listener.dart';
