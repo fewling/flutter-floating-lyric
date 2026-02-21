@@ -42,15 +42,12 @@ class OverlayWindowSettingsBloc
     }
   }
 
-  Future<void> _onIgnoreTouchToggled(
+  void _onIgnoreTouchToggled(
     _WindowIgnoreTouchToggled event,
     Emitter<OverlayWindowSettingsState> emit,
-  ) async {
-    // TODO(@Felix)
-    emit(
-      state.copyWith(config: state.config.copyWith(ignoreTouch: event.value)),
-    );
-  }
+  ) => emit(
+    state.copyWith(config: state.config.copyWith(ignoreTouch: event.value)),
+  );
 
   Future<void> _onTouchThroughToggled(
     _WindowTouchThroughToggled event,

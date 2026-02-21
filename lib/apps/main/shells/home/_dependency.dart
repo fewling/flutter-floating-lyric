@@ -7,15 +7,6 @@ class _Dependency extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Add providers, repositories, BLoCs here
-    // Example with BlocProvider:
-    // return BlocProvider(
-    //   create: (context) => HomeBloc(
-    //     repository: context.read<Repository>(),
-    //   ),
-    //   child: Builder(builder: builder),
-    // );
-
     return Builder(builder: builder);
   }
 }
